@@ -2,10 +2,18 @@ import urllib.request
 import urllib.parse
 import re
 import base64
+import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 success_count = 0
 fail_count = 0
+
+# 🔴 СЮДА ДУБЛИРУЕМ ТВОИ VIP-ПОДПИСКИ ИЗ ВОРКЕРА ДЛЯ УМНОЙ СОРТИРОВКИ
+VIP_URLS = [
+    "https://mifa.world/vless",
+    "https://sub.aska.lol/Ux7lmK0xkIl2",
+    "https://raw.githubusercontent.com/zieng2/wl/main/vless_universal.txt"
+]
 
 def fetch_single_url(url):
     global success_count, fail_count
@@ -19,12 +27,12 @@ def fetch_single_url(url):
             except:
                 content = raw_data.decode('latin-1', errors='ignore')
             
-            if not any(p in content for p in ['vless://', 'vmess://', 'ss://', 'trojan://']):
+            if not any(p in content for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                 try:
                     b64_str = content.strip().replace('-', '+').replace('_', '/')
                     b64_str += "=" * ((4 - len(b64_str) % 4) % 4)
                     decoded = base64.b64decode(b64_str).decode('utf-8', errors='ignore')
-                    if any(p in decoded for p in ['vless://', 'vmess://', 'ss://', 'trojan://']):
+                    if any(p in decoded for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                         content = decoded
                 except:
                     pass
@@ -57,7 +65,7 @@ def clean_and_dedup(links):
     unique = set()
     valid_links = []
     for link in links:
-        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://')): 
+        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): 
             continue
         if '127.0.0.1' in link or 'localhost' in link: 
             continue
@@ -68,43 +76,86 @@ def clean_and_dedup(links):
             valid_links.append(link)
     return valid_links
 
+def filter_by_protocol_priority(links, max_total):
+    """Умный фильтр: разделяет по протоколам и жестко душит трояны/ss до 5%"""
+    vless_hy = []
+    trojan_ss = []
+    
+    for link in links:
+        if link.startswith(('vless://', 'hysteria2://', 'hy2://', 'vmess://')):
+            vless_hy.append(link)
+        elif link.startswith(('trojan://', 'ss://')):
+            trojan_ss.append(link)
+            
+    # Перемешиваем обе кучи независимо
+    random.shuffle(vless_hy)
+    random.shuffle(trojan_ss)
+    
+    # Считаем лимит для шлака (5% от общей свободной квоты)
+    trojan_limit = int(max_total * 0.05)
+    
+    # Собираем пачку: берем чуток троянов, а всё остальное место забиваем VLESS/Hysteria
+    allowed_trojan_ss = trojan_ss[:trojan_limit]
+    remaining_slots = max_total - len(allowed_trojan_ss)
+    
+    return vless_hy[:remaining_slots] + allowed_trojan_ss
+
 def main():
     global success_count, fail_count
-    print("🚀 Начинаем умную фильтрацию базы подписок с лимитом размера...")
+    print("🚀 Начинаем сбор источников с жестким приоритетом на VLESS/Hysteria...")
     
+    # Скачиваем VIP подписки
+    print("💎 Скачиваем неприкасаемые VIP подписки...")
+    vip_raw = []
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [executor.submit(fetch_single_url, url) for url in VIP_URLS]
+        for future in as_completed(futures):
+            vip_raw.extend(future.result())
+    vip_clean = clean_and_dedup(vip_raw)
+    vip_cores = {link.split('#')[0] for link in vip_clean}
+    
+    # Качаем обычные базы
     full_raw = fetch_links_parallel('sources_full.txt')
     bs_raw = fetch_links_parallel('sources_bs.txt')
 
-    final_full = []
-    final_bs = []
+    full_clean = clean_and_dedup(full_raw)
+    bs_clean = clean_and_dedup(bs_raw)
 
-    final_bs.extend(bs_raw)
-    final_full.extend(bs_raw)
+    full_clean = [l for l in full_clean if l.split('#')[0] not in vip_cores]
+    bs_clean = [l for l in bs_clean if l.split('#')[0] not in vip_cores]
 
-    for link in full_raw:
-        final_full.append(link)
-        if is_ru_sni(link):
-            final_bs.append(link)
+    # Сортируем .ru из общей массы в Белый Список (BS)
+    for link in full_clean:
+        if is_ru_sni(link) and link.split('#')[0] not in vip_cores:
+            bs_clean.append(link)
+            
+    bs_clean = clean_and_dedup(bs_clean)
 
-    final_full = clean_and_dedup(final_full)
-    final_bs = clean_and_dedup(final_bs)
+    # Высчитываем сколько мест осталось до 3000
+    free_slots_full = max(0, 3000 - len(vip_clean))
+    free_slots_bs = max(0, 3000 - len(vip_clean))
 
-    # 🛑 ЖЕСТКИЙ ЛИМИТ: Оставляем максимум по 40 000 строк, чтобы файлы весили около 5-8 МБ
-    # Это с запасом зайдет в лимиты GitHub и не положит Hiddify у пользователей
-    final_full = final_full[:40000]
-    final_bs = final_bs[:40000]
+    # Фильтруем с приоритетом протоколов
+    random_full = filter_by_protocol_priority(full_clean, free_slots_full)
+    random_bs = filter_by_protocol_priority(bs_clean, free_slots_bs)
 
+    # Собираем финальные пачки
+    final_full = vip_clean + random_full
+    final_bs = vip_clean + random_bs
+
+    # На всякий случай еще раз перемешаем именно вырезанную случайную часть, чтобы они шли вперемешку
+    # (но VIP останутся в начале или будут разбавлены)
+    
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_full))
         
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_bs))
 
-    print("\n📊 ИТОГИ РАБОТЫ ПАРСЕРА С ОБРЕЗКОЙ:")
+    print("\n📊 ИТОГИ УМНОЙ ФИЛЬТРАЦИИ ПО ПРОТОКОЛАМ:")
     print(f"✅ Успешно скачано источников: {success_count}")
-    print(f"❌ Сдохло/заблокировано источников: {fail_count}")
-    print(f"💎 Обрезано для сохранения в FULL: {len(final_full)} (изначальный пул был огромным)")
-    print(f"🛡️ Обрезано для сохранения в BS: {len(final_bs)}")
+    print(f"💎 Всего в FULL (VIP + Топ-протоколы): {len(final_full)}")
+    print(f"🛡️ Всего в Белом Списке BS (VIP + Топ-протоколы): {len(final_bs)}")
 
 if __name__ == '__main__':
     main()
