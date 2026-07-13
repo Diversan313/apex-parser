@@ -4,28 +4,21 @@ import re
 import base64
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# Глобальные счетчики для красивой статистики
 success_count = 0
 fail_count = 0
 
 def fetch_single_url(url):
     global success_count, fail_count
     try:
-        # Чистим пробелы в ссылке, если они случайно затесались
         url = url.strip().replace(' ', '%20')
-        
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         with urllib.request.urlopen(req, timeout=5) as response:
-            # Читаем с игнорированием кривых символов в кодировке
             raw_data = response.read()
-            
-            # Пробуем декодировать аккуратно
             try:
                 content = raw_data.decode('utf-8', errors='ignore')
             except:
                 content = raw_data.decode('latin-1', errors='ignore')
             
-            # Проверяем на Base64
             if not any(p in content for p in ['vless://', 'vmess://', 'ss://', 'trojan://']):
                 try:
                     b64_str = content.strip().replace('-', '+').replace('_', '/')
@@ -39,7 +32,6 @@ def fetch_single_url(url):
             success_count += 1
             return [l.strip() for l in content.split('\n') if l.strip()]
     except:
-        # Полный саунд-дизайн: никаких принтов ошибок в консоль
         fail_count += 1
         return []
 
@@ -78,7 +70,7 @@ def clean_and_dedup(links):
 
 def main():
     global success_count, fail_count
-    print("🚀 Начинаем умную фильтрацию базы подписок...")
+    print("🚀 Начинаем умную фильтрацию базы подписок с лимитом размера...")
     
     full_raw = fetch_links_parallel('sources_full.txt')
     bs_raw = fetch_links_parallel('sources_bs.txt')
@@ -97,17 +89,22 @@ def main():
     final_full = clean_and_dedup(final_full)
     final_bs = clean_and_dedup(final_bs)
 
+    # 🛑 ЖЕСТКИЙ ЛИМИТ: Оставляем максимум по 40 000 строк, чтобы файлы весили около 5-8 МБ
+    # Это с запасом зайдет в лимиты GitHub и не положит Hiddify у пользователей
+    final_full = final_full[:40000]
+    final_bs = final_bs[:40000]
+
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_full))
         
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_bs))
 
-    print("\n📊 ИТОГИ РАБОТЫ ПАРСЕРА:")
+    print("\n📊 ИТОГИ РАБОТЫ ПАРСЕРА С ОБРЕЗКОЙ:")
     print(f"✅ Успешно скачано источников: {success_count}")
     print(f"❌ Сдохло/заблокировано источников: {fail_count}")
-    print(f"💎 Уникальных серверов в FULL списке: {len(final_full)}")
-    print(f"🛡️ Уникальных серверов в Белом Списке (BS): {len(final_bs)}")
+    print(f"💎 Обрезано для сохранения в FULL: {len(final_full)} (изначальный пул был огромным)")
+    print(f"🛡️ Обрезано для сохранения в BS: {len(final_bs)}")
 
 if __name__ == '__main__':
     main()
