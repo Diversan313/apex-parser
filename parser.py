@@ -3,17 +3,69 @@ import urllib.parse
 import re
 import base64
 import random
+import socket
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 success_count = 0
 fail_count = 0
 
-# 🔴 СЮДА ДУБЛИРУЕМ ТВОИ VIP-ПОДПИСКИ ИЗ ВОРКЕРА ДЛЯ УМНОЙ СОРТИРОВКИ
 VIP_URLS = [
     "https://mifa.world/vless",
     "https://sub.aska.lol/Ux7lmK0xkIl2",
     "https://raw.githubusercontent.com/zieng2/wl/main/vless_universal.txt"
 ]
+
+def check_tcp(host, port, timeout=2.5):
+    """Быстрая проверка доступности IP:PORT сервера"""
+    try:
+        # Если домен в SNI или адресе содержит явные заглушки, отсекаем сразу
+        if any(fake in host.lower() for fake in ['localhost', '127.0.0.1', 'github.com']):
+            return False
+        
+        with socket.create_connection((host, int(port)), timeout=timeout):
+            return True
+    except:
+        return False
+
+def parse_host_port(link):
+    """Вытаскивает host и port из различных типов прокси-ссылок"""
+    try:
+        # Убираем имя сервера для чистоты парсинга
+        clean_link = link.split('#')[0]
+        
+        if clean_link.startswith(('vless://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
+            # Формат: протокол://uuid@host:port?параметры
+            content = clean_link.split('://')[1]
+            server_part = content.split('?')[0]
+            if '@' in server_part:
+                server_part = server_part.split('@')[1]
+            
+            # Обработка IPv6 адресов [2001:...]:port
+            if server_part.startswith('['):
+                host = server_part.split(']')[0] + ']'
+                port = server_part.split(']:')[1]
+            else:
+                host, port = server_part.split(':')
+            return host, int(port)
+            
+        elif clean_link.startswith('vmess://'):
+            # Vmess зашит в base64
+            b64_data = clean_link.replace('vmess://', '').strip()
+            b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+            import json
+            data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
+            return data.get('add'), int(data.get('port'))
+    except:
+        pass
+    return None, None
+
+def check_proxy_alive(link):
+    """Парсит ссылку и проверяет, живой ли сервер"""
+    host, port = parse_host_port(link)
+    if host and port:
+        if check_tcp(host, port):
+            return link
+    return None
 
 def fetch_single_url(url):
     global success_count, fail_count
@@ -67,8 +119,6 @@ def clean_and_dedup(links):
     for link in links:
         if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): 
             continue
-        if '127.0.0.1' in link or 'localhost' in link: 
-            continue
         
         core = link.split('#')[0]
         if core not in unique:
@@ -77,7 +127,6 @@ def clean_and_dedup(links):
     return valid_links
 
 def filter_by_protocol_priority(links, max_total):
-    """Умный фильтр: разделяет по протоколам и жестко душит трояны/ss до 5%"""
     vless_hy = []
     trojan_ss = []
     
@@ -87,14 +136,10 @@ def filter_by_protocol_priority(links, max_total):
         elif link.startswith(('trojan://', 'ss://')):
             trojan_ss.append(link)
             
-    # Перемешиваем обе кучи независимо
     random.shuffle(vless_hy)
     random.shuffle(trojan_ss)
     
-    # Считаем лимит для шлака (5% от общей свободной квоты)
     trojan_limit = int(max_total * 0.05)
-    
-    # Собираем пачку: берем чуток троянов, а всё остальное место забиваем VLESS/Hysteria
     allowed_trojan_ss = trojan_ss[:trojan_limit]
     remaining_slots = max_total - len(allowed_trojan_ss)
     
@@ -102,10 +147,9 @@ def filter_by_protocol_priority(links, max_total):
 
 def main():
     global success_count, fail_count
-    print("🚀 Начинаем сбор источников с жестким приоритетом на VLESS/Hysteria...")
+    print("🚀 Сбор источников и жесткая валидация портов (TCP-Check)...")
     
-    # Скачиваем VIP подписки
-    print("💎 Скачиваем неприкасаемые VIP подписки...")
+    # VIP-подписки качаем и добавляем СРАЗУ (их порты не пингуем, чтобы не замедлять и не терять их)
     vip_raw = []
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(fetch_single_url, url) for url in VIP_URLS]
@@ -114,48 +158,61 @@ def main():
     vip_clean = clean_and_dedup(vip_raw)
     vip_cores = {link.split('#')[0] for link in vip_clean}
     
-    # Качаем обычные базы
+    # Сбор обычных баз
     full_raw = fetch_links_parallel('sources_full.txt')
     bs_raw = fetch_links_parallel('sources_bs.txt')
 
     full_clean = clean_and_dedup(full_raw)
     bs_clean = clean_and_dedup(bs_raw)
 
+    # Исключаем VIP из общего пула проверки
     full_clean = [l for l in full_clean if l.split('#')[0] not in vip_cores]
     bs_clean = [l for l in bs_clean if l.split('#')[0] not in vip_cores]
 
-    # Сортируем .ru из общей массы в Белый Список (BS)
+    # Сортировка по SNI до чека
     for link in full_clean:
         if is_ru_sni(link) and link.split('#')[0] not in vip_cores:
             bs_clean.append(link)
-            
     bs_clean = clean_and_dedup(bs_clean)
 
-    # Высчитываем сколько мест осталось до 3000
+    # Приоритет протоколов (сначала отбираем потенциально лучшие, чтобы не пинговать лишние трояны)
+    pre_filtered_full = filter_by_protocol_priority(full_clean, 15000)
+    pre_filtered_bs = filter_by_protocol_priority(bs_clean, 15000)
+
+    # ⚡️ ПАРАЛЛЕЛЬНЫЙ TCP ЧЕК (100 потоков) для обычных серверов
+    print("⚡️ Проверяем порты серверов на доступность...")
+    alive_full_pool = []
+    alive_bs_pool = []
+
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        # Проверяем FULL
+        full_futures = [executor.submit(check_proxy_alive, link) for link in pre_filtered_full]
+        for future in as_completed(full_futures):
+            res = future.result()
+            if res: alive_full_pool.append(res)
+            
+        # Проверяем BS
+        bs_futures = [executor.submit(check_proxy_alive, link) for link in pre_filtered_bs]
+        for future in as_completed(bs_futures):
+            res = future.result()
+            if res: alive_bs_pool.append(res)
+
+    # Ограничиваем финальный размер до 3000 (VIP на первом месте)
     free_slots_full = max(0, 3000 - len(vip_clean))
     free_slots_bs = max(0, 3000 - len(vip_clean))
 
-    # Фильтруем с приоритетом протоколов
-    random_full = filter_by_protocol_priority(full_clean, free_slots_full)
-    random_bs = filter_by_protocol_priority(bs_clean, free_slots_bs)
+    final_full = vip_clean + alive_full_pool[:free_slots_full]
+    final_bs = vip_clean + alive_bs_pool[:free_slots_bs]
 
-    # Собираем финальные пачки
-    final_full = vip_clean + random_full
-    final_bs = vip_clean + random_bs
-
-    # На всякий случай еще раз перемешаем именно вырезанную случайную часть, чтобы они шли вперемешку
-    # (но VIP останутся в начале или будут разбавлены)
-    
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_full))
         
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_bs))
 
-    print("\n📊 ИТОГИ УМНОЙ ФИЛЬТРАЦИИ ПО ПРОТОКОЛАМ:")
-    print(f"✅ Успешно скачано источников: {success_count}")
-    print(f"💎 Всего в FULL (VIP + Топ-протоколы): {len(final_full)}")
-    print(f"🛡️ Всего в Белом Списке BS (VIP + Топ-протоколы): {len(final_bs)}")
+    print("\n📊 ИТОГИ ВАЛИДАЦИИ:")
+    print(f"💎 Всего ЖИВЫХ серверов в FULL: {len(final_full)} (включая VIP)")
+    print(f"🛡️ Всего ЖИВЫХ серверов в BS: {len(final_bs)} (включая VIP)")
 
 if __name__ == '__main__':
     main()
