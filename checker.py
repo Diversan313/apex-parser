@@ -13,13 +13,16 @@ URLS = [
     "https://raw.githubusercontent.com/freefq/free/master/v2",
     "https://raw.githubusercontent.com/barry-far/V2ray-Configs/main/All_Configs_Sub.txt",
     "https://raw.githubusercontent.com/vfarid/v2ray-worker-sub/main/sub/shadowrocket",
-    "https://raw.githubusercontent.com/Alvin9999/new-pac/master/v2ray/sub"
+    "https://raw.githubusercontent.com/Alvin9999/new-pac/master/v2ray/sub",
+    "https://raw.githubusercontent.com/Borders-freedom/freedom/master/All_Configs_Sub.txt",
+    "https://raw.githubusercontent.com/LonUp/NodeList/main/Active/All.txt",
+    "https://raw.githubusercontent.com/tbbatbb/Proxy/master/Distribute/v2ray.txt"
 ]
 
 LIMIT_WL_BL = 500 
 LIMIT_MIXED = 750  
-LIMIT_FULL = 2000  # Поднимаем планку для Мега-подписки
-CONCURRENT_LIMIT = 500 
+LIMIT_FULL = 2500  # Разрешаем огромную базу для FL
+CONCURRENT_LIMIT = 400 
 
 SPECIFIC_WL_SNI = [
     'first.eurocast.work', 
@@ -77,7 +80,6 @@ def is_wl_by_sni(line):
         if not sni: continue
         if sni.endswith('.ru') or any(wl_sni in sni for wl_sni in SPECIFIC_WL_SNI):
             return True
-            
     return False
 
 def parse_proxy(line):
@@ -96,7 +98,7 @@ def parse_proxy(line):
     except: pass
     return None
 
-async def check_server(semaphore, ip, port, line, source_url, timeout=2.5):
+async def check_server(semaphore, ip, port, line, source_url, timeout=2.0):
     async with semaphore:
         start_time = time.time()
         try:
@@ -118,14 +120,16 @@ async def get_real_countries(nodes):
     async with aiohttp.ClientSession() as session:
         for chunk in chunks:
             try:
-                async with session.post("http://ip-api.com/batch?fields=status,countryCode,query", json=chunk) as resp:
+                async with session.post("http://ip-api.com/batch?fields=status,countryCode,query", json=chunk, timeout=5) as resp:
                     if resp.status == 200:
                         results = await resp.json()
-                        for res in results:
-                            if res.get("status") == "success":
-                                ip_to_country[res["query"]] = res["countryCode"]
-            except: pass
-            await asyncio.sleep(0.4)
+                        if isinstance(results, list):
+                            for res in results:
+                                if isinstance(res, dict) and res.get("status") == "success":
+                                    ip_to_country[res["query"]] = res["countryCode"]
+            except:
+                pass  # Защита от вылета при блокировках лимитов флуда
+            await asyncio.sleep(0.5)
 
     for node in nodes:
         node["country_code"] = ip_to_country.get(node["ip"], "GL")
@@ -150,7 +154,7 @@ async def main():
     async with aiohttp.ClientSession() as session:
         for url in URLS:
             try:
-                async with session.get(url, headers={'User-Agent': 'Mozilla/5.0'}) as resp:
+                async with session.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=10) as resp:
                     raw_data = await resp.read()
                     text = decode_base64(raw_data)
                     for line in text.splitlines():
@@ -158,8 +162,8 @@ async def main():
                         if not line: continue
                         if any(x in line.lower() for x in ['t.me', 'tg://', 'хуй', 'бля', 'еба', 'пизд']): continue
                         all_tasks_data.append((line, url))
-            except Exception as e:
-                print(f"Ошибка загрузки базы {url}: {e}")
+            except:
+                print(f"Пропуск нерабочей базы: {url}")
 
     tasks = []
     seen = set()
@@ -173,11 +177,11 @@ async def main():
                 seen.add(f"{ip}:{port}")
                 tasks.append(check_server(semaphore, ip, port, original_line, url))
 
-    print(f"Запуск TCP-теста для {len(tasks)} уникальных нод...")
+    print(f"Запуск TCP-теста для {len(tasks)} нод...")
     results = await asyncio.gather(*tasks)
     alive_nodes = [res for res in results if res is not None]
     
-    print(f"Живых портов: {len(alive_nodes)}. Запуск GeoIP...")
+    print(f"Живых портов: {len(alive_nodes)}. Запуск безопасного GeoIP...")
     nodes_with_geo = await get_real_countries(alive_nodes)
     nodes_with_geo.sort(key=lambda x: x["latency"])
 
@@ -203,7 +207,6 @@ async def main():
                 any(tag in orig_name for tag in ['wl', 'whitelist', 'бс', 'вл', 'белый']) or \
                 is_wl_by_sni(line)
 
-        # 1. Формируем списки БС и ЧС отдельно
         if is_wl:
             name_wl = f"[БС] {flag} {cc} · {ms}ms · №{wl_counter}"
             wl_configs.append(rebuild_line_with_name(line, name_wl))
@@ -213,12 +216,10 @@ async def main():
             bl_configs.append(rebuild_line_with_name(line, name_bl))
             bl_counter += 1
 
-        # 2. Формируем MIX подписку (ограниченная пачка)
         name_mix = f"[MIX] {flag} {cc} · {ms}ms · №{mix_counter}"
         mixed_configs.append(rebuild_line_with_name(line, name_mix))
         mix_counter += 1
 
-        # 3. Формируем МЕГА-ПОДПИСКУ [FL] (вообще всё подряд без ограничений)
         name_fl = f"[FL] {flag} {cc} · {ms}ms · №{fl_counter}"
         full_configs.append(rebuild_line_with_name(line, name_fl))
         fl_counter += 1
@@ -233,7 +234,7 @@ async def main():
     with open("alive_mixed.txt", "w") as f: f.write(encode_base64("\n".join(top_mixed)))
     with open("alive_full.txt", "w") as f: f.write(encode_base64("\n".join(top_full)))
 
-    print(f"Успех! БС: {len(top_wl)}, ЧС: {len(top_bl)}, MIX: {len(top_mixed)}, FL (Фулл): {len(top_full)}")
+    print(f"Успешно сохранено! FL: {len(top_full)}, MIX: {len(top_mixed)}, БС: {len(top_wl)}, ЧС: {len(top_bl)}")
 
 if __name__ == "__main__":
     asyncio.run(main())
