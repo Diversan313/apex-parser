@@ -16,7 +16,7 @@ jobs:
     - name: Установка Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10' # Вот тут я исправил ошибку!
+        python-version: '3.10'
 
     - name: Установка зависимостей
       run: |
@@ -31,4 +31,9 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add alive_bs.txt alive_cs.txt alive_mixed.txt
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Automatic Update" && git push)
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "Авто-обновление баз ВПН"
+          git push
+        else
+          echo "Изменений нет, пропускаем коммит."
+        fi
