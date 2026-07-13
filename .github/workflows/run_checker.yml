@@ -9,7 +9,7 @@ jobs:
   run-parser:
     runs-on: ubuntu-latest
 
-    steps:
+  steps:
     - name: Проверка репозитория
       uses: actions/checkout@v4
 
@@ -30,7 +30,10 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add alive_bs.txt alive_cs.txt alive_mixed.txt
+        
+        # Вот тут мы теперь забираем абсолютно все четыре файла подписок!
+        git add alive_bs.txt alive_cs.txt alive_mixed.txt alive_full.txt
+        
         if [ -n "$(git status --porcelain)" ]; then
           git commit -m "Авто-обновление баз ВПН"
           git push
