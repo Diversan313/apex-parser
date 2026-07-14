@@ -4,55 +4,51 @@ import re
 import base64
 import random
 import socket
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-success_count = 0
-fail_count = 0
+# Регулярка для вытаскивания флагов стран (эмодзи) и других смайликов
+EMOJI_REGEX = re.compile(
+    r'[\U0001F1E6-\U0001F1FF]{2}|'  # Флаги стран
+    r'[\u2600-\u27BF]|'             # Различные символы
+    r'[\U0001F300-\U0001F5FF]|'     # Пиктограммы
+    r'[\U0001F600-\U0001F64F]|'     # Смайлики
+    r'[\U0001F680-\U0001F6FF]|'     # Транспорт/карты
+    r'[\U0001F900-\U0001F9FF]|'     # Доп. символы
+    r'[\U0001FA70-\U0001FAFF]'      # Новые эмодзи
+)
 
-VIP_URLS = [
-    "https://mifa.world/vless",
-    "https://sub.aska.lol/Ux7lmK0xkIl2",
-    "https://raw.githubusercontent.com/zieng2/wl/main/vless_universal.txt"
-]
+def extract_emojis(text):
+    if not text:
+        return ""
+    return "".join(EMOJI_REGEX.findall(text)).strip()
 
-def check_tcp(host, port, timeout=2.5):
-    """Быстрая проверка доступности IP:PORT сервера"""
+def check_tcp(host, port, timeout=2.0):
     try:
-        # Если домен в SNI или адресе содержит явные заглушки, отсекаем сразу
-        if any(fake in host.lower() for fake in ['localhost', '127.0.0.1', 'github.com']):
+        if any(bad in host.lower() for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
             return False
-        
         with socket.create_connection((host, int(port)), timeout=timeout):
             return True
     except:
         return False
 
 def parse_host_port(link):
-    """Вытаскивает host и port из различных типов прокси-ссылок"""
     try:
-        # Убираем имя сервера для чистоты парсинга
         clean_link = link.split('#')[0]
-        
         if clean_link.startswith(('vless://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-            # Формат: протокол://uuid@host:port?параметры
             content = clean_link.split('://')[1]
             server_part = content.split('?')[0]
             if '@' in server_part:
                 server_part = server_part.split('@')[1]
-            
-            # Обработка IPv6 адресов [2001:...]:port
             if server_part.startswith('['):
                 host = server_part.split(']')[0] + ']'
                 port = server_part.split(']:')[1]
             else:
                 host, port = server_part.split(':')
             return host, int(port)
-            
         elif clean_link.startswith('vmess://'):
-            # Vmess зашит в base64
             b64_data = clean_link.replace('vmess://', '').strip()
             b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
-            import json
             data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
             return data.get('add'), int(data.get('port'))
     except:
@@ -60,7 +56,6 @@ def parse_host_port(link):
     return None, None
 
 def check_proxy_alive(link):
-    """Парсит ссылку и проверяет, живой ли сервер"""
     host, port = parse_host_port(link)
     if host and port:
         if check_tcp(host, port):
@@ -68,16 +63,13 @@ def check_proxy_alive(link):
     return None
 
 def fetch_single_url(url):
-    global success_count, fail_count
     try:
         url = url.strip().replace(' ', '%20')
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         with urllib.request.urlopen(req, timeout=5) as response:
             raw_data = response.read()
-            try:
-                content = raw_data.decode('utf-8', errors='ignore')
-            except:
-                content = raw_data.decode('latin-1', errors='ignore')
+            try: content = raw_data.decode('utf-8', errors='ignore')
+            except: content = raw_data.decode('latin-1', errors='ignore')
             
             if not any(p in content for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                 try:
@@ -86,13 +78,9 @@ def fetch_single_url(url):
                     decoded = base64.b64decode(b64_str).decode('utf-8', errors='ignore')
                     if any(p in decoded for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                         content = decoded
-                except:
-                    pass
-            
-            success_count += 1
+                except: pass
             return [l.strip() for l in content.split('\n') if l.strip()]
     except:
-        fail_count += 1
         return []
 
 def fetch_links_parallel(url_file):
@@ -100,119 +88,151 @@ def fetch_links_parallel(url_file):
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        
-        with ThreadPoolExecutor(max_workers=50) as executor:
+        with ThreadPoolExecutor(max_workers=30) as executor:
             futures = {executor.submit(fetch_single_url, url): url for url in urls}
-            for future in as_completed(futures):
-                links.extend(future.result())
+            for future in as_completed(futures): links.extend(future.result())
     except FileNotFoundError:
-        print(f"Файл {url_file} не найден.")
+        print(f"⚠️ Файл {url_file} не найден!")
     return links
 
 def is_ru_sni(link):
-    match = re.search(r'sni=[^&]*\.(ru|su)(?:&|$)', link.lower())
-    return bool(match)
+    """Глубокая проверка на наличие .ru / .su в SNI или хосте"""
+    link_low = link.lower()
+    # 1. Ищем sni= в параметрах строки
+    if bool(re.search(r'sni=[^&]*\.(ru|su)(?:&|$)', link_low)):
+        return True
+    # 2. Если это VMess, парсим JSON внутри Base64
+    if link.startswith("vmess://"):
+        try:
+            b64_data = link.replace("vmess://", "").strip()
+            b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+            data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
+            sni = data.get('sni', '').lower()
+            host = data.get('host', '').lower()
+            add = data.get('add', '').lower()
+            if any(x.endswith(('.ru', '.su')) or '.ru:' in x or '.su:' in x for x in [sni, host, add] if x):
+                return True
+        except: pass
+    else:
+        # 3. Для остальных проверяем основной хост/порт
+        host, _ = parse_host_port(link)
+        if host:
+            host_low = host.lower()
+            if host_low.endswith(('.ru', '.su')) or '.ru]' in host_low or '.su]' in host_low:
+                return True
+    return False
 
 def clean_and_dedup(links):
     unique = set()
     valid_links = []
     for link in links:
-        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): 
-            continue
-        
+        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): continue
         core = link.split('#')[0]
         if core not in unique:
             unique.add(core)
             valid_links.append(link)
     return valid_links
 
-def filter_by_protocol_priority(links, max_total):
-    vless_hy = []
-    trojan_ss = []
-    
-    for link in links:
-        if link.startswith(('vless://', 'hysteria2://', 'hy2://', 'vmess://')):
-            vless_hy.append(link)
-        elif link.startswith(('trojan://', 'ss://')):
-            trojan_ss.append(link)
+def rename_config(link, index, tag):
+    """Переименовывает конфиг: вытаскивает флаг страны и вешает тег [WL] или [BL]"""
+    if link.startswith("vmess://"):
+        try:
+            b64_data = link.replace("vmess://", "").strip()
+            b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+            data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
             
-    random.shuffle(vless_hy)
-    random.shuffle(trojan_ss)
-    
-    trojan_limit = int(max_total * 0.05)
-    allowed_trojan_ss = trojan_ss[:trojan_limit]
-    remaining_slots = max_total - len(allowed_trojan_ss)
-    
-    return vless_hy[:remaining_slots] + allowed_trojan_ss
+            orig_name = data.get('ps', '')
+            emojis = extract_emojis(orig_name)
+            prefix = f"{emojis} " if emojis else "🌐 "
+            
+            data['ps'] = f"{prefix}{tag} Сервер {index}"
+            new_b64 = base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')
+            return f"vmess://{new_b64}"
+        except:
+            return link
+            
+    if "://" in link:
+        try:
+            parts = link.split('#', 1)
+            main_part = parts[0]
+            orig_name = urllib.parse.unquote(parts[1]) if len(parts) > 1 else ""
+            
+            emojis = extract_emojis(orig_name)
+            prefix = f"{emojis} " if emojis else "🌐 "
+            
+            new_name = f"{prefix}{tag} Сервер {index}"
+            return f"{main_part}#{urllib.parse.quote(new_name)}"
+        except:
+            return link
+            
+    return link
 
 def main():
-    global success_count, fail_count
-    print("🚀 Сбор источников и жесткая валидация портов (TCP-Check)...")
+    print("🚀 Запуск точечного парсера (WL / BL с авто-сортировкой)...")
     
-    # VIP-подписки качаем и добавляем СРАЗУ (их порты не пингуем, чтобы не замедлять и не терять их)
-    vip_raw = []
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_single_url, url) for url in VIP_URLS]
-        for future in as_completed(futures):
-            vip_raw.extend(future.result())
-    vip_clean = clean_and_dedup(vip_raw)
-    vip_cores = {link.split('#')[0] for link in vip_clean}
+    # Шаг 1. Собираем пулы из файлов
+    wl_raw = fetch_links_parallel('sources_wl.txt')
+    bl_raw = fetch_links_parallel('sources_bl.txt')
+
+    wl_clean = clean_and_dedup(wl_raw)
+    bl_clean = clean_and_dedup(bl_raw)
+
+    # Шаг 2. Умное распределение: если в ЧС затесался .ru/.su SNI, переносим в БС (WL)
+    real_wl = list(wl_clean)
+    real_bl = []
+
+    wl_cores = {link.split('#')[0] for link in real_wl}
+
+    for link in bl_clean:
+        core = link.split('#')[0]
+        if core in wl_cores:
+            continue  # Пропускаем дубликат, если он уже есть в БС
+        
+        if is_ru_sni(link):
+            real_wl.append(link)
+            wl_cores.add(core)
+        else:
+            real_bl.append(link)
+
+    # Шаг 3. Проверяем порты на доступность
+    print(f"⚡️ Проверяем {len(real_wl)} конфигов из БС (WL) и {len(real_bl)} из ЧС (BL)...")
     
-    # Сбор обычных баз
-    full_raw = fetch_links_parallel('sources_full.txt')
-    bs_raw = fetch_links_parallel('sources_bs.txt')
+    alive_wl = []
+    alive_bl = []
 
-    full_clean = clean_and_dedup(full_raw)
-    bs_clean = clean_and_dedup(bs_raw)
-
-    # Исключаем VIP из общего пула проверки
-    full_clean = [l for l in full_clean if l.split('#')[0] not in vip_cores]
-    bs_clean = [l for l in bs_clean if l.split('#')[0] not in vip_cores]
-
-    # Сортировка по SNI до чека
-    for link in full_clean:
-        if is_ru_sni(link) and link.split('#')[0] not in vip_cores:
-            bs_clean.append(link)
-    bs_clean = clean_and_dedup(bs_clean)
-
-    # Приоритет протоколов (сначала отбираем потенциально лучшие, чтобы не пинговать лишние трояны)
-    pre_filtered_full = filter_by_protocol_priority(full_clean, 15000)
-    pre_filtered_bs = filter_by_protocol_priority(bs_clean, 15000)
-
-    # ⚡️ ПАРАЛЛЕЛЬНЫЙ TCP ЧЕК (100 потоков) для обычных серверов
-    print("⚡️ Проверяем порты серверов на доступность...")
-    alive_full_pool = []
-    alive_bs_pool = []
-
-    with ThreadPoolExecutor(max_workers=100) as executor:
-        # Проверяем FULL
-        full_futures = [executor.submit(check_proxy_alive, link) for link in pre_filtered_full]
-        for future in as_completed(full_futures):
+    with ThreadPoolExecutor(max_workers=80) as executor:
+        wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
+        for future in as_completed(wl_futures):
             res = future.result()
-            if res: alive_full_pool.append(res)
+            if res: alive_wl.append(res)
             
-        # Проверяем BS
-        bs_futures = [executor.submit(check_proxy_alive, link) for link in pre_filtered_bs]
-        for future in as_completed(bs_futures):
+        bl_futures = [executor.submit(check_proxy_alive, link) for link in real_bl]
+        for future in as_completed(bl_futures):
             res = future.result()
-            if res: alive_bs_pool.append(res)
+            if res: alive_bl.append(res)
 
-    # Ограничиваем финальный размер до 3000 (VIP на первом месте)
-    free_slots_full = max(0, 3000 - len(vip_clean))
-    free_slots_bs = max(0, 3000 - len(vip_clean))
+    # Шаг 4. Красиво переименовываем с сохранением оригинальных эмодзи/флагов
+    final_wl = [rename_config(link, idx, "[WL]") for idx, link in enumerate(alive_wl, 1)]
+    final_bl = [rename_config(link, idx, "[BL]") for idx, link in enumerate(alive_bl, 1)]
 
-    final_full = vip_clean + alive_full_pool[:free_slots_full]
-    final_bs = vip_clean + alive_bs_pool[:free_slots_bs]
-
+    # Шаг 5. Записываем файлы на выход
+    # 1. alive_bs.txt — строго Белый Список (WL)
+    with open('alive_bs.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(final_wl))
+        
+    # 2. alive_bl.txt — строго Черный Список (BL)
+    with open('alive_bl.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(final_bl))
+        
+    # 3. alive_full.txt — Полный список (сначала все WL, потом все BL)
+    final_full = final_wl + final_bl
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_full))
-        
-    with open('alive_bs.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(final_bs))
 
-    print("\n📊 ИТОГИ ВАЛИДАЦИИ:")
-    print(f"💎 Всего ЖИВЫХ серверов в FULL: {len(final_full)} (включая VIP)")
-    print(f"🛡️ Всего ЖИВЫХ серверов в BS: {len(final_bs)} (включая VIP)")
+    print(f"\n📊 Успешно сохранено три подписки:")
+    print(f"🛡️ Только БС (alive_bs.txt): {len(final_wl)} серверов [WL]")
+    print(f"🛑 Только ЧС (alive_bl.txt): {len(final_bl)} серверов [BL]")
+    print(f"🌍 Полный список (alive_full.txt): {len(final_full)} серверов")
 
 if __name__ == '__main__':
     main()
