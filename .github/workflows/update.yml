@@ -21,17 +21,17 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Create source files from Secrets
-        run: |
-          echo "${{ secrets.SOURCES_WL }}" > sources_wl.txt
-          echo "${{ secrets.SOURCES_BL }}" > sources_bl.txt
+#      - name: Create source files from Secrets
+#        run: |
+#         echo "${{ secrets.SOURCES_WL }}" > sources_wl.txt
+#         echo "${{ secrets.SOURCES_BL }}" > sources_bl.txt
 
       - name: Run parser
         run: python parser.py
 
-      - name: Clean secrets files before commit
-        run: |
-          rm -f sources_wl.txt sources_bl.txt
+    #  - name: Clean secrets files before commit
+     #   run: |
+      #    rm -f sources_wl.txt sources_bl.txt
 
       - name: Commit and Push Changes
         run: |
