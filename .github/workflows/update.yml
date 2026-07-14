@@ -35,8 +35,9 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          # Прописываем официального системного бота GitHub
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
           git add alive_full.txt alive_bs.txt alive_bl.txt
-          # Проверяем изменения: если новые прокси появились, коммитим их. Если всё без изменений — просто пропускаем шаг
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update subscriptions [skip ci]" && git push)
