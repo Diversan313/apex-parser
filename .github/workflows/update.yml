@@ -1,32 +1,42 @@
-name: Update Proxies
+name: Update Subscriptions
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Запускать каждые 6 часов
-  workflow_dispatch: # Появится кнопка ручного запуска
+    - cron: '0 */4 * * *' # Автозапуск каждые 4 часа
+  workflow_dispatch: # Кнопка для ручного запуска в меню Actions
+
+permissions:
+  contents: write # Важно! Разрешает скрипту сохранять и обновлять файлы в репозитории
 
 jobs:
-  update-proxies:
+  update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      - name: Create source files from Secrets
+        run: |
+          echo "${{ secrets.SOURCES_WL }}" > sources_wl.txt
+          echo "${{ secrets.SOURCES_BL }}" > sources_bl.txt
 
       - name: Run parser
         run: python parser.py
 
-      - name: Commit and push changes
+      - name: Clean secrets files before commit
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add alive_full.txt alive_bs.txt alive_bl.txt sources_wl.txt sources_bl.txt
-          git commit -m "Auto-update proxies" || exit 0
-          git push
+          rm -f sources_wl.txt sources_bl.txt
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add alive_full.txt alive_bs.txt alive_bl.txt
+          # Проверяем изменения: если новые прокси появились, коммитим их. Если всё без изменений — просто пропускаем шаг
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update subscriptions [skip ci]" && git push)
