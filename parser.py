@@ -7,21 +7,16 @@ import socket
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# Регулярка для вытаскивания флагов стран (эмодзи) и других смайликов
-EMOJI_REGEX = re.compile(
-    r'[\U0001F1E6-\U0001F1FF]{2}|'  # Флаги стран
-    r'[\u2600-\u27BF]|'             # Различные символы
-    r'[\U0001F300-\U0001F5FF]|'     # Пиктограммы
-    r'[\U0001F600-\U0001F64F]|'     # Смайлики
-    r'[\U0001F680-\U0001F6FF]|'     # Транспорт/карты
-    r'[\U0001F900-\U0001F9FF]|'     # Доп. символы
-    r'[\U0001FA70-\U0001FAFF]'      # Новые эмодзи
-)
+# Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
+FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-def extract_emojis(text):
+def extract_clean_flag(text):
     if not text:
-        return ""
-    return "".join(EMOJI_REGEX.findall(text)).strip()
+        return "🌐"
+    flags = FLAG_REGEX.findall(text)
+    if flags:
+        return flags[0]  # Берем строго первый найденный флаг страны
+    return "🌐"  # Если флага страны нет, возвращаем синий шарик
 
 def check_tcp(host, port, timeout=2.0):
     try:
@@ -54,6 +49,44 @@ def parse_host_port(link):
     except:
         pass
     return None, None
+
+def get_config_identity(link):
+    """
+    Создает уникальный 'паспорт' для конфига на основе реальных сетевых параметров:
+    (Протокол, Хост/IP, Порт, SNI/Host-заголовок)
+    """
+    try:
+        protocol = link.split('://')[0].lower()
+        if protocol == 'vmess':
+            b64_data = link.replace('vmess://', '').strip()
+            b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+            data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
+            host = data.get('add', '').lower().strip()
+            port = str(data.get('port', '')).strip()
+            sni = data.get('sni', '').lower().strip() or data.get('host', '').lower().strip()
+            return (protocol, host, port, sni)
+        else:
+            clean_link = link.split('#')[0]
+            parsed_url = urllib.parse.urlparse(clean_link)
+            query_params = urllib.parse.parse_qs(parsed_url.query)
+            
+            host, port = parse_host_port(link)
+            if not host:
+                return None
+            
+            host = host.lower().strip()
+            port = str(port).strip()
+            
+            # Извлекаем SNI или хост, чтобы не путать разные сайты на одном Cloudflare IP
+            sni = ""
+            if 'sni' in query_params:
+                sni = query_params['sni'][0].lower().strip()
+            elif 'host' in query_params:
+                sni = query_params['host'][0].lower().strip()
+                
+            return (protocol, host, port, sni)
+    except:
+        return None
 
 def check_proxy_alive(link):
     host, port = parse_host_port(link)
@@ -96,12 +129,9 @@ def fetch_links_parallel(url_file):
     return links
 
 def is_ru_sni(link):
-    """Глубокая проверка на наличие .ru / .su в SNI или хосте"""
     link_low = link.lower()
-    # 1. Ищем sni= в параметрах строки
     if bool(re.search(r'sni=[^&]*\.(ru|su)(?:&|$)', link_low)):
         return True
-    # 2. Если это VMess, парсим JSON внутри Base64
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
@@ -114,7 +144,6 @@ def is_ru_sni(link):
                 return True
         except: pass
     else:
-        # 3. Для остальных проверяем основной хост/порт
         host, _ = parse_host_port(link)
         if host:
             host_low = host.lower()
@@ -123,18 +152,29 @@ def is_ru_sni(link):
     return False
 
 def clean_and_dedup(links):
-    unique = set()
+    """
+    Умная фильтрация дубликатов по реальному паспорту конфигурации.
+    """
+    unique_identities = set()
     valid_links = []
     for link in links:
-        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): continue
-        core = link.split('#')[0]
-        if core not in unique:
-            unique.add(core)
-            valid_links.append(link)
+        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')): 
+            continue
+        
+        identity = get_config_identity(link)
+        if identity:
+            if identity not in unique_identities:
+                unique_identities.add(identity)
+                valid_links.append(link)
+        else:
+            # Запасной вариант, если не удалось распарсить детали
+            core = link.split('#')[0]
+            if core not in unique_identities:
+                unique_identities.add(core)
+                valid_links.append(link)
     return valid_links
 
 def rename_config(link, index, tag):
-    """Переименовывает конфиг: вытаскивает флаг страны и вешает тег [WL] или [BL]"""
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
@@ -142,10 +182,9 @@ def rename_config(link, index, tag):
             data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
             
             orig_name = data.get('ps', '')
-            emojis = extract_emojis(orig_name)
-            prefix = f"{emojis} " if emojis else "🌐 "
+            flag = extract_clean_flag(orig_name)
             
-            data['ps'] = f"{prefix}{tag} Сервер {index}"
+            data['ps'] = f"{flag} {tag} Сервер {index}"
             new_b64 = base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')
             return f"vmess://{new_b64}"
         except:
@@ -157,10 +196,9 @@ def rename_config(link, index, tag):
             main_part = parts[0]
             orig_name = urllib.parse.unquote(parts[1]) if len(parts) > 1 else ""
             
-            emojis = extract_emojis(orig_name)
-            prefix = f"{emojis} " if emojis else "🌐 "
+            flag = extract_clean_flag(orig_name)
             
-            new_name = f"{prefix}{tag} Сервер {index}"
+            new_name = f"{flag} {tag} Сервер {index}"
             return f"{main_part}#{urllib.parse.quote(new_name)}"
         except:
             return link
@@ -168,34 +206,38 @@ def rename_config(link, index, tag):
     return link
 
 def main():
-    print("🚀 Запуск точечного парсера (WL / BL с авто-сортировкой)...")
+    print("🚀 Запуск точечного парсера (БС / ЧС с умным удалением дубликатов)...")
     
-    # Шаг 1. Собираем пулы из файлов
     wl_raw = fetch_links_parallel('sources_wl.txt')
     bl_raw = fetch_links_parallel('sources_bl.txt')
 
+    # Применяем новую умную дедупликацию
     wl_clean = clean_and_dedup(wl_raw)
     bl_clean = clean_and_dedup(bl_raw)
 
-    # Шаг 2. Умное распределение: если в ЧС затесался .ru/.su SNI, переносим в БС (WL)
     real_wl = list(wl_clean)
     real_bl = []
 
-    wl_cores = {link.split('#')[0] for link in real_wl}
+    # Создаем базу паспортов для БС, чтобы исключить пересечения в ЧС
+    wl_identities = set()
+    for link in real_wl:
+        identity = get_config_identity(link)
+        if identity:
+            wl_identities.add(identity)
 
     for link in bl_clean:
-        core = link.split('#')[0]
-        if core in wl_cores:
-            continue  # Пропускаем дубликат, если он уже есть в БС
+        identity = get_config_identity(link)
+        if identity and identity in wl_identities:
+            continue
         
         if is_ru_sni(link):
             real_wl.append(link)
-            wl_cores.add(core)
+            if identity:
+                wl_identities.add(identity)
         else:
             real_bl.append(link)
 
-    # Шаг 3. Проверяем порты на доступность
-    print(f"⚡️ Проверяем {len(real_wl)} конфигов из БС (WL) и {len(real_bl)} из ЧС (BL)...")
+    print(f"⚡️ Проверяем {len(real_wl)} уникальных конфигов из БС (WL) и {len(real_bl)} из ЧС (BL)...")
     
     alive_wl = []
     alive_bl = []
@@ -211,25 +253,20 @@ def main():
             res = future.result()
             if res: alive_bl.append(res)
 
-    # Шаг 4. Красиво переименовываем с сохранением оригинальных эмодзи/флагов
     final_wl = [rename_config(link, idx, "[WL]") for idx, link in enumerate(alive_wl, 1)]
     final_bl = [rename_config(link, idx, "[BL]") for idx, link in enumerate(alive_bl, 1)]
 
-    # Шаг 5. Записываем файлы на выход
-    # 1. alive_bs.txt — строго Белый Список (WL)
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_wl))
         
-    # 2. alive_bl.txt — строго Черный Список (BL)
     with open('alive_bl.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_bl))
         
-    # 3. alive_full.txt — Полный список (сначала все WL, потом все BL)
     final_full = final_wl + final_bl
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(final_full))
 
-    print(f"\n📊 Успешно сохранено три подписки:")
+    print(f"\n📊 Успешно сохранено три подписки без дубликатов:")
     print(f"🛡️ Только БС (alive_bs.txt): {len(final_wl)} серверов [WL]")
     print(f"🛑 Только ЧС (alive_bl.txt): {len(final_bl)} серверов [BL]")
     print(f"🌍 Полный список (alive_full.txt): {len(final_full)} серверов")
