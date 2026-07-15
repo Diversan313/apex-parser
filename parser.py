@@ -52,8 +52,8 @@ def parse_host_port(link):
 
 def get_config_identity(link):
     """
-    Создает уникальный 'паспорт' для конфига на основе реальных сетевых параметров:
-    (Протокол, Хост/IP, Порт, SNI/Host-заголовок)
+    Создает уникальный 'паспорт' для конфига на основе реальных параметров:
+    (Протокол, Хост/IP, Порт, SNI/Host)
     """
     try:
         protocol = link.split('://')[0].lower()
@@ -77,7 +77,6 @@ def get_config_identity(link):
             host = host.lower().strip()
             port = str(port).strip()
             
-            # Извлекаем SNI или хост, чтобы не путать разные сайты на одном Cloudflare IP
             sni = ""
             if 'sni' in query_params:
                 sni = query_params['sni'][0].lower().strip()
@@ -104,16 +103,19 @@ def fetch_single_url(url):
             try: content = raw_data.decode('utf-8', errors='ignore')
             except: content = raw_data.decode('latin-1', errors='ignore')
             
+            # Умное декодирование Base64 (вырезает любые переносы строк и пробелы внутри)
             if not any(p in content for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                 try:
-                    b64_str = content.strip().replace('-', '+').replace('_', '/')
-                    b64_str += "=" * ((4 - len(b64_str) % 4) % 4)
-                    decoded = base64.b64decode(b64_str).decode('utf-8', errors='ignore')
+                    clean_str = "".join(content.split())  # Убирает ВСЕ пробелы и переносы (\n, \r, \t)
+                    clean_str = clean_str.replace('-', '+').replace('_', '/')
+                    clean_str += "=" * ((4 - len(clean_str) % 4) % 4)
+                    decoded = base64.b64decode(clean_str).decode('utf-8', errors='ignore')
                     if any(p in decoded for p in ['vless://', 'vmess://', 'ss://', 'trojan://', 'hysteria2://', 'hy2://']):
                         content = decoded
                 except: pass
             return [l.strip() for l in content.split('\n') if l.strip()]
-    except:
+    except Exception as e:
+        print(f"❌ Ошибка скачивания источника {url}: {e}")
         return []
 
 def fetch_links_parallel(url_file):
@@ -121,11 +123,13 @@ def fetch_links_parallel(url_file):
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
+        print(f"📖 Читаем файл {url_file}, найдено источников: {len(urls)}")
         with ThreadPoolExecutor(max_workers=30) as executor:
             futures = {executor.submit(fetch_single_url, url): url for url in urls}
-            for future in as_completed(futures): links.extend(future.result())
+            for future in as_completed(futures): 
+                links.extend(future.result())
     except FileNotFoundError:
-        print(f"⚠️ Файл {url_file} не найден!")
+        print(f"⚠️ Файл {url_file} отсутствует в репозитории!")
     return links
 
 def is_ru_sni(link):
@@ -152,9 +156,6 @@ def is_ru_sni(link):
     return False
 
 def clean_and_dedup(links):
-    """
-    Умная фильтрация дубликатов по реальному паспорту конфигурации.
-    """
     unique_identities = set()
     valid_links = []
     for link in links:
@@ -167,7 +168,6 @@ def clean_and_dedup(links):
                 unique_identities.add(identity)
                 valid_links.append(link)
         else:
-            # Запасной вариант, если не удалось распарсить детали
             core = link.split('#')[0]
             if core not in unique_identities:
                 unique_identities.add(core)
@@ -206,19 +206,22 @@ def rename_config(link, index, tag):
     return link
 
 def main():
-    print("🚀 Запуск точечного парсера (БС / ЧС с умным удалением дубликатов)...")
+    print("🚀 Запуск парсера с поддержкой Base64 вывода...")
     
     wl_raw = fetch_links_parallel('sources_wl.txt')
     bl_raw = fetch_links_parallel('sources_bl.txt')
 
-    # Применяем новую умную дедупликацию
+    print(f"📥 Из WL скачано сырых строк: {len(wl_raw)}")
+    print(f"📥 Из BL скачано сырых строк: {len(bl_raw)}")
+
     wl_clean = clean_and_dedup(wl_raw)
     bl_clean = clean_and_dedup(bl_raw)
+
+    print(f"🧹 После удаления дубликатов: WL = {len(wl_clean)}, BL = {len(bl_clean)}")
 
     real_wl = list(wl_clean)
     real_bl = []
 
-    # Создаем базу паспортов для БС, чтобы исключить пересечения в ЧС
     wl_identities = set()
     for link in real_wl:
         identity = get_config_identity(link)
@@ -237,7 +240,7 @@ def main():
         else:
             real_bl.append(link)
 
-    print(f"⚡️ Проверяем {len(real_wl)} уникальных конфигов из БС (WL) и {len(real_bl)} из ЧС (BL)...")
+    print(f"⚡️ Начинаем проверку {len(real_wl)} уникальных конфигов для БС и {len(real_bl)} для ЧС...")
     
     alive_wl = []
     alive_bl = []
@@ -253,23 +256,30 @@ def main():
             res = future.result()
             if res: alive_bl.append(res)
 
+    print(f"📈 Найдено живых серверов: БС (WL) = {len(alive_wl)}, ЧС (BL) = {len(alive_bl)}")
+
     final_wl = [rename_config(link, idx, "[WL]") for idx, link in enumerate(alive_wl, 1)]
     final_bl = [rename_config(link, idx, "[BL]") for idx, link in enumerate(alive_bl, 1)]
+    final_full = final_wl + final_bl
+
+    # Кодируем результаты в BASE64 для совместимости со всеми клиентами
+    wl_b64 = base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8') if final_wl else ""
+    bl_b64 = base64.b64encode('\n'.join(final_bl).encode('utf-8')).decode('utf-8') if final_bl else ""
+    full_b64 = base64.b64encode('\n'.join(final_full).encode('utf-8')).decode('utf-8') if final_full else ""
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(final_wl))
+        f.write(wl_b64)
         
     with open('alive_bl.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(final_bl))
+        f.write(bl_b64)
         
-    final_full = final_wl + final_bl
     with open('alive_full.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(final_full))
+        f.write(full_b64)
 
-    print(f"\n📊 Успешно сохранено три подписки без дубликатов:")
-    print(f"🛡️ Только БС (alive_bs.txt): {len(final_wl)} серверов [WL]")
-    print(f"🛑 Только ЧС (alive_bl.txt): {len(final_bl)} серверов [BL]")
-    print(f"🌍 Полный список (alive_full.txt): {len(final_full)} серверов")
+    print(f"\n📊 Успешно сохранено и закодировано в Base64:")
+    print(f"🛡️ Только БС (alive_bs.txt) — {len(final_wl)} серверов")
+    print(f"🛑 Только ЧС (alive_bl.txt) — {len(final_bl)} серверов")
+    print(f"🌍 Полный список (alive_full.txt) — {len(final_full)} серверов")
 
 if __name__ == '__main__':
     main()
