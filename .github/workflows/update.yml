@@ -2,18 +2,17 @@ name: Update Subscriptions
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Автозапуск каждые 4 часа
-  workflow_dispatch: # Кнопка для ручного запуска в меню Actions
+    - cron: '0 */4 * * *' # Каждые 4 часа
+  workflow_dispatch: # Кнопка ручного запуска
 
 permissions:
-  contents: write # Важно! Разрешает скрипту сохранять и обновлять файлы в репозитории
+  contents: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -21,23 +20,36 @@ jobs:
         with:
           python-version: '3.10'
 
-#      - name: Create source files from Secrets
-#        run: |
-#         echo "${{ secrets.SOURCES_WL }}" > sources_wl.txt
-#         echo "${{ secrets.SOURCES_BL }}" > sources_bl.txt
+      - name: Create source files from Secrets
+        env:
+          SOURCES_WL_SECRET: ${{ secrets.SOURCES_WL }}
+          SOURCES_BL_SECRET: ${{ secrets.SOURCES_BL }}
+        run: |
+          # Проверяем секрет SOURCES_WL безопасным образом
+          if [ -n "$SOURCES_WL_SECRET" ]; then
+            echo "$SOURCES_WL_SECRET" > sources_wl.txt
+            echo "✅ WL-источники загружены из GitHub Secrets"
+          else
+            echo "ℹ️ Секрет SOURCES_WL пустой или отсутствует. Используем файлы из репозитория"
+          fi
 
-      - name: Run parser
+          # Проверяем секрет SOURCES_BL безопасным образом
+          if [ -n "$SOURCES_BL_SECRET" ]; then
+            echo "$SOURCES_BL_SECRET" > sources_bl.txt
+            echo "✅ BL-источники загружены из GitHub Secrets"
+          else
+            echo "ℹ️ Секрет SOURCES_BL пустой или отсутствует. Используем файлы из репозитория"
+          fi
+
+      - name: Run Parser Script
         run: python parser.py
-
-    #  - name: Clean secrets files before commit
-     #   run: |
-      #    rm -f sources_wl.txt sources_bl.txt
 
       - name: Commit and Push Changes
         run: |
-          # Прописываем официального системного бота GitHub
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
+          # Загружаем обратно ТОЛЬКО результаты в Base64. Источники не улетают в репозиторий!
           git add alive_full.txt alive_bs.txt alive_bl.txt
+          
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update subscriptions [skip ci]" && git push)
