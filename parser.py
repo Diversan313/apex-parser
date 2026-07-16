@@ -1,3 +1,4 @@
+import os
 import urllib.request
 import urllib.parse
 import re
@@ -10,14 +11,19 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-# Простой список подсетей Cloudflare и WARP
+# Расширенный список подсетей Cloudflare, WARP и Anycast AS13335
 CF_CIDRS = [
     "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
     "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
     "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
-    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16"
+    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16",
+    # Дополнительные диапазоны Cloudflare Anycast, которые часто пингуются как "живые"
+    "8.35.0.0/16", "8.39.0.0/16", "8.43.0.0/16", "8.44.0.0/16"
 ]
 CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
+
+# Домены, которые гарантированно заблокированы на мобильных сетях РФ
+BLOCKED_DOMAINS = ['workers.dev', 'pages.dev', 'trycloudflare.com']
 
 def extract_clean_flag(text):
     if not text:
@@ -123,12 +129,33 @@ def get_config_identity(link):
         return None
 
 def check_proxy_alive(link):
+    # 1. Сразу отсекаем Cloudflare Workers / Pages домены в текстовых ссылках (vless, trojan, ss, hy2)
+    link_low = link.lower()
+    if any(domain in link_low for domain in BLOCKED_DOMAINS):
+        return None
+
+    # 2. Парсим хост и порт
     host, port = parse_host_port(link)
     if host and port:
-        # 1. Если Cloudflare/WARP — нахер с пляжа
+        # 3. Декодируем VMESS и проверяем скрытые поля внутри JSON (add, host, sni) на заблокированные домены
+        if link.startswith("vmess://"):
+            try:
+                b64_data = link.replace('vmess://', '').strip()
+                b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+                data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
+                for field in [data.get('add'), data.get('host'), data.get('sni')]:
+                    if field:
+                        field_low = str(field).lower()
+                        if any(domain in field_low for domain in BLOCKED_DOMAINS):
+                            return None
+            except:
+                pass
+
+        # 4. Если IP принадлежит к расширенной сети Cloudflare/WARP — отбрасываем
         if is_cloudflare(host):
             return None
-        # 2. Обычный пинг
+
+        # 5. Обычный пинг
         if check_tcp(host, port):
             return link
     return None
@@ -240,8 +267,15 @@ def rename_config(link, index, tag):
 def main():
     print("🚀 Запуск парсера...")
     
-    wl_raw = fetch_links_parallel('sources_wl.txt')
-    bl_raw = fetch_links_parallel('sources_bl.txt')
+    # Автоопределение имен файлов
+    wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
+    bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
+    
+    print(f"📂 Будем читать белый список из: {wl_file}")
+    print(f"📂 Будем читать черный список из: {bl_file}")
+
+    wl_raw = fetch_links_parallel(wl_file)
+    bl_raw = fetch_links_parallel(bl_file)
 
     wl_clean = clean_and_dedup(wl_raw)
     bl_clean = clean_and_dedup(bl_raw)
@@ -272,7 +306,6 @@ def main():
     alive_wl = []
     alive_bl = []
 
-    # Уменьшили количество воркеров до стабильных 45, чтобы не вешать DNS гитхаба
     with ThreadPoolExecutor(max_workers=45) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
