@@ -11,8 +11,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-# Список всех диапазонов Cloudflare (включая WARP 162.159.0.0/16)
-CF_NETWORKS = [
+# Раздельные списки подсетей Cloudflare для IPv4 и IPv6 во избежание TypeError
+CF_IPV4 = [
     ipaddress.ip_network("173.245.48.0/20"),
     ipaddress.ip_network("103.21.244.0/22"),
     ipaddress.ip_network("103.22.200.0/22"),
@@ -28,7 +28,17 @@ CF_NETWORKS = [
     ipaddress.ip_network("104.24.0.0/14"),
     ipaddress.ip_network("172.64.0.0/13"),
     ipaddress.ip_network("131.0.72.0/22"),
-    ipaddress.ip_network("162.159.0.0/16")  # Полностью вырезаем WARP и Клауд ТСПУ
+    ipaddress.ip_network("162.159.0.0/16")  # Сюда же улетает весь WARP
+]
+
+CF_IPV6 = [
+    ipaddress.ip_network("2400:cb00::/32"),
+    ipaddress.ip_network("2606:4700::/32"),
+    ipaddress.ip_network("2803:f800::/32"),
+    ipaddress.ip_network("2405:b500::/32"),
+    ipaddress.ip_network("2405:8100::/32"),
+    ipaddress.ip_network("2a06:98c0::/29"),
+    ipaddress.ip_network("2c0f:f248::/32")
 ]
 
 def extract_clean_flag(text):
@@ -51,26 +61,51 @@ def check_tcp(host, port, timeout=2.0):
 def is_cloudflare_or_blocked(host):
     """Проверяет, принадлежит ли хост/IP Клаудфлейру или забаненным пулам"""
     try:
-        clean_host = host.strip('[]')
-        # Если это домен — резолвим его в IP (игнорируем IPv6 при резолве домена для простоты)
-        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
-            socket.setdefaulttimeout(1.5)
-            ip_str = socket.gethostbyname(clean_host)
-        else:
-            ip_str = clean_host
-
-        # Жесткий бан по префиксам (быстрая проверка)
-        if ip_str.startswith(("8.39.", "188.114.", "104.", "172.")):
+        clean_host = host.strip('[]').lower()
+        
+        # Быстрый отсев локалхоста
+        if clean_host in ['localhost', '127.0.0.1', '0.0.0.0']:
             return True
 
-        # Проверка по подсетям Cloudflare
-        ip_obj = ipaddress.ip_address(ip_str)
-        for network in CF_NETWORKS:
-            if ip_obj in network:
+        # Проверяем, является ли хост уже готовым IP-адресом
+        is_ip = False
+        try:
+            ip_obj = ipaddress.ip_address(clean_host)
+            is_ip = True
+        except ValueError:
+            pass
+
+        # Если это домен, то резолвим его в IP
+        if not is_ip:
+            socket.setdefaulttimeout(2.0)
+            try:
+                # getaddrinfo стабильнее резолвит и IPv4, и IPv6 под нагрузкой
+                addr_info = socket.getaddrinfo(clean_host, None)
+                ip_str = addr_info[0][4][0]
+                ip_obj = ipaddress.ip_address(ip_str)
+            except Exception:
+                # ВАЖНО: Если DNS временно сбоит/таймаутит — НЕ бракуем конфиг сразу!
+                # Возвращаем False (не забанен), пусть check_tcp сам попробует подключиться.
+                return False
+
+        # Проверяем IP на принадлежность к Cloudflare подсетям
+        if ip_obj.version == 4:
+            ip_str = str(ip_obj)
+            # Быстрый бан по префиксам IPv4
+            if ip_str.startswith(("8.39.", "188.114.", "104.", "172.")):
                 return True
-    except:
-        # Если домен даже не резолвится — это труп, блокируем
-        return True
+            for network in CF_IPV4:
+                if ip_obj in network:
+                    return True
+        elif ip_obj.version == 6:
+            for network in CF_IPV6:
+                if ip_obj in network:
+                    return True
+
+    except Exception:
+        # В случае любой непредвиденной ошибки даем прокси шанс пройти через check_tcp
+        return False
+
     return False
 
 def parse_host_port(link):
@@ -136,7 +171,7 @@ def get_config_identity(link):
 def check_proxy_alive(link):
     host, port = parse_host_port(link)
     if host and port:
-        # 1. Если это Cloudflare или WARP — мгновенно выбрасываем нахуй
+        # 1. Если это Cloudflare или WARP — мгновенно выбрасываем
         if is_cloudflare_or_blocked(host):
             return None
         # 2. Пингуем только чистые VPS порты
