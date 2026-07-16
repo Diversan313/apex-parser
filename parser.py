@@ -5,10 +5,31 @@ import base64
 import random
 import socket
 import json
+import ipaddress
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
+
+# Список всех диапазонов Cloudflare (включая WARP 162.159.0.0/16)
+CF_NETWORKS = [
+    ipaddress.ip_network("173.245.48.0/20"),
+    ipaddress.ip_network("103.21.244.0/22"),
+    ipaddress.ip_network("103.22.200.0/22"),
+    ipaddress.ip_network("103.31.4.0/22"),
+    ipaddress.ip_network("141.101.64.0/18"),
+    ipaddress.ip_network("108.162.192.0/18"),
+    ipaddress.ip_network("190.93.240.0/20"),
+    ipaddress.ip_network("188.114.96.0/20"),
+    ipaddress.ip_network("197.234.240.0/22"),
+    ipaddress.ip_network("198.41.128.0/17"),
+    ipaddress.ip_network("162.158.0.0/15"),
+    ipaddress.ip_network("104.16.0.0/13"),
+    ipaddress.ip_network("104.24.0.0/14"),
+    ipaddress.ip_network("172.64.0.0/13"),
+    ipaddress.ip_network("131.0.72.0/22"),
+    ipaddress.ip_network("162.159.0.0/16")  # Полностью вырезаем WARP и Клауд ТСПУ
+]
 
 def extract_clean_flag(text):
     if not text:
@@ -26,6 +47,31 @@ def check_tcp(host, port, timeout=2.0):
             return True
     except:
         return False
+
+def is_cloudflare_or_blocked(host):
+    """Проверяет, принадлежит ли хост/IP Клаудфлейру или забаненным пулам"""
+    try:
+        clean_host = host.strip('[]')
+        # Если это домен — резолвим его в IP (игнорируем IPv6 при резолве домена для простоты)
+        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
+            socket.setdefaulttimeout(1.5)
+            ip_str = socket.gethostbyname(clean_host)
+        else:
+            ip_str = clean_host
+
+        # Жесткий бан по префиксам (быстрая проверка)
+        if ip_str.startswith(("8.39.", "188.114.", "104.", "172.")):
+            return True
+
+        # Проверка по подсетям Cloudflare
+        ip_obj = ipaddress.ip_address(ip_str)
+        for network in CF_NETWORKS:
+            if ip_obj in network:
+                return True
+    except:
+        # Если домен даже не резолвится — это труп, блокируем
+        return True
+    return False
 
 def parse_host_port(link):
     try:
@@ -53,7 +99,7 @@ def parse_host_port(link):
 def get_config_identity(link):
     """
     Создает уникальный 'паспорт' для конфига на основе реальных параметров:
-    (Протокол, Хост/IP, Порт, SNI/Host)
+    (Протокол, Host/IP, Порт, SNI/Host)
     """
     try:
         protocol = link.split('://')[0].lower()
@@ -90,6 +136,10 @@ def get_config_identity(link):
 def check_proxy_alive(link):
     host, port = parse_host_port(link)
     if host and port:
+        # 1. Если это Cloudflare или WARP — мгновенно выбрасываем нахуй
+        if is_cloudflare_or_blocked(host):
+            return None
+        # 2. Пингуем только чистые VPS порты
         if check_tcp(host, port):
             return link
     return None
