@@ -5,25 +5,10 @@ import re
 import base64
 import socket
 import json
-import ipaddress
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
-
-# Расширенный список подсетей Cloudflare, WARP и Anycast AS13335
-CF_CIDRS = [
-    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
-    "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
-    "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
-    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16",
-    # Дополнительные диапазоны Cloudflare Anycast, которые часто пингуются как "живые"
-    "8.35.0.0/16", "8.39.0.0/16", "8.43.0.0/16", "8.44.0.0/16"
-]
-CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
-
-# Домены, которые гарантированно заблокированы на мобильных сетях РФ
-BLOCKED_DOMAINS = ['workers.dev', 'pages.dev', 'trycloudflare.com']
 
 def extract_clean_flag(text):
     if not text:
@@ -36,41 +21,13 @@ def extract_clean_flag(text):
 def check_tcp(host, port, timeout=2.0):
     try:
         clean_host = host.strip('[]').lower()
+        # Базовый блок очевидно нерабочих локальных адресов и мусорных доменов
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
             return False
         with socket.create_connection((clean_host, int(port)), timeout=timeout):
             return True
     except:
         return False
-
-def is_cloudflare(host):
-    """Проверяет, принадлежит ли IP к сети Cloudflare/WARP"""
-    try:
-        clean_host = host.strip('[]').lower()
-        if clean_host in ['localhost', '127.0.0.1', '0.0.0.0']:
-            return True
-
-        # Если это домен, резолвим в IP
-        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
-            socket.setdefaulttimeout(1.5)
-            ip_str = socket.gethostbyname(clean_host)
-        else:
-            ip_str = clean_host
-
-        ip_obj = ipaddress.ip_address(ip_str)
-        
-        # Проверяем по листу подсетей
-        if ip_obj.version == 4:
-            for network in CF_NETWORKS:
-                if ip_obj in network:
-                    return True
-        # IPv6 адреса Клауда пропускаем или баним, если они начинаются на стандартные префиксы
-        elif ip_obj.version == 6:
-            if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:")):
-                return True
-    except:
-        pass
-    return False
 
 def parse_host_port(link):
     try:
@@ -129,33 +86,9 @@ def get_config_identity(link):
         return None
 
 def check_proxy_alive(link):
-    # 1. Сразу отсекаем Cloudflare Workers / Pages домены в текстовых ссылках (vless, trojan, ss, hy2)
-    link_low = link.lower()
-    if any(domain in link_low for domain in BLOCKED_DOMAINS):
-        return None
-
-    # 2. Парсим хост и порт
     host, port = parse_host_port(link)
     if host and port:
-        # 3. Декодируем VMESS и проверяем скрытые поля внутри JSON (add, host, sni) на заблокированные домены
-        if link.startswith("vmess://"):
-            try:
-                b64_data = link.replace('vmess://', '').strip()
-                b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
-                data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
-                for field in [data.get('add'), data.get('host'), data.get('sni')]:
-                    if field:
-                        field_low = str(field).lower()
-                        if any(domain in field_low for domain in BLOCKED_DOMAINS):
-                            return None
-            except:
-                pass
-
-        # 4. Если IP принадлежит к расширенной сети Cloudflare/WARP — отбрасываем
-        if is_cloudflare(host):
-            return None
-
-        # 5. Обычный пинг
+        # Проверяем только доступность порта по TCP (никаких черных списков IP)
         if check_tcp(host, port):
             return link
     return None
