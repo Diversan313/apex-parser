@@ -8,22 +8,45 @@ import json
 import ipaddress
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+# Пытаемся импортировать maxminddb для работы с GeoIP
+try:
+    import maxminddb
+except ImportError:
+    maxminddb = None
+
 # Регулярка для поиска СТРОГО флагов стран (региональные индикаторы)
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-# Расширенный список подсетей Cloudflare, WARP и Anycast AS13335
-CF_CIDRS = [
-    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
-    "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
-    "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
-    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16",
-    # Дополнительные диапазоны Cloudflare Anycast, которые часто пингуются как "живые"
-    "8.35.0.0/16", "8.39.0.0/16", "8.43.0.0/16", "8.44.0.0/16"
-]
-CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
+# Ссылка на авторитетное и легкое зеркало базы GeoIP Country
+MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
+MMDB_PATH = "GeoLite2-Country.mmdb"
 
-# Домены, которые гарантированно заблокированы на мобильных сетях РФ
-BLOCKED_DOMAINS = ['workers.dev', 'pages.dev', 'trycloudflare.com']
+def download_geoip_db():
+    """Автоматически скачивает базу GeoIP, если её нет"""
+    if not os.path.exists(MMDB_PATH):
+        print("📥 База GeoIP не найдена. Скачиваю актуальную версию...")
+        try:
+            req = urllib.request.Request(MMDB_URL, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=30) as response, open(MMDB_PATH, 'wb') as out_file:
+                out_file.write(response.read())
+            print("✅ База GeoIP успешно загружена!")
+        except Exception as e:
+            print(f"⚠️ Не удалось скачать GeoIP базу: {e}. Скрипт продолжит работу по старому методу.")
+
+# Инициализируем глобальный ридер для базы, чтобы не открывать файл каждую секунду
+download_geoip_db()
+GEO_READER = None
+if maxminddb and os.path.exists(MMDB_PATH):
+    try:
+        GEO_READER = maxminddb.open_database(MMDB_PATH)
+    except Exception as e:
+        print(f"⚠️ Ошибка открытия базы GeoIP: {e}")
+
+def cc_to_flag(cc):
+    """Конвертирует двухбуквенный код страны (SSh, RU, US) в эмодзи флаг"""
+    if not cc or len(cc) != 2:
+        return "🌐"
+    return "".join(chr(127397 + ord(c)) for c in cc.upper())
 
 def extract_clean_flag(text):
     if not text:
@@ -43,37 +66,38 @@ def check_tcp(host, port, timeout=2.0):
     except:
         return False
 
-def is_cloudflare(host):
-    """Проверяет, принадлежит ли IP к сети Cloudflare/WARP"""
+def get_real_ip_and_flag(host, orig_flag):
+    """Умный поиск страны по IP через локальную базу GeoIP"""
+    if not GEO_READER:
+        return orig_flag
+    
     try:
         clean_host = host.strip('[]').lower()
-        if clean_host in ['localhost', '127.0.0.1', '0.0.0.0']:
-            return True
-
-        # Если это домен, резолвим в IP
+        # Если это домен, резолвим его в IP-адрес
         if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
             socket.setdefaulttimeout(1.5)
             ip_str = socket.gethostbyname(clean_host)
         else:
             ip_str = clean_host
 
-        ip_obj = ipaddress.ip_address(ip_str)
-        
-        # Проверяем по листу подсетей
-        if ip_obj.version == 4:
-            for network in CF_NETWORKS:
-                if ip_obj in network:
-                    return True
-        # IPv6 адреса Клауда пропускаем или баним, если они начинаются на стандартные префиксы
-        elif ip_obj.version == 6:
-            if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:")):
-                return True
+        # Ищем IP в базе данных MaxMind
+        record = GEO_READER.get(ip_str)
+        if record and 'country' in record and 'iso_code' in record['country']:
+            country_code = record['country']['iso_code']
+            return cc_to_flag(country_code) # Возвращаем точный флаг из базы
     except:
         pass
-    return False
+    
+    # Если IP не определился, скрытый или базы нет — возвращаем оригинальный флаг
+    return orig_flag
 
-def parse_host_port(link):
+def parse_host_port_and_name(link):
+    """Парсит хост, порт и оригинальное имя конфига для извлечения старого флага"""
     try:
+        orig_name = ""
+        if '#' in link:
+            orig_name = urllib.parse.unquote(link.split('#')[1])
+            
         clean_link = link.split('#')[0]
         if clean_link.startswith(('vless://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
             content = clean_link.split('://')[1]
@@ -85,15 +109,15 @@ def parse_host_port(link):
                 port = server_part.split(']:')[1]
             else:
                 host, port = server_part.split(':')
-            return host, int(port)
+            return host, int(port), orig_name
         elif clean_link.startswith('vmess://'):
             b64_data = clean_link.replace('vmess://', '').strip()
             b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
             data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
-            return data.get('add'), int(data.get('port'))
+            return data.get('add'), int(data.get('port')), data.get('ps', '')
     except:
         pass
-    return None, None
+    return None, None, ""
 
 def get_config_identity(link):
     try:
@@ -111,7 +135,7 @@ def get_config_identity(link):
             parsed_url = urllib.parse.urlparse(clean_link)
             query_params = urllib.parse.parse_qs(parsed_url.query)
             
-            host, port = parse_host_port(link)
+            host, port, _ = parse_host_port_and_name(link)
             if not host:
                 return None
             
@@ -129,35 +153,14 @@ def get_config_identity(link):
         return None
 
 def check_proxy_alive(link):
-    # 1. Сразу отсекаем Cloudflare Workers / Pages домены в текстовых ссылках (vless, trojan, ss, hy2)
-    link_low = link.lower()
-    if any(domain in link_low for domain in BLOCKED_DOMAINS):
-        return None
-
-    # 2. Парсим хост и порт
-    host, port = parse_host_port(link)
+    host, port, orig_name = parse_host_port_and_name(link)
     if host and port:
-        # 3. Декодируем VMESS и проверяем скрытые поля внутри JSON (add, host, sni) на заблокированные домены
-        if link.startswith("vmess://"):
-            try:
-                b64_data = link.replace('vmess://', '').strip()
-                b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
-                data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
-                for field in [data.get('add'), data.get('host'), data.get('sni')]:
-                    if field:
-                        field_low = str(field).lower()
-                        if any(domain in field_low for domain in BLOCKED_DOMAINS):
-                            return None
-            except:
-                pass
-
-        # 4. Если IP принадлежит к расширенной сети Cloudflare/WARP — отбрасываем
-        if is_cloudflare(host):
-            return None
-
-        # 5. Обычный пинг
         if check_tcp(host, port):
-            return link
+            # Извлекаем старый флаг из названия
+            orig_flag = extract_clean_flag(orig_name)
+            # Запускаем умную проверку: база данных vs оригинальный флаг
+            final_flag = get_real_ip_and_flag(host, orig_flag)
+            return (link, final_flag)
     return None
 
 def fetch_single_url(url):
@@ -212,7 +215,7 @@ def is_ru_sni(link):
                 return True
         except: pass
     else:
-        host, _ = parse_host_port(link)
+        host, _, _ = parse_host_port_and_name(link)
         if host:
             host_low = host.lower()
             if host_low.endswith(('.ru', '.su')) or '.ru]' in host_low or '.su]' in host_low:
@@ -238,15 +241,14 @@ def clean_and_dedup(links):
                 valid_links.append(link)
     return valid_links
 
-def rename_config(link, index, tag):
+def rename_config(link, index, tag, detected_flag):
+    """Переименовывает конфиг, используя умный флаг, полученный при тесте"""
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
             b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
             data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
-            orig_name = data.get('ps', '')
-            flag = extract_clean_flag(orig_name)
-            data['ps'] = f"{flag} {tag} Сервер {index}"
+            data['ps'] = f"{detected_flag} {tag} Сервер {index}"
             new_b64 = base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')
             return f"vmess://{new_b64}"
         except:
@@ -256,23 +258,17 @@ def rename_config(link, index, tag):
         try:
             parts = link.split('#', 1)
             main_part = parts[0]
-            orig_name = urllib.parse.unquote(parts[1]) if len(parts) > 1 else ""
-            flag = extract_clean_flag(orig_name)
-            new_name = f"{flag} {tag} Сервер {index}"
+            new_name = f"{detected_flag} {tag} Сервер {index}"
             return f"{main_part}#{urllib.parse.quote(new_name)}"
         except:
             return link
     return link
 
 def main():
-    print("🚀 Запуск парсера...")
+    print("🚀 Запуск парсера с умным GeoIP...")
     
-    # Автоопределение имен файлов
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
     bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
-    
-    print(f"📂 Будем читать белый список из: {wl_file}")
-    print(f"📂 Будем читать черный список из: {bl_file}")
 
     wl_raw = fetch_links_parallel(wl_file)
     bl_raw = fetch_links_parallel(bl_file)
@@ -303,38 +299,39 @@ def main():
 
     print(f"⚡️ Проверяем {len(real_wl)} WL и {len(real_bl)} BL...")
     
-    alive_wl = []
-    alive_bl = []
+    alive_wl_data = []
+    alive_bl_data = []
 
+    # Тестируем серверы параллельно
     with ThreadPoolExecutor(max_workers=45) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
-            res = future.result()
-            if res: alive_wl.append(res)
+            res = future.result() # Возвращает кортеж (link, final_flag) или None
+            if res: alive_wl_data.append(res)
             
         bl_futures = [executor.submit(check_proxy_alive, link) for link in real_bl]
         for future in as_completed(bl_futures):
             res = future.result()
-            if res: alive_bl.append(res)
+            if res: alive_bl_data.append(res)
 
-    print(f"📈 Найдено живых серверов: WL = {len(alive_wl)}, BL = {len(alive_bl)}")
+    print(f"📈 Найдено живых серверов: WL = {len(alive_wl_data)}, BL = {len(alive_bl_data)}")
 
-    final_wl = [rename_config(link, idx, "[WL]") for idx, link in enumerate(alive_wl, 1)]
-    final_bl = [rename_config(link, idx, "[BL]") for idx, link in enumerate(alive_bl, 1)]
+    # Собираем финальные списки с правильными флагами
+    final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
+    final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
 
     wl_b64 = base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8') if final_wl else ""
     bl_b64 = base64.b64encode('\n'.join(final_bl).encode('utf-8')).decode('utf-8') if final_bl else ""
     full_b64 = base64.b64encode('\n'.join(final_full).encode('utf-8')).decode('utf-8') if final_full else ""
 
-    with open('alive_bs.txt', 'w', encoding='utf-8') as f:
-        f.write(wl_b64)
-        
-    with open('alive_bl.txt', 'w', encoding='utf-8') as f:
-        f.write(bl_b64)
-        
-    with open('alive_full.txt', 'w', encoding='utf-8') as f:
-        f.write(full_b64)
+    with open('alive_bs.txt', 'w', encoding='utf-8') as f: f.write(wl_b64)
+    with open('alive_bl.txt', 'w', encoding='utf-8') as f: f.write(bl_b64)
+    with open('alive_full.txt', 'w', encoding='utf-8') as f: f.write(full_b64)
+
+    # Закрываем ридер базы данных в конце
+    if GEO_READER:
+        GEO_READER.close()
 
 if __name__ == '__main__':
     main()
