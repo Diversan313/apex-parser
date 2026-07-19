@@ -19,14 +19,6 @@ FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 MMDB_PATH = "GeoLite2-Country.mmdb"
 
-CF_CIDRS = [
-    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
-    "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
-    "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
-    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16"
-]
-CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
-
 def download_geoip_db():
     if not os.path.exists(MMDB_PATH):
         print("📥 Скачиваю базу GeoIP...")
@@ -53,44 +45,12 @@ def extract_clean_flag(text):
     flags = FLAG_REGEX.findall(text)
     return flags[0] if flags else "🌐"
 
-def is_cloudflare_or_warp(host):
-    """Улучшенный фильтр: вычисляет Cloudflare/WARP как по IPv4, так и по IPv6"""
-    try:
-        clean_host = host.strip('[]').lower()
-        if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
-            return True
-        
-        # Резолвим домен сразу во все доступные IP-адреса (и v4, и v6)
-        ips = []
-        try:
-            addr_info = socket.getaddrinfo(clean_host, None)
-            for item in addr_info:
-                ips.append(item[4][0])
-        except:
-            ips = [clean_host]
-
-        for ip_str in ips:
-            # Жесткий бан по началу строки (включая тот самый IPv6 диапазон 2a05:d018)
-            if ip_str.startswith(('104.', '162.', '172.', '8.39.', '8.35.', '188.114.', '2a05:d018:', '2400:cb00:', '2606:4700:')):
-                return True
-
-            ip_obj = ipaddress.ip_address(ip_str)
-            if ip_obj.version == 4:
-                for network in CF_NETWORKS:
-                    if ip_obj in network: return True
-            elif ip_obj.version == 6:
-                if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:", "2a05:d018:")):
-                    return True
-    except:
-        pass
-    return False
-
 def get_real_ip_and_flag(host, orig_flag):
     if not GEO_READER: return orig_flag
     try:
         clean_host = host.strip('[]').lower()
         try:
-            addr_info = socket.getaddrinfo(clean_host, None)
+            addr_info = socket.getaddrinfo(clean_host, None, socket.AF_INET)
             ip_str = addr_info[0][4][0]
         except:
             ip_str = clean_host
@@ -237,7 +197,7 @@ def check_via_xray(outbound_obj, timeout=3.5):
         
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
-        req = urllib.request.Request("http://cp.cloudflare.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.Request("http://connectivitycheck.gstatic.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
         
         with opener.open(req, timeout=timeout) as resp:
             if resp.status in [200, 204]: return True
@@ -265,15 +225,59 @@ def check_proxy_alive(link):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port: return None
     
-    # Шаг 1: Жесткий пре-хирургический отсев Клауда (v4 и v6)
-    if is_cloudflare_or_warp(host): return None
-        
-    # Шаг 2: Реальный тест через ядро Xray
-    outbound = link_to_xray_outbound(link)
+    clean_host = host.strip('[]').lower()
+    
+    # Проверяем, является ли хост уже IP адресом
+    is_ip = False
+    try:
+        ipaddress.ip_address(clean_host)
+        is_ip = True
+    except: pass
+    
+    opt_link = link
+    # СТРАТЕГИЯ СТАБИЛИЗАЦИИ: Принудительно переводим домен в IPv4 для мобилок
+    if not is_ip:
+        try:
+            addr_info = socket.getaddrinfo(clean_host, None, socket.AF_INET)
+            ipv4_str = addr_info[0][4][0]
+            
+            if link.startswith("vmess://"):
+                b64_data = link.replace('vmess://', '').strip()
+                b64_data += "=" * ((4 - len(b64_data) % 4) % 4)
+                data = json.loads(base64.b64decode(b64_data).decode('utf-8', errors='ignore'))
+                if not data.get('sni') and not data.get('host'):
+                    data['sni'] = clean_host
+                data['add'] = ipv4_str
+                opt_link = f"vmess://{base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')}"
+            else:
+                main_part = link.split('#')[0]
+                name_part = link.split('#')[1] if '#' in link else ""
+                protocol, rest = main_part.split('://', 1)
+                
+                user_part, host_port = rest.split('@', 1) if '@' in rest else ("", rest)
+                path_params = ""
+                if '?' in host_port:
+                    host_port, path_params = host_port.split('?', 1)
+                
+                params = urllib.parse.parse_qs(path_params)
+                if 'sni' not in params:
+                    params['sni'] = [clean_host]
+                if protocol in ['vless', 'trojan'] and 'security' not in params:
+                    params['security'] = ['tls']
+                    
+                new_params = urllib.parse.urlencode(params, doseq=True)
+                opt_link = f"{protocol}://{user_part}@{ipv4_str}:{port}?{new_params}"
+                if name_part:
+                    opt_link += f"#{name_part}"
+        except:
+            pass
+
+    outbound = link_to_xray_outbound(opt_link)
     if outbound and check_via_xray(outbound):
         orig_flag = extract_clean_flag(orig_name)
-        final_flag = get_real_ip_and_flag(host, orig_flag)
-        return (link, final_flag)
+        # Для флага чекаем геолокацию итогового IPv4
+        final_flag = get_real_ip_and_flag(ipv4_str if not is_ip else clean_host, orig_flag)
+        return (opt_link, final_flag)
     return None
 
 def fetch_single_url(url):
@@ -349,7 +353,7 @@ def rename_config(link, index, tag, detected_flag):
     return link
 
 def main():
-    print("🚀 Старт продвинутого Xray-парсера c IPv4/IPv6 фильтрацией...")
+    print("🚀 Старт IPv4-стабилизатора подписок...")
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
     bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
 
@@ -368,7 +372,7 @@ def main():
         else:
             real_bl.append(link)
 
-    print(f"⚡️ HTTP-тестирование через Xray: {len(real_wl)} WL и {len(real_bl)} BL...")
+    print(f"⚡️ Тестирование и хардкод IPv4: {len(real_wl)} WL и {len(real_bl)} BL...")
     alive_wl_data, alive_bl_data = [], []
 
     with ThreadPoolExecutor(max_workers=20) as executor:
@@ -391,7 +395,7 @@ def main():
     with open('alive_full.txt', 'w', encoding='utf-8') as f: f.write(base64.b64encode('\n'.join(final_full).encode('utf-8')).decode('utf-8'))
 
     if GEO_READER: GEO_READER.close()
-    print("✨ Все готово! Результаты обновлены.")
+    print(f"✨ Готово! Сформировано {len(final_full)} мобильно-стабильных конфигов.")
 
 if __name__ == '__main__':
     main()
