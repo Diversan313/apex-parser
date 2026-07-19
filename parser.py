@@ -54,29 +54,33 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def is_cloudflare_or_warp(host):
-    """Жесткий пре-фильтр Cloudflare, WARP и мусорных пулов"""
+    """Улучшенный фильтр: вычисляет Cloudflare/WARP как по IPv4, так и по IPv6"""
     try:
         clean_host = host.strip('[]').lower()
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
             return True
         
-        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
-            socket.setdefaulttimeout(1.5)
-            ip_str = socket.gethostbyname(clean_host)
-        else:
-            ip_str = clean_host
+        # Резолвим домен сразу во все доступные IP-адреса (и v4, и v6)
+        ips = []
+        try:
+            addr_info = socket.getaddrinfo(clean_host, None)
+            for item in addr_info:
+                ips.append(item[4][0])
+        except:
+            ips = [clean_host]
 
-        # Тотальный бан пулов ВАРПа и Клауда по началу строки
-        if ip_str.startswith(('104.', '162.', '172.', '8.39.', '8.35.', '188.114.')):
-            return True
-
-        ip_obj = ipaddress.ip_address(ip_str)
-        if ip_obj.version == 4:
-            for network in CF_NETWORKS:
-                if ip_obj in network: return True
-        elif ip_obj.version == 6:
-            if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:")):
+        for ip_str in ips:
+            # Жесткий бан по началу строки (включая тот самый IPv6 диапазон 2a05:d018)
+            if ip_str.startswith(('104.', '162.', '172.', '8.39.', '8.35.', '188.114.', '2a05:d018:', '2400:cb00:', '2606:4700:')):
                 return True
+
+            ip_obj = ipaddress.ip_address(ip_str)
+            if ip_obj.version == 4:
+                for network in CF_NETWORKS:
+                    if ip_obj in network: return True
+            elif ip_obj.version == 6:
+                if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:", "2a05:d018:")):
+                    return True
     except:
         pass
     return False
@@ -85,11 +89,12 @@ def get_real_ip_and_flag(host, orig_flag):
     if not GEO_READER: return orig_flag
     try:
         clean_host = host.strip('[]').lower()
-        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) and not ':' in clean_host:
-            socket.setdefaulttimeout(1.5)
-            ip_str = socket.gethostbyname(clean_host)
-        else:
+        try:
+            addr_info = socket.getaddrinfo(clean_host, None)
+            ip_str = addr_info[0][4][0]
+        except:
             ip_str = clean_host
+            
         record = GEO_READER.get(ip_str)
         if record and 'country' in record and 'iso_code' in record['country']:
             return cc_to_flag(record['country']['iso_code'])
@@ -120,7 +125,6 @@ def parse_host_port_and_name(link):
     return None, None, ""
 
 def link_to_xray_outbound(link):
-    """Умная конвертация ссылки подписки в JSON-объект outbound для Xray"""
     try:
         main_part = link.split('#')[0]
         protocol, rest = main_part.split('://', 1)
@@ -183,7 +187,6 @@ def link_to_xray_outbound(link):
         else:
             return None
 
-        # Обработка TLS / Reality
         security = query_params.get('security', [''])[0]
         if protocol == 'trojan' and not security: security = 'tls'
         if security in ['tls', 'reality']:
@@ -198,7 +201,6 @@ def link_to_xray_outbound(link):
                     "fingerprint": query_params.get('fp', ['chrome'])[0]
                 }
 
-        # Обработка транспортов (WS / gRPC)
         net = query_params.get('type', [''])[0]
         if net in ['ws', 'grpc']:
             outbound["streamSettings"]["network"] = net
@@ -217,7 +219,6 @@ def get_free_port():
         return s.getsockname()[1]
 
 def check_via_xray(outbound_obj, timeout=3.5):
-    """Запускает изолированный процесс Xray и прогоняет честный HTTP запрос"""
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -232,7 +233,7 @@ def check_via_xray(outbound_obj, timeout=3.5):
     try:
         cmd = ["./xray", "-c", cfg_name] if os.name != 'nt' else ["xray.exe", "-c", cfg_name]
         proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(0.35) # Даем ядру подняться
+        time.sleep(0.35)
         
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
@@ -264,10 +265,10 @@ def check_proxy_alive(link):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port: return None
     
-    # Шаг 1: Тотальный блок подсетей Cloudflare/WARP
+    # Шаг 1: Жесткий пре-хирургический отсев Клауда (v4 и v6)
     if is_cloudflare_or_warp(host): return None
         
-    # Шаг 2: Честный HTTP-тест через ядро Xray
+    # Шаг 2: Реальный тест через ядро Xray
     outbound = link_to_xray_outbound(link)
     if outbound and check_via_xray(outbound):
         orig_flag = extract_clean_flag(orig_name)
@@ -348,7 +349,7 @@ def rename_config(link, index, tag, detected_flag):
     return link
 
 def main():
-    print("🚀 Старт продвинутого Xray-парсера...")
+    print("🚀 Старт продвинутого Xray-парсера c IPv4/IPv6 фильтрацией...")
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
     bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
 
@@ -370,7 +371,6 @@ def main():
     print(f"⚡️ HTTP-тестирование через Xray: {len(real_wl)} WL и {len(real_bl)} BL...")
     alive_wl_data, alive_bl_data = [], []
 
-    # Уменьшаем число воркеров до 20, чтобы не перегружать CPU процессами Xray
     with ThreadPoolExecutor(max_workers=20) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
@@ -391,7 +391,7 @@ def main():
     with open('alive_full.txt', 'w', encoding='utf-8') as f: f.write(base64.b64encode('\n'.join(final_full).encode('utf-8')).decode('utf-8'))
 
     if GEO_READER: GEO_READER.close()
-    print("✨ Все готово! Результаты залиты.")
+    print("✨ Все готово! Результаты обновлены.")
 
 if __name__ == '__main__':
     main()
