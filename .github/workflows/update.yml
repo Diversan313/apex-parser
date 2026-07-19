@@ -25,28 +25,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install maxminddb
 
+      - name: Download Xray Core
+        run: |
+          curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+          unzip -o xray.zip xray
+          chmod +x xray
+
       - name: Create source files from Secrets
         env:
           SOURCES_WL_SECRET: ${{ secrets.SOURCES_WL }}
           SOURCES_BL_SECRET: ${{ secrets.SOURCES_BL }}
         run: |
-          # Проверяем секрет SOURCES_WL безопасным образом
           if [ -n "$SOURCES_WL_SECRET" ]; then
             echo "$SOURCES_WL_SECRET" > sources_wl.txt
             echo "✅ WL-источники загружены из GitHub Secrets"
-          else
-            echo "ℹ️ Секрет SOURCES_WL пустой или отсутствует. Используем файлы из репозитория"
           fi
 
-          # Проверяем секрет SOURCES_BL безопасным образом
           if [ -n "$SOURCES_BL_SECRET" ]; then
             echo "$SOURCES_BL_SECRET" > sources_bl.txt
             echo "✅ BL-источники загружены из GitHub Secrets"
-          else
-            echo "ℹ️ Секрет SOURCES_BL пустой или отсутствует. Используем файлы из репозитория"
           fi
 
-          # Скачиваем саму базу данных GeoIP прямо в окружение гитхаба
           curl -L -o GeoLite2-Country.mmdb https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
 
       - name: Run Parser Script
@@ -57,7 +56,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Загружаем обратно ТОЛЬКО результаты в Base64. Источники и файл базы данных не улетают в репозиторий!
+          # Загружаем обратно ТОЛЬКО результаты. Источники, база данных и бинарник Xray отсекаются!
           git add alive_full.txt alive_bs.txt alive_bl.txt
           
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update subscriptions [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update subscriptions via Xray Core [skip ci]" && git push)
