@@ -10,7 +10,7 @@ import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# --- НАСТРОЙКИ И ФАЙЛЫ ---
+# --- НАСТРОЙКИ И ЛИМИТЫ ---
 WHITE_IP_FILE = 'white_ip.txt'
 HEALTH_FILE = 'white_ip_health.json'
 INCOMING_FILE = 'incoming_sources.txt'
@@ -18,6 +18,8 @@ MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
 MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 часа (прогона) подряд
+MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
+MAX_WHITE_IPS = 1000          # Максимум IP в итоговом white_ip.txt
 
 try:
     import maxminddb
@@ -323,21 +325,30 @@ def fetch_links_parallel(url_file):
     return links
 
 def process_incoming_queue():
-    """ Читает входящие ссылки из incoming_sources.txt и очищает файл """
-    incoming_links = []
+    """Разделяет входящие из Telegram на ссылки и чистые IP с ограничением в 1 000 записей"""
+    incoming_proxies = []
+    incoming_raw_ips = []
     if os.path.exists(INCOMING_FILE):
         try:
             with open(INCOMING_FILE, 'r', encoding='utf-8') as f:
-                for line in f:
-                    clean = line.strip()
-                    if clean and not clean.startswith('#'):
-                        incoming_links.append(clean)
-            # Очищаем файл очереди (всё забрали на проверку)
+                lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
+            
+            # Дедупликация с сохранением порядка и срезом до 1 000 элементов
+            unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
+
+            for item in unique_lines:
+                if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', item):
+                    if not is_cloudflare_or_warp(item):
+                        incoming_raw_ips.append(item)
+                elif item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
+                    incoming_proxies.append(item)
+
+            # Очищаем файл входящих
             open(INCOMING_FILE, 'w', encoding='utf-8').close()
-            print(f"📥 Из входящей очереди Telegram забрано элементов: {len(incoming_links)}")
+            print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
-    return incoming_links
+    return incoming_proxies, incoming_raw_ips
 
 def load_health_tracker():
     if os.path.exists(HEALTH_FILE):
@@ -351,12 +362,13 @@ def save_health_tracker(data):
     with open(HEALTH_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def process_and_clean_white_list(alive_wl_data):
+def process_and_clean_white_list(alive_wl_data, incoming_raw_ips):
     """
     Авто-чистка white_ip.txt:
-    - Сбрасывает ошибки для поднявшихся IP.
-    - Инкрементирует ошибки для неответивших IP из текущей базы.
+    - Принимает проверенные WL прокси и прилетевшие чистые IP.
+    - Инкрементирует ошибки для неответивших IP.
     - Если IP не отвечает >= MAX_FAILS_BEFORE_DELETE раз подряд -> УДАЛЯЕТ.
+    - Ограничивает итоговую базу MAX_WHITE_IPS (1000 шт).
     """
     health = load_health_tracker()
     
@@ -368,7 +380,10 @@ def process_and_clean_white_list(alive_wl_data):
                 if ip and not ip.startswith('#'):
                     current_ips.add(ip)
 
-    alive_ips_set = set()
+    alive_ips_set = set(incoming_raw_ips)
+    for ip in incoming_raw_ips:
+        health[ip] = 0
+
     for item in alive_wl_data:
         link = item[0]
         host, _, _ = parse_host_port_and_name(link)
@@ -395,14 +410,17 @@ def process_and_clean_white_list(alive_wl_data):
     for ip in alive_ips_set:
         final_white_ips.add(ip)
 
+    # Ограничение итогового файла 1 000 адресами
+    limited_white_ips = sorted(list(final_white_ips))[:MAX_WHITE_IPS]
+
     with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
-        if final_white_ips:
-            f.write('\n'.join(sorted(list(final_white_ips))) + '\n')
+        if limited_white_ips:
+            f.write('\n'.join(limited_white_ips) + '\n')
         else:
             f.write('')
         
     save_health_tracker(health)
-    print(f"🛡 Актуальный размер white_ip.txt: {len(final_white_ips)} IP адресов.")
+    print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов.")
 
 def is_ru_sni(link):
     link_low = link.lower()
@@ -453,9 +471,9 @@ def main():
     wl_fetched = fetch_links_parallel(wl_file)
     bl_fetched = fetch_links_parallel(bl_file)
     
-    # Добавляем входящие из Telegram
-    incoming_links = process_incoming_queue()
-    wl_fetched.extend(incoming_links)
+    # Забираем из Telegram входящие прокси и чистые IP
+    incoming_proxies, incoming_raw_ips = process_incoming_queue()
+    wl_fetched.extend(incoming_proxies)
 
     wl_clean = clean_and_dedup(wl_fetched)
     bl_clean = clean_and_dedup(bl_fetched)
@@ -486,8 +504,8 @@ def main():
             res = future.result()
             if res: alive_bl_data.append(res)
 
-    # Авто-чистка white_ip.txt и выгрузка живых IP
-    process_and_clean_white_list(alive_wl_data)
+    # Авто-чистка white_ip.txt и сведение IP
+    process_and_clean_white_list(alive_wl_data, incoming_raw_ips)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
