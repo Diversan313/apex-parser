@@ -35,6 +35,7 @@ jobs:
         run: |
           touch white_ip.txt
           touch incoming_sources.txt
+          touch incoming_subs.txt
           if [ ! -f white_ip_health.json ]; then echo "{}" > white_ip_health.json; fi
 
       - name: Create source files from Secrets
@@ -62,7 +63,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Сохраняем результаты работы парсера, динамическую базу IP и служебные счетчики
-          git add alive_full.txt alive_bs.txt alive_bl.txt white_ip.txt white_ip_health.json incoming_sources.txt
+          # Сохраняем результаты работы парсера, динамическую базу IP и очищенные файлы очередей
+          git add alive_full.txt alive_bs.txt alive_bl.txt white_ip.txt white_ip_health.json incoming_sources.txt incoming_subs.txt
           
           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update subscriptions & clean white IP base [skip ci]" && git push)
