@@ -18,9 +18,9 @@ INCOMING_SUBS_FILE = 'incoming_subs.txt'
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
-MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 часа (прогона) подряд
-MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WHITE_IPS = 1000          # Максимум IP в итоговом white_ip.txt
+MAX_FAILS_BEFORE_DELETE = 2  
+MAX_QUEUE_LIMIT = 1000        
+MAX_WHITE_IPS = 1000          
 
 try:
     import maxminddb
@@ -39,14 +39,11 @@ CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
 
 def download_geoip_db():
     if not os.path.exists(MMDB_PATH):
-        print("📥 Скачиваю базу GeoIP...")
         try:
             req = urllib.request.Request(MMDB_URL, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req, timeout=30) as response, open(MMDB_PATH, 'wb') as out_file:
                 out_file.write(response.read())
-            print("✅ База GeoIP загружена!")
-        except Exception as e:
-            print(f"⚠️ Ошибка GeoIP базы: {e}")
+        except Exception: pass
 
 download_geoip_db()
 GEO_READER = None
@@ -64,7 +61,6 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def is_cloudflare_or_warp(host):
-    """Пре-фильтр Cloudflare, WARP и мусорных пулов"""
     try:
         clean_host = host.strip('[]').lower()
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
@@ -86,23 +82,18 @@ def is_cloudflare_or_warp(host):
         elif ip_obj.version == 6:
             if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:")):
                 return True
-    except:
-        pass
+    except: pass
     return False
 
 def resolve_to_clean_ip(host):
-    """Превращает хост/домен в чистый IP (если это не Cloudflare)"""
     try:
         clean_host = host.strip('[]').lower()
-        if is_cloudflare_or_warp(clean_host):
-            return None
-        if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host):
-            return clean_host
+        if is_cloudflare_or_warp(clean_host): return None
+        if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host): return clean_host
         socket.setdefaulttimeout(1.5)
         ip = socket.gethostbyname(clean_host)
         return ip if not is_cloudflare_or_warp(ip) else None
-    except:
-        return None
+    except: return None
 
 def get_real_ip_and_flag(host, orig_flag):
     if not GEO_READER: return orig_flag
@@ -143,7 +134,6 @@ def parse_host_port_and_name(link):
     return None, None, ""
 
 def link_to_xray_outbound(link):
-    """Умная конвертация ссылки подписки в JSON-объект outbound для Xray"""
     try:
         main_part = link.split('#')[0]
         protocol, rest = main_part.split('://', 1)
@@ -203,8 +193,7 @@ def link_to_xray_outbound(link):
                 'path': [data.get('path', '/')],
                 'host': [data.get('host', '')]
             }
-        else:
-            return None
+        else: return None
 
         security = query_params.get('security', [''])[0]
         if protocol == 'trojan' and not security: security = 'tls'
@@ -229,16 +218,15 @@ def link_to_xray_outbound(link):
                 outbound["streamSettings"]["grpcSettings"] = {"serviceName": query_params.get('serviceName', [''])[0] or query_params.get('path', [''])[0]}
 
         return outbound
-    except:
-        return None
+    except: return None
 
 def get_free_port():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('127.0.0.1', 0))
         return s.getsockname()[1]
 
-def check_via_xray(outbound_obj, timeout=3.5):
-    """Запускает изолированный процесс Xray и прогоняет HTTP-тест"""
+def check_via_xray(outbound_obj, timeout=4.0):
+    """Изолированная проверка Xray с динамической подстройкой под запуск порта"""
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -253,8 +241,19 @@ def check_via_xray(outbound_obj, timeout=3.5):
     try:
         cmd = ["./xray", "-c", cfg_name] if os.name != 'nt' else ["xray.exe", "-c", cfg_name]
         proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(0.35)
         
+        # Динамическая проверка: ждём пока Xray откроет порт (до 1.5 сек)
+        port_open = False
+        for _ in range(15):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(0.1)
+                if s.connect_ex(('127.0.0.1', port)) == 0:
+                    port_open = True
+                    break
+            time.sleep(0.1)
+            
+        if not port_open: return False
+
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
         req = urllib.request.Request("http://cp.cloudflare.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
@@ -284,7 +283,6 @@ def get_config_identity(link):
 def check_proxy_alive(link):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port: return None
-    
     if is_cloudflare_or_warp(host): return None
         
     outbound = link_to_xray_outbound(link)
@@ -319,38 +317,30 @@ def fetch_links_parallel(url_file):
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        with ThreadPoolExecutor(max_workers=20) as executor:
+        with ThreadPoolExecutor(max_workers=10) as executor:
             futures = {executor.submit(fetch_single_url, url): url for url in urls}
             for future in as_completed(futures): links.extend(future.result())
     except FileNotFoundError: pass
     return links
 
 def process_incoming_queue():
-    """Разделяет входящие из Telegram на ссылки и чистые IP с ограничением в 1 000 записей"""
-    incoming_proxies = []
-    incoming_raw_ips = []
+    incoming_proxies, incoming_raw_ips = [], []
     if os.path.exists(INCOMING_FILE):
         try:
             with open(INCOMING_FILE, 'r', encoding='utf-8') as f:
                 lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
             
-            unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
-
-            for item in unique_lines:
+            for item in list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]:
                 if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', item):
-                    if not is_cloudflare_or_warp(item):
-                        incoming_raw_ips.append(item)
+                    if not is_cloudflare_or_warp(item): incoming_raw_ips.append(item)
                 elif item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
                     incoming_proxies.append(item)
 
             open(INCOMING_FILE, 'w', encoding='utf-8').close()
-            print(f"📥 Из очереди incoming_sources.txt забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
-        except Exception as e:
-            print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
+        except: pass
     return incoming_proxies, incoming_raw_ips
 
 def process_incoming_subs_queue():
-    """Забирает донорские ссылки на подписки (URL), выкачивает с них ключи и очищает файл."""
     sub_proxies = []
     if os.path.exists(INCOMING_SUBS_FILE):
         try:
@@ -358,25 +348,19 @@ def process_incoming_subs_queue():
                 sub_urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
 
             unique_urls = list(dict.fromkeys(sub_urls))[:MAX_QUEUE_LIMIT]
-
             if unique_urls:
-                print(f"📥 Из очереди incoming_subs.txt забрано {len(unique_urls)} сторонних подписок, выкачиваем ключи...")
-                with ThreadPoolExecutor(max_workers=15) as executor:
+                with ThreadPoolExecutor(max_workers=10) as executor:
                     futures = {executor.submit(fetch_single_url, url): url for url in unique_urls}
-                    for future in as_completed(futures):
-                        sub_proxies.extend(future.result())
+                    for future in as_completed(futures): sub_proxies.extend(future.result())
 
             open(INCOMING_SUBS_FILE, 'w', encoding='utf-8').close()
-            print(f"✅ Из сторонних подписок извлечено {len(sub_proxies)} потенциальных конфигов.")
-        except Exception as e:
-            print(f"⚠️ Ошибка чтения подписок {INCOMING_SUBS_FILE}: {e}")
+        except: pass
     return sub_proxies
 
 def load_health_tracker():
     if os.path.exists(HEALTH_FILE):
         try:
-            with open(HEALTH_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
+            with open(HEALTH_FILE, 'r', encoding='utf-8') as f: return json.load(f)
         except: pass
     return {}
 
@@ -385,26 +369,16 @@ def save_health_tracker(data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def process_and_clean_white_list(alive_wl_data, incoming_raw_ips):
-    """
-    Авто-чистка white_ip.txt:
-    - Принимает проверенные WL прокси и прилетевшие чистые IP.
-    - Инкрементирует ошибки для неответивших IP.
-    - Если IP не отвечает >= MAX_FAILS_BEFORE_DELETE раз подряд -> УДАЛЯЕТ.
-    - Ограничивает итоговую базу MAX_WHITE_IPS (1000 шт).
-    """
     health = load_health_tracker()
-    
     current_ips = set()
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
             for line in f:
                 ip = line.strip()
-                if ip and not ip.startswith('#'):
-                    current_ips.add(ip)
+                if ip and not ip.startswith('#'): current_ips.add(ip)
 
     alive_ips_set = set(incoming_raw_ips)
-    for ip in incoming_raw_ips:
-        health[ip] = 0
+    for ip in incoming_raw_ips: health[ip] = 0
 
     for item in alive_wl_data:
         link = item[0]
@@ -423,25 +397,17 @@ def process_and_clean_white_list(alive_wl_data, incoming_raw_ips):
             fails = health.get(ip, 0) + 1
             health[ip] = fails
             if fails < MAX_FAILS_BEFORE_DELETE:
-                print(f"⚠️ IP {ip} не ответил ({fails}/{MAX_FAILS_BEFORE_DELETE} шансов). Оставляем.")
                 final_white_ips.add(ip)
             else:
-                print(f"❌ IP {ip} не отвечает {fails} прогона подряд -> УДАЛЯЕМ из базы.")
                 if ip in health: del health[ip]
 
-    for ip in alive_ips_set:
-        final_white_ips.add(ip)
-
+    for ip in alive_ips_set: final_white_ips.add(ip)
     limited_white_ips = sorted(list(final_white_ips))[:MAX_WHITE_IPS]
 
     with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
-        if limited_white_ips:
-            f.write('\n'.join(limited_white_ips) + '\n')
-        else:
-            f.write('')
+        f.write('\n'.join(limited_white_ips) + ('\n' if limited_white_ips else ''))
         
     save_health_tracker(health)
-    print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов.")
 
 def is_ru_sni(link):
     link_low = link.lower()
@@ -484,19 +450,23 @@ def rename_config(link, index, tag, detected_flag):
         except: return link
     return link
 
+def save_base64_file(filename, lines_list):
+    content = '\n'.join(lines_list) if lines_list else ""
+    encoded = base64.b64encode(content.encode('utf-8')).decode('utf-8') if content else ""
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(encoded)
+
 def main():
-    print("🚀 Старт продвинутого Xray-парсера...")
+    print("🚀 Старт Xray-парсера...")
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
     bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
 
     wl_fetched = fetch_links_parallel(wl_file)
     bl_fetched = fetch_links_parallel(bl_file)
     
-    # 1. Забираем входящие ключи и чистые IP из Telegram
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
     wl_fetched.extend(incoming_proxies)
 
-    # 2. Забираем сторонние подписки из Telegram и скачиваем их
     incoming_sub_proxies = process_incoming_subs_queue()
     wl_fetched.extend(incoming_sub_proxies)
 
@@ -515,10 +485,11 @@ def main():
         else:
             real_bl.append(link)
 
-    print(f"⚡️ HTTP-тестирование через Xray: {len(real_wl)} WL и {len(real_bl)} BL...")
+    print(f"⚡️ HTTP-тестирование: {len(real_wl)} WL и {len(real_bl)} BL...")
     alive_wl_data, alive_bl_data = [], []
 
-    with ThreadPoolExecutor(max_workers=20) as executor:
+    # 10 потоков для предотвращения зависания процессора в GitHub Actions
+    with ThreadPoolExecutor(max_workers=10) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
             res = future.result()
@@ -529,19 +500,18 @@ def main():
             res = future.result()
             if res: alive_bl_data.append(res)
 
-    # Авто-чистка white_ip.txt и сведение IP
     process_and_clean_white_list(alive_wl_data, incoming_raw_ips)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
 
-    with open('alive_bs.txt', 'w', encoding='utf-8') as f: f.write(base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8'))
-    with open('alive_bl.txt', 'w', encoding='utf-8') as f: f.write(base64.b64encode('\n'.join(final_bl).encode('utf-8')).decode('utf-8'))
-    with open('alive_full.txt', 'w', encoding='utf-8') as f: f.write(base64.b64encode('\n'.join(final_full).encode('utf-8')).decode('utf-8'))
+    save_base64_file('alive_bs.txt', final_wl)
+    save_base64_file('alive_bl.txt', final_bl)
+    save_base64_file('alive_full.txt', final_full)
 
     if GEO_READER: GEO_READER.close()
-    print("✨ Все готово! Результаты и базы обновлены.")
+    print("✨ Прогон завершен успешно.")
 
 if __name__ == '__main__':
     main()
