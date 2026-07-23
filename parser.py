@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 WHITE_IP_FILE = 'white_ip.txt'
 HEALTH_FILE = 'white_ip_health.json'
 INCOMING_FILE = 'incoming_sources.txt'
+INCOMING_SUBS_FILE = 'incoming_subs.txt'
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
@@ -297,7 +298,7 @@ def fetch_single_url(url):
     try:
         url = url.strip().replace(' ', '%20')
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=5) as response:
+        with urllib.request.urlopen(req, timeout=8) as response:
             raw_data = response.read()
             try: content = raw_data.decode('utf-8', errors='ignore')
             except: content = raw_data.decode('latin-1', errors='ignore')
@@ -333,7 +334,6 @@ def process_incoming_queue():
             with open(INCOMING_FILE, 'r', encoding='utf-8') as f:
                 lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
             
-            # Дедупликация с сохранением порядка и срезом до 1 000 элементов
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
 
             for item in unique_lines:
@@ -343,12 +343,34 @@ def process_incoming_queue():
                 elif item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
                     incoming_proxies.append(item)
 
-            # Очищаем файл входящих
             open(INCOMING_FILE, 'w', encoding='utf-8').close()
-            print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
+            print(f"📥 Из очереди incoming_sources.txt забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
+
+def process_incoming_subs_queue():
+    """Забирает донорские ссылки на подписки (URL), выкачивает с них ключи и очищает файл."""
+    sub_proxies = []
+    if os.path.exists(INCOMING_SUBS_FILE):
+        try:
+            with open(INCOMING_SUBS_FILE, 'r', encoding='utf-8') as f:
+                sub_urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
+
+            unique_urls = list(dict.fromkeys(sub_urls))[:MAX_QUEUE_LIMIT]
+
+            if unique_urls:
+                print(f"📥 Из очереди incoming_subs.txt забрано {len(unique_urls)} сторонних подписок, выкачиваем ключи...")
+                with ThreadPoolExecutor(max_workers=15) as executor:
+                    futures = {executor.submit(fetch_single_url, url): url for url in unique_urls}
+                    for future in as_completed(futures):
+                        sub_proxies.extend(future.result())
+
+            open(INCOMING_SUBS_FILE, 'w', encoding='utf-8').close()
+            print(f"✅ Из сторонних подписок извлечено {len(sub_proxies)} потенциальных конфигов.")
+        except Exception as e:
+            print(f"⚠️ Ошибка чтения подписок {INCOMING_SUBS_FILE}: {e}")
+    return sub_proxies
 
 def load_health_tracker():
     if os.path.exists(HEALTH_FILE):
@@ -410,7 +432,6 @@ def process_and_clean_white_list(alive_wl_data, incoming_raw_ips):
     for ip in alive_ips_set:
         final_white_ips.add(ip)
 
-    # Ограничение итогового файла 1 000 адресами
     limited_white_ips = sorted(list(final_white_ips))[:MAX_WHITE_IPS]
 
     with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
@@ -471,9 +492,13 @@ def main():
     wl_fetched = fetch_links_parallel(wl_file)
     bl_fetched = fetch_links_parallel(bl_file)
     
-    # Забираем из Telegram входящие прокси и чистые IP
+    # 1. Забираем входящие ключи и чистые IP из Telegram
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
     wl_fetched.extend(incoming_proxies)
+
+    # 2. Забираем сторонние подписки из Telegram и скачиваем их
+    incoming_sub_proxies = process_incoming_subs_queue()
+    wl_fetched.extend(incoming_sub_proxies)
 
     wl_clean = clean_and_dedup(wl_fetched)
     bl_clean = clean_and_dedup(bl_fetched)
