@@ -58,12 +58,14 @@ jobs:
         run: python parser.py
 
       - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Сохраняем результаты работы парсера, динамическую базу IP и служебные счетчики
-          git add alive_full.txt alive_bs.txt alive_bl.txt white_ip.txt white_ip_health.json incoming_sources.txt
-          
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update subscriptions & clean white IP base [skip ci]" && git push)
-
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        if ! git diff-index --quiet HEAD; then
+          git commit -m "Auto-update subscriptions & clean white IP base [skip ci]"
+          git pull --rebase origin main
+          git push origin main
+        else
+          echo "Нет изменений для коммита."
+        fi
