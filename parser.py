@@ -14,7 +14,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 WHITE_IP_FILE = 'white_ip.txt'
 HEALTH_FILE = 'white_ip_health.json'
 INCOMING_FILE = 'incoming_sources.txt'
-INCOMING_SUBS_FILE = 'incoming_subs.txt'
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
@@ -43,7 +42,8 @@ def download_geoip_db():
             req = urllib.request.Request(MMDB_URL, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req, timeout=30) as response, open(MMDB_PATH, 'wb') as out_file:
                 out_file.write(response.read())
-        except Exception: pass
+        except Exception as e:
+            print(f"⚠️ GeoIP warning: {e}")
 
 download_geoip_db()
 GEO_READER = None
@@ -225,8 +225,7 @@ def get_free_port():
         s.bind(('127.0.0.1', 0))
         return s.getsockname()[1]
 
-def check_via_xray(outbound_obj, timeout=4.0):
-    """Изолированная проверка Xray с динамической подстройкой под запуск порта"""
+def check_via_xray(outbound_obj, timeout=3.5):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -242,17 +241,17 @@ def check_via_xray(outbound_obj, timeout=4.0):
         cmd = ["./xray", "-c", cfg_name] if os.name != 'nt' else ["xray.exe", "-c", cfg_name]
         proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
-        # Динамическая проверка: ждём пока Xray откроет порт (до 1.5 сек)
-        port_open = False
-        for _ in range(15):
+        # Динамическое ожидание открытия порта Xray (до 1.5 сек)
+        port_ready = False
+        for _ in range(30):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(0.1)
+                s.settimeout(0.05)
                 if s.connect_ex(('127.0.0.1', port)) == 0:
-                    port_open = True
+                    port_ready = True
                     break
-            time.sleep(0.1)
-            
-        if not port_open: return False
+            time.sleep(0.05)
+
+        if not port_ready: return False
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
@@ -296,7 +295,7 @@ def fetch_single_url(url):
     try:
         url = url.strip().replace(' ', '%20')
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=8) as response:
+        with urllib.request.urlopen(req, timeout=6) as response:
             raw_data = response.read()
             try: content = raw_data.decode('utf-8', errors='ignore')
             except: content = raw_data.decode('latin-1', errors='ignore')
@@ -330,7 +329,8 @@ def process_incoming_queue():
             with open(INCOMING_FILE, 'r', encoding='utf-8') as f:
                 lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
             
-            for item in list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]:
+            unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
+            for item in unique_lines:
                 if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', item):
                     if not is_cloudflare_or_warp(item): incoming_raw_ips.append(item)
                 elif item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
@@ -339,23 +339,6 @@ def process_incoming_queue():
             open(INCOMING_FILE, 'w', encoding='utf-8').close()
         except: pass
     return incoming_proxies, incoming_raw_ips
-
-def process_incoming_subs_queue():
-    sub_proxies = []
-    if os.path.exists(INCOMING_SUBS_FILE):
-        try:
-            with open(INCOMING_SUBS_FILE, 'r', encoding='utf-8') as f:
-                sub_urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-
-            unique_urls = list(dict.fromkeys(sub_urls))[:MAX_QUEUE_LIMIT]
-            if unique_urls:
-                with ThreadPoolExecutor(max_workers=10) as executor:
-                    futures = {executor.submit(fetch_single_url, url): url for url in unique_urls}
-                    for future in as_completed(futures): sub_proxies.extend(future.result())
-
-            open(INCOMING_SUBS_FILE, 'w', encoding='utf-8').close()
-        except: pass
-    return sub_proxies
 
 def load_health_tracker():
     if os.path.exists(HEALTH_FILE):
@@ -450,8 +433,8 @@ def rename_config(link, index, tag, detected_flag):
         except: return link
     return link
 
-def save_base64_file(filename, lines_list):
-    content = '\n'.join(lines_list) if lines_list else ""
+def write_b64_file(filename, data_list):
+    content = '\n'.join(data_list) if data_list else ""
     encoded = base64.b64encode(content.encode('utf-8')).decode('utf-8') if content else ""
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(encoded)
@@ -466,9 +449,6 @@ def main():
     
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
     wl_fetched.extend(incoming_proxies)
-
-    incoming_sub_proxies = process_incoming_subs_queue()
-    wl_fetched.extend(incoming_sub_proxies)
 
     wl_clean = clean_and_dedup(wl_fetched)
     bl_clean = clean_and_dedup(bl_fetched)
@@ -488,7 +468,7 @@ def main():
     print(f"⚡️ HTTP-тестирование: {len(real_wl)} WL и {len(real_bl)} BL...")
     alive_wl_data, alive_bl_data = [], []
 
-    # 10 потоков для предотвращения зависания процессора в GitHub Actions
+    # 10 оптимизированных потоков
     with ThreadPoolExecutor(max_workers=10) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
@@ -506,12 +486,12 @@ def main():
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
 
-    save_base64_file('alive_bs.txt', final_wl)
-    save_base64_file('alive_bl.txt', final_bl)
-    save_base64_file('alive_full.txt', final_full)
+    write_b64_file('alive_bs.txt', final_wl)
+    write_b64_file('alive_bl.txt', final_bl)
+    write_b64_file('alive_full.txt', final_full)
 
     if GEO_READER: GEO_READER.close()
-    print("✨ Прогон завершен успешно.")
+    print("✨ Все готово! Результаты и базы обновлены.")
 
 if __name__ == '__main__':
     main()
