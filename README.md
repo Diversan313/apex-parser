@@ -1,19 +1,32 @@
+<div align="center">
+
 # apex-parser
-Warrior of Internet Freedom 
 
+**Warrior of Internet Freedom**
 
+[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Sent1nel0_bot)
+[![License](https://img.shields.io/badge/Status-FREE_FOR_USE-brightgreen?style=for-the-badge)](#)
 
+---
 
-### ССЫЛКИ:
+### 🔗 Subscription Links
 
-<p>
-  <a href="https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt" target="_blank" rel="noopener">
-    <img src="https://img.shields.io/badge/WL%20Link-brightgreen?style=for-the-badge&logo=github" alt="Link WL" style="height:30px; display:block; margin:10px 0;">
-  </a>
-  <a href="https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt" target="_blank" rel="noopener">
-    <img src="https://img.shields.io/badge/BL%20Link-red?style=for-the-badge&logo=github" alt="Link BL" style="height:30px; display:block; margin:10px 0;">
-  </a>
-  <a href="https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt" target="_blank" rel="noopener">
-    <img src="https://img.shields.io/badge/Full%20Link-blue?style=for-the-badge&logo=github" alt="Link Full" style="height:30px; display:block; margin:10px 0;">
-  </a>
-</p>
+</div>
+
+#### 🛡 WhiteList (RU Mobile / БС)
+[![Open Raw Link](https://img.shields.io/badge/Open_WL_Link-brightgreen?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt)
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt
+```
+
+#### 🌐 BlackList (Wi-Fi / Global)
+[![Open Raw Link](https://img.shields.io/badge/Open_BL_Link-red?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt)
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt
+```
+
+#### 🚀 Full List (All-in-One)
+[![Open Raw Link](https://img.shields.io/badge/Open_Full_Link-blue?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt)
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt
+```
