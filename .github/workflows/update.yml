@@ -1,0 +1,95 @@
+name: Update Subscriptions
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install maxminddb
+
+      - name: Download Xray Core
+        run: |
+          curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+          unzip -o xray.zip xray
+          chmod +x xray
+
+      - name: Fetch Sources
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          curl -H "Authorization: token $GH_PAT" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -L -o sources_wl.txt \
+               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt || touch sources_wl.txt
+
+          curl -H "Authorization: token $GH_PAT" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -L -o sources_bl.txt \
+               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt || touch sources_bl.txt
+
+          curl -H "Authorization: token $GH_PAT" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -L -o incoming_sources.txt \
+               https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt || touch incoming_sources.txt
+
+          curl -L -o GeoLite2-Country.mmdb https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
+
+      - name: Ensure Base Files Exist
+        run: |
+          touch white_ip.txt
+          if [ ! -f white_ip_health.json ]; then echo "{}" > white_ip_health.json; fi
+
+      - name: Run Parser Script
+        run: python parser.py
+
+      - name: Sync Incoming State
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
+          cd temp_src
+          > incoming_sources.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add incoming_sources.txt
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "update incoming sources"
+            git push
+          fi
+          cd ..
+          rm -rf temp_src
+
+      - name: Commit and Push Results
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt
+          
+          git add white_ip.txt white_ip_health.json alive_*.txt
+          
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "auto update"
+            git pull --rebase --autostash origin main
+            git push origin main
+          else
+            echo "No changes."
+          fi
