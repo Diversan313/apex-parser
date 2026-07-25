@@ -50,6 +50,11 @@ jobs:
                -L -o incoming_sources.txt \
                https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt || touch incoming_sources.txt
 
+          curl -H "Authorization: token $GH_PAT" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -L -o incoming_subs.txt \
+               https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_subs.txt || touch incoming_subs.txt
+
           curl -L -o GeoLite2-Country.mmdb https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
 
       - name: Ensure Base Files Exist
@@ -67,11 +72,12 @@ jobs:
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
           > incoming_sources.txt
+          > incoming_subs.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add incoming_sources.txt
+          git add .
           if ! git diff-index --quiet HEAD; then
-            git commit -m "update incoming sources"
+            git commit -m "update state"
             git push
           fi
           cd ..
@@ -82,7 +88,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt
+          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt
           
           git add white_ip.txt white_ip_health.json alive_*.txt
           
