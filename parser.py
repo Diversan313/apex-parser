@@ -9,6 +9,7 @@ import ipaddress
 import subprocess
 import time
 import random
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # --- НАСТРОЙКИ И ЛИМИТЫ ---
@@ -22,7 +23,9 @@ MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответ�
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
 MAX_WHITE_IPS = 1000          # Максимум IP в итоговом white_ip.txt
 
+# --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
 DNS_CACHE = {}
+DNS_LOCK = threading.Lock()
 
 try:
     import maxminddb
@@ -75,20 +78,25 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
-    if clean_host in DNS_CACHE:
-        return DNS_CACHE[clean_host]
-    
+    """Потокобезопасный кэширующий DNS-резолвер"""
+    with DNS_LOCK:
+        if clean_host in DNS_CACHE:
+            return DNS_CACHE[clean_host]
+
     if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) or ':' in clean_host:
-        DNS_CACHE[clean_host] = clean_host
+        with DNS_LOCK:
+            DNS_CACHE[clean_host] = clean_host
         return clean_host
 
     try:
         socket.setdefaulttimeout(1.5)
         ip = socket.gethostbyname(clean_host)
-        DNS_CACHE[clean_host] = ip
+        with DNS_LOCK:
+            DNS_CACHE[clean_host] = ip
         return ip
     except Exception:
-        DNS_CACHE[clean_host] = None
+        with DNS_LOCK:
+            DNS_CACHE[clean_host] = None
         return None
 
 def is_cloudflare_or_warp(host):
@@ -221,7 +229,7 @@ def is_ru_sni(link):
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
     """
-    🎯 НОВАЯ ТОЧНАЯ ЛОГИКА РАСПРЕДЕЛЕНИЯ:
+    🎯 КЛАССИФИКАЦИЯ КОНФИГОВ:
     1. IP есть в white_ip.txt -> 100% WL
     2. Флаг 🇷🇺 или российский IP -> 100% WL
     3. RU SNI -> рандом (30% в WL, 70% в BL)
@@ -233,7 +241,7 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
 
     clean_ip = resolve_to_clean_ip(host)
 
-    # 1. Проверка по white_ip.txt
+    # 1. Проверка по совпадению с white_ip.txt
     if clean_ip and clean_ip in white_ips:
         return 'WL'
 
@@ -244,14 +252,11 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
         if flag == "🇷🇺":
             return 'WL'
 
-    # 3. Проверка на RU SNI (30% отправляем в WL, остальные 70% в BL)
+    # 3. Проверка на RU SNI (30% в WL, 70% в BL)
     if is_ru_sni(link):
-        if random.random() < ru_sni_ratio:
-            return 'WL'
-        else:
-            return 'BL'
+        return 'WL' if random.random() < ru_sni_ratio else 'BL'
 
-    # 4. По умолчанию уходит в BlackList
+    # 4. По умолчанию -> BlackList
     return 'BL'
 
 def link_to_xray_outbound(link):
@@ -382,13 +387,25 @@ def get_free_port():
         s.bind(('127.0.0.1', 0))
         return s.getsockname()[1]
 
-def get_xray_cmd(cfg_name):
-    if os.name == 'nt':
-        return ["xray.exe", "-c", cfg_name] if os.path.exists('xray.exe') else ["xray", "-c", cfg_name]
-    else:
-        return ["./xray", "-c", cfg_name] if os.path.exists('./xray') else ["xray", "-c", cfg_name]
+def wait_for_port(port, timeout=0.6):
+    """Активное ожидание готовности локального порта без жестких задержек"""
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            with socket.create_connection(('127.0.0.1', port), timeout=0.05):
+                return True
+        except (OSError, ConnectionRefusedError):
+            time.sleep(0.01)
+    return False
+
+def get_xray_cmd():
+    exe = "xray.exe" if os.name == 'nt' else "./xray"
+    if not os.path.exists(exe):
+        exe = "xray"
+    return [exe, "run", "-c", "stdin:"]
 
 def check_via_xray(outbound_obj, timeout=3.5):
+    """Изолированный запуск Xray с передачей конфига в STDIN (0 дискового I/O)"""
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -396,15 +413,24 @@ def check_via_xray(outbound_obj, timeout=3.5):
         "outbounds": [outbound_obj]
     }
 
-    cfg_name = f"tmp_{port}.json"
-    with open(cfg_name, 'w', encoding='utf-8') as f:
-        json.dump(config, f)
-
     proc = None
     try:
-        cmd = get_xray_cmd(cfg_name)
-        proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(0.35)
+        cmd = get_xray_cmd()
+        proc = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        
+        # Передаем JSON-конфиг прямо в память Xray
+        proc.stdin.write(json.dumps(config).encode('utf-8'))
+        proc.stdin.flush()
+        proc.stdin.close()
+
+        # Ждем открытия порта мгновенно (без задержки time.sleep)
+        if not wait_for_port(port):
+            return False
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
@@ -419,17 +445,12 @@ def check_via_xray(outbound_obj, timeout=3.5):
         if proc:
             try:
                 proc.terminate()
-                proc.wait(timeout=0.5)
+                proc.wait(timeout=0.3)
             except Exception:
                 try:
                     proc.kill()
                 except Exception:
                     pass
-        if os.path.exists(cfg_name):
-            try:
-                os.remove(cfg_name)
-            except Exception:
-                pass
     return False
 
 def get_config_identity(link):
@@ -529,12 +550,7 @@ def save_health_tracker(data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips):
-    """
-    🛡 ЧИСТКА Базы white_ip.txt:
-    - Проверяет только существующий white_ip.txt + прилетевшие IP из TG.
-    - НЕ ДОБАВЛЯЕТ новые IP из распарсенных ссылок подписок!
-    - Удаляет мертвые IP только после MAX_FAILS_BEFORE_DELETE неудач.
-    """
+    """Чистка базы white_ip.txt без внесения сторонних IP из подписок"""
     health = load_health_tracker()
 
     current_ips = set()
@@ -545,10 +561,8 @@ def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
                 if ip and not ip.startswith('#'):
                     current_ips.add(ip)
 
-    # Кандидаты: старая база + только новые чистые IP из очереди Telegram
     candidate_ips = current_ips.union(set(incoming_raw_ips))
 
-    # Собираем все IP, которые реально ответили в текущем тесте (и из WL, и из BL)
     all_alive_configs = alive_wl_data + alive_bl_data
     alive_ips_in_run = set(incoming_raw_ips)
 
@@ -627,11 +641,9 @@ def main():
 
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
-    # Собираем все ссылки и чистим от дублей
     all_raw_links = wl_fetched + bl_fetched + incoming_proxies
     clean_links = clean_and_dedup(all_raw_links)
 
-    # Загружаем ручную базу white_ip.txt (для проверки)
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
@@ -641,7 +653,6 @@ def main():
     real_wl = []
     real_bl = []
 
-    # РАСПРЕДЕЛЕНИЕ ССЫЛОК ПО НОВЫМ ПРАВИЛАМ
     for link in clean_links:
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
         if target_list == 'WL':
@@ -666,7 +677,6 @@ def main():
             if res:
                 alive_bl_data.append(res)
 
-    # Чистим и обновляем white_ip.txt (без авто-добавления новых IP из подписок!)
     process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
