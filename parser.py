@@ -24,13 +24,9 @@ MAX_QUEUE_LIMIT = 1000        # Максимум элементов из оче�
 MAX_WHITE_IPS = 30000         # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
 
-# --- 5 ЭНДПОИНТОВ ДЛЯ МУЛЬТИ-ТЕСТА (С МИНИМУМОМ CLOUDFLARE) ---
+# Единый быстрый эндпоинт проверки
 CHECK_TARGETS = [
-    "https://www.gstatic.com/generate_204",
-    "https://connectivitycheck.gstatic.com/generate_204",
-    "http://detectportal.firefox.com/success.txt",
-    "http://www.msftconnecttest.com/connecttest.txt",
-    "https://cp.cloudflare.com/generate_204"
+    "https://www.gstatic.com/generate_204"
 ]
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
@@ -402,11 +398,7 @@ def get_xray_cmd():
     return [exe, "run", "-c", "stdin:"]
 
 def check_via_xray(outbound_obj, timeout=2.5):
-    """
-    🎯 МУЛЬТИ-ПРОВЕРКА (5 ЭНДПОИНТОВ):
-    Прокси проходит, только если ответил хотя бы на 3 из 5 тестов.
-    Считывает данные ответа, исключая ложные срабатывания (например, заглушки Nginx).
-    """
+    """Быстрый единичный тест через gstatic."""
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -434,51 +426,20 @@ def check_via_xray(outbound_obj, timeout=2.5):
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
 
-        successes = 0
-        fails = 0
-        latencies = []
-
-        for target in CHECK_TARGETS:
-            req = urllib.request.Request(target, headers={'User-Agent': 'Mozilla/5.0'})
-            t0 = time.time()
-            try:
-                with opener.open(req, timeout=timeout) as resp:
-                    if resp.status in [200, 204]:
-                        # Читаем кусочек ответа для проверки реального прохождения трафика
-                        content = resp.read(1024).decode('utf-8', errors='ignore').lower()
-
-                        is_valid = True
-                        if "firefox" in target and "success" not in content:
-                            is_valid = False
-                        elif "msftconnecttest" in target and "microsoft connect test" not in content:
-                            is_valid = False
-
-                        if is_valid:
-                            rtt = (time.time() - t0) * 1000
-                            successes += 1
-                            latencies.append(rtt)
-                        else:
-                            fails += 1
-                    else:
-                        fails += 1
-            except Exception:
-                fails += 1
-
-            # Если набралось 3 ошибки — набрать 3 успеха уже невозможно (из 5 тестов)
-            if fails >= 3:
-                break
-
-        if successes >= 3:
-            avg_latency = sum(latencies) / len(latencies) if latencies else 9999
-            return True, avg_latency
-
+        target = CHECK_TARGETS[0]
+        req = urllib.request.Request(target, headers={'User-Agent': 'Mozilla/5.0'})
+        t0 = time.time()
+        with opener.open(req, timeout=timeout) as resp:
+            if resp.status in [200, 204]:
+                rtt = (time.time() - t0) * 1000
+                return True, rtt
     except Exception:
         pass
     finally:
         if proc:
             try:
                 proc.terminate()
-                proc.wait(timeout=0.3)
+                proc.wait(timeout=0.2)
             except Exception:
                 try:
                     proc.kill()
@@ -487,6 +448,7 @@ def check_via_xray(outbound_obj, timeout=2.5):
     return False, 9999
 
 def check_proxy_alive(link):
+    """Обычная проверка для BlackList (если мертв — возвращает None)."""
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port:
         return None
@@ -502,6 +464,21 @@ def check_proxy_alive(link):
             final_flag = get_real_ip_and_flag(host, orig_flag)
             return (link, final_flag, avg_latency)
     return None
+
+def check_proxy_alive_wl(link):
+    """
+    ПРИОРИТЕТНАЯ ПРОВЕРКА ДЛЯ WHITE LIST:
+    Если ответил — отдает реальный пинг.
+    Если мертв — Все равно ВОЗВРАЩАЕТ ТУ ЖЕ ССЫЛКУ с пингом 9999 (чтобы не потерять!).
+    """
+    res = check_proxy_alive(link)
+    if res:
+        return res
+
+    host, _, orig_name = parse_host_port_and_name(link)
+    orig_flag = extract_clean_flag(orig_name)
+    final_flag = get_real_ip_and_flag(host, orig_flag) if host else orig_flag
+    return (link, final_flag, 9999)
 
 def fetch_single_url(url):
     try:
@@ -655,21 +632,20 @@ def clean_and_dedup(tagged_items):
     return valid_items
 
 def rename_config(link, index, tag, detected_flag):
+    """Гарантирует красивое переименование строго без дыр в нумерации."""
+    new_name = f"{detected_flag} {tag} Сервер {index}"
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
             decoded = safe_b64decode(b64_data)
             data = json.loads(decoded)
-            data['ps'] = f"{detected_flag} {tag} Сервер {index}"
-            return f"vmess://{base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')}"
+            data['ps'] = new_name
+            return f"vmess://{base64.b64encode(json.dumps(data, ensure_ascii=False).encode('utf-8')).decode('utf-8')}"
         except Exception:
-            return link
+            pass
     if "://" in link:
-        try:
-            main_part = link.split('#', 1)[0]
-            return f"{main_part}#{urllib.parse.quote(f'{detected_flag} {tag} Сервер {index}')}"
-        except Exception:
-            return link
+        main_part = link.split('#', 1)[0]
+        return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
 def main():
@@ -712,27 +688,31 @@ def main():
                 real_bl.append(link)
 
     print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
-    print(f"⚡️ HTTP-тестирование (5 источников, порог 3/5) в {MAX_WORKERS} потоков...")
+    print(f"⚡️ Быстрое HTTP-тестирование в {MAX_WORKERS} потоков...")
     alive_wl_data, alive_bl_data = [], []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
+        # Для WL используем принудительное сохранение даже при сбое
+        wl_futures = [executor.submit(check_proxy_alive_wl, link) for link in real_wl]
         for future in as_completed(wl_futures):
             res = future.result()
             if res:
                 alive_wl_data.append(res)
 
+        # Для BL используем стандартное удаление нерабочих
         bl_futures = [executor.submit(check_proxy_alive, link) for link in real_bl]
         for future in as_completed(bl_futures):
             res = future.result()
             if res:
                 alive_bl_data.append(res)
 
+    # Сортировка по задержке: живые серверы будут сверху (10-300 мс), не ответившие — внизу (9999 мс)
     alive_wl_data.sort(key=lambda x: x[2])
     alive_bl_data.sort(key=lambda x: x[2])
 
     process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
 
+    # Последовательная гарантированная нумерация от 1 до N без дыр
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
