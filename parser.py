@@ -231,7 +231,7 @@ def is_ru_sni(link):
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
     """
     🎯 КЛАССИФИКАЦИЯ ДЛЯ ЧЕРНОГО СПИСКА И ОЧЕРЕДИ:
-    1. IP есть в white_ip.txt -> WL
+    1. Абсолютный приоритет: IP/хост есть в white_ip.txt -> WL
     2. Флаг 🇷🇺 или российский IP -> WL
     3. RU SNI -> рандом (30% в WL, 70% в BL)
     4. Всё остальное -> BL
@@ -240,11 +240,18 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
     if not host:
         return 'BL'
 
-    clean_ip = resolve_to_clean_ip(host)
+    clean_host = host.strip('[]').lower()
 
-    if clean_ip and clean_ip in white_ips:
+    # 1. СНАЧАЛА ПРОВЕРЯЕМ WHITE_IP БЕЗ ДОПОЛНИТЕЛЬНЫХ ФИЛЬТРОВ
+    if clean_host in white_ips:
         return 'WL'
 
+    resolved_ip = resolve_host_cached(clean_host)
+    if resolved_ip and resolved_ip in white_ips:
+        return 'WL'
+
+    # 2. ПРОВЕРКИ НА РОССИЙСКИЕ IP ИЛИ SNI
+    clean_ip = resolve_to_clean_ip(host)
     if clean_ip:
         orig_flag = extract_clean_flag(orig_name)
         flag = get_real_ip_and_flag(clean_ip, orig_flag)
