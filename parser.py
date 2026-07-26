@@ -47,7 +47,7 @@ def download_geoip_db():
     if not os.path.exists(MMDB_PATH):
         print("📥 Скачиваю базу GeoIP...")
         try:
-            req = urllib.request.Request(MMDB_URL, headers={'User-Agent': 'Mozilla/5.0'})
+            req = urllib.request.Request(MMDB_URL, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
             with urllib.request.urlopen(req, timeout=30) as response, open(MMDB_PATH, 'wb') as out_file:
                 out_file.write(response.read())
             print("✅ База GeoIP загружена!")
@@ -90,7 +90,7 @@ def resolve_host_cached(clean_host):
         return clean_host
 
     try:
-        socket.setdefaulttimeout(1.5)
+        socket.setdefaulttimeout(2.0)
         ip = socket.gethostbyname(clean_host)
         with DNS_LOCK:
             DNS_CACHE[clean_host] = ip
@@ -101,6 +101,7 @@ def resolve_host_cached(clean_host):
         return None
 
 def is_cloudflare_or_warp(host):
+    """Жесткая проверка на Cloudflare и заглушки"""
     try:
         clean_host = host.strip('[]').lower()
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
@@ -229,20 +230,13 @@ def is_ru_sni(link):
     return False
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
-    """
-    🎯 КЛАССИФИКАЦИЯ ДЛЯ ЧЕРНОГО СПИСКА И ОЧЕРЕДИ:
-    1. Абсолютный приоритет: IP/хост есть в white_ip.txt -> WL
-    2. Флаг 🇷🇺 или российский IP -> WL
-    3. RU SNI -> рандом (30% в WL, 70% в BL)
-    4. Всё остальное -> BL
-    """
     host, _, orig_name = parse_host_port_and_name(link)
     if not host:
         return 'BL'
 
     clean_host = host.strip('[]').lower()
 
-    # 1. СНАЧАЛА ПРОВЕРЯЕМ WHITE_IP БЕЗ ДОПОЛНИТЕЛЬНЫХ ФИЛЬТРОВ
+    # 1. СНАЧАЛА ПРОВЕРЯЕМ СОВПАДЕНИЕ ПО WHITE_IP
     if clean_host in white_ips:
         return 'WL'
 
@@ -250,7 +244,7 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
     if resolved_ip and resolved_ip in white_ips:
         return 'WL'
 
-    # 2. ПРОВЕРКИ НА РОССИЙСКИЕ IP ИЛИ SNI
+    # 2. Российский IP или Флаг
     clean_ip = resolve_to_clean_ip(host)
     if clean_ip:
         orig_flag = extract_clean_flag(orig_name)
@@ -264,6 +258,12 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
     return 'BL'
 
 def link_to_xray_outbound(link):
+    """
+    Генератор outbound для Xray с поддержкой ВСЕХ современных транспортов:
+    vless, vmess, trojan, shadowsocks, hysteria2
+    ws, grpc, xhttp, splithttp, httpupgrade, http, kcp
+    tls, reality
+    """
     try:
         main_part = link.split('#')[0]
         if '://' not in main_part:
@@ -348,38 +348,77 @@ def link_to_xray_outbound(link):
                 'sni': [data.get('sni', '') or data.get('host', '')],
                 'type': [data.get('net', '')],
                 'path': [data.get('path', '/')],
-                'host': [data.get('host', '')]
+                'host': [data.get('host', '')],
+                'alpn': [data.get('alpn', '')]
             }
         else:
             return None
 
-        security = query_params.get('security', [''])[0]
-        if protocol == 'trojan' and not security:
+        # --- НАСТРОЙКА БЕЗОПАСНОСТИ (TLS / REALITY) ---
+        security = query_params.get('security', [''])[0].lower()
+        if protocol in ['trojan', 'hysteria2', 'hy2'] and not security:
             security = 'tls'
+
         if security in ['tls', 'reality']:
             outbound["streamSettings"]["security"] = security
+            sni = query_params.get('sni', [''])[0] or query_params.get('host', [''])[0]
+            alpn_raw = query_params.get('alpn', [''])[0]
+            alpn_list = [a.strip() for a in alpn_raw.split(',') if a.strip()] if alpn_raw else []
+
             if security == 'tls':
-                sni = query_params.get('sni', [''])[0] or query_params.get('host', [''])[0]
-                outbound["streamSettings"]["tlsSettings"] = {"serverName": sni}
+                tls_obj = {"serverName": sni}
+                if alpn_list:
+                    tls_obj["alpn"] = alpn_list
+                outbound["streamSettings"]["tlsSettings"] = tls_obj
             elif security == 'reality':
-                outbound["streamSettings"]["realitySettings"] = {
-                    "serverName": query_params.get('sni', [''])[0],
+                reality_obj = {
+                    "serverName": sni,
                     "publicKey": query_params.get('pbk', [''])[0],
                     "shortId": query_params.get('sid', [''])[0],
                     "fingerprint": query_params.get('fp', ['chrome'])[0]
                 }
+                spx = query_params.get('spx', [''])[0]
+                if spx:
+                    reality_obj["spiderX"] = spx
+                outbound["streamSettings"]["realitySettings"] = reality_obj
 
+        # --- НАСТРОЙКА ВСЕХ СОВРЕМЕННЫХ ТРАНСПОРТОВ ---
         net = query_params.get('type', [''])[0] or query_params.get('net', [''])[0]
-        if net in ['ws', 'grpc']:
+        if net:
+            net = net.lower()
             outbound["streamSettings"]["network"] = net
+            path_val = query_params.get('path', ['/'])[0]
+            host_val = query_params.get('host', [''])[0]
+            header_type = query_params.get('headerType', ['none'])[0]
+
             if net == 'ws':
                 outbound["streamSettings"]["wsSettings"] = {
-                    "path": query_params.get('path', ['/'])[0],
-                    "headers": {"Host": query_params.get('host', [''])[0]}
+                    "path": path_val,
+                    "headers": {"Host": host_val} if host_val else {}
                 }
             elif net == 'grpc':
                 outbound["streamSettings"]["grpcSettings"] = {
-                    "serviceName": query_params.get('serviceName', [''])[0] or query_params.get('path', [''])[0]
+                    "serviceName": query_params.get('serviceName', [''])[0] or path_val.lstrip('/')
+                }
+            elif net in ['xhttp', 'splithttp']:
+                outbound["streamSettings"]["xhttpSettings"] = {
+                    "path": path_val,
+                    "host": host_val,
+                    "mode": query_params.get('mode', ['auto'])[0]
+                }
+            elif net == 'httpupgrade':
+                outbound["streamSettings"]["httpupgradeSettings"] = {
+                    "path": path_val,
+                    "host": host_val
+                }
+            elif net in ['http', 'h2']:
+                outbound["streamSettings"]["httpSettings"] = {
+                    "path": path_val,
+                    "host": [host_val] if host_val else []
+                }
+            elif net in ['kcp', 'mkcp']:
+                outbound["streamSettings"]["kcpSettings"] = {
+                    "header": {"type": header_type}
                 }
 
         return outbound
@@ -458,11 +497,12 @@ def check_proxy_alive(link):
     if not host or not port:
         return None
 
+    # ВОЗВРАЩЕНО: Жесткий срез Cloudflare / WARP для ВСЕХ серверов
     if is_cloudflare_or_warp(host):
         return None
 
     outbound = link_to_xray_outbound(link)
-    if outbound and check_via_xray(outbound):
+    if outbound and check_via_xray(outbound, timeout=3.5):
         orig_flag = extract_clean_flag(orig_name)
         final_flag = get_real_ip_and_flag(host, orig_flag)
         return (link, final_flag)
@@ -471,8 +511,11 @@ def check_proxy_alive(link):
 def fetch_single_url(url):
     try:
         url = url.strip().replace(' ', '%20')
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=5) as response:
+        req = urllib.request.Request(
+            url, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+        )
+        with urllib.request.urlopen(req, timeout=10) as response:
             raw_data = response.read()
             try:
                 content = raw_data.decode('utf-8', errors='ignore')
@@ -486,21 +529,27 @@ def fetch_single_url(url):
                         content = decoded
                 except Exception:
                     pass
-            return [l.strip() for l in content.split('\n') if l.strip()]
+            return [l.strip() for l in content.splitlines() if l.strip()]
     except Exception:
         return []
 
 def fetch_links_parallel(url_file):
     links = []
+    urls = []
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
+        
+        print(f"🔗 Загружаем источники из файла {url_file} (всего урлов: {len(urls)})...")
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = {executor.submit(fetch_single_url, url): url for url in urls}
             for future in as_completed(futures):
                 links.extend(future.result())
+        print(f"✅ Из файла {url_file} выкачано конфигов: {len(links)}")
     except FileNotFoundError:
-        pass
+        print(f"⚠️ Файл {url_file} не найден!")
+    except Exception as e:
+        print(f"⚠️ Ошибка чтения {url_file}: {e}")
     return links
 
 def process_incoming_queue():
@@ -620,7 +669,6 @@ def clean_and_dedup(tagged_items):
     return valid_items
 
 def rename_config(link, index, tag, detected_flag):
-    """Гарантирует последовательную нумерацию 1..N без пропусков"""
     new_name = f"{detected_flag} {tag} Сервер {index}"
     if link.startswith("vmess://"):
         try:
@@ -675,7 +723,7 @@ def main():
             else:
                 real_bl.append(link)
 
-    print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
+    print(f"⚡️ Итого на проверку: {len(real_wl)} в WL и {len(real_bl)} в BL.")
     print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
     alive_wl_data, alive_bl_data = [], []
 
