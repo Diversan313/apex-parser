@@ -21,7 +21,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 прогона подряд
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WHITE_IPS = 1000          # Максимум IP в итоговом white_ip.txt
+MAX_WHITE_IPS = 30000          # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
