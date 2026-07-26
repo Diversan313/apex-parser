@@ -24,11 +24,13 @@ MAX_QUEUE_LIMIT = 1000        # Максимум элементов из оче�
 MAX_WHITE_IPS = 30000         # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
 
-# Эндпоинты для мульти-теста доступности
+# --- 5 ЭНДПОИНТОВ ДЛЯ МУЛЬТИ-ТЕСТА (С МИНИМУМОМ CLOUDFLARE) ---
 CHECK_TARGETS = [
     "https://www.gstatic.com/generate_204",
-    "https://cp.cloudflare.com/generate_204",
-    "https://connectivitycheck.gstatic.com/generate_204"
+    "https://connectivitycheck.gstatic.com/generate_204",
+    "http://detectportal.firefox.com/success.txt",
+    "http://www.msftconnecttest.com/connecttest.txt",
+    "https://cp.cloudflare.com/generate_204"
 ]
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
@@ -401,9 +403,9 @@ def get_xray_cmd():
 
 def check_via_xray(outbound_obj, timeout=2.5):
     """
-    🎯 МУЛЬТИ-ПРОВЕРКА (3 эндпоинта):
-    Прокси проходит, если ответил хотя бы 2 из 3 раз.
-    Возвращает (is_alive, avg_latency_ms).
+    🎯 МУЛЬТИ-ПРОВЕРКА (5 ЭНДПОИНТОВ):
+    Прокси проходит, только если ответил хотя бы на 3 из 5 тестов.
+    Считывает данные ответа, исключая ложные срабатывания (например, заглушки Nginx).
     """
     port = get_free_port()
     config = {
@@ -442,19 +444,31 @@ def check_via_xray(outbound_obj, timeout=2.5):
             try:
                 with opener.open(req, timeout=timeout) as resp:
                     if resp.status in [200, 204]:
-                        rtt = (time.time() - t0) * 1000
-                        successes += 1
-                        latencies.append(rtt)
+                        # Читаем кусочек ответа для проверки реального прохождения трафика
+                        content = resp.read(1024).decode('utf-8', errors='ignore').lower()
+
+                        is_valid = True
+                        if "firefox" in target and "success" not in content:
+                            is_valid = False
+                        elif "msftconnecttest" in target and "microsoft connect test" not in content:
+                            is_valid = False
+
+                        if is_valid:
+                            rtt = (time.time() - t0) * 1000
+                            successes += 1
+                            latencies.append(rtt)
+                        else:
+                            fails += 1
                     else:
                         fails += 1
             except Exception:
                 fails += 1
 
-            # Ранняя отбраковка: 2 сбоя означают, что 2/3 уже не набрать
-            if fails >= 2:
+            # Если набралось 3 ошибки — набрать 3 успеха уже невозможно (из 5 тестов)
+            if fails >= 3:
                 break
 
-        if successes >= 2:
+        if successes >= 3:
             avg_latency = sum(latencies) / len(latencies) if latencies else 9999
             return True, avg_latency
 
@@ -698,7 +712,7 @@ def main():
                 real_bl.append(link)
 
     print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
-    print(f"⚡️ HTTP-тестирование (3 попытки, от 2/3) в {MAX_WORKERS} потоков...")
+    print(f"⚡️ HTTP-тестирование (5 источников, порог 3/5) в {MAX_WORKERS} потоков...")
     alive_wl_data, alive_bl_data = [], []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -714,7 +728,6 @@ def main():
             if res:
                 alive_bl_data.append(res)
 
-    # 📊 Бесшумная сортировка по пингу (элемент index=2 — это avg_latency)
     alive_wl_data.sort(key=lambda x: x[2])
     alive_bl_data.sort(key=lambda x: x[2])
 
