@@ -21,13 +21,8 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 прогона подряд
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WHITE_IPS = 30000         # Максимум IP в итоговом white_ip.txt
+MAX_WHITE_IPS = 30000          # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
-
-# Единый быстрый эндпоинт проверки
-CHECK_TARGETS = [
-    "https://www.gstatic.com/generate_204"
-]
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
 DNS_CACHE = {}
@@ -84,6 +79,7 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
+    """Потокобезопасный кэширующий DNS-резолвер"""
     with DNS_LOCK:
         if clean_host in DNS_CACHE:
             return DNS_CACHE[clean_host]
@@ -233,6 +229,13 @@ def is_ru_sni(link):
     return False
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
+    """
+    🎯 КЛАССИФИКАЦИЯ ДЛЯ ЧЕРНОГО СПИСКА И ОЧЕРЕДИ:
+    1. IP есть в white_ip.txt -> WL
+    2. Флаг 🇷🇺 или российский IP -> WL
+    3. RU SNI -> рандом (30% в WL, 70% в BL)
+    4. Всё остальное -> BL
+    """
     host, _, orig_name = parse_host_port_and_name(link)
     if not host:
         return 'BL'
@@ -397,8 +400,7 @@ def get_xray_cmd():
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray(outbound_obj, timeout=2.5):
-    """Быстрый единичный тест через gstatic."""
+def check_via_xray(outbound_obj, timeout=3.5):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -421,34 +423,30 @@ def check_via_xray(outbound_obj, timeout=2.5):
         proc.stdin.close()
 
         if not wait_for_port(port):
-            return False, 9999
+            return False
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
+        req = urllib.request.Request("https://www.gstatic.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
 
-        target = CHECK_TARGETS[0]
-        req = urllib.request.Request(target, headers={'User-Agent': 'Mozilla/5.0'})
-        t0 = time.time()
         with opener.open(req, timeout=timeout) as resp:
             if resp.status in [200, 204]:
-                rtt = (time.time() - t0) * 1000
-                return True, rtt
+                return True
     except Exception:
         pass
     finally:
         if proc:
             try:
                 proc.terminate()
-                proc.wait(timeout=0.2)
+                proc.wait(timeout=0.3)
             except Exception:
                 try:
                     proc.kill()
                 except Exception:
                     pass
-    return False, 9999
+    return False
 
 def check_proxy_alive(link):
-    """Обычная проверка для BlackList (если мертв — возвращает None)."""
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port:
         return None
@@ -457,28 +455,11 @@ def check_proxy_alive(link):
         return None
 
     outbound = link_to_xray_outbound(link)
-    if outbound:
-        is_alive, avg_latency = check_via_xray(outbound)
-        if is_alive:
-            orig_flag = extract_clean_flag(orig_name)
-            final_flag = get_real_ip_and_flag(host, orig_flag)
-            return (link, final_flag, avg_latency)
+    if outbound and check_via_xray(outbound):
+        orig_flag = extract_clean_flag(orig_name)
+        final_flag = get_real_ip_and_flag(host, orig_flag)
+        return (link, final_flag)
     return None
-
-def check_proxy_alive_wl(link):
-    """
-    ПРИОРИТЕТНАЯ ПРОВЕРКА ДЛЯ WHITE LIST:
-    Если ответил — отдает реальный пинг.
-    Если мертв — Все равно ВОЗВРАЩАЕТ ТУ ЖЕ ССЫЛКУ с пингом 9999 (чтобы не потерять!).
-    """
-    res = check_proxy_alive(link)
-    if res:
-        return res
-
-    host, _, orig_name = parse_host_port_and_name(link)
-    orig_flag = extract_clean_flag(orig_name)
-    final_flag = get_real_ip_and_flag(host, orig_flag) if host else orig_flag
-    return (link, final_flag, 9999)
 
 def fetch_single_url(url):
     try:
@@ -632,7 +613,7 @@ def clean_and_dedup(tagged_items):
     return valid_items
 
 def rename_config(link, index, tag, detected_flag):
-    """Гарантирует красивое переименование строго без дыр в нумерации."""
+    """Гарантирует последовательную нумерацию 1..N без пропусков"""
     new_name = f"{detected_flag} {tag} Сервер {index}"
     if link.startswith("vmess://"):
         try:
@@ -688,31 +669,24 @@ def main():
                 real_bl.append(link)
 
     print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
-    print(f"⚡️ Быстрое HTTP-тестирование в {MAX_WORKERS} потоков...")
+    print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
     alive_wl_data, alive_bl_data = [], []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        # Для WL используем принудительное сохранение даже при сбое
-        wl_futures = [executor.submit(check_proxy_alive_wl, link) for link in real_wl]
+        wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
             res = future.result()
             if res:
                 alive_wl_data.append(res)
 
-        # Для BL используем стандартное удаление нерабочих
         bl_futures = [executor.submit(check_proxy_alive, link) for link in real_bl]
         for future in as_completed(bl_futures):
             res = future.result()
             if res:
                 alive_bl_data.append(res)
 
-    # Сортировка по задержке: живые серверы будут сверху (10-300 мс), не ответившие — внизу (9999 мс)
-    alive_wl_data.sort(key=lambda x: x[2])
-    alive_bl_data.sort(key=lambda x: x[2])
-
     process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
 
-    # Последовательная гарантированная нумерация от 1 до N без дыр
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
@@ -726,7 +700,7 @@ def main():
 
     if GEO_READER:
         GEO_READER.close()
-    print("✨ Все готово! Результаты отсортированы по задержке и сохранены.")
+    print("✨ Все готово! Результаты и базы обновлены.")
 
 if __name__ == '__main__':
     main()
