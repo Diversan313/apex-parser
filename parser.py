@@ -21,8 +21,15 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 прогона подряд
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WHITE_IPS = 30000          # Максимум IP в итоговом white_ip.txt
+MAX_WHITE_IPS = 30000         # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
+
+# Эндпоинты для мульти-теста доступности
+CHECK_TARGETS = [
+    "https://www.gstatic.com/generate_204",
+    "https://cp.cloudflare.com/generate_204",
+    "https://connectivitycheck.gstatic.com/generate_204"
+]
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
 DNS_CACHE = {}
@@ -79,7 +86,6 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
-    """Потокобезопасный кэширующий DNS-резолвер"""
     with DNS_LOCK:
         if clean_host in DNS_CACHE:
             return DNS_CACHE[clean_host]
@@ -229,13 +235,6 @@ def is_ru_sni(link):
     return False
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
-    """
-    🎯 КЛАССИФИКАЦИЯ ДЛЯ ЧЕРНОГО СПИСКА И ОЧЕРЕДИ:
-    1. IP есть в white_ip.txt -> WL
-    2. Флаг 🇷🇺 или российский IP -> WL
-    3. RU SNI -> рандом (30% в WL, 70% в BL)
-    4. Всё остальное -> BL
-    """
     host, _, orig_name = parse_host_port_and_name(link)
     if not host:
         return 'BL'
@@ -400,7 +399,12 @@ def get_xray_cmd():
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray(outbound_obj, timeout=3.5):
+def check_via_xray(outbound_obj, timeout=2.5):
+    """
+    🎯 МУЛЬТИ-ПРОВЕРКА (3 эндпоинта):
+    Прокси проходит, если ответил хотя бы 2 из 3 раз.
+    Возвращает (is_alive, avg_latency_ms).
+    """
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -423,15 +427,37 @@ def check_via_xray(outbound_obj, timeout=3.5):
         proc.stdin.close()
 
         if not wait_for_port(port):
-            return False
+            return False, 9999
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
-        req = urllib.request.Request("https://www.gstatic.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
 
-        with opener.open(req, timeout=timeout) as resp:
-            if resp.status in [200, 204]:
-                return True
+        successes = 0
+        fails = 0
+        latencies = []
+
+        for target in CHECK_TARGETS:
+            req = urllib.request.Request(target, headers={'User-Agent': 'Mozilla/5.0'})
+            t0 = time.time()
+            try:
+                with opener.open(req, timeout=timeout) as resp:
+                    if resp.status in [200, 204]:
+                        rtt = (time.time() - t0) * 1000
+                        successes += 1
+                        latencies.append(rtt)
+                    else:
+                        fails += 1
+            except Exception:
+                fails += 1
+
+            # Ранняя отбраковка: 2 сбоя означают, что 2/3 уже не набрать
+            if fails >= 2:
+                break
+
+        if successes >= 2:
+            avg_latency = sum(latencies) / len(latencies) if latencies else 9999
+            return True, avg_latency
+
     except Exception:
         pass
     finally:
@@ -444,7 +470,7 @@ def check_via_xray(outbound_obj, timeout=3.5):
                     proc.kill()
                 except Exception:
                     pass
-    return False
+    return False, 9999
 
 def check_proxy_alive(link):
     host, port, orig_name = parse_host_port_and_name(link)
@@ -455,10 +481,12 @@ def check_proxy_alive(link):
         return None
 
     outbound = link_to_xray_outbound(link)
-    if outbound and check_via_xray(outbound):
-        orig_flag = extract_clean_flag(orig_name)
-        final_flag = get_real_ip_and_flag(host, orig_flag)
-        return (link, final_flag)
+    if outbound:
+        is_alive, avg_latency = check_via_xray(outbound)
+        if is_alive:
+            orig_flag = extract_clean_flag(orig_name)
+            final_flag = get_real_ip_and_flag(host, orig_flag)
+            return (link, final_flag, avg_latency)
     return None
 
 def fetch_single_url(url):
@@ -584,10 +612,6 @@ def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
     print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов.")
 
 def clean_and_dedup(tagged_items):
-    """
-    Удаляет 100% копии и дубликаты вида (протокол, хост, порт)
-    tagged_items: список кортежей (link, source_tag)
-    """
     seen_strings = set()
     seen_keys = set()
     valid_items = []
@@ -597,12 +621,10 @@ def clean_and_dedup(tagged_items):
         if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
             continue
 
-        # 1. Проверка на 100% совпадение строки
         if link in seen_strings:
             continue
         seen_strings.add(link)
 
-        # 2. Проверка на дубликат по (протокол, хост, порт)
         host, port, _ = parse_host_port_and_name(link)
         if not host or not port:
             continue
@@ -646,7 +668,6 @@ def main():
 
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
-    # Помечаем источники
     tagged_items = []
     for link in wl_fetched:
         tagged_items.append((link, 'WL'))
@@ -655,7 +676,6 @@ def main():
     for link in incoming_proxies:
         tagged_items.append((link, 'BL'))
 
-    # Выполняем строгую дедупликацию
     clean_items = clean_and_dedup(tagged_items)
 
     white_ips = set()
@@ -669,10 +689,8 @@ def main():
 
     for link, source_tag in clean_items:
         if source_tag == 'WL':
-            # Из источников WL конфиги идут 100% в WL
             real_wl.append(link)
         else:
-            # Из источников BL и очереди конфиги классифицируются
             target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
             if target_list == 'WL':
                 real_wl.append(link)
@@ -680,7 +698,7 @@ def main():
                 real_bl.append(link)
 
     print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
-    print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
+    print(f"⚡️ HTTP-тестирование (3 попытки, от 2/3) в {MAX_WORKERS} потоков...")
     alive_wl_data, alive_bl_data = [], []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -695,6 +713,10 @@ def main():
             res = future.result()
             if res:
                 alive_bl_data.append(res)
+
+    # 📊 Бесшумная сортировка по пингу (элемент index=2 — это avg_latency)
+    alive_wl_data.sort(key=lambda x: x[2])
+    alive_bl_data.sort(key=lambda x: x[2])
 
     process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
 
@@ -711,7 +733,7 @@ def main():
 
     if GEO_READER:
         GEO_READER.close()
-    print("✨ Все готово! Результаты и базы обновлены.")
+    print("✨ Все готово! Результаты отсортированы по задержке и сохранены.")
 
 if __name__ == '__main__':
     main()
