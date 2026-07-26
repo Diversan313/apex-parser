@@ -22,6 +22,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 прогона подряд
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
 MAX_WHITE_IPS = 1000          # Максимум IP в итоговом white_ip.txt
+MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
 DNS_CACHE = {}
@@ -229,9 +230,9 @@ def is_ru_sni(link):
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
     """
-    🎯 КЛАССИФИКАЦИЯ КОНФИГОВ:
-    1. IP есть в white_ip.txt -> 100% WL
-    2. Флаг 🇷🇺 или российский IP -> 100% WL
+    🎯 КЛАССИФИКАЦИЯ ДЛЯ ЧЕРНОГО СПИСКА И ОЧЕРЕДИ:
+    1. IP есть в white_ip.txt -> WL
+    2. Флаг 🇷🇺 или российский IP -> WL
     3. RU SNI -> рандом (30% в WL, 70% в BL)
     4. Всё остальное -> BL
     """
@@ -241,22 +242,18 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
 
     clean_ip = resolve_to_clean_ip(host)
 
-    # 1. Проверка по совпадению с white_ip.txt
     if clean_ip and clean_ip in white_ips:
         return 'WL'
 
-    # 2. Проверка на RU IP или Флаг 🇷🇺
     if clean_ip:
         orig_flag = extract_clean_flag(orig_name)
         flag = get_real_ip_and_flag(clean_ip, orig_flag)
         if flag == "🇷🇺":
             return 'WL'
 
-    # 3. Проверка на RU SNI (30% в WL, 70% в BL)
     if is_ru_sni(link):
         return 'WL' if random.random() < ru_sni_ratio else 'BL'
 
-    # 4. По умолчанию -> BlackList
     return 'BL'
 
 def link_to_xray_outbound(link):
@@ -388,7 +385,6 @@ def get_free_port():
         return s.getsockname()[1]
 
 def wait_for_port(port, timeout=0.6):
-    """Активное ожидание готовности локального порта без жестких задержек"""
     start = time.time()
     while time.time() - start < timeout:
         try:
@@ -405,7 +401,6 @@ def get_xray_cmd():
     return [exe, "run", "-c", "stdin:"]
 
 def check_via_xray(outbound_obj, timeout=3.5):
-    """Изолированный запуск Xray с передачей конфига в STDIN (0 дискового I/O)"""
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -423,18 +418,16 @@ def check_via_xray(outbound_obj, timeout=3.5):
             stderr=subprocess.DEVNULL
         )
         
-        # Передаем JSON-конфиг прямо в память Xray
         proc.stdin.write(json.dumps(config).encode('utf-8'))
         proc.stdin.flush()
         proc.stdin.close()
 
-        # Ждем открытия порта мгновенно (без задержки time.sleep)
         if not wait_for_port(port):
             return False
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
-        req = urllib.request.Request("http://cp.cloudflare.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.Request("https://www.gstatic.com/generate_204", headers={'User-Agent': 'Mozilla/5.0'})
 
         with opener.open(req, timeout=timeout) as resp:
             if resp.status in [200, 204]:
@@ -452,16 +445,6 @@ def check_via_xray(outbound_obj, timeout=3.5):
                 except Exception:
                     pass
     return False
-
-def get_config_identity(link):
-    try:
-        protocol = link.split('://')[0].lower()
-        host, port, _ = parse_host_port_and_name(link)
-        if not host:
-            return None
-        return (protocol, host.lower().strip(), str(port))
-    except Exception:
-        return None
 
 def check_proxy_alive(link):
     host, port, orig_name = parse_host_port_and_name(link)
@@ -505,7 +488,7 @@ def fetch_links_parallel(url_file):
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        with ThreadPoolExecutor(max_workers=20) as executor:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = {executor.submit(fetch_single_url, url): url for url in urls}
             for future in as_completed(futures):
                 links.extend(future.result())
@@ -550,7 +533,6 @@ def save_health_tracker(data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips):
-    """Чистка базы white_ip.txt без внесения сторонних IP из подписок"""
     health = load_health_tracker()
 
     current_ips = set()
@@ -601,17 +583,40 @@ def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
     save_health_tracker(health)
     print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов.")
 
-def clean_and_dedup(links):
-    unique_identities = set()
-    valid_links = []
-    for link in links:
+def clean_and_dedup(tagged_items):
+    """
+    Удаляет 100% копии и дубликаты вида (протокол, хост, порт)
+    tagged_items: список кортежей (link, source_tag)
+    """
+    seen_strings = set()
+    seen_keys = set()
+    valid_items = []
+
+    for link, source_tag in tagged_items:
+        link = link.strip()
         if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
             continue
-        identity = get_config_identity(link)
-        if identity and identity not in unique_identities:
-            unique_identities.add(identity)
-            valid_links.append(link)
-    return valid_links
+
+        # 1. Проверка на 100% совпадение строки
+        if link in seen_strings:
+            continue
+        seen_strings.add(link)
+
+        # 2. Проверка на дубликат по (протокол, хост, порт)
+        host, port, _ = parse_host_port_and_name(link)
+        if not host or not port:
+            continue
+
+        protocol = link.split('://')[0].lower()
+        key = (protocol, host.lower().strip(), str(port))
+
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+
+        valid_items.append((link, source_tag))
+
+    return valid_items
 
 def rename_config(link, index, tag, detected_flag):
     if link.startswith("vmess://"):
@@ -641,8 +646,17 @@ def main():
 
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
-    all_raw_links = wl_fetched + bl_fetched + incoming_proxies
-    clean_links = clean_and_dedup(all_raw_links)
+    # Помечаем источники
+    tagged_items = []
+    for link in wl_fetched:
+        tagged_items.append((link, 'WL'))
+    for link in bl_fetched:
+        tagged_items.append((link, 'BL'))
+    for link in incoming_proxies:
+        tagged_items.append((link, 'BL'))
+
+    # Выполняем строгую дедупликацию
+    clean_items = clean_and_dedup(tagged_items)
 
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
@@ -653,18 +667,23 @@ def main():
     real_wl = []
     real_bl = []
 
-    for link in clean_links:
-        target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
-        if target_list == 'WL':
+    for link, source_tag in clean_items:
+        if source_tag == 'WL':
+            # Из источников WL конфиги идут 100% в WL
             real_wl.append(link)
         else:
-            real_bl.append(link)
+            # Из источников BL и очереди конфиги классифицируются
+            target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
+            if target_list == 'WL':
+                real_wl.append(link)
+            else:
+                real_bl.append(link)
 
     print(f"⚡️ Распределено: {len(real_wl)} в WL и {len(real_bl)} в BL.")
-    print(f"⚡️ HTTP-тестирование через Xray...")
+    print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
     alive_wl_data, alive_bl_data = [], []
 
-    with ThreadPoolExecutor(max_workers=20) as executor:
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
         for future in as_completed(wl_futures):
             res = future.result()
