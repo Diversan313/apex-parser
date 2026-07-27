@@ -14,15 +14,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # --- НАСТРОЙКИ И ЛИМИТЫ ---
 WHITE_IP_FILE = 'white_ip.txt'
-HEALTH_FILE = 'white_ip_health.json'
 INCOMING_FILE = 'incoming_sources.txt'
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
-MAX_FAILS_BEFORE_DELETE = 2  # Стираем IP, если он не ответил 2 прогона подряд
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
 MAX_WHITE_IPS = 30000          # Максимум IP в итоговом white_ip.txt
-MAX_WORKERS = 15              # Ограничение потоков (не больше 15)
+MAX_WORKERS = 15              # Ограничение потоков
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
 DNS_CACHE = {}
@@ -79,7 +77,6 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
-    """Потокобезопасный кэширующий DNS-резолвер"""
     with DNS_LOCK:
         if clean_host in DNS_CACHE:
             return DNS_CACHE[clean_host]
@@ -101,7 +98,6 @@ def resolve_host_cached(clean_host):
         return None
 
 def is_cloudflare_or_warp(host):
-    """Жесткая проверка на Cloudflare и заглушки"""
     try:
         clean_host = host.strip('[]').lower()
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
@@ -111,9 +107,7 @@ def is_cloudflare_or_warp(host):
         if not ip_str:
             return True
 
-        if ip_str.startswith(('104.', '162.', '172.', '8.39.', '8.35.', '188.114.')):
-            return True
-
+        # Удалена проверка по startswith (104. и т.д.), оставлена только точная сверка по подсетям
         ip_obj = ipaddress.ip_address(ip_str)
         if ip_obj.version == 4:
             for network in CF_NETWORKS:
@@ -236,7 +230,6 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
 
     clean_host = host.strip('[]').lower()
 
-    # 1. СНАЧАЛА ПРОВЕРЯЕМ СОВПАДЕНИЕ ПО WHITE_IP
     if clean_host in white_ips:
         return 'WL'
 
@@ -244,7 +237,6 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
     if resolved_ip and resolved_ip in white_ips:
         return 'WL'
 
-    # 2. Российский IP или Флаг
     clean_ip = resolve_to_clean_ip(host)
     if clean_ip:
         orig_flag = extract_clean_flag(orig_name)
@@ -258,12 +250,6 @@ def classify_config(link, white_ips, ru_sni_ratio=0.3):
     return 'BL'
 
 def link_to_xray_outbound(link):
-    """
-    Генератор outbound для Xray с поддержкой ВСЕХ современных транспортов:
-    vless, vmess, trojan, shadowsocks, hysteria2
-    ws, grpc, xhttp, splithttp, httpupgrade, http, kcp
-    tls, reality
-    """
     try:
         main_part = link.split('#')[0]
         if '://' not in main_part:
@@ -299,22 +285,18 @@ def link_to_xray_outbound(link):
                         method, password = user_info.split(':', 1)
                     else:
                         return None
-
             host, port = parse_host_port(host_port)
             if not host or not port:
                 return None
-
             outbound.update({
                 "protocol": "shadowsocks",
                 "settings": {"servers": [{"address": host, "port": port, "method": method, "password": password}]}
             })
-
         elif protocol in ['vless', 'trojan', 'hysteria2', 'hy2']:
             user_info, host_port = rest.split('@', 1) if '@' in rest else ("", rest)
             host, port = parse_host_port(host_port)
             if not host or not port:
                 return None
-
             if protocol == 'vless':
                 flow = query_params.get('flow', [''])[0]
                 outbound.update({
@@ -331,14 +313,12 @@ def link_to_xray_outbound(link):
                     "protocol": "hysteria2",
                     "settings": {"servers": [{"address": host, "port": port, "password": user_info}]}
                 })
-
         elif protocol == 'vmess':
             decoded = safe_b64decode(rest)
             data = json.loads(decoded)
             host, port = data.get('add'), int(data.get('port'))
             if not host or not port:
                 return None
-
             outbound.update({
                 "protocol": "vmess",
                 "settings": {"vnext": [{"address": host, "port": port, "users": [{"id": data.get('id'), "alterId": int(data.get('aid', 0)), "security": "auto"}]}]}
@@ -354,7 +334,6 @@ def link_to_xray_outbound(link):
         else:
             return None
 
-        # --- НАСТРОЙКА БЕЗОПАСНОСТИ (TLS / REALITY) ---
         security = query_params.get('security', [''])[0].lower()
         if protocol in ['trojan', 'hysteria2', 'hy2'] and not security:
             security = 'tls'
@@ -382,7 +361,6 @@ def link_to_xray_outbound(link):
                     reality_obj["spiderX"] = spx
                 outbound["streamSettings"]["realitySettings"] = reality_obj
 
-        # --- НАСТРОЙКА ВСЕХ СОВРЕМЕННЫХ ТРАНСПОРТОВ ---
         net = query_params.get('type', [''])[0] or query_params.get('net', [''])[0]
         if net:
             net = net.lower()
@@ -392,34 +370,17 @@ def link_to_xray_outbound(link):
             header_type = query_params.get('headerType', ['none'])[0]
 
             if net == 'ws':
-                outbound["streamSettings"]["wsSettings"] = {
-                    "path": path_val,
-                    "headers": {"Host": host_val} if host_val else {}
-                }
+                outbound["streamSettings"]["wsSettings"] = {"path": path_val, "headers": {"Host": host_val} if host_val else {}}
             elif net == 'grpc':
-                outbound["streamSettings"]["grpcSettings"] = {
-                    "serviceName": query_params.get('serviceName', [''])[0] or path_val.lstrip('/')
-                }
+                outbound["streamSettings"]["grpcSettings"] = {"serviceName": query_params.get('serviceName', [''])[0] or path_val.lstrip('/')}
             elif net in ['xhttp', 'splithttp']:
-                outbound["streamSettings"]["xhttpSettings"] = {
-                    "path": path_val,
-                    "host": host_val,
-                    "mode": query_params.get('mode', ['auto'])[0]
-                }
+                outbound["streamSettings"]["xhttpSettings"] = {"path": path_val, "host": host_val, "mode": query_params.get('mode', ['auto'])[0]}
             elif net == 'httpupgrade':
-                outbound["streamSettings"]["httpupgradeSettings"] = {
-                    "path": path_val,
-                    "host": host_val
-                }
+                outbound["streamSettings"]["httpupgradeSettings"] = {"path": path_val, "host": host_val}
             elif net in ['http', 'h2']:
-                outbound["streamSettings"]["httpSettings"] = {
-                    "path": path_val,
-                    "host": [host_val] if host_val else []
-                }
+                outbound["streamSettings"]["httpSettings"] = {"path": path_val, "host": [host_val] if host_val else []}
             elif net in ['kcp', 'mkcp']:
-                outbound["streamSettings"]["kcpSettings"] = {
-                    "header": {"type": header_type}
-                }
+                outbound["streamSettings"]["kcpSettings"] = {"header": {"type": header_type}}
 
         return outbound
     except Exception:
@@ -446,7 +407,8 @@ def get_xray_cmd():
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray(outbound_obj, timeout=3.5):
+# ТАЙМАУТ УВЕЛИЧЕН ДО 6.0 секунд для Github Actions
+def check_via_xray(outbound_obj, timeout=6.0):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -457,13 +419,7 @@ def check_via_xray(outbound_obj, timeout=3.5):
     proc = None
     try:
         cmd = get_xray_cmd()
-        proc = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-        
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         proc.stdin.write(json.dumps(config).encode('utf-8'))
         proc.stdin.flush()
         proc.stdin.close()
@@ -497,12 +453,11 @@ def check_proxy_alive(link):
     if not host or not port:
         return None
 
-    # ВОЗВРАЩЕНО: Жесткий срез Cloudflare / WARP для ВСЕХ серверов
     if is_cloudflare_or_warp(host):
         return None
 
     outbound = link_to_xray_outbound(link)
-    if outbound and check_via_xray(outbound, timeout=3.5):
+    if outbound and check_via_xray(outbound, timeout=6.0):
         orig_flag = extract_clean_flag(orig_name)
         final_flag = get_real_ip_and_flag(host, orig_flag)
         return (link, final_flag)
@@ -575,69 +530,13 @@ def process_incoming_queue():
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
 
-def load_health_tracker():
-    if os.path.exists(HEALTH_FILE):
-        try:
-            with open(HEALTH_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {}
-
-def save_health_tracker(data):
-    with open(HEALTH_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-
-def process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips):
-    health = load_health_tracker()
-
-    current_ips = set()
-    if os.path.exists(WHITE_IP_FILE):
-        with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
-            for line in f:
-                ip = line.strip()
-                if ip and not ip.startswith('#'):
-                    current_ips.add(ip)
-
-    candidate_ips = current_ips.union(set(incoming_raw_ips))
-
-    all_alive_configs = alive_wl_data + alive_bl_data
-    alive_ips_in_run = set(incoming_raw_ips)
-
-    for item in all_alive_configs:
-        link = item[0]
-        host, _, _ = parse_host_port_and_name(link)
-        if host:
-            clean_ip = resolve_to_clean_ip(host)
-            if clean_ip:
-                alive_ips_in_run.add(clean_ip)
-
-    final_white_ips = set()
-    for ip in candidate_ips:
-        if ip in alive_ips_in_run:
-            final_white_ips.add(ip)
-            health[ip] = 0
-        else:
-            fails = health.get(ip, 0) + 1
-            health[ip] = fails
-            if fails < MAX_FAILS_BEFORE_DELETE:
-                print(f"⚠️ IP {ip} не ответил ({fails}/{MAX_FAILS_BEFORE_DELETE} шансов). Оставляем.")
-                final_white_ips.add(ip)
-            else:
-                print(f"❌ IP {ip} не отвечает {fails} прогона подряд -> УДАЛЯЕМ из базы.")
-                if ip in health:
-                    del health[ip]
-
-    limited_white_ips = sorted(list(final_white_ips))[:MAX_WHITE_IPS]
-
+def save_white_ips(white_ips):
+    # Теперь IP НИКОГДА не удаляются из файла. Они только пополняются.
+    limited_white_ips = sorted(list(white_ips))[:MAX_WHITE_IPS]
     with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
         if limited_white_ips:
             f.write('\n'.join(limited_white_ips) + '\n')
-        else:
-            f.write('')
-
-    save_health_tracker(health)
-    print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов.")
+    print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов (без удалений).")
 
 def clean_and_dedup(tagged_items):
     seen_strings = set()
@@ -704,45 +603,74 @@ def main():
 
     clean_items = clean_and_dedup(tagged_items)
 
+    # 1. ЧИТАЕМ WHITE IPs. ОНИ ТЕПЕРЬ ПОСТОЯННЫ.
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
             white_ips = {line.strip() for line in f if line.strip() and not line.strip().startswith('#')}
     white_ips.update(incoming_raw_ips)
 
-    real_wl = []
-    real_bl = []
+    trusted_wl_data = [] # Идут в финал БЕЗ пинга
+    ping_wl = []         # WL, которые нужно пинговать (например, по RU SNI)
+    ping_bl = []         # Обычный BL
 
     for link, source_tag in clean_items:
-        if source_tag == 'WL':
-            real_wl.append(link)
+        host, port, orig_name = parse_host_port_and_name(link)
+        if not host:
+            continue
+            
+        clean_host = host.strip('[]').lower()
+        resolved_ip = resolve_host_cached(clean_host)
+        orig_flag = extract_clean_flag(orig_name)
+
+        # Проверка: есть ли этот сервер в наших сохраненных White IP
+        is_white_ip = (clean_host in white_ips) or (resolved_ip and resolved_ip in white_ips)
+
+        # 2. ГЛАВНОЕ ПРАВИЛО: Если конфиг из источника WL или числится в white_ip.txt - БЕРЕМ БЕЗ ПИНГА
+        if source_tag == 'WL' or is_white_ip:
+            final_flag = get_real_ip_and_flag(host, orig_flag)
+            trusted_wl_data.append((link, final_flag))
         else:
+            # Остальное классифицируем
             target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
             if target_list == 'WL':
-                real_wl.append(link)
+                ping_wl.append(link)
             else:
-                real_bl.append(link)
+                ping_bl.append(link)
 
-    print(f"⚡️ Итого на проверку: {len(real_wl)} в WL и {len(real_bl)} в BL.")
+    print(f"⚡️ Итого серверов: {len(trusted_wl_data)} ДОВЕРЕННЫХ (без пинга), {len(ping_wl)} на пинг(WL) и {len(ping_bl)} на пинг(BL).")
     print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
-    alive_wl_data, alive_bl_data = [], []
+    
+    alive_wl_data = []
+    alive_bl_data = []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        wl_futures = [executor.submit(check_proxy_alive, link) for link in real_wl]
+        wl_futures = [executor.submit(check_proxy_alive, link) for link in ping_wl]
         for future in as_completed(wl_futures):
             res = future.result()
             if res:
                 alive_wl_data.append(res)
 
-        bl_futures = [executor.submit(check_proxy_alive, link) for link in real_bl]
+        bl_futures = [executor.submit(check_proxy_alive, link) for link in ping_bl]
         for future in as_completed(bl_futures):
             res = future.result()
             if res:
                 alive_bl_data.append(res)
 
-    process_and_clean_white_list(alive_wl_data, alive_bl_data, incoming_raw_ips)
+    # Сохраняем White IPs навсегда (добавляем новые живые IP из прогона)
+    for link, flag in (trusted_wl_data + alive_wl_data + alive_bl_data):
+        host, _, _ = parse_host_port_and_name(link)
+        if host:
+            clean_ip = resolve_to_clean_ip(host)
+            if clean_ip:
+                white_ips.add(clean_ip)
+                
+    save_white_ips(white_ips)
 
-    final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_data, 1)]
+    # Объединяем доверенные без пинга и те, что выжили после пинга
+    final_wl_raw = trusted_wl_data + alive_wl_data
+
+    final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(final_wl_raw, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
 
