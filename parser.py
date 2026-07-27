@@ -19,7 +19,7 @@ MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
 MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WHITE_IPS = 30000          # Максимум IP в итоговом white_ip.txt
+MAX_WHITE_IPS = 30000         # Максимум IP в итоговом white_ip.txt
 MAX_WORKERS = 15              # Ограничение потоков
 
 # --- БЕЗОПАСНЫЙ КЭШ DNS С БЛОКИРОВКОЙ ПОТОКОВ ---
@@ -107,7 +107,6 @@ def is_cloudflare_or_warp(host):
         if not ip_str:
             return True
 
-        # Удалена проверка по startswith (104. и т.д.), оставлена только точная сверка по подсетям
         ip_obj = ipaddress.ip_address(ip_str)
         if ip_obj.version == 4:
             for network in CF_NETWORKS:
@@ -407,7 +406,7 @@ def get_xray_cmd():
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-# ТАЙМАУТ УВЕЛИЧЕН ДО 6.0 секунд для Github Actions
+# ТАЙМАУТ УВЕЛИЧЕН ДО 6.0 секунд
 def check_via_xray(outbound_obj, timeout=6.0):
     port = get_free_port()
     config = {
@@ -610,9 +609,9 @@ def main():
             white_ips = {line.strip() for line in f if line.strip() and not line.strip().startswith('#')}
     white_ips.update(incoming_raw_ips)
 
-    trusted_wl_data = [] # Идут в финал БЕЗ пинга
-    ping_wl = []         # WL, которые нужно пинговать (например, по RU SNI)
-    ping_bl = []         # Обычный BL
+    trusted_white_data = [] # Идут в финал БЕЗ пинга (спасенные из white_ip.txt)
+    ping_wl = []            # WL, которые нужно пинговать (всё содержимое sources_wl)
+    ping_bl = []            # Обычный BL на пинг
 
     for link, source_tag in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
@@ -626,19 +625,22 @@ def main():
         # Проверка: есть ли этот сервер в наших сохраненных White IP
         is_white_ip = (clean_host in white_ips) or (resolved_ip and resolved_ip in white_ips)
 
-        # 2. ГЛАВНОЕ ПРАВИЛО: Если конфиг из источника WL или числится в white_ip.txt - БЕРЕМ БЕЗ ПИНГА
-        if source_tag == 'WL' or is_white_ip:
+        # 2. ГЛАВНОЕ ПРАВИЛО: Если конфиг есть в white_ip.txt - БЕРЕМ БЕЗ ПИНГА
+        if is_white_ip:
             final_flag = get_real_ip_and_flag(host, orig_flag)
-            trusted_wl_data.append((link, final_flag))
+            trusted_white_data.append((link, final_flag))
         else:
-            # Остальное классифицируем
-            target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
-            if target_list == 'WL':
+            # Если конфига нет в white_ip.txt, он ИДЕТ НА ТЕСТ, даже если он из WL
+            if source_tag == 'WL':
                 ping_wl.append(link)
             else:
-                ping_bl.append(link)
+                target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
+                if target_list == 'WL':
+                    ping_wl.append(link)
+                else:
+                    ping_bl.append(link)
 
-    print(f"⚡️ Итого серверов: {len(trusted_wl_data)} ДОВЕРЕННЫХ (без пинга), {len(ping_wl)} на пинг(WL) и {len(ping_bl)} на пинг(BL).")
+    print(f"⚡️ Итого серверов: {len(trusted_white_data)} ДОВЕРЕННЫХ (из white_ip.txt, без пинга), {len(ping_wl)} на пинг(WL) и {len(ping_bl)} на пинг(BL).")
     print(f"⚡️ HTTP-тестирование через Xray (в {MAX_WORKERS} потоков)...")
     
     alive_wl_data = []
@@ -658,7 +660,7 @@ def main():
                 alive_bl_data.append(res)
 
     # Сохраняем White IPs навсегда (добавляем новые живые IP из прогона)
-    for link, flag in (trusted_wl_data + alive_wl_data + alive_bl_data):
+    for link, flag in (trusted_white_data + alive_wl_data + alive_bl_data):
         host, _, _ = parse_host_port_and_name(link)
         if host:
             clean_ip = resolve_to_clean_ip(host)
@@ -667,8 +669,8 @@ def main():
                 
     save_white_ips(white_ips)
 
-    # Объединяем доверенные без пинга и те, что выжили после пинга
-    final_wl_raw = trusted_wl_data + alive_wl_data
+    # Объединяем спасенные из white_ip и те, что выжили после теста из WL
+    final_wl_raw = trusted_white_data + alive_wl_data
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(final_wl_raw, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
