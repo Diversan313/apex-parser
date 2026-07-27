@@ -530,14 +530,6 @@ def process_incoming_queue():
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
 
-def save_white_ips(white_ips):
-    # Теперь IP НИКОГДА не удаляются из файла. Они только пополняются.
-    limited_white_ips = sorted(list(white_ips))[:MAX_WHITE_IPS]
-    with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
-        if limited_white_ips:
-            f.write('\n'.join(limited_white_ips) + '\n')
-    print(f"🛡 Актуальный размер white_ip.txt: {len(limited_white_ips)} IP адресов (без удалений).")
-
 def clean_and_dedup(tagged_items):
     seen_strings = set()
     seen_keys = set()
@@ -603,7 +595,7 @@ def main():
 
     clean_items = clean_and_dedup(tagged_items)
 
-    # 1. ЧИТАЕМ WHITE IPs. ОНИ ТЕПЕРЬ ПОСТОЯННЫ.
+    # 1. ЧИТАЕМ WHITE IPs (только для чтения, БЕЗ изменений)
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
@@ -656,16 +648,9 @@ def main():
             res = future.result()
             if res:
                 alive_bl_data.append(res)
-
-    # Сохраняем White IPs навсегда (добавляем новые живые IP из прогона)
-    for link, flag in (trusted_wl_data + alive_wl_data):  # ← ИСКЛЮЧИЛИ alive_bl_data
-        host, _, _ = parse_host_port_and_name(link)
-        if host:
-            clean_ip = resolve_to_clean_ip(host)
-            if clean_ip:
-                white_ips.add(clean_ip)
                 
-    save_white_ips(white_ips)
+    # Parser.py ТОЛЬКО ЧИТАЕТ white_ip.txt, но НЕ ПИШЕТ в него
+    print(f"📌 Parser.py не пишет в white_ip.txt.")
 
     # Объединяем доверенные без пинга и те, что выжили после пинга
     final_wl_raw = trusted_wl_data + alive_wl_data
@@ -683,7 +668,7 @@ def main():
 
     if GEO_READER:
         GEO_READER.close()
-    print("✨ Все готово! Результаты и базы обновлены.")
+    print("✨ Все готово! Результаты обновлены.")
 
 if __name__ == '__main__':
     main()
