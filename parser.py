@@ -659,8 +659,8 @@ def main():
             if res:
                 alive_bl_data.append(res)
 
-    # Сохраняем White IPs навсегда (добавляем новые живые IP из прогона)
-    for link, flag in (trusted_white_data + alive_wl_data + alive_bl_data):
+    # Сохраняем White IPs навсегда (добавляем новые живые IP ТОЛЬКО из Белого списка)
+    for link, flag in (trusted_white_data + alive_wl_data):
         host, _, _ = parse_host_port_and_name(link)
         if host:
             clean_ip = resolve_to_clean_ip(host)
