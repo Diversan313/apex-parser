@@ -507,30 +507,6 @@ def fetch_links_parallel(url_file):
         print(f"⚠️ Ошибка чтения {url_file}: {e}")
     return links
 
-def fetch_links_parallel_with_source(url_file):
-    """Загружает конфиги и отслеживает их источник (конкретный URL)"""
-    links_with_source = []
-    urls = []
-    try:
-        with open(url_file, 'r', encoding='utf-8') as f:
-            urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        
-        print(f"🔗 Загружаем источники из файла {url_file} (всего урлов: {len(urls)})...")
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = {executor.submit(fetch_single_url, url): url for url in urls}
-            for future in as_completed(futures):
-                source_url = futures[future]
-                configs = future.result()
-                links_with_source.extend([(config, source_url) for config in configs])
-                if configs:
-                    print(f"  📍 {source_url}: {len(configs)} конфигов")
-        print(f"✅ Из файла {url_file} выкачано всего: {len(links_with_source)} конфигов")
-    except FileNotFoundError:
-        print(f"⚠️ Файл {url_file} не найден!")
-    except Exception as e:
-        print(f"⚠️ Ошибка чтения {url_file}: {e}")
-    return links_with_source
-
 def process_incoming_queue():
     incoming_proxies = []
     incoming_raw_ips = []
@@ -599,11 +575,10 @@ def rename_config(link, index, tag, detected_flag):
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
-def dedup_by_ip(config_list, list_name=""):
+def dedup_by_ip(config_list):
     """Дедупликация по IP - оставляет только первый конфиг на каждый уникальный IP"""
     seen_ips = set()
     result = []
-    not_resolved = 0
     
     for link in config_list:
         host, _, _ = parse_host_port_and_name(link)
@@ -618,10 +593,7 @@ def dedup_by_ip(config_list, list_name=""):
         else:
             # Если не смогли резолвить IP, все равно добавляем (вдруг домен?)
             result.append(link)
-            not_resolved += 1
     
-    removed = len(config_list) - len(result)
-    print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (выкидано дубликатов: {removed}, не резолвилось: {not_resolved}, уникальных IP: {len(seen_ips)})")
     return result
 
 def main():
@@ -629,13 +601,8 @@ def main():
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
     bl_file = 'sources_bl.txt' if os.path.exists('sources_bl.txt') else 'source_bl.txt'
 
-    # Загружаем с отслеживанием источников
-    wl_fetched_with_source = fetch_links_parallel_with_source(wl_file)
-    bl_fetched_with_source = fetch_links_parallel_with_source(bl_file)
-    
-    # Извлекаем только конфиги для дальнейшей обработки
-    wl_fetched = [link for link, _ in wl_fetched_with_source]
-    bl_fetched = [link for link, _ in bl_fetched_with_source]
+    wl_fetched = fetch_links_parallel(wl_file)
+    bl_fetched = fetch_links_parallel(bl_file)
 
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
@@ -656,7 +623,7 @@ def main():
             white_ips = {line.strip() for line in f if line.strip() and not line.strip().startswith('#')}
     white_ips.update(incoming_raw_ips)
 
-    trusted_wl_data = [] # Идят в финал БЕЗ пинга
+    trusted_wl_data = [] # Идут в финал БЕЗ пинга
     ping_wl = []         # WL, которые нужно пинговать (например, по RU SNI)
     ping_bl = []         # Обычный BL
 
@@ -714,9 +681,9 @@ def main():
     final_full = final_wl + final_bl
 
     # Дедупликация по IP перед финальным выводом
-    final_wl = dedup_by_ip(final_wl, "WL")
-    final_bl = dedup_by_ip(final_bl, "BL")
-    final_full = dedup_by_ip(final_full, "FULL")
+    final_wl = dedup_by_ip(final_wl)
+    final_bl = dedup_by_ip(final_bl)
+    final_full = dedup_by_ip(final_full)
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write(base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8'))
