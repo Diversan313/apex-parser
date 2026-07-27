@@ -575,6 +575,27 @@ def rename_config(link, index, tag, detected_flag):
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
+def dedup_by_ip(config_list):
+    """Дедупликация по IP - оставляет только первый конфиг на каждый уникальный IP"""
+    seen_ips = set()
+    result = []
+    
+    for link in config_list:
+        host, _, _ = parse_host_port_and_name(link)
+        if not host:
+            continue
+        
+        clean_ip = resolve_to_clean_ip(host)
+        if clean_ip:
+            if clean_ip not in seen_ips:
+                seen_ips.add(clean_ip)
+                result.append(link)
+        else:
+            # Если не смогли резолвить IP, все равно добавляем (вдруг домен?)
+            result.append(link)
+    
+    return result
+
 def main():
     print("🚀 Старт продвинутого Xray-парсера...")
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
@@ -658,6 +679,11 @@ def main():
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(final_wl_raw, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_data, 1)]
     final_full = final_wl + final_bl
+
+    # Дедупликация по IP перед финальным выводом
+    final_wl = dedup_by_ip(final_wl)
+    final_bl = dedup_by_ip(final_bl)
+    final_full = dedup_by_ip(final_full)
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write(base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8'))
