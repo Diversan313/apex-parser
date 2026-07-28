@@ -64,13 +64,33 @@ jobs:
       - name: Run Parser Script
         run: python parser.py
 
-      - name: Sync Incoming State
+      - name: Commit and Push Results to apex-parser
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Удаляем временные рабочие файлы
+          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
+          
+          git fetch origin main
+          git reset --soft origin/main
+          
+          git add white_ip.txt alive_*.txt
+          
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "auto update proxies and white_ip"
+            git push origin main
+          else
+            echo "No changes."
+          fi
+
+      - name: Sync Incoming State (Clear apex-sources queue)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
-          # Очищаем только входящие источники, архивную базу incoming_subs не трогаем!
+          # Очищаем очередь только ПОСЛЕ того, как все IP успешно ушли в apex-parser
           > incoming_sources.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -81,23 +101,3 @@ jobs:
           fi
           cd ..
           rm -rf temp_src
-
-      - name: Commit and Push Results
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Удаляем временные рабочие файлы и возможный хлам от health.json
-          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
-          
-          git fetch origin main
-          git reset --soft origin/main
-          
-          git add white_ip.txt alive_*.txt
-          
-          if ! git diff-index --quiet HEAD; then
-            git commit -m "auto update proxies"
-            git push origin main
-          else
-            echo "No changes."
-          fi
