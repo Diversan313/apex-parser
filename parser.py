@@ -499,7 +499,6 @@ def get_xray_cmd():
     return [exe, "run", "-c", "stdin:"]
 
 def check_via_xray_detailed(outbound_obj, timeout=6.0):
-    """ Проверка соединения И определение реальной страны НА ВЫХОДЕ (Exit IP) """
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -637,13 +636,14 @@ def process_incoming_queue():
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
 
             for item in unique_lines:
-                if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', item):
-                    if not is_cloudflare_or_warp(item):
-                        incoming_raw_ips.append(item)
-                elif item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-                    incoming_proxies.append(item)
+                try:
+                    ip_obj = ipaddress.ip_address(item)
+                    if not is_cloudflare_or_warp(str(ip_obj)):
+                        incoming_raw_ips.append(str(ip_obj))
+                except ValueError:
+                    if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
+                        incoming_proxies.append(item)
 
-            open(INCOMING_FILE, 'w', encoding='utf-8').close()
             print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
@@ -764,11 +764,34 @@ def main():
 
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
+    # --- СБОР И ГАРАНТИРОВАННОЕ СОХРАНЕНИЕ WHITE IP В БАЗУ ---
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
-            white_ips = {line.strip() for line in f if line.strip() and not line.strip().startswith('#')}
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    try:
+                        ipaddress.ip_address(line)
+                        white_ips.add(line)
+                    except ValueError:
+                        pass
+
+    # Пополняем новыми входящими IP без всяких проверок сети
     white_ips.update(incoming_raw_ips)
+
+    # Записываем обновленный список IP обратную в файл white_ip.txt
+    def ip_sort_key(ip):
+        try:
+            return ipaddress.ip_address(ip)
+        except ValueError:
+            return ip
+
+    with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
+        for ip in sorted(list(white_ips), key=ip_sort_key):
+            f.write(f"{ip}\n")
+    
+    print(f"💾 База {WHITE_IP_FILE} полностью сохранена. Всего IP в базе: {len(white_ips)}")
 
     trace_data = {target_ip: [] for target_ip in white_ips}
 
