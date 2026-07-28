@@ -1,4 +1,4 @@
-name: Update Subscriptions
+Name: Update Subscriptions
 
 on:
   schedule:
@@ -60,7 +60,6 @@ jobs:
       - name: Ensure Base Files Exist
         run: |
           touch white_ip.txt
-          if [ ! -f white_ip_health.json ]; then echo "{}" > white_ip_health.json; fi
 
       - name: Run Parser Script
         run: python parser.py
@@ -71,13 +70,13 @@ jobs:
         run: |
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
+          # Очищаем только входящие источники, архивную базу incoming_subs не трогаем!
           > incoming_sources.txt
-          > incoming_subs.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add incoming_sources.txt
           if ! git diff-index --quiet HEAD; then
-            git commit -m "update state"
+            git commit -m "clear incoming sources queue"
             git push
           fi
           cd ..
@@ -88,15 +87,16 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt
+          # Удаляем временные рабочие файлы и возможный хлам от health.json
+          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
           
           git fetch origin main
           git reset --soft origin/main
           
-          git add white_ip.txt white_ip_health.json alive_*.txt
+          git add white_ip.txt alive_*.txt
           
           if ! git diff-index --quiet HEAD; then
-            git commit -m "auto update"
+            git commit -m "auto update proxies"
             git push origin main
           else
             echo "No changes."
