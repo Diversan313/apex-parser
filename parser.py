@@ -35,6 +35,12 @@ WL_KEYWORDS_REGEX = re.compile(
     r'(?i)(?:^|[^a-zA-Zа-яА-Я0-9])(бс|обход|глусилк(?:а|и|ок|ам|ах)?|глушилк(?:а|и|ок|ам|ах)?|whitelist|lte|бел(?:ый|ые|ых)\s*списк(?:и|а|ов|ам|ах)?)(?:$|[^a-zA-Zа-яА-Я0-9])'
 )
 
+# Регулярка для валидации доменных имен
+DOMAIN_REGEX = re.compile(
+    r'^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$',
+    re.IGNORECASE
+)
+
 try:
     import maxminddb
 except ImportError:
@@ -49,6 +55,43 @@ CF_CIDRS = [
     "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16"
 ]
 CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
+
+def is_valid_public_host(host):
+    """ Проверка хоста на валидность и исключение локального/числового мусора """
+    if not host:
+        return False
+    clean_host = host.strip('[]').strip().lower()
+    if not clean_host:
+        return False
+
+    # Если хост состоит только из цифр (например, 9338383929) — это мусор
+    if clean_host.isdigit():
+        return False
+
+    # Проверка на IP адрес (IPv4 / IPv6)
+    try:
+        ip_obj = ipaddress.ip_address(clean_host)
+        if ip_obj.version == 4 and '.' not in clean_host:
+            return False
+        if (ip_obj.is_private or ip_obj.is_loopback or 
+            ip_obj.is_reserved or ip_obj.is_link_local or 
+            ip_obj.is_unspecified):
+            return False
+        return True
+    except ValueError:
+        pass
+
+    # Если это не IP, проверяем как доменное имя
+    if '.' not in clean_host or clean_host.startswith('.') or clean_host.endswith('.'):
+        return False
+
+    if not DOMAIN_REGEX.match(clean_host):
+        return False
+
+    if clean_host.endswith(('.local', '.localhost', '.internal', '.lan', '.home', '.arpa', '.invalid', '.test')):
+        return False
+
+    return True
 
 def download_geoip_db():
     if not os.path.exists(MMDB_PATH):
@@ -86,29 +129,42 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
+    clean_host = clean_host.strip('[]').strip().lower()
+    if not is_valid_public_host(clean_host):
+        return None
+
     with DNS_LOCK:
         if clean_host in DNS_CACHE:
             return DNS_CACHE[clean_host]
 
-    if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', clean_host) or ':' in clean_host:
+    try:
+        ip_obj = ipaddress.ip_address(clean_host)
         with DNS_LOCK:
             DNS_CACHE[clean_host] = clean_host
         return clean_host
+    except ValueError:
+        pass
 
     try:
         socket.setdefaulttimeout(2.0)
         ip = socket.gethostbyname(clean_host)
-        with DNS_LOCK:
-            DNS_CACHE[clean_host] = ip
-        return ip
+        ip_obj = ipaddress.ip_address(ip)
+        if (ip_obj.is_private or ip_obj.is_loopback or 
+            ip_obj.is_reserved or ip_obj.is_link_local or 
+            ip_obj.is_unspecified):
+            resolved_ip = None
+        else:
+            resolved_ip = ip
     except Exception:
-        with DNS_LOCK:
-            DNS_CACHE[clean_host] = None
-        return None
+        resolved_ip = None
+
+    with DNS_LOCK:
+        DNS_CACHE[clean_host] = resolved_ip
+    return resolved_ip
 
 def bulk_fetch_countries_online(ip_list):
     """ Пакетная выкачка геолокаций входных IP с обработкой лимита 429 """
-    unique_ips = list(set([ip for ip in ip_list if ip and re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip)]))
+    unique_ips = list(set([ip for ip in ip_list if ip and is_valid_public_host(ip)]))
     to_fetch = []
     with GEO_LOCK:
         for ip in unique_ips:
@@ -176,6 +232,9 @@ def fetch_country_online(ip_str):
 def is_cloudflare_or_warp(host):
     try:
         clean_host = host.strip('[]').lower()
+        if not is_valid_public_host(clean_host):
+            return True
+
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', 'github.com', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
             return True
 
@@ -184,6 +243,9 @@ def is_cloudflare_or_warp(host):
             return True
 
         ip_obj = ipaddress.ip_address(ip_str)
+        if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved:
+            return True
+
         if ip_obj.version == 4:
             for network in CF_NETWORKS:
                 if ip_obj in network:
@@ -192,7 +254,7 @@ def is_cloudflare_or_warp(host):
             if str(ip_obj).startswith(("2400:cb00:", "2606:4700:", "2803:f800:", "2405:b500:", "2405:8100:", "2a06:98c0:", "2c0f:f248:")):
                 return True
     except Exception:
-        pass
+        return True
     return False
 
 def resolve_to_clean_ip(host):
@@ -236,12 +298,12 @@ def parse_host_port(server_part):
             if ']' in server_part:
                 host_b, rest = server_part.split(']', 1)
                 host = host_b + ']'
-                port_str = rest.lstrip(':').split('/')[0]
+                port_str = rest.lstrip(':').split('/')[0].split('?')[0]
                 return host, int(port_str)
         else:
             if ':' in server_part:
                 host, port_str = server_part.rsplit(':', 1)
-                port_str = port_str.split('/')[0]
+                port_str = port_str.split('/')[0].split('?')[0]
                 return host, int(port_str)
     except Exception:
         pass
@@ -316,7 +378,7 @@ def is_ru_sni(link):
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
     host, _, orig_name = parse_host_port_and_name(link)
-    if not host:
+    if not host or not is_valid_public_host(host):
         return 'BL'
 
     clean_host = host.strip('[]').lower()
@@ -555,8 +617,8 @@ def check_via_xray_detailed(outbound_obj, timeout=6.0):
 
 def check_proxy_alive_detailed(link):
     host, port, orig_name = parse_host_port_and_name(link)
-    if not host or not port:
-        return False, None, "Некорректный формат ссылки/порта"
+    if not host or not port or not is_valid_public_host(host):
+        return False, None, "Некорректный формат хоста/порта"
 
     if is_cloudflare_or_warp(host):
         return False, None, "Отфильтрован (Cloudflare/WARP)"
@@ -638,8 +700,9 @@ def process_incoming_queue():
             for item in unique_lines:
                 try:
                     ip_obj = ipaddress.ip_address(item)
-                    if not is_cloudflare_or_warp(str(ip_obj)):
-                        incoming_raw_ips.append(str(ip_obj))
+                    if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved):
+                        if not is_cloudflare_or_warp(str(ip_obj)):
+                            incoming_raw_ips.append(str(ip_obj))
                 except ValueError:
                     if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
                         incoming_proxies.append(item)
@@ -664,11 +727,14 @@ def clean_and_dedup(tagged_items):
         seen_strings.add(link)
 
         host, port, _ = parse_host_port_and_name(link)
-        if not host or not port:
+        if not host or not port or not is_valid_public_host(host):
+            continue
+
+        if not (1 <= port <= 65535):
             continue
 
         protocol = link.split('://')[0].lower()
-        key = (protocol, host.lower().strip(), str(port))
+        key = (protocol, host.lower().strip('[]'), str(port))
 
         if key in seen_keys:
             continue
@@ -717,7 +783,7 @@ def dedup_advanced(config_list, list_name=""):
     
     for link in config_list:
         host, port, _ = parse_host_port_and_name(link)
-        if not host or not port:
+        if not host or not port or not is_valid_public_host(host):
             continue
         
         clean_ip = resolve_to_clean_ip(host) or host.strip('[]').lower()
@@ -735,7 +801,7 @@ def dedup_advanced(config_list, list_name=""):
     return result
 
 def find_matched_ip(host, white_ips):
-    if not host:
+    if not host or not is_valid_public_host(host):
         return None
     clean_host = host.strip('[]').lower()
     if clean_host in white_ips:
@@ -772,15 +838,14 @@ def main():
                 line = line.strip()
                 if line and not line.startswith('#'):
                     try:
-                        ipaddress.ip_address(line)
-                        white_ips.add(line)
+                        ip_obj = ipaddress.ip_address(line)
+                        if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved):
+                            white_ips.add(str(ip_obj))
                     except ValueError:
                         pass
 
-    # Пополняем новыми входящими IP без всяких проверок сети
     white_ips.update(incoming_raw_ips)
 
-    # Записываем обновленный список IP обратную в файл white_ip.txt
     def ip_sort_key(ip):
         try:
             return ipaddress.ip_address(ip)
@@ -827,7 +892,6 @@ def main():
 
         matched_ip = find_matched_ip(host, white_ips)
 
-        # 1. Прямой пропуск если IP входит в white_ip.txt
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
             final_flag = get_real_ip_and_flag(host, orig_flag)
@@ -844,14 +908,12 @@ def main():
             })
             continue
 
-        # 2. Прямой пропуск если совпали ключевые слова (бс, глушилки, обход и т.д.)
         if is_wl_by_keywords(link, orig_name):
             orig_flag = extract_clean_flag(orig_name)
             final_flag = get_real_ip_and_flag(host, orig_flag)
             alive_wl_data.append((link, final_flag))
             continue
 
-        # 3. Все остальное классифицируем и отправляем на Xray-тест
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
         if target_list == 'WL':
             ping_wl.append(link)
