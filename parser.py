@@ -10,6 +10,7 @@ import subprocess
 import time
 import random
 import threading
+import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # --- НАСТРОЙКИ И ЛИМИТЫ ---
@@ -56,6 +57,11 @@ CF_CIDRS = [
 ]
 CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
 
+def get_config_hash(link):
+    """ Хеш ссылки без учета названия (#remark) для полной точности дублей """
+    clean_part = link.split('#')[0].strip()
+    return hashlib.md5(clean_part.encode('utf-8')).hexdigest()
+
 def is_valid_public_host(host):
     """ Проверка хоста на валидность и исключение локального/числового мусора """
     if not host:
@@ -64,11 +70,9 @@ def is_valid_public_host(host):
     if not clean_host:
         return False
 
-    # Если хост состоит только из цифр (например, 9338383929) — это мусор
     if clean_host.isdigit():
         return False
 
-    # Проверка на IP адрес (IPv4 / IPv6)
     try:
         ip_obj = ipaddress.ip_address(clean_host)
         if ip_obj.version == 4 and '.' not in clean_host:
@@ -81,7 +85,6 @@ def is_valid_public_host(host):
     except ValueError:
         pass
 
-    # Если это не IP, проверяем как доменное имя
     if '.' not in clean_host or clean_host.startswith('.') or clean_host.endswith('.'):
         return False
 
@@ -163,7 +166,7 @@ def resolve_host_cached(clean_host):
     return resolved_ip
 
 def bulk_fetch_countries_online(ip_list):
-    """ Пакетная выкачка геолокаций входных IP с обработкой лимита 429 """
+    """ Пакетная выкачка геолокаций входных IP """
     unique_ips = list(set([ip for ip in ip_list if ip and is_valid_public_host(ip)]))
     to_fetch = []
     with GEO_LOCK:
@@ -713,18 +716,13 @@ def process_incoming_queue():
     return incoming_proxies, incoming_raw_ips
 
 def clean_and_dedup(tagged_items):
-    seen_strings = set()
-    seen_keys = set()
+    seen_hashes = set()
     valid_items = []
 
     for link, source_tag in tagged_items:
         link = link.strip()
         if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
             continue
-
-        if link in seen_strings:
-            continue
-        seen_strings.add(link)
 
         host, port, _ = parse_host_port_and_name(link)
         if not host or not port or not is_valid_public_host(host):
@@ -733,12 +731,11 @@ def clean_and_dedup(tagged_items):
         if not (1 <= port <= 65535):
             continue
 
-        protocol = link.split('://')[0].lower()
-        key = (protocol, host.lower().strip('[]'), str(port))
-
-        if key in seen_keys:
+        # Хэш по всему телу ссылки - сохраняет уникальные UUID/Path на одном IP
+        link_hash = get_config_hash(link)
+        if link_hash in seen_hashes:
             continue
-        seen_keys.add(key)
+        seen_hashes.add(link_hash)
 
         valid_items.append((link, source_tag))
 
@@ -760,25 +757,8 @@ def rename_config(link, index, tag, detected_flag):
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
-def extract_sni_from_link(link):
-    try:
-        if '?' in link:
-            query_part = link.split('?', 1)[1].split('#')[0]
-            params = urllib.parse.parse_qs(query_part)
-            sni = params.get('sni', [''])[0] or params.get('host', [''])[0]
-            if sni:
-                return sni.lower().strip()
-        if link.startswith("vmess://"):
-            b64_data = link.replace("vmess://", "").strip()
-            decoded = safe_b64decode(b64_data)
-            data = json.loads(decoded)
-            return (data.get('sni') or data.get('host') or '').lower().strip()
-    except Exception:
-        pass
-    return ""
-
 def dedup_advanced(config_list, list_name=""):
-    seen_keys = set()
+    seen_hashes = set()
     result = []
     
     for link in config_list:
@@ -786,14 +766,9 @@ def dedup_advanced(config_list, list_name=""):
         if not host or not port or not is_valid_public_host(host):
             continue
         
-        clean_ip = resolve_to_clean_ip(host) or host.strip('[]').lower()
-        protocol = link.split('://')[0].lower() if '://' in link else ''
-        sni = extract_sni_from_link(link)
-        
-        key = (clean_ip, str(port), protocol, sni)
-        
-        if key not in seen_keys:
-            seen_keys.add(key)
+        link_hash = get_config_hash(link)
+        if link_hash not in seen_hashes:
+            seen_hashes.add(link_hash)
             result.append(link)
             
     removed = len(config_list) - len(result)
@@ -892,6 +867,7 @@ def main():
 
         matched_ip = find_matched_ip(host, white_ips)
 
+        # ПРИОРИТЕТ 1: Если совпал с white_ip.txt - сразу добавляем в WL БЕЗ проверок!
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
             final_flag = get_real_ip_and_flag(host, orig_flag)
