@@ -64,11 +64,9 @@ def is_valid_public_host(host):
     if not clean_host:
         return False
 
-    # Если хост состоит только из цифр (например, 9338383929) — это мусор
     if clean_host.isdigit():
         return False
 
-    # Проверка на IP адрес (IPv4 / IPv6)
     try:
         ip_obj = ipaddress.ip_address(clean_host)
         if ip_obj.version == 4 and '.' not in clean_host:
@@ -81,7 +79,6 @@ def is_valid_public_host(host):
     except ValueError:
         pass
 
-    # Если это не IP, проверяем как доменное имя
     if '.' not in clean_host or clean_host.startswith('.') or clean_host.endswith('.'):
         return False
 
@@ -163,7 +160,6 @@ def resolve_host_cached(clean_host):
     return resolved_ip
 
 def bulk_fetch_countries_online(ip_list):
-    """ Пакетная выкачка геолокаций входных IP с обработкой лимита 429 """
     unique_ips = list(set([ip for ip in ip_list if ip and is_valid_public_host(ip)]))
     to_fetch = []
     with GEO_LOCK:
@@ -349,6 +345,79 @@ def parse_host_port_and_name(link):
         pass
     return None, None, ""
 
+def extract_sni_from_link(link):
+    try:
+        if '?' in link:
+            query_part = link.split('?', 1)[1].split('#')[0]
+            params = urllib.parse.parse_qs(query_part)
+            sni = params.get('sni', [''])[0] or params.get('host', [''])[0]
+            if sni:
+                return sni.lower().strip()
+        if link.startswith("vmess://"):
+            b64_data = link.replace("vmess://", "").strip()
+            decoded = safe_b64decode(b64_data)
+            data = json.loads(decoded)
+            return (data.get('sni') or data.get('host') or '').lower().strip()
+    except Exception:
+        pass
+    return ""
+
+def extract_all_hosts_and_ips_from_link(link):
+    """ Извлекает все возможные домены, IP и SNI из конфигурационной ссылки """
+    hosts = set()
+    
+    # 1. Основной хост ссылки
+    main_host, _, _ = parse_host_port_and_name(link)
+    if main_host:
+        hosts.add(main_host.strip('[]').lower())
+
+    # 2. Извлечение SNI и Host из параметров URL или JSON
+    sni = extract_sni_from_link(link)
+    if sni:
+        hosts.add(sni.strip('[]').lower())
+
+    if '?' in link:
+        try:
+            query_part = link.split('?', 1)[1].split('#')[0]
+            params = urllib.parse.parse_qs(query_part)
+            h_param = params.get('host', [''])[0]
+            if h_param:
+                hosts.add(h_param.strip('[]').lower())
+        except Exception:
+            pass
+
+    # 3. Поиск IP-адресов внутри всей строки ссылки (включая имена поддоменов)
+    ip_matches = re.findall(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', link)
+    for ip_cand in ip_matches:
+        try:
+            ip_obj = ipaddress.ip_address(ip_cand)
+            if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved):
+                hosts.add(ip_cand)
+        except ValueError:
+            pass
+
+    return list(hosts)
+
+def find_matched_ip_for_link(link, white_ips):
+    """ Проверяет ВСЕ домены/IP из ссылки и резолвит их через DNS на предмет вхождения в white_ips """
+    all_hosts = extract_all_hosts_and_ips_from_link(link)
+    
+    for host in all_hosts:
+        if not host or not is_valid_public_host(host):
+            continue
+        clean_host = host.strip('[]').lower()
+
+        # Прямое совпадение (если домен или IP уже есть в белом списке)
+        if clean_host in white_ips:
+            return clean_host
+
+        # DNS Резолвинг домена в IP и проверка совпадения
+        resolved_ip = resolve_host_cached(clean_host)
+        if resolved_ip and resolved_ip in white_ips:
+            return resolved_ip
+
+    return None
+
 def is_wl_by_keywords(link, orig_name=""):
     full_text = f"{link} {orig_name}"
     try:
@@ -377,18 +446,13 @@ def is_ru_sni(link):
     return False
 
 def classify_config(link, white_ips, ru_sni_ratio=0.3):
+    matched_ip = find_matched_ip_for_link(link, white_ips)
+    if matched_ip:
+        return 'WL'
+
     host, _, orig_name = parse_host_port_and_name(link)
     if not host or not is_valid_public_host(host):
         return 'BL'
-
-    clean_host = host.strip('[]').lower()
-
-    if clean_host in white_ips:
-        return 'WL'
-
-    resolved_ip = resolve_host_cached(clean_host)
-    if resolved_ip and resolved_ip in white_ips:
-        return 'WL'
 
     if is_wl_by_keywords(link, orig_name):
         return 'WL'
@@ -760,23 +824,6 @@ def rename_config(link, index, tag, detected_flag):
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
-def extract_sni_from_link(link):
-    try:
-        if '?' in link:
-            query_part = link.split('?', 1)[1].split('#')[0]
-            params = urllib.parse.parse_qs(query_part)
-            sni = params.get('sni', [''])[0] or params.get('host', [''])[0]
-            if sni:
-                return sni.lower().strip()
-        if link.startswith("vmess://"):
-            b64_data = link.replace("vmess://", "").strip()
-            decoded = safe_b64decode(b64_data)
-            data = json.loads(decoded)
-            return (data.get('sni') or data.get('host') or '').lower().strip()
-    except Exception:
-        pass
-    return ""
-
 def dedup_advanced(config_list, list_name=""):
     seen_keys = set()
     result = []
@@ -799,17 +846,6 @@ def dedup_advanced(config_list, list_name=""):
     removed = len(config_list) - len(result)
     print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (выкинуто дубликатов: {removed})")
     return result
-
-def find_matched_ip(host, white_ips):
-    if not host or not is_valid_public_host(host):
-        return None
-    clean_host = host.strip('[]').lower()
-    if clean_host in white_ips:
-        return clean_host
-    resolved_ip = resolve_host_cached(clean_host)
-    if resolved_ip and resolved_ip in white_ips:
-        return resolved_ip
-    return None
 
 def update_trace_status(trace_data, link, matched_ip, status, reason):
     if not matched_ip or matched_ip not in trace_data:
@@ -890,7 +926,7 @@ def main():
         if not host:
             continue
 
-        matched_ip = find_matched_ip(host, white_ips)
+        matched_ip = find_matched_ip_for_link(link, white_ips)
 
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
@@ -929,8 +965,7 @@ def main():
             is_ok, res, reason = future.result()
             link = wl_futures[future]
             
-            host, _, _ = parse_host_port_and_name(link)
-            matched_ip = find_matched_ip(host, white_ips)
+            matched_ip = find_matched_ip_for_link(link, white_ips)
             update_trace_status(trace_data, link, matched_ip, 'ЖИВОЙ' if is_ok else 'МЕРТВ_XRAY', reason)
 
             if is_ok:
@@ -941,8 +976,7 @@ def main():
             is_ok, res, reason = future.result()
             link = bl_futures[future]
             
-            host, _, _ = parse_host_port_and_name(link)
-            matched_ip = find_matched_ip(host, white_ips)
+            matched_ip = find_matched_ip_for_link(link, white_ips)
             update_trace_status(trace_data, link, matched_ip, 'ЖИВОЙ' if is_ok else 'МЕРТВ_XRAY', reason)
 
             if is_ok:
