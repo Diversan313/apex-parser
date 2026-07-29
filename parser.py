@@ -849,7 +849,20 @@ def clean_and_dedup(tagged_items):
         sni = extract_sni_from_link(link)
         clean_host = host.strip('[] \t\r\n\'"').lower()
 
-        key = (protocol, clean_host, str(port), sni)
+        # ИСПРАВЛЕНИЕ: Извлекаем транспорт, пути и параметры идентификации
+        net, path, pbk, uuid = "", "", "", ""
+        try:
+            parsed = urllib.parse.urlparse(link)
+            uuid = parsed.username or ''
+            query_params = urllib.parse.parse_qs(parsed.query)
+            net = query_params.get('type', query_params.get('net', ['raw']))[0].lower()
+            path = query_params.get('path', [''])[0]
+            pbk = query_params.get('pbk', [''])[0]
+        except Exception:
+            pass
+
+        # Полный составной ключ, предотвращающий ложное удаление уникальных конфигов
+        key = (protocol, clean_host, str(port), sni, net, path, pbk, uuid)
 
         if key in seen_keys:
             continue
@@ -888,7 +901,19 @@ def dedup_advanced(config_list, list_name=""):
         protocol = link.split('://')[0].lower() if '://' in link else ''
         sni = extract_sni_from_link(link)
         
-        key = (clean_ip, str(port), protocol, sni)
+        # ИСПРАВЛЕНИЕ: Извлечение уникальных параметров каждого конфига
+        net, path, pbk, uuid = "", "", "", ""
+        try:
+            parsed = urllib.parse.urlparse(link)
+            uuid = parsed.username or ''
+            query_params = urllib.parse.parse_qs(parsed.query)
+            net = query_params.get('type', query_params.get('net', ['raw']))[0].lower()
+            path = query_params.get('path', [''])[0]
+            pbk = query_params.get('pbk', [''])[0]
+        except Exception:
+            pass
+
+        key = (clean_ip, str(port), protocol, sni, net, path, pbk, uuid)
         
         if key not in seen_keys:
             seen_keys.add(key)
