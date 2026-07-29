@@ -60,7 +60,7 @@ def is_valid_public_host(host):
     """ Проверка хоста на валидность и исключение локального/числового мусора """
     if not host:
         return False
-    clean_host = host.strip('[]').strip().lower()
+    clean_host = host.strip('[] \t\r\n\'"').lower()
     if not clean_host:
         return False
 
@@ -126,7 +126,7 @@ def extract_clean_flag(text):
     return flags[0] if flags else "🌐"
 
 def resolve_host_cached(clean_host):
-    clean_host = clean_host.strip('[]').strip().lower()
+    clean_host = clean_host.strip('[] \t\r\n\'"').lower()
     if not is_valid_public_host(clean_host):
         return None
 
@@ -227,7 +227,7 @@ def fetch_country_online(ip_str):
 
 def is_cloudflare_or_warp(host):
     try:
-        clean_host = host.strip('[]').lower()
+        clean_host = host.strip('[] \t\r\n\'"').lower()
         if not is_valid_public_host(clean_host):
             return True
 
@@ -255,7 +255,7 @@ def is_cloudflare_or_warp(host):
 
 def resolve_to_clean_ip(host):
     try:
-        clean_host = host.strip('[]').lower()
+        clean_host = host.strip('[] \t\r\n\'"').lower()
         if is_cloudflare_or_warp(clean_host):
             return None
         ip = resolve_host_cached(clean_host)
@@ -265,7 +265,7 @@ def resolve_to_clean_ip(host):
 
 def get_real_ip_and_flag(host, orig_flag):
     try:
-        clean_host = host.strip('[]').lower()
+        clean_host = host.strip('[] \t\r\n\'"').lower()
         ip_str = resolve_host_cached(clean_host)
         if ip_str:
             with GEO_LOCK:
@@ -321,18 +321,18 @@ def parse_host_port_and_name(link):
                     try:
                         decoded = safe_b64decode(rest)
                         if '@' in decoded:
-                            _, host_port = decoded.split('@', 1)
+                            _, host_port = decoded.rsplit('@', 1)
                             host, port = parse_host_port(host_port)
                             return host, port, orig_name
                     except Exception:
                         pass
                 else:
-                    _, host_port = rest.split('@', 1)
+                    _, host_port = rest.rsplit('@', 1)
                     host, port = parse_host_port(host_port)
                     return host, port, orig_name
             else:
                 if '@' in rest:
-                    rest = rest.split('@', 1)[1]
+                    rest = rest.rsplit('@', 1)[1]
                 host, port = parse_host_port(rest)
                 return host, port, orig_name
 
@@ -369,12 +369,12 @@ def extract_all_hosts_and_ips_from_link(link):
     # 1. Основной хост ссылки
     main_host, _, _ = parse_host_port_and_name(link)
     if main_host:
-        hosts.add(main_host.strip('[]').lower())
+        hosts.add(main_host.strip('[] \t\r\n\'"').lower())
 
     # 2. Извлечение SNI и Host из параметров URL или JSON
     sni = extract_sni_from_link(link)
     if sni:
-        hosts.add(sni.strip('[]').lower())
+        hosts.add(sni.strip('[] \t\r\n\'"').lower())
 
     if '?' in link:
         try:
@@ -382,11 +382,11 @@ def extract_all_hosts_and_ips_from_link(link):
             params = urllib.parse.parse_qs(query_part)
             h_param = params.get('host', [''])[0]
             if h_param:
-                hosts.add(h_param.strip('[]').lower())
+                hosts.add(h_param.strip('[] \t\r\n\'"').lower())
         except Exception:
             pass
 
-    # 3. Поиск IP-адресов внутри всей строки ссылки (включая имена поддоменов)
+    # 3. Поиск IP-адресов внутри всей строки ссылки
     ip_matches = re.findall(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', link)
     for ip_cand in ip_matches:
         try:
@@ -398,16 +398,66 @@ def extract_all_hosts_and_ips_from_link(link):
 
     return list(hosts)
 
+def parse_ip_or_resolve(item):
+    """
+    Извлекает только валидные IP-адреса.
+    Обрабатывает IP, IP:порт, URL, доменные имена (резолвит их в IP).
+    """
+    if not item:
+        return set()
+    item = item.strip()
+    if not item or item.startswith('#'):
+        return set()
+
+    if '://' in item:
+        try:
+            item = urllib.parse.urlparse(item).netloc or item.split('://', 1)[1]
+        except Exception:
+            pass
+
+    item = item.split('/')[0].split('?')[0].split('#')[0].strip()
+
+    host, _ = parse_host_port(item)
+    if not host:
+        host = item
+
+    clean_host = host.strip('[] \t\r\n\'"').lower()
+    if not is_valid_public_host(clean_host):
+        return set()
+
+    try:
+        ip_obj = ipaddress.ip_address(clean_host)
+        if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved or ip_obj.is_link_local or ip_obj.is_unspecified):
+            return {str(ip_obj)}
+    except ValueError:
+        pass
+
+    resolved_ip = resolve_host_cached(clean_host)
+    if resolved_ip:
+        try:
+            ip_obj = ipaddress.ip_address(resolved_ip)
+            if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved or ip_obj.is_link_local or ip_obj.is_unspecified):
+                return {resolved_ip}
+        except ValueError:
+            pass
+
+    return set()
+
 def find_matched_ip_for_link(link, white_ips):
     """ Проверяет ВСЕ домены/IP из ссылки и резолвит их через DNS на предмет вхождения в white_ips """
+    if not white_ips:
+        return None
+
     all_hosts = extract_all_hosts_and_ips_from_link(link)
     
     for host in all_hosts:
-        if not host or not is_valid_public_host(host):
+        if not host:
             continue
-        clean_host = host.strip('[]').lower()
+        clean_host = host.strip('[] \t\r\n\'"').lower()
+        if not is_valid_public_host(clean_host):
+            continue
 
-        # Прямое совпадение (если домен или IP уже есть в белом списке)
+        # Прямое совпадение (если IP есть в белом списке)
         if clean_host in white_ips:
             return clean_host
 
@@ -491,11 +541,11 @@ def link_to_xray_outbound(link):
             if '@' not in rest:
                 decoded = safe_b64decode(rest)
                 if '@' in decoded:
-                    user_info, host_port = decoded.split('@', 1)
+                    user_info, host_port = decoded.rsplit('@', 1)
                 else:
                     return None
             else:
-                user_info, host_port = rest.split('@', 1)
+                user_info, host_port = rest.rsplit('@', 1)
                 if ':' not in user_info:
                     try:
                         user_info = safe_b64decode(user_info)
@@ -515,7 +565,7 @@ def link_to_xray_outbound(link):
                 "settings": {"servers": [{"address": host, "port": port, "method": method, "password": password}]}
             })
         elif protocol in ['vless', 'trojan']:
-            user_info, host_port = rest.split('@', 1) if '@' in rest else ("", rest)
+            user_info, host_port = rest.rsplit('@', 1) if '@' in rest else ("", rest)
             host, port = parse_host_port(host_port)
             if not host or not port:
                 return None
@@ -762,14 +812,12 @@ def process_incoming_queue():
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
 
             for item in unique_lines:
-                try:
-                    ip_obj = ipaddress.ip_address(item)
-                    if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved):
-                        if not is_cloudflare_or_warp(str(ip_obj)):
-                            incoming_raw_ips.append(str(ip_obj))
-                except ValueError:
-                    if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-                        incoming_proxies.append(item)
+                if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
+                    incoming_proxies.append(item)
+                else:
+                    extracted = parse_ip_or_resolve(item)
+                    for ip in extracted:
+                        incoming_raw_ips.append(ip)
 
             print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
         except Exception as e:
@@ -798,7 +846,10 @@ def clean_and_dedup(tagged_items):
             continue
 
         protocol = link.split('://')[0].lower()
-        key = (protocol, host.lower().strip('[]'), str(port))
+        sni = extract_sni_from_link(link)
+        clean_host = host.strip('[] \t\r\n\'"').lower()
+
+        key = (protocol, clean_host, str(port), sni)
 
         if key in seen_keys:
             continue
@@ -833,7 +884,7 @@ def dedup_advanced(config_list, list_name=""):
         if not host or not port or not is_valid_public_host(host):
             continue
         
-        clean_ip = resolve_to_clean_ip(host) or host.strip('[]').lower()
+        clean_ip = resolve_to_clean_ip(host) or host.strip('[] \t\r\n\'"').lower()
         protocol = link.split('://')[0].lower() if '://' in link else ''
         sni = extract_sni_from_link(link)
         
@@ -871,16 +922,12 @@ def main():
     if os.path.exists(WHITE_IP_FILE):
         with open(WHITE_IP_FILE, 'r', encoding='utf-8') as f:
             for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    try:
-                        ip_obj = ipaddress.ip_address(line)
-                        if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved):
-                            white_ips.add(str(ip_obj))
-                    except ValueError:
-                        pass
+                extracted = parse_ip_or_resolve(line)
+                white_ips.update(extracted)
 
-    white_ips.update(incoming_raw_ips)
+    for item in incoming_raw_ips:
+        extracted = parse_ip_or_resolve(item)
+        white_ips.update(extracted)
 
     def ip_sort_key(ip):
         try:
@@ -910,7 +957,7 @@ def main():
     for link, _ in clean_items:
         host, _, _ = parse_host_port_and_name(link)
         if host:
-            clean_ip = resolve_to_clean_ip(host) or resolve_host_cached(host.strip('[]').lower())
+            clean_ip = resolve_to_clean_ip(host) or resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
             if clean_ip:
                 all_ips.append(clean_ip)
     
