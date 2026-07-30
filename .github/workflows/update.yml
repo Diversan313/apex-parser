@@ -84,6 +84,33 @@ jobs:
             echo "No changes."
           fi
 
+      - name: Deploy Subscriptions to GitFlick
+        env:
+          GITFLICK_SSH_KEY: ${{ secrets.GITFLICK_SSH_KEY }}
+          # Укажи реальный адрес своего репозитория на GitFlick:
+          GITFLICK_REPO: "git@gitflick.ru:ТВОЙ_ЮЗЕРНЕЙМ/ТВОЙ_РЕПОЗИТОРИЙ.git"
+        run: |
+          mkdir -p ~/.ssh
+          echo "$GITFLICK_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -h gitflick.ru >> ~/.ssh/known_hosts 2>/dev/null || true
+
+          # Создаем изолированную директорию в гитфлекеееее
+          mkdir deploy_gitflick
+          cp alive_bs.txt alive_bl.txt alive_full.txt deploy_gitflick/ 2>/dev/null || true
+          
+          cd deploy_gitflick
+
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b main
+          git add alive_bs.txt alive_bl.txt alive_full.txt
+          git commit -m "auto update subscriptions"
+          
+          git remote add origin "$GITFLICK_REPO"
+          git push --force origin main
+
       - name: Sync Incoming State (Clear apex-sources queue)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
