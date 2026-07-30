@@ -84,10 +84,15 @@ jobs:
             echo "No changes."
           fi
 
-      - name: Deploy Subscriptions to GitFlick (via HTTPS Token)
+      - name: Deploy Subscriptions to GitFlic
         env:
           GITFLICK_TOKEN: ${{ secrets.GITFLICK_TOKEN }}
         run: |
+          if [ -z "$GITFLICK_TOKEN" ]; then
+            echo "ОШИБКА: Секрет GITFLICK_TOKEN не найден в GitHub Secrets!"
+            exit 1
+          fi
+
           rm -rf deploy_gitflick
           mkdir deploy_gitflick
           cp alive_bs.txt alive_bl.txt alive_full.txt deploy_gitflick/ 2>/dev/null || true
@@ -101,7 +106,8 @@ jobs:
           git add .
           git commit -m "auto update subscriptions"
           
-          git remote add origin "https://admin1111:${GITFLICK_TOKEN}@gitflick.ru/admin1111/apelsintel.git"
+          # Используем точный домен gitflic.ru без буквенных редиректов
+          git remote add origin "https://token:${GITFLICK_TOKEN}@gitflic.ru/admin1111/apelsintel.git"
           git push --force origin master
 
       - name: Sync Incoming State (Clear apex-sources queue)
