@@ -84,15 +84,14 @@ jobs:
             echo "No changes."
           fi
 
-      - name: Setup SSH Agent for GitFlic
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.GITFLICK_SSH_KEY }}
-
       - name: Deploy Subscriptions to GitFlic
+        env:
+          GITFLICK_SSH_KEY: ${{ secrets.GITFLICK_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H gitflic.ru >> ~/.ssh/known_hosts
+          printf "%s\n" "$GITFLICK_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H gitflic.ru >> ~/.ssh/known_hosts 2>/dev/null
 
           rm -rf deploy_gitflick
           mkdir deploy_gitflick
@@ -116,7 +115,6 @@ jobs:
         run: |
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
-          # Очищаем очередь только ПОСЛЕ того, как все IP успешно ушли в apex-parser
           > incoming_sources.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
