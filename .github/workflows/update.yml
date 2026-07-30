@@ -84,14 +84,15 @@ jobs:
             echo "No changes."
           fi
 
+      - name: Setup SSH Agent for GitFlic
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GITFLICK_SSH_KEY }}
+
       - name: Deploy Subscriptions to GitFlic
-        env:
-          GITFLICK_TOKEN: ${{ secrets.GITFLICK_TOKEN }}
         run: |
-          if [ -z "$GITFLICK_TOKEN" ]; then
-            echo "ОШИБКА: Секрет GITFLICK_TOKEN не найден в GitHub Secrets!"
-            exit 1
-          fi
+          mkdir -p ~/.ssh
+          ssh-keyscan -H gitflic.ru >> ~/.ssh/known_hosts
 
           rm -rf deploy_gitflick
           mkdir deploy_gitflick
@@ -106,8 +107,7 @@ jobs:
           git add .
           git commit -m "auto update subscriptions"
           
-          # Логин admin1111 + Токен в качестве пароля + правильный домен gitflic.ru
-          git remote add origin "https://admin1111:${GITFLICK_TOKEN}@gitflic.ru/admin1111/apelsintel.git"
+          git remote add origin "git@gitflic.ru:admin1111/apelsintel.git"
           git push --force origin master
 
       - name: Sync Incoming State (Clear apex-sources queue)
