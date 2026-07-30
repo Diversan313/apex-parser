@@ -106,8 +106,8 @@ jobs:
           git add .
           git commit -m "auto update subscriptions"
           
-          # Используем точный домен gitflic.ru без буквенных редиректов
-          git remote add origin "https://token:${GITFLICK_TOKEN}@gitflic.ru/admin1111/apelsintel.git"
+          # Логин admin1111 + Токен в качестве пароля + правильный домен gitflic.ru
+          git remote add origin "https://admin1111:${GITFLICK_TOKEN}@gitflic.ru/admin1111/apelsintel.git"
           git push --force origin master
 
       - name: Sync Incoming State (Clear apex-sources queue)
