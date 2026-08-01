@@ -20,11 +20,11 @@ INCOMING_FILE = 'incoming_sources.txt'
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 
-MAX_QUEUE_LIMIT = 1000        # Максимум элементов из очереди Telegram за раз
-MAX_WORKERS = 15              # Ограничение потоков для сетевых запросов и Xray
-MAX_CONFIGS_PER_IP = 3        # ЖЕСТКИЙ ЛИМИТ: Не более 3 конфигов на 1 IP
+MAX_QUEUE_LIMIT = 1000
+MAX_WORKERS = 15
+MAX_CONFIGS_PER_IP_BL = 3      # Жесткий лимит для BL
+MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL (чтобы сохранить разные SNI на один IP)
 
-# Игнорирование ошибок SSL при скачивании подписок
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
 SSL_CONTEXT.verify_mode = ssl.CERT_NONE
@@ -34,23 +34,15 @@ HEADERS = {
     'Accept': '*/*'
 }
 
-# --- КЭШИ И БЛОКИРОВКИ ПОТОКОВ ---
 DNS_CACHE = {}
 DNS_LOCK = threading.Lock()
-
 GEO_ONLINE_CACHE = {}
 GEO_LOCK = threading.Lock()
-
-TRACE_LOCK = threading.Lock()
 
 WL_KEYWORDS_REGEX = re.compile(
     r'(?i)(?:^|[^a-zA-Zа-яА-Я0-9])(бс|обход|глусилк(?:а|и|ок|ам|ах)?|глушилк(?:а|и|ок|ам|ах)?|whitelist|lte|бел(?:ый|ые|ых)\s*списк(?:и|а|ов|ам|ах)?)(?:$|[^a-zA-Zа-яА-Я0-9])'
 )
-
-DOMAIN_REGEX = re.compile(
-    r'^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$',
-    re.IGNORECASE
-)
+DOMAIN_REGEX = re.compile(r'^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$', re.IGNORECASE)
 
 try:
     import maxminddb
@@ -108,7 +100,6 @@ def is_valid_public_host(host: str) -> bool:
     clean_host = host.strip('[] \t\r\n\'"').lower()
     if not clean_host or clean_host.isdigit():
         return False
-
     try:
         ip_obj = ipaddress.ip_address(clean_host)
         if ip_obj.version == 4 and '.' not in clean_host:
@@ -120,27 +111,21 @@ def is_valid_public_host(host: str) -> bool:
         return True
     except ValueError:
         pass
-
     if '.' not in clean_host or clean_host.startswith('.') or clean_host.endswith('.'):
         return False
-
     if not DOMAIN_REGEX.match(clean_host):
         return False
-
     if clean_host.endswith(('.local', '.localhost', '.internal', '.lan', '.home', '.arpa', '.invalid', '.test')):
         return False
-
     return True
 
 def resolve_host_cached(clean_host: str):
     clean_host = clean_host.strip('[] \t\r\n\'"').lower()
     if not is_valid_public_host(clean_host):
         return None
-
     with DNS_LOCK:
         if clean_host in DNS_CACHE:
             return DNS_CACHE[clean_host]
-
     try:
         ip_obj = ipaddress.ip_address(clean_host)
         with DNS_LOCK:
@@ -148,7 +133,6 @@ def resolve_host_cached(clean_host: str):
         return clean_host
     except ValueError:
         pass
-
     try:
         socket.setdefaulttimeout(2.0)
         ip = socket.gethostbyname(clean_host)
@@ -156,17 +140,13 @@ def resolve_host_cached(clean_host: str):
         resolved_ip = None if (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved or ip_obj.is_link_local or ip_obj.is_unspecified) else ip
     except Exception:
         resolved_ip = None
-
     with DNS_LOCK:
         DNS_CACHE[clean_host] = resolved_ip
     return resolved_ip
 
 def fetch_country_from_ip(ip_str: str) -> str:
-    """Определение страны с каскадным резервированием провайдеров."""
     if not ip_str or not is_valid_public_host(ip_str):
         return None
-
-    # 1. Локальная база MaxMind
     if GEO_READER:
         try:
             record = GEO_READER.get(ip_str)
@@ -174,13 +154,9 @@ def fetch_country_from_ip(ip_str: str) -> str:
                 return record['country']['iso_code']
         except Exception:
             pass
-
-    # 2. Онлайн Кэш
     with GEO_LOCK:
         if ip_str in GEO_ONLINE_CACHE:
             return GEO_ONLINE_CACHE[ip_str]
-
-    # 3. Сервис №1: ip-api.com
     try:
         url = f"http://ip-api.com/json/{ip_str}?fields=status,countryCode"
         req = urllib.request.Request(url, headers=HEADERS)
@@ -193,57 +169,21 @@ def fetch_country_from_ip(ip_str: str) -> str:
                 return cc
     except Exception:
         pass
-
-    # 4. Сервис №2 (Запасной): ipwho.is
-    try:
-        url = f"http://ipwho.is/{ip_str}"
-        req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, timeout=2.0, context=SSL_CONTEXT) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-            if data.get('success') is True and data.get('country_code'):
-                cc = data['country_code']
-                with GEO_LOCK:
-                    GEO_ONLINE_CACHE[ip_str] = cc
-                return cc
-    except Exception:
-        pass
-
     return None
-
-def preload_countries_parallel(ip_list: list):
-    """Параллельная предзагрузка стран для ускорения работы."""
-    unique_ips = list(set([ip for ip in ip_list if ip and is_valid_public_host(ip)]))
-    to_fetch = []
-
-    for ip in unique_ips:
-        cc = fetch_country_from_ip(ip)
-        if not cc:
-            to_fetch.append(ip)
-
-    if not to_fetch:
-        return
-
-    print(f"🌐 Запрашиваем геолокацию для {len(to_fetch)} IP адресов...")
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(fetch_country_from_ip, to_fetch)
 
 def is_cloudflare_or_warp(host: str) -> bool:
     try:
         clean_host = host.strip('[] \t\r\n\'"').lower()
         if not is_valid_public_host(clean_host):
             return True
-
         if any(bad in clean_host for bad in ['localhost', '127.0.0.1', '.ir', '.cn', '.cf', '.ga', '.gq', '.ml', '.tk']):
             return True
-
         ip_str = resolve_host_cached(clean_host)
         if not ip_str:
             return True
-
         ip_obj = ipaddress.ip_address(ip_str)
         if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved:
             return True
-
         if ip_obj.version == 4:
             for network in CF_NETWORKS:
                 if ip_obj in network:
@@ -254,28 +194,6 @@ def is_cloudflare_or_warp(host: str) -> bool:
     except Exception:
         return True
     return False
-
-def resolve_to_clean_ip(host: str):
-    try:
-        clean_host = host.strip('[] \t\r\n\'"').lower()
-        if is_cloudflare_or_warp(clean_host):
-            return None
-        ip = resolve_host_cached(clean_host)
-        return ip if ip and not is_cloudflare_or_warp(ip) else None
-    except Exception:
-        return None
-
-def get_real_ip_and_flag(host: str, orig_flag: str = "🌐") -> str:
-    try:
-        clean_host = host.strip('[] \t\r\n\'"').lower()
-        ip_str = resolve_host_cached(clean_host) or (clean_host if not DOMAIN_REGEX.match(clean_host) else None)
-        if ip_str:
-            cc = fetch_country_from_ip(ip_str)
-            if cc:
-                return cc_to_flag(cc)
-    except Exception:
-        pass
-    return orig_flag if orig_flag and orig_flag != "🌐" else "🌐"
 
 def parse_host_port(server_part: str):
     if not server_part:
@@ -382,7 +300,6 @@ def extract_all_hosts_and_ips_from_link(link: str) -> list:
                 hosts.add(ip_cand)
         except ValueError:
             pass
-
     return list(hosts)
 
 def parse_ip_or_resolve(item: str) -> set:
@@ -391,30 +308,24 @@ def parse_ip_or_resolve(item: str) -> set:
     item = item.strip()
     if not item or item.startswith('#'):
         return set()
-
     if '://' in item:
         try:
             item = urllib.parse.urlparse(item).netloc or item.split('://', 1)[1]
         except Exception:
             pass
-
     item = item.split('/')[0].split('?')[0].split('#')[0].strip()
-
     host, _ = parse_host_port(item)
     if not host:
         host = item
-
     clean_host = host.strip('[] \t\r\n\'"').lower()
     if not is_valid_public_host(clean_host):
         return set()
-
     try:
         ip_obj = ipaddress.ip_address(clean_host)
         if not (ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_reserved or ip_obj.is_link_local or ip_obj.is_unspecified):
             return {str(ip_obj)}
     except ValueError:
         pass
-
     resolved_ip = resolve_host_cached(clean_host)
     if resolved_ip:
         try:
@@ -423,13 +334,11 @@ def parse_ip_or_resolve(item: str) -> set:
                 return {resolved_ip}
         except ValueError:
             pass
-
     return set()
 
 def find_matched_ip_for_link(link: str, white_ips: set):
     if not white_ips:
         return None
-
     all_hosts = extract_all_hosts_and_ips_from_link(link)
     for host in all_hosts:
         if not host:
@@ -437,14 +346,11 @@ def find_matched_ip_for_link(link: str, white_ips: set):
         clean_host = host.strip('[] \t\r\n\'"').lower()
         if not is_valid_public_host(clean_host):
             continue
-
         if clean_host in white_ips:
             return clean_host
-
         resolved_ip = resolve_host_cached(clean_host)
         if resolved_ip and resolved_ip in white_ips:
             return resolved_ip
-
     return None
 
 def is_wl_by_keywords(link: str, orig_name: str = "") -> bool:
@@ -486,11 +392,10 @@ def classify_config(link: str, white_ips: set, ru_sni_ratio: float = 0.3) -> str
     if is_wl_by_keywords(link, orig_name):
         return 'WL'
 
-    clean_ip = resolve_to_clean_ip(host)
+    clean_ip = resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
     if clean_ip:
-        orig_flag = extract_clean_flag(orig_name)
-        flag = get_real_ip_and_flag(clean_ip, orig_flag)
-        if flag == "🇷🇺":
+        cc = fetch_country_from_ip(clean_ip)
+        if cc and cc.upper() == 'RU':
             return 'WL'
 
     if is_ru_sni(link):
@@ -530,15 +435,12 @@ def link_to_xray_outbound(link: str):
                         user_info = safe_b64decode(user_info)
                     except Exception:
                         pass
-
             if ':' not in user_info:
                 return None
-
             method, password = user_info.split(':', 1)
             host, port = parse_host_port(host_port)
             if not host or not port:
                 return None
-
             outbound.update({
                 "protocol": "shadowsocks",
                 "settings": {"servers": [{"address": host, "port": port, "method": method, "password": password}]}
@@ -675,16 +577,37 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
 
-        req_204 = urllib.request.Request("https://www.gstatic.com/generate_204", headers=HEADERS)
-        with opener.open(req_204, timeout=timeout) as resp:
-            if resp.status in [200, 204]:
-                return True, None, "OK"
-            return False, None, f"HTTP Статус {resp.status}"
+        test_urls = [
+            "https://www.gstatic.com/generate_204",
+            "https://cp.cloudflare.com/generate_204",
+            "https://www.microsoft.com/connecttest.txt"
+        ]
 
-    except urllib.error.URLError as e:
-        if isinstance(e.reason, socket.timeout):
-            return False, None, f"Таймаут подключения ({timeout}s)"
-        return False, None, f"Ошибка сети: {e.reason}"
+        success_count = 0
+        cc = None
+
+        for url in test_urls:
+            try:
+                req = urllib.request.Request(url, headers=HEADERS)
+                with opener.open(req, timeout=timeout) as resp:
+                    if resp.status in [200, 204]:
+                        success_count += 1
+            except Exception:
+                pass
+
+        if success_count >= 2:
+            try:
+                req_ip = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
+                with opener.open(req_ip, timeout=timeout) as resp_ip:
+                    data = json.loads(resp_ip.read().decode('utf-8'))
+                    cc = data.get('countryCode')
+            except Exception:
+                pass
+            
+            return True, cc, f"OK ({success_count}/3)"
+
+        return False, None, f"Тест провален ({success_count}/3)"
+
     except Exception as e:
         return False, None, f"Ошибка: {str(e)}"
     finally:
@@ -707,38 +630,31 @@ def check_proxy_alive_detailed(link: str):
         return False, None, "Отфильтрован (Cloudflare/WARP)"
 
     if link.startswith(('hysteria2://', 'hy2://')):
-        return False, None, "Hysteria2 не поддерживается стандартным Xray-core"
+        return False, None, "Hysteria2 не поддерживается Xray"
 
     outbound = link_to_xray_outbound(link)
     if not outbound:
         return False, None, "Ошибка генерации JSON для Xray"
 
-    is_ok, _, reason = check_via_xray_detailed(outbound, timeout=6.0)
+    is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0)
     if is_ok:
-        orig_flag = extract_clean_flag(orig_name)
-        final_flag = get_real_ip_and_flag(host, orig_flag)
+        # Если получили реальный код страны — ставим реальный флаг. Иначе оставляем оригинальный.
+        if cc:
+            final_flag = cc_to_flag(cc)
+        else:
+            final_flag = extract_clean_flag(orig_name)
         return True, (link, final_flag), "OK"
     return False, None, reason
 
 def fetch_single_url_with_details(url: str) -> dict:
     url_clean = url.strip().replace(' ', '%20')
-    info = {
-        'url': url,
-        'http_status': None,
-        'size_bytes': 0,
-        'is_base64': False,
-        'total_lines': 0,
-        'configs': [],
-        'error': None
-    }
-    
+    info = {'url': url, 'http_status': None, 'size_bytes': 0, 'is_base64': False, 'total_lines': 0, 'configs': [], 'error': None}
     try:
         req = urllib.request.Request(url_clean, headers=HEADERS)
         with urllib.request.urlopen(req, timeout=12, context=SSL_CONTEXT) as response:
             info['http_status'] = response.status
             raw_data = response.read()
             info['size_bytes'] = len(raw_data)
-
             try:
                 content = raw_data.decode('utf-8', errors='ignore')
             except Exception:
@@ -755,13 +671,10 @@ def fetch_single_url_with_details(url: str) -> dict:
 
             raw_lines = [l.strip() for l in content.splitlines() if l.strip()]
             info['total_lines'] = len(raw_lines)
-            
             valid_configs = [l for l in raw_lines if l.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
             info['configs'] = valid_configs
-
     except Exception as e:
         info['error'] = str(e)
-
     return info
 
 def fetch_links_parallel_with_source(url_file: str) -> list:
@@ -769,34 +682,25 @@ def fetch_links_parallel_with_source(url_file: str) -> list:
     if not os.path.exists(url_file):
         print(f"⚠️ Файл источников {url_file} не найден!")
         return links_with_source
-
     try:
         with open(url_file, 'r', encoding='utf-8') as f:
             urls = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        
         print(f"\n📡 [{url_file}] Скачивание источников ({len(urls)} шт.)...")
-        
         successful_sources = 0
-
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = {executor.submit(fetch_single_url_with_details, url): idx for idx, url in enumerate(urls, 1)}
             for future in as_completed(futures):
                 idx = futures[future]
                 res = future.result()
                 configs = res['configs']
-
                 status_str = f"HTTP {res['http_status']}" if res['http_status'] else "ОШИБКА"
                 b64_str = " [Base64]" if res['is_base64'] else ""
                 err_str = f" (Ошибка: {res['error']})" if res['error'] else ""
-                
                 if res['http_status'] in [200, 204] or configs:
                     successful_sources += 1
-
                 print(f"  ├─ 🔗 Источник #{idx:<3} | Статус: {status_str:<10} | Размер: {res['size_bytes']}B | Найдено конфигов: {len(configs)}{b64_str}{err_str}")
-
                 for cfg in configs:
                     links_with_source.append((cfg, res['url']))
-
         print(f"✅ Успешно получено {len(links_with_source)} конфигов из {successful_sources}/{len(urls)} источников.")
     except Exception as e:
         print(f"⚠️ Ошибка чтения {url_file}: {e}")
@@ -809,9 +713,7 @@ def process_incoming_queue():
         try:
             with open(INCOMING_FILE, 'r', encoding='utf-8') as f:
                 lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
-
             for item in unique_lines:
                 if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
                     incoming_proxies.append(item)
@@ -819,24 +721,22 @@ def process_incoming_queue():
                     extracted = parse_ip_or_resolve(item)
                     for ip in extracted:
                         incoming_raw_ips.append(ip)
-
             print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
 
 def get_config_dedup_key(link: str) -> tuple:
-    """Универсальный ключ дедупликации."""
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
         return None
-
     clean_host = host.strip('[] \t\r\n\'"').lower()
-    clean_ip = resolve_to_clean_ip(clean_host) or resolve_host_cached(clean_host) or clean_host
+    clean_ip = resolve_host_cached(clean_host) or clean_host
     protocol = link.split('://')[0].lower() if '://' in link else ''
     sni = extract_sni_from_link(link)
-
+    
     net, path, pbk, uuid, security = "", "", "", "", ""
+    flow, sid, mode = "", "", ""
     try:
         if link.startswith("vmess://"):
             b64_data = link.replace("vmess://", "").strip()
@@ -854,70 +754,67 @@ def get_config_dedup_key(link: str) -> tuple:
             path = query_params.get('path', [''])[0]
             pbk = query_params.get('pbk', [''])[0]
             security = query_params.get('security', [''])[0].lower()
+            flow = query_params.get('flow', [''])[0].lower()
+            sid = query_params.get('sid', [''])[0]
+            mode = query_params.get('mode', [''])[0].lower()
     except Exception:
         pass
-
-    return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security)
+    
+    # Нормализуем path (например, %2F превращаем в /, а пустой путь в /)
+    path = urllib.parse.unquote(path) or "/"
+    
+    # ВАЖНО: Мы ИСКЛЮЧАЕМ 'fp' (fingerprint) из ключа! Его здесь нет.
+    return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
 def clean_and_dedup(tagged_items: list) -> list:
     seen_strings = set()
     seen_keys = set()
     valid_items = []
-
     for link, source_tag in tagged_items:
         link = link.strip()
         if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
             continue
-
         if link in seen_strings:
             continue
         seen_strings.add(link)
-
         key = get_config_dedup_key(link)
         if not key:
             continue
-
         if key in seen_keys:
             continue
         seen_keys.add(key)
-
         valid_items.append((link, source_tag))
-
     return valid_items
 
-def limit_configs_per_ip(items_list: list, max_per_ip: int = 3) -> list:
-    """Жесткий отсекатель: не более `max_per_ip` элементов на один IP адрес."""
+def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 3, max_per_ip_wl: int = 50) -> list:
     ip_counter = defaultdict(int)
     filtered = []
-
     for item in items_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
         host, _, _ = parse_host_port_and_name(link)
         if not host:
             continue
-            
         clean_host = host.strip('[] \t\r\n\'"').lower()
         ip_str = resolve_host_cached(clean_host) or clean_host
 
-        if ip_counter[ip_str] < max_per_ip:
+        # Если IP в белом списке, разрешаем больше конфигов (разные SNI нужны для разных операторов)
+        limit = max_per_ip_wl if (ip_str in white_ips or clean_host in white_ips) else max_per_ip_bl
+        if ip_counter[ip_str] < limit:
             ip_counter[ip_str] += 1
             filtered.append(item)
 
-    print(f"✂️ Ограничение на IP (не более {max_per_ip} шт.): было {len(items_list)}, осталось {len(filtered)}.")
+    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl}): было {len(items_list)}, осталось {len(filtered)}.")
     return filtered
 
 def dedup_advanced(config_list: list, list_name: str = "") -> list:
     seen_keys = set()
     result = []
-    
     for item in config_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
         key = get_config_dedup_key(link)
-        
         if key and key not in seen_keys:
             seen_keys.add(key)
             result.append(item)
-            
     removed = len(config_list) - len(result)
     print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
     return result
@@ -938,15 +835,6 @@ def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
 
-def update_trace_status(trace_data: dict, link: str, matched_ip: str, status: str, reason: str):
-    if not matched_ip or matched_ip not in trace_data:
-        return
-    with TRACE_LOCK:
-        for item in trace_data[matched_ip]:
-            if item['link'] == link:
-                item['status'] = status
-                item['xray_reason'] = reason
-
 def main():
     print("🚀 Старт продвинутого Xray-парсера...")
     wl_file = 'sources_wl.txt' if os.path.exists('sources_wl.txt') else 'source_wl.txt'
@@ -954,7 +842,6 @@ def main():
 
     wl_fetched_with_source = fetch_links_parallel_with_source(wl_file)
     bl_fetched_with_source = fetch_links_parallel_with_source(bl_file)
-
     incoming_proxies, incoming_raw_ips = process_incoming_queue()
 
     white_ips = set()
@@ -977,10 +864,7 @@ def main():
     with open(WHITE_IP_FILE, 'w', encoding='utf-8') as f:
         for ip in sorted(list(white_ips), key=ip_sort_key):
             f.write(f"{ip}\n")
-    
     print(f"💾 База {WHITE_IP_FILE} сохранена. Всего IP: {len(white_ips)}")
-
-    trace_data = {target_ip: [] for target_ip in white_ips}
 
     tagged_items = []
     for link, src in wl_fetched_with_source:
@@ -990,22 +874,19 @@ def main():
     for link in incoming_proxies:
         tagged_items.append((link, 'INCOMING_TELEGRAM'))
 
-    # 1. Первичная очистка от дубликатов по ключам
     clean_items = clean_and_dedup(tagged_items)
+    clean_items = limit_configs_per_ip(clean_items, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
 
-    # 2. ЖЕСТКАЯ ОЧИСТКА: Не больше MAX_CONFIGS_PER_IP на один IP ДО тестирования
-    clean_items = limit_configs_per_ip(clean_items, max_per_ip=MAX_CONFIGS_PER_IP)
-
-    # 3. Предзагрузка геолокаций по всем уникальным IP адресам
     all_ips = []
     for link, _ in clean_items:
         host, _, _ = parse_host_port_and_name(link)
         if host:
-            clean_ip = resolve_to_clean_ip(host) or resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
+            clean_ip = resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
             if clean_ip:
                 all_ips.append(clean_ip)
-    
-    preload_countries_parallel(all_ips)
+    unique_ips = list(set(all_ips))
+    for ip in unique_ips:
+        fetch_country_from_ip(ip)
 
     ping_wl = []
     ping_bl = []
@@ -1018,28 +899,16 @@ def main():
             continue
 
         matched_ip = find_matched_ip_for_link(link, white_ips)
-
+        # ВОЗВРАЩАЕМ ПРЯМОЙ ПРОПУСК БЕЗ ТЕСТА ДЛЯ WL
         if matched_ip:
+            # Оставляем оригинальный флаг, никаких фейков
             orig_flag = extract_clean_flag(orig_name)
-            final_flag = get_real_ip_and_flag(host, orig_flag)
-            alive_wl_data.append((link, final_flag))
-
-            protocol = link.split('://')[0] if '://' in link else 'unk'
-            trace_data[matched_ip].append({
-                'link': link,
-                'port': port,
-                'protocol': protocol,
-                'source_url': src,
-                'target_list': 'WL',
-                'status': 'ЖИВОЙ_БЕЗ_ТЕСТА',
-                'xray_reason': 'Прямой пропуск (IP в white_ip.txt)'
-            })
+            alive_wl_data.append((link, orig_flag))
             continue
 
         if is_wl_by_keywords(link, orig_name):
             orig_flag = extract_clean_flag(orig_name)
-            final_flag = get_real_ip_and_flag(host, orig_flag)
-            alive_wl_data.append((link, final_flag))
+            alive_wl_data.append((link, orig_flag))
             continue
 
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
@@ -1048,38 +917,28 @@ def main():
         else:
             ping_bl.append((link, src))
 
+    print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
+    
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         wl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_wl}
         for future in as_completed(wl_futures):
             is_ok, res, reason = future.result()
-            link, src = wl_futures[future]
-            
-            matched_ip = find_matched_ip_for_link(link, white_ips)
-            update_trace_status(trace_data, link, matched_ip, 'ЖИВОЙ' if is_ok else 'МЕРТВ_XRAY', reason)
-
             if is_ok:
                 alive_wl_data.append(res)
 
         bl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason = future.result()
-            link, src = bl_futures[future]
-            
-            matched_ip = find_matched_ip_for_link(link, white_ips)
-            update_trace_status(trace_data, link, matched_ip, 'ЖИВОЙ' if is_ok else 'МЕРТВ_XRAY', reason)
-
             if is_ok:
                 alive_bl_data.append(res)
 
-    # 4. Вторичная дедупликация и контроль лимитов после тестирования
-    alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), max_per_ip=MAX_CONFIGS_PER_IP)
-    alive_bl_clean = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), max_per_ip=MAX_CONFIGS_PER_IP)
+    alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
+    alive_bl_clean = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
 
     wl_set = set(alive_wl_clean)
     alive_full_raw = alive_wl_clean + alive_bl_clean
-    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), max_per_ip=MAX_CONFIGS_PER_IP)
+    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
 
-    # Сквозное переименование с обновленными флагами
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
     final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1]) for idx, item in enumerate(alive_full_clean, 1)]
