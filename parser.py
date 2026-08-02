@@ -25,7 +25,7 @@ MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      
 MAX_CONFIGS_PER_IP_WL = 10     
 MAX_CONFIGS_PER_SUBNET_BL = 5  
-SPEED_TEST_THRESHOLD = 30     # Порог скорости (Мбит/с) для значка ⚡️ в BL
+SPEED_TEST_THRESHOLD = 15     # ПОНИЖЕН ПОРОГ: 15 Мбит/с из-за тестирования из США в Европу
 
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
@@ -621,14 +621,14 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
             if run_speedtest:
                 try:
                     start_time = time.time()
-                    # ИЗМЕНЕНИЕ: Скачиваем 5 Мегабайт и даем 6 секунд на это
-                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=5000000", headers=HEADERS)
-                    with opener.open(req_speed, timeout=6.0) as resp_speed:
+                    # ОПТИМИЗАЦИЯ: 2 МБ файл и таймаут 3 секунды
+                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=2000000", headers=HEADERS)
+                    with opener.open(req_speed, timeout=3.0) as resp_speed:
                         resp_speed.read()
                     elapsed = time.time() - start_time
                     if elapsed > 0:
-                        # 5 MB = 40 Mbit. Формула: 40 / время_в_секундах
-                        speed_mbps = (40.0 / elapsed)
+                        # 2 MB = 16 Mbit
+                        speed_mbps = (16.0 / elapsed)
                 except:
                     speed_mbps = 0.0
             
