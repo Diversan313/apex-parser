@@ -25,7 +25,6 @@ MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      
 MAX_CONFIGS_PER_IP_WL = 10     
 MAX_CONFIGS_PER_SUBNET_BL = 5  
-SPEED_TEST_THRESHOLD = 15     # ПОНИЖЕН ПОРОГ: 15 Мбит/с из-за тестирования из США в Европу
 
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
@@ -621,14 +620,14 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
             if run_speedtest:
                 try:
                     start_time = time.time()
-                    # ОПТИМИЗАЦИЯ: 2 МБ файл и таймаут 3 секунды
-                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=2000000", headers=HEADERS)
-                    with opener.open(req_speed, timeout=3.0) as resp_speed:
+                    # ОПТИМИЗАЦИЯ: 1 МБ файл и таймаут 2 секунды (убираем зависание на 40 минут)
+                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=1000000", headers=HEADERS)
+                    with opener.open(req_speed, timeout=2.0) as resp_speed:
                         resp_speed.read()
                     elapsed = time.time() - start_time
                     if elapsed > 0:
-                        # 2 MB = 16 Mbit
-                        speed_mbps = (16.0 / elapsed)
+                        # 1 MB = 8 Mbit
+                        speed_mbps = (8.0 / elapsed)
                 except:
                     speed_mbps = 0.0
             
@@ -671,9 +670,8 @@ def check_proxy_alive_detailed(link: str, run_speedtest=False):
         else:
             final_flag = extract_clean_flag(orig_name)
         
-        is_fast = run_speedtest and speed >= SPEED_TEST_THRESHOLD
-        
-        return True, (link, final_flag, is_fast), "OK", cc
+        # Возвращаем скорость (а не True/False), флаг скорости присвоим позже
+        return True, (link, final_flag, speed), "OK", cc
     return False, None, "Ошибка", None
 
 def fetch_single_url_with_details(url: str) -> dict:
@@ -986,28 +984,46 @@ def main():
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
-                alive_wl_data.append(res)
+                # Для WL скорость не важна, ставим False
+                alive_wl_data.append((res[0], res[1], False))
 
         bl_futures = {executor.submit(check_proxy_alive_detailed, link, True): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
+                # res = (link, flag, speed_mbps)
                 if cc and cc.upper() == 'RU':
-                    alive_wl_data.append(res)
+                    alive_wl_data.append((res[0], res[1], False))
                 else:
+                    # Сохраняем скорость для сортировки
                     alive_bl_data.append(res)
 
     alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
+    # НОВАЯ ЛОГИКА: Сортируем BL по скорости (от самой высокой к самой низкой) ПЕРЕД дедупликацией и лимитами
+    # Это гарантирует, что на 1 IP останутся самые быстрые конфиги
+    alive_bl_data.sort(key=lambda x: x[2], reverse=True)
+    
     alive_bl_limited = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
+    # НОВАЯ ЛОГИКА: Отмечаем топ 30% самых быстрых конфигов значком ⚡️
+    num_fast = max(10, int(len(alive_bl_clean) * 0.30))
+    alive_bl_marked = []
+    for i, item in enumerate(alive_bl_clean):
+        link, flag, speed = item
+        # Если скорость > 0 и конфиг входит в топ 30%
+        is_fast = i < num_fast and speed > 0
+        alive_bl_marked.append((link, flag, is_fast))
+        
+    print(f"⚡️ Отмечено быстрых конфигов (Топ 30%): {num_fast} шт.")
+
     wl_set = set(alive_wl_clean)
-    alive_full_raw = alive_wl_clean + alive_bl_clean
+    alive_full_raw = alive_wl_clean + alive_bl_marked
     alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1], item[2]) for idx, item in enumerate(alive_wl_clean, 1)]
-    final_bl = [rename_config(item[0], idx, "[BL]", item[1], item[2]) for idx, item in enumerate(alive_bl_clean, 1)]
+    final_bl = [rename_config(item[0], idx, "[BL]", item[1], item[2]) for idx, item in enumerate(alive_bl_marked, 1)]
     final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1], item[2]) for idx, item in enumerate(alive_full_clean, 1)]
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
