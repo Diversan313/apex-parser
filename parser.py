@@ -22,9 +22,9 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
-MAX_CONFIGS_PER_IP_BL = 2      
-MAX_CONFIGS_PER_IP_WL = 10     
-MAX_CONFIGS_PER_SUBNET_BL = 5  
+MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
+MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL
+MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
@@ -52,6 +52,7 @@ except ImportError:
 
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
+# РАСШИРЕННЫЙ СПИСОК ПОДСЕТЕЙ CLOUDFLARE
 CF_CIDRS = [
     "103.4.160.0/22", "103.5.72.0/22", "103.7.4.0/22", "103.8.4.0/22", "103.8.84.0/22",
     "103.16.0.0/12", "103.24.124.0/22", "103.27.248.0/22", "103.44.96.0/22", "103.252.104.0/22",
@@ -558,7 +559,7 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedtest=False):
+def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -575,7 +576,7 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
         proc.stdin.close()
 
         if not wait_for_port(port):
-            return False, None, "Локальный Xray не запустился", 0.0
+            return False, None, "Локальный Xray не запустился"
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
@@ -588,7 +589,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
 
         success_count = 0
         cc = None
-        speed_mbps = 0.0
 
         for url in test_urls:
             try:
@@ -617,26 +617,12 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                 except Exception:
                     pass
             
-            if run_speedtest:
-                try:
-                    start_time = time.time()
-                    # ОПТИМИЗАЦИЯ: 1 МБ файл и таймаут 2 секунды (убираем зависание на 40 минут)
-                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=1000000", headers=HEADERS)
-                    with opener.open(req_speed, timeout=2.0) as resp_speed:
-                        resp_speed.read()
-                    elapsed = time.time() - start_time
-                    if elapsed > 0:
-                        # 1 MB = 8 Mbit
-                        speed_mbps = (8.0 / elapsed)
-                except:
-                    speed_mbps = 0.0
-            
-            return True, cc, f"OK ({success_count}/3)", speed_mbps
+            return True, cc, f"OK ({success_count}/3)"
 
-        return False, None, f"Тест провален ({success_count}/3)", 0.0
+        return False, None, f"Тест провален ({success_count}/3)"
 
     except Exception as e:
-        return False, None, f"Ошибка: {str(e)}", 0.0
+        return False, None, f"Ошибка: {str(e)}"
     finally:
         if proc:
             try:
@@ -648,7 +634,7 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                 except Exception:
                     pass
 
-def check_proxy_alive_detailed(link: str, run_speedtest=False):
+def check_proxy_alive_detailed(link: str):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
         return False, None, "Некорректный формат хоста/порта", None
@@ -663,15 +649,13 @@ def check_proxy_alive_detailed(link: str, run_speedtest=False):
     if not outbound:
         return False, None, "Ошибка генерации JSON для Xray", None
 
-    is_ok, cc, reason, speed = check_via_xray_detailed(outbound, timeout=6.0, run_speedtest=run_speedtest)
+    is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0)
     if is_ok:
         if cc:
             final_flag = cc_to_flag(cc)
         else:
             final_flag = extract_clean_flag(orig_name)
-        
-        # Возвращаем скорость (а не True/False), флаг скорости присвоим позже
-        return True, (link, final_flag, speed), "OK", cc
+        return True, (link, final_flag), "OK", cc
     return False, None, "Ошибка", None
 
 def fetch_single_url_with_details(url: str) -> dict:
@@ -862,9 +846,8 @@ def dedup_advanced(config_list: list, list_name: str = "") -> list:
     print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
     return result
 
-def rename_config(link: str, index: int, tag: str, detected_flag: str, is_fast: bool = False) -> str:
-    fast_prefix = "⚡️" if is_fast else ""
-    new_name = f"{fast_prefix}{detected_flag} {tag} Сервер {index}"
+def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
+    new_name = f"{detected_flag} {tag} Сервер {index}"
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
@@ -963,12 +946,12 @@ def main():
         matched_ip = find_matched_ip_for_link(link, white_ips)
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag, False))
+            alive_wl_data.append((link, orig_flag))
             continue
 
         if is_wl_by_keywords(link, orig_name):
             orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag, False))
+            alive_wl_data.append((link, orig_flag))
             continue
 
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
@@ -984,47 +967,29 @@ def main():
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
-                # Для WL скорость не важна, ставим False
-                alive_wl_data.append((res[0], res[1], False))
+                alive_wl_data.append(res)
 
-        bl_futures = {executor.submit(check_proxy_alive_detailed, link, True): (link, src) for link, src in ping_bl}
+        bl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
-                # res = (link, flag, speed_mbps)
                 if cc and cc.upper() == 'RU':
-                    alive_wl_data.append((res[0], res[1], False))
+                    alive_wl_data.append(res)
                 else:
-                    # Сохраняем скорость для сортировки
                     alive_bl_data.append(res)
 
     alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
-    # НОВАЯ ЛОГИКА: Сортируем BL по скорости (от самой высокой к самой низкой) ПЕРЕД дедупликацией и лимитами
-    # Это гарантирует, что на 1 IP останутся самые быстрые конфиги
-    alive_bl_data.sort(key=lambda x: x[2], reverse=True)
-    
     alive_bl_limited = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
-    # НОВАЯ ЛОГИКА: Отмечаем топ 30% самых быстрых конфигов значком ⚡️
-    num_fast = max(10, int(len(alive_bl_clean) * 0.30))
-    alive_bl_marked = []
-    for i, item in enumerate(alive_bl_clean):
-        link, flag, speed = item
-        # Если скорость > 0 и конфиг входит в топ 30%
-        is_fast = i < num_fast and speed > 0
-        alive_bl_marked.append((link, flag, is_fast))
-        
-    print(f"⚡️ Отмечено быстрых конфигов (Топ 30%): {num_fast} шт.")
-
     wl_set = set(alive_wl_clean)
-    alive_full_raw = alive_wl_clean + alive_bl_marked
+    alive_full_raw = alive_wl_clean + alive_bl_clean
     alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
-    final_wl = [rename_config(item[0], idx, "[WL]", item[1], item[2]) for idx, item in enumerate(alive_wl_clean, 1)]
-    final_bl = [rename_config(item[0], idx, "[BL]", item[1], item[2]) for idx, item in enumerate(alive_bl_marked, 1)]
-    final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1], item[2]) for idx, item in enumerate(alive_full_clean, 1)]
+    final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
+    final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
+    final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1]) for idx, item in enumerate(alive_full_clean, 1)]
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write(base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8'))
