@@ -621,12 +621,14 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
             if run_speedtest:
                 try:
                     start_time = time.time()
-                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=1000000", headers=HEADERS)
-                    with opener.open(req_speed, timeout=4.0) as resp_speed:
+                    # ИЗМЕНЕНИЕ: Скачиваем 5 Мегабайт и даем 6 секунд на это
+                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=5000000", headers=HEADERS)
+                    with opener.open(req_speed, timeout=6.0) as resp_speed:
                         resp_speed.read()
                     elapsed = time.time() - start_time
                     if elapsed > 0:
-                        speed_mbps = (8.0 / elapsed)
+                        # 5 MB = 40 Mbit. Формула: 40 / время_в_секундах
+                        speed_mbps = (40.0 / elapsed)
                 except:
                     speed_mbps = 0.0
             
@@ -647,7 +649,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                 except Exception:
                     pass
 
-# ИЗМЕНЕНИЕ: Возвращаем 4 элемента, включая cc (код страны)
 def check_proxy_alive_detailed(link: str, run_speedtest=False):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
@@ -958,8 +959,6 @@ def main():
 
     for link, src in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
-        
-        # ФИКС 1: Жесткая проверка валидности хоста в самом начале. Мусор типа 9338383929 отсюда вылетает моментально.
         if not host or not port or not is_valid_public_host(host):
             continue
 
@@ -993,7 +992,6 @@ def main():
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
-                # ФИКС 2: Если после теста BL конфиг оказался RU, кидаем его в WL
                 if cc and cc.upper() == 'RU':
                     alive_wl_data.append(res)
                 else:
