@@ -22,9 +22,9 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
-MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL
-MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
+MAX_CONFIGS_PER_IP_BL = 2      
+MAX_CONFIGS_PER_IP_WL = 10     
+MAX_CONFIGS_PER_SUBNET_BL = 5  
 SPEED_TEST_THRESHOLD = 30     # Порог скорости (Мбит/с) для значка ⚡️ в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -53,7 +53,6 @@ except ImportError:
 
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-# РАСШИРЕННЫЙ СПИСОК ПОДСЕТЕЙ CLOUDFLARE
 CF_CIDRS = [
     "103.4.160.0/22", "103.5.72.0/22", "103.7.4.0/22", "103.8.4.0/22", "103.8.84.0/22",
     "103.16.0.0/12", "103.24.124.0/22", "103.27.248.0/22", "103.44.96.0/22", "103.252.104.0/22",
@@ -560,7 +559,6 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-# ДОБАВЛЕН ТЕСТ СКОРОСТИ ДЛЯ BL
 def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedtest=False):
     port = get_free_port()
     config = {
@@ -620,7 +618,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                 except Exception:
                     pass
             
-            # ТЕСТ СКОРОСТИ (только для BL)
             if run_speedtest:
                 try:
                     start_time = time.time()
@@ -628,8 +625,8 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                     with opener.open(req_speed, timeout=4.0) as resp_speed:
                         resp_speed.read()
                     elapsed = time.time() - start_time
-                    if elapsed > 0.1:
-                        speed_mbps = (8.0 / elapsed) # 1MB = 8 Mbit
+                    if elapsed > 0:
+                        speed_mbps = (8.0 / elapsed)
                 except:
                     speed_mbps = 0.0
             
@@ -650,20 +647,21 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedt
                 except Exception:
                     pass
 
+# ИЗМЕНЕНИЕ: Возвращаем 4 элемента, включая cc (код страны)
 def check_proxy_alive_detailed(link: str, run_speedtest=False):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
-        return False, None, "Некорректный формат хоста/порта"
+        return False, None, "Некорректный формат хоста/порта", None
 
     if is_cloudflare_or_warp(host):
-        return False, None, "Отфильтрован (Cloudflare/WARP)"
+        return False, None, "Отфильтрован (Cloudflare/WARP)", None
 
     if link.startswith(('hysteria2://', 'hy2://')):
-        return False, None, "Hysteria2 не поддерживается Xray"
+        return False, None, "Hysteria2 не поддерживается Xray", None
 
     outbound = link_to_xray_outbound(link)
     if not outbound:
-        return False, None, "Ошибка генерации JSON для Xray"
+        return False, None, "Ошибка генерации JSON для Xray", None
 
     is_ok, cc, reason, speed = check_via_xray_detailed(outbound, timeout=6.0, run_speedtest=run_speedtest)
     if is_ok:
@@ -672,12 +670,10 @@ def check_proxy_alive_detailed(link: str, run_speedtest=False):
         else:
             final_flag = extract_clean_flag(orig_name)
         
-        # Добавляем значок скорости, если тест пройден
-        if run_speedtest and speed >= SPEED_TEST_THRESHOLD:
-            final_flag = "⚡️" + final_flag
-            
-        return True, (link, final_flag), "OK"
-    return False, None, reason
+        is_fast = run_speedtest and speed >= SPEED_TEST_THRESHOLD
+        
+        return True, (link, final_flag, is_fast), "OK", cc
+    return False, None, "Ошибка", None
 
 def fetch_single_url_with_details(url: str) -> dict:
     url_clean = url.strip().replace(' ', '%20')
@@ -831,7 +827,6 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
         is_wl = (ip_str in white_ips or clean_host in white_ips)
         limit = max_per_ip_wl if is_wl else max_per_ip_bl
         
-        # Вычисляем подсеть /24 для BL
         subnet_key = None
         if not is_wl:
             try:
@@ -868,8 +863,9 @@ def dedup_advanced(config_list: list, list_name: str = "") -> list:
     print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
     return result
 
-def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
-    new_name = f"{detected_flag} {tag} Сервер {index}"
+def rename_config(link: str, index: int, tag: str, detected_flag: str, is_fast: bool = False) -> str:
+    fast_prefix = "⚡️" if is_fast else ""
+    new_name = f"{fast_prefix}{detected_flag} {tag} Сервер {index}"
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
@@ -962,18 +958,20 @@ def main():
 
     for link, src in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
-        if not host:
+        
+        # ФИКС 1: Жесткая проверка валидности хоста в самом начале. Мусор типа 9338383929 отсюда вылетает моментально.
+        if not host or not port or not is_valid_public_host(host):
             continue
 
         matched_ip = find_matched_ip_for_link(link, white_ips)
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag))
+            alive_wl_data.append((link, orig_flag, False))
             continue
 
         if is_wl_by_keywords(link, orig_name):
             orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag))
+            alive_wl_data.append((link, orig_flag, False))
             continue
 
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
@@ -987,16 +985,19 @@ def main():
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         wl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_wl}
         for future in as_completed(wl_futures):
-            is_ok, res, reason = future.result()
+            is_ok, res, reason, cc = future.result()
             if is_ok:
                 alive_wl_data.append(res)
 
-        # Для BL передаем флаг run_speedtest=True
         bl_futures = {executor.submit(check_proxy_alive_detailed, link, True): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
-            is_ok, res, reason = future.result()
+            is_ok, res, reason, cc = future.result()
             if is_ok:
-                alive_bl_data.append(res)
+                # ФИКС 2: Если после теста BL конфиг оказался RU, кидаем его в WL
+                if cc and cc.upper() == 'RU':
+                    alive_wl_data.append(res)
+                else:
+                    alive_bl_data.append(res)
 
     alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
@@ -1007,9 +1008,9 @@ def main():
     alive_full_raw = alive_wl_clean + alive_bl_clean
     alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
-    final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
-    final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
-    final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1]) for idx, item in enumerate(alive_full_clean, 1)]
+    final_wl = [rename_config(item[0], idx, "[WL]", item[1], item[2]) for idx, item in enumerate(alive_wl_clean, 1)]
+    final_bl = [rename_config(item[0], idx, "[BL]", item[1], item[2]) for idx, item in enumerate(alive_bl_clean, 1)]
+    final_full = [rename_config(item[0], idx, "[WL]" if item in wl_set else "[BL]", item[1], item[2]) for idx, item in enumerate(alive_full_clean, 1)]
 
     with open('alive_bs.txt', 'w', encoding='utf-8') as f:
         f.write(base64.b64encode('\n'.join(final_wl).encode('utf-8')).decode('utf-8'))
