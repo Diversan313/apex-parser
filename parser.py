@@ -22,7 +22,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
-MAX_CONFIGS_PER_IP_BL = 3      # Жесткий лимит для BL
+MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL (на WiFi не нужно 10 SNI на 1 IP)
 MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL (чтобы сохранить разные SNI на один IP)
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -604,6 +604,15 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
             except Exception:
                 pass
             
+            if not cc:
+                try:
+                    req_ip2 = urllib.request.Request("https://api.country.is/", headers=HEADERS)
+                    with opener.open(req_ip2, timeout=timeout) as resp_ip2:
+                        data2 = json.loads(resp_ip2.read().decode('utf-8'))
+                        cc = data2.get('country')
+                except Exception:
+                    pass
+            
             return True, cc, f"OK ({success_count}/3)"
 
         return False, None, f"Тест провален ({success_count}/3)"
@@ -638,7 +647,6 @@ def check_proxy_alive_detailed(link: str):
 
     is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0)
     if is_ok:
-        # Если получили реальный код страны — ставим реальный флаг. Иначе оставляем оригинальный.
         if cc:
             final_flag = cc_to_flag(cc)
         else:
@@ -760,10 +768,7 @@ def get_config_dedup_key(link: str) -> tuple:
     except Exception:
         pass
     
-    # Нормализуем path (например, %2F превращаем в /, а пустой путь в /)
     path = urllib.parse.unquote(path) or "/"
-    
-    # ВАЖНО: Мы ИСКЛЮЧАЕМ 'fp' (fingerprint) из ключа! Его здесь нет.
     return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
 def clean_and_dedup(tagged_items: list) -> list:
@@ -786,7 +791,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 3, max_per_ip_wl: int = 50) -> list:
+def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 10) -> list:
     ip_counter = defaultdict(int)
     filtered = []
     for item in items_list:
@@ -797,7 +802,6 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
         clean_host = host.strip('[] \t\r\n\'"').lower()
         ip_str = resolve_host_cached(clean_host) or clean_host
 
-        # Если IP в белом списке, разрешаем больше конфигов (разные SNI нужны для разных операторов)
         limit = max_per_ip_wl if (ip_str in white_ips or clean_host in white_ips) else max_per_ip_bl
         if ip_counter[ip_str] < limit:
             ip_counter[ip_str] += 1
@@ -834,6 +838,25 @@ def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
         main_part = link.split('#', 1)[0]
         return f"{main_part}#{urllib.parse.quote(new_name)}"
     return link
+
+# НОВАЯ ФУНКЦИЯ: Приоритет VLESS/Hy2 и ограничение старых протоколов до 10%
+def filter_protocols_bl(alive_configs, minority_ratio=0.10):
+    priority = []
+    minority = []
+    for item in alive_configs:
+        link = item[0] if isinstance(item, (tuple, list)) else item
+        proto = link.split('://')[0].lower()
+        if proto in ['vless', 'hysteria2', 'hy2']:
+            priority.append(item)
+        else:
+            minority.append(item)
+    
+    max_minority = max(10, int(len(priority) * (minority_ratio / (1 - minority_ratio))))
+    if len(minority) > max_minority:
+        minority = minority[:max_minority]
+        
+    print(f"🎯 Фильтр BL протоколов: VLESS/Hy2: {len(priority)} шт. | Старые (SS/VMess/Trojan): {len(minority)} шт. (лимит {minority_ratio*100}%)")
+    return priority + minority
 
 def main():
     print("🚀 Старт продвинутого Xray-парсера...")
@@ -933,9 +956,14 @@ def main():
                 alive_bl_data.append(res)
 
     alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
-    alive_bl_clean = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
+    
+    # Применяем ужесточенную дедупликацию и лимит 2 на IP для BL
+    alive_bl_limited = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
+    # Применяем умный фильтр протоколов (90% VLESS / 10% остальное)
+    alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
     wl_set = set(alive_wl_clean)
+    # Для полного списка (FULL) тоже прогоняем через фильтр, чтобы не раздувать его мусором
     alive_full_raw = alive_wl_clean + alive_bl_clean
     alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL)
 
