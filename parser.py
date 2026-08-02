@@ -22,9 +22,10 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
-MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL (на WiFi не нужно 10 SNI на 1 IP)
-MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL (чтобы сохранить разные SNI на один IP)
-MAX_CONFIGS_PER_SUBNET_BL = 5  # НОВЫЙ ЛИМИТ: Не более 5 конфигов на одну подсеть /24 в BL
+MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
+MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL
+MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
+SPEED_TEST_THRESHOLD = 30     # Порог скорости (Мбит/с) для значка ⚡️ в BL
 
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
@@ -52,11 +53,14 @@ except ImportError:
 
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
+# РАСШИРЕННЫЙ СПИСОК ПОДСЕТЕЙ CLOUDFLARE
 CF_CIDRS = [
-    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
-    "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
-    "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
-    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22", "162.159.0.0/16"
+    "103.4.160.0/22", "103.5.72.0/22", "103.7.4.0/22", "103.8.4.0/22", "103.8.84.0/22",
+    "103.16.0.0/12", "103.24.124.0/22", "103.27.248.0/22", "103.44.96.0/22", "103.252.104.0/22",
+    "104.16.0.0/13", "104.24.0.0/14", "108.162.192.0/18", "131.0.72.0/22", "141.101.64.0/18",
+    "162.158.0.0/15", "172.64.0.0/13", "173.245.48.0/20", "188.114.96.0/20", "190.93.240.0/20",
+    "197.234.240.0/22", "198.41.128.0/17",
+    "8.39.124.0/22", "8.41.8.0/22", "8.42.120.0/22", "8.44.0.0/22", "8.46.0.0/22", "8.48.0.0/22", "8.50.0.0/22", "8.52.0.0/22"
 ]
 CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
 
@@ -556,7 +560,8 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
+# ДОБАВЛЕН ТЕСТ СКОРОСТИ ДЛЯ BL
+def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, run_speedtest=False):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -573,7 +578,7 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
         proc.stdin.close()
 
         if not wait_for_port(port):
-            return False, None, "Локальный Xray не запустился"
+            return False, None, "Локальный Xray не запустился", 0.0
 
         proxy_handler = urllib.request.ProxyHandler({'http': f'http://127.0.0.1:{port}', 'https': f'http://127.0.0.1:{port}'})
         opener = urllib.request.build_opener(proxy_handler)
@@ -586,6 +591,7 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
 
         success_count = 0
         cc = None
+        speed_mbps = 0.0
 
         for url in test_urls:
             try:
@@ -614,12 +620,25 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
                 except Exception:
                     pass
             
-            return True, cc, f"OK ({success_count}/3)"
+            # ТЕСТ СКОРОСТИ (только для BL)
+            if run_speedtest:
+                try:
+                    start_time = time.time()
+                    req_speed = urllib.request.Request("https://speed.cloudflare.com/__down?bytes=1000000", headers=HEADERS)
+                    with opener.open(req_speed, timeout=4.0) as resp_speed:
+                        resp_speed.read()
+                    elapsed = time.time() - start_time
+                    if elapsed > 0.1:
+                        speed_mbps = (8.0 / elapsed) # 1MB = 8 Mbit
+                except:
+                    speed_mbps = 0.0
+            
+            return True, cc, f"OK ({success_count}/3)", speed_mbps
 
-        return False, None, f"Тест провален ({success_count}/3)"
+        return False, None, f"Тест провален ({success_count}/3)", 0.0
 
     except Exception as e:
-        return False, None, f"Ошибка: {str(e)}"
+        return False, None, f"Ошибка: {str(e)}", 0.0
     finally:
         if proc:
             try:
@@ -631,7 +650,7 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
                 except Exception:
                     pass
 
-def check_proxy_alive_detailed(link: str):
+def check_proxy_alive_detailed(link: str, run_speedtest=False):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
         return False, None, "Некорректный формат хоста/порта"
@@ -646,12 +665,17 @@ def check_proxy_alive_detailed(link: str):
     if not outbound:
         return False, None, "Ошибка генерации JSON для Xray"
 
-    is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0)
+    is_ok, cc, reason, speed = check_via_xray_detailed(outbound, timeout=6.0, run_speedtest=run_speedtest)
     if is_ok:
         if cc:
             final_flag = cc_to_flag(cc)
         else:
             final_flag = extract_clean_flag(orig_name)
+        
+        # Добавляем значок скорости, если тест пройден
+        if run_speedtest and speed >= SPEED_TEST_THRESHOLD:
+            final_flag = "⚡️" + final_flag
+            
         return True, (link, final_flag), "OK"
     return False, None, reason
 
@@ -820,7 +844,6 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
                 pass
         
         if ip_counter[ip_str] < limit:
-            # Проверяем лимит подсети
             if subnet_key:
                 if subnet_counter[subnet_key] >= max_per_subnet_bl:
                     continue
@@ -968,7 +991,8 @@ def main():
             if is_ok:
                 alive_wl_data.append(res)
 
-        bl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_bl}
+        # Для BL передаем флаг run_speedtest=True
+        bl_futures = {executor.submit(check_proxy_alive_detailed, link, True): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason = future.result()
             if is_ok:
