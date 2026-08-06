@@ -599,7 +599,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_succes
             except Exception:
                 pass
 
-        # ИЗМЕНЕНИЕ ЗДЕСЬ: Используем min_success_count (Для WL = 1, для BL = 2)
         if success_count >= min_success_count:
             try:
                 req_ip = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
@@ -635,7 +634,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_succes
                 except Exception:
                     pass
 
-# ИЗМЕНЕНИЕ ЗДЕСЬ: Добавлен параметр min_success_count
 def check_proxy_alive_detailed(link: str, min_success_count: int = 2):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
@@ -940,12 +938,19 @@ def main():
     alive_wl_data = []
     alive_bl_data = []
 
-    # ИЗМЕНЕНИЕ ЗДЕСЬ: Убрал обход пинга для WL, отправляем всё на пинг
     for link, src in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
         if not host or not port or not is_valid_public_host(host):
             continue
 
+        # ВОЗВРАЩАЕМ БАЙПАСС ПИНГА ДЛЯ WHITE IP
+        matched_ip = find_matched_ip_for_link(link, white_ips)
+        if matched_ip:
+            orig_flag = extract_clean_flag(orig_name)
+            alive_wl_data.append((link, orig_flag))
+            continue
+
+        # Остальные WL (по ключевикам и SNI) идут на пинг, для них условие 1 из 3
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
         if target_list == 'WL':
             ping_wl.append((link, src))
@@ -955,14 +960,14 @@ def main():
     print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
     
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        # ИЗМЕНЕНИЕ ЗДЕСЬ: Для WL используем min_success_count=1
+        # Для WL используем min_success_count=1
         wl_futures = {executor.submit(check_proxy_alive_detailed, link, 1): (link, src) for link, src in ping_wl}
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
                 alive_wl_data.append(res)
 
-        # ИЗМЕНЕНИЕ ЗДЕСЬ: Для BL оставляем 2 (по умолчанию)
+        # Для BL оставляем 2 (по умолчанию)
         bl_futures = {executor.submit(check_proxy_alive_detailed, link, 2): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
