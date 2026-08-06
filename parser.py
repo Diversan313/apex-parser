@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL
+MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL (с приоритетом уникальных SNI)
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -738,6 +738,7 @@ def process_incoming_queue():
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
 
+# ДЕДУПЛИКАЦИЯ ДО ПИНГА (Проверяет разные path и UUID, чтобы найти рабочий)
 def get_config_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
@@ -775,7 +776,7 @@ def get_config_dedup_key(link: str) -> tuple:
     path = urllib.parse.unquote(path) or "/"
     return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
-# ФИНАЛЬНАЯ ДЕДУПЛИКАЦИЯ: Игнорирует UUID и SID, но строго держит разные SNI
+# УЛЬТА-СТРОГАЯ ДЕДУПЛИКАЦИЯ ДЛЯ ФИНАЛЬНОГО ФАЙЛА (Оставляет только 1 конфиг на IP+Порт+SNI+Net)
 def get_final_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
@@ -785,26 +786,21 @@ def get_final_dedup_key(link: str) -> tuple:
     protocol = link.split('://')[0].lower() if '://' in link else ''
     sni = extract_sni_from_link(link)
     
-    net, path, security = "", "/", ""
+    net = "raw"
     try:
         if link.startswith("vmess://"):
             b64_data = link.replace("vmess://", "").strip()
             decoded = safe_b64decode(b64_data)
             data = json.loads(decoded)
             net = str(data.get('net', 'raw')).lower()
-            path = str(data.get('path', '')) or "/"
-            security = str(data.get('tls', '')).lower()
         else:
             parsed = urllib.parse.urlparse(link)
             query_params = urllib.parse.parse_qs(parsed.query)
             net = query_params.get('type', query_params.get('net', ['raw']))[0].lower()
-            path = query_params.get('path', [''])[0] or "/"
-            security = query_params.get('security', [''])[0].lower()
     except Exception:
         pass
     
-    path = urllib.parse.unquote(path) or "/"
-    return (protocol, clean_ip, str(port), sni, net, path, security)
+    return (protocol, clean_ip, str(port), sni, net)
 
 def clean_and_dedup(tagged_items: list) -> list:
     seen_strings = set()
@@ -826,7 +822,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-# НОВАЯ ЛОГИКА ЛИМИТОВ: Приоритет на уникальные SNI для WL
+# ЛИМИТЫ: Приоритет на уникальные SNI для WL
 def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
@@ -890,12 +886,13 @@ def dedup_advanced(config_list: list, list_name: str = "") -> list:
     result = []
     for item in config_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
+        # ИСПОЛЬЗУЕМ УЛЬТА-СТРОГИЙ КЛЮЧ
         key = get_final_dedup_key(link)
         if key and key not in seen_keys:
             seen_keys.add(key)
             result.append(item)
     removed = len(config_list) - len(result)
-    print(f"🔍 Дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
+    print(f"🔍 Финальная дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
     return result
 
 def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
@@ -1025,9 +1022,13 @@ def main():
                 else:
                     alive_bl_data.append(res)
 
-    alive_wl_clean = limit_configs_per_ip(dedup_advanced(alive_wl_data, "WL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    # Применяем ультра-строгую дедупликацию ПЕРЕД лимитами, чтобы убрать дубли еще до подсчета
+    alive_wl_data = dedup_advanced(alive_wl_data, "WL (предварительно)")
+    alive_bl_data = dedup_advanced(alive_bl_data, "BL (предварительно)")
+
+    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
-    alive_bl_limited = limit_configs_per_ip(dedup_advanced(alive_bl_data, "BL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
     wl_set = set(alive_wl_clean)
