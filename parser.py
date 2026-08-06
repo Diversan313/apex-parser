@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 50     # Подняли лимит для WL, чтобы не терять ключи с одинаковым IP но разными SNI/UUID
+MAX_CONFIGS_PER_IP_WL = 30     # Опустили до 30, чтобы не пинговать кучу дублей. Разные SNI все равно пройдут.
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -775,6 +775,37 @@ def get_config_dedup_key(link: str) -> tuple:
     path = urllib.parse.unquote(path) or "/"
     return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
+# НОВАЯ ФУНКЦИЯ: Группирует конфиги строго по IP + SNI + Порт + Сеть + Путь. Игнорирует UUID и SID.
+def get_final_dedup_key(link: str) -> tuple:
+    host, port, _ = parse_host_port_and_name(link)
+    if not host or not port:
+        return None
+    clean_host = host.strip('[] \t\r\n\'"').lower()
+    clean_ip = resolve_host_cached(clean_host) or clean_host
+    protocol = link.split('://')[0].lower() if '://' in link else ''
+    sni = extract_sni_from_link(link)
+    
+    net, path, security = "", "/", ""
+    try:
+        if link.startswith("vmess://"):
+            b64_data = link.replace("vmess://", "").strip()
+            decoded = safe_b64decode(b64_data)
+            data = json.loads(decoded)
+            net = str(data.get('net', 'raw')).lower()
+            path = str(data.get('path', '')) or "/"
+            security = str(data.get('tls', '')).lower()
+        else:
+            parsed = urllib.parse.urlparse(link)
+            query_params = urllib.parse.parse_qs(parsed.query)
+            net = query_params.get('type', query_params.get('net', ['raw']))[0].lower()
+            path = query_params.get('path', [''])[0] or "/"
+            security = query_params.get('security', [''])[0].lower()
+    except Exception:
+        pass
+    
+    path = urllib.parse.unquote(path) or "/"
+    return (protocol, clean_ip, str(port), sni, net, path, security)
+
 def clean_and_dedup(tagged_items: list) -> list:
     seen_strings = set()
     seen_keys = set()
@@ -795,7 +826,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 50, max_per_subnet_bl: int = 5) -> list:
+def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
     filtered = []
@@ -838,7 +869,8 @@ def dedup_advanced(config_list: list, list_name: str = "") -> list:
     result = []
     for item in config_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
-        key = get_config_dedup_key(link)
+        # ИСПОЛЬЗУЕМ НОВЫЙ КЛЮЧ БЕЗ UUID И SID
+        key = get_final_dedup_key(link)
         if key and key not in seen_keys:
             seen_keys.add(key)
             result.append(item)
@@ -943,14 +975,12 @@ def main():
         if not host or not port or not is_valid_public_host(host):
             continue
 
-        # ВОЗВРАЩАЕМ БАЙПАСС ПИНГА ДЛЯ WHITE IP
         matched_ip = find_matched_ip_for_link(link, white_ips)
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
             alive_wl_data.append((link, orig_flag))
             continue
 
-        # Остальные WL (по ключевикам и SNI) идут на пинг, для них условие 1 из 3
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
         if target_list == 'WL':
             ping_wl.append((link, src))
@@ -960,14 +990,12 @@ def main():
     print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
     
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        # Для WL используем min_success_count=1
         wl_futures = {executor.submit(check_proxy_alive_detailed, link, 1): (link, src) for link, src in ping_wl}
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
                 alive_wl_data.append(res)
 
-        # Для BL оставляем 2 (по умолчанию)
         bl_futures = {executor.submit(check_proxy_alive_detailed, link, 2): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
