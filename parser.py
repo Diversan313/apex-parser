@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 10     # Мягкий лимит для WL
+MAX_CONFIGS_PER_IP_WL = 50     # Подняли лимит для WL, чтобы не терять ключи с одинаковым IP но разными SNI/UUID
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -559,7 +559,7 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
+def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_success_count: int = 2):
     port = get_free_port()
     config = {
         "log": {"loglevel": "none"},
@@ -599,7 +599,8 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
             except Exception:
                 pass
 
-        if success_count >= 2:
+        # ИЗМЕНЕНИЕ ЗДЕСЬ: Используем min_success_count (Для WL = 1, для BL = 2)
+        if success_count >= min_success_count:
             try:
                 req_ip = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
                 with opener.open(req_ip, timeout=timeout) as resp_ip:
@@ -634,7 +635,8 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0):
                 except Exception:
                     pass
 
-def check_proxy_alive_detailed(link: str):
+# ИЗМЕНЕНИЕ ЗДЕСЬ: Добавлен параметр min_success_count
+def check_proxy_alive_detailed(link: str, min_success_count: int = 2):
     host, port, orig_name = parse_host_port_and_name(link)
     if not host or not port or not is_valid_public_host(host):
         return False, None, "Некорректный формат хоста/порта", None
@@ -649,7 +651,7 @@ def check_proxy_alive_detailed(link: str):
     if not outbound:
         return False, None, "Ошибка генерации JSON для Xray", None
 
-    is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0)
+    is_ok, cc, reason = check_via_xray_detailed(outbound, timeout=6.0, min_success_count=min_success_count)
     if is_ok:
         if cc:
             final_flag = cc_to_flag(cc)
@@ -795,7 +797,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 10, max_per_subnet_bl: int = 5) -> list:
+def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 50, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
     filtered = []
@@ -938,20 +940,10 @@ def main():
     alive_wl_data = []
     alive_bl_data = []
 
+    # ИЗМЕНЕНИЕ ЗДЕСЬ: Убрал обход пинга для WL, отправляем всё на пинг
     for link, src in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
         if not host or not port or not is_valid_public_host(host):
-            continue
-
-        matched_ip = find_matched_ip_for_link(link, white_ips)
-        if matched_ip:
-            orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag))
-            continue
-
-        if is_wl_by_keywords(link, orig_name):
-            orig_flag = extract_clean_flag(orig_name)
-            alive_wl_data.append((link, orig_flag))
             continue
 
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
@@ -963,13 +955,15 @@ def main():
     print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
     
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        wl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_wl}
+        # ИЗМЕНЕНИЕ ЗДЕСЬ: Для WL используем min_success_count=1
+        wl_futures = {executor.submit(check_proxy_alive_detailed, link, 1): (link, src) for link, src in ping_wl}
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
                 alive_wl_data.append(res)
 
-        bl_futures = {executor.submit(check_proxy_alive_detailed, link): (link, src) for link, src in ping_bl}
+        # ИЗМЕНЕНИЕ ЗДЕСЬ: Для BL оставляем 2 (по умолчанию)
+        bl_futures = {executor.submit(check_proxy_alive_detailed, link, 2): (link, src) for link, src in ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
