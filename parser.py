@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 30     # Опустили до 30, чтобы не пинговать кучу дублей. Разные SNI все равно пройдут.
+MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -775,7 +775,7 @@ def get_config_dedup_key(link: str) -> tuple:
     path = urllib.parse.unquote(path) or "/"
     return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
-# НОВАЯ ФУНКЦИЯ: Группирует конфиги строго по IP + SNI + Порт + Сеть + Путь. Игнорирует UUID и SID.
+# ФИНАЛЬНАЯ ДЕДУПЛИКАЦИЯ: Игнорирует UUID и SID, но строго держит разные SNI
 def get_final_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
@@ -826,42 +826,63 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
+# НОВАЯ ЛОГИКА ЛИМИТОВ: Приоритет на уникальные SNI для WL
 def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
     filtered = []
+    
+    # Временно группируем по IP, чтобы отсортировать и优先изировать уникальные SNI
+    grouped_by_ip = defaultdict(list)
     for item in items_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
         host, _, _ = parse_host_port_and_name(link)
-        if not host:
-            continue
+        if not host: continue
         clean_host = host.strip('[] \t\r\n\'"').lower()
         ip_str = resolve_host_cached(clean_host) or clean_host
-
-        is_wl = (ip_str in white_ips or clean_host in white_ips)
+        grouped_by_ip[ip_str].append(item)
+        
+    for ip_str, items in grouped_by_ip.items():
+        is_wl = (ip_str in white_ips)
         limit = max_per_ip_wl if is_wl else max_per_ip_bl
         
-        subnet_key = None
-        if not is_wl:
-            try:
-                ip_obj = ipaddress.ip_address(ip_str)
-                if ip_obj.version == 4:
-                    subnet_key = str(ipaddress.ip_network(f"{ip_str}/24", strict=False))
+        # Для WL сортируем конфиги так, чтобы уникальные SNI были первыми
+        if is_wl:
+            seen_snis = set()
+            unique_sni_items = []
+            other_items = []
+            for item in items:
+                link = item[0] if isinstance(item, (tuple, list)) else item
+                sni = extract_sni_from_link(link)
+                if sni not in seen_snis:
+                    seen_snis.add(sni)
+                    unique_sni_items.append(item)
                 else:
-                    subnet_key = str(ipaddress.ip_network(f"{ip_str}/64", strict=False))
-            except:
-                pass
-        
-        if ip_counter[ip_str] < limit:
-            if subnet_key:
-                if subnet_counter[subnet_key] >= max_per_subnet_bl:
-                    continue
-                subnet_counter[subnet_key] += 1
+                    other_items.append(item)
+            items = unique_sni_items + other_items
             
+        for item in items:
+            if ip_counter[ip_str] >= limit:
+                break
+                
+            if not is_wl:
+                try:
+                    ip_obj = ipaddress.ip_address(ip_str)
+                    if ip_obj.version == 4:
+                        subnet_key = str(ipaddress.ip_network(f"{ip_str}/24", strict=False))
+                    else:
+                        subnet_key = str(ipaddress.ip_network(f"{ip_str}/64", strict=False))
+                        
+                    if subnet_counter[subnet_key] >= max_per_subnet_bl:
+                        continue
+                    subnet_counter[subnet_key] += 1
+                except:
+                    pass
+                    
             ip_counter[ip_str] += 1
             filtered.append(item)
 
-    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl}, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
+    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl} с приоритетом уникальных SNI, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
     return filtered
 
 def dedup_advanced(config_list: list, list_name: str = "") -> list:
@@ -869,7 +890,6 @@ def dedup_advanced(config_list: list, list_name: str = "") -> list:
     result = []
     for item in config_list:
         link = item[0] if isinstance(item, (tuple, list)) else item
-        # ИСПОЛЬЗУЕМ НОВЫЙ КЛЮЧ БЕЗ UUID И SID
         key = get_final_dedup_key(link)
         if key and key not in seen_keys:
             seen_keys.add(key)
