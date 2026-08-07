@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL (теперь игнорируется, ставим бесконечность)
+MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -943,8 +943,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-# ИЗМЕНЕНИЯ ЗДЕСЬ: Добавлен флаг is_wl_list для отключения лимитов
-def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = False, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
+def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
     filtered = []
@@ -959,9 +958,8 @@ def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = Fa
         grouped_by_ip[ip_str].append(item)
         
     for ip_str, items in grouped_by_ip.items():
-        is_wl = is_wl_list or (ip_str in white_ips)
-        # Если это список WL или IP в базе - ставим бесконечный лимит (999999)
-        limit = 999999 if is_wl else max_per_ip_bl
+        is_wl = (ip_str in white_ips)
+        limit = max_per_ip_wl if is_wl else max_per_ip_bl
         
         if is_wl:
             seen_snis = set()
@@ -998,7 +996,7 @@ def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = Fa
             ip_counter[ip_str] += 1
             filtered.append(item)
 
-    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL: {'Бесконечно' if is_wl_list else max_per_ip_wl}, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
+    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl} с приоритетом уникальных SNI, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
     return filtered
 
 def dedup_advanced(config_list: list, list_name: str = "") -> list:
@@ -1088,7 +1086,7 @@ def main():
         tagged_items.append((link, 'INCOMING_TELEGRAM'))
 
     clean_items = clean_and_dedup(tagged_items)
-    clean_items = limit_configs_per_ip(clean_items, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    clean_items = limit_configs_per_ip(clean_items, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     all_ips = []
     for link, _ in clean_items:
@@ -1164,15 +1162,14 @@ def main():
     alive_wl_data = dedup_advanced(alive_wl_data, "WL (предварительно)")
     alive_bl_data = dedup_advanced(alive_bl_data, "BL (предварительно)")
 
-    # ИЗМЕНЕНИЯ ЗДЕСЬ: Передаем is_wl_list=True для WL и FULL, чтобы отключить лимиты
-    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
-    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
     wl_set = set(alive_wl_clean)
     alive_full_raw = alive_wl_clean + alive_bl_clean
-    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
