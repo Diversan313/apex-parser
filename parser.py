@@ -87,6 +87,64 @@ def safe_b64decode(s: str) -> str:
     s += '=' * (-len(s) % 4)
     return base64.b64decode(s).decode('utf-8', errors='ignore')
 
+# НОВАЯ ФУНКЦИЯ: Санирование ссылок, чтобы V2rayNG не ругался на "auto"
+def sanitize_v2rayng_link(link: str) -> str:
+    try:
+        if link.startswith("vmess://"):
+            b64_data = link.replace("vmess://", "").strip()
+            decoded = safe_b64decode(b64_data)
+            data = json.loads(decoded)
+            # V2rayNG не понимает "auto" в сети, меняем на tcp
+            if str(data.get('net', '')).lower() in ['auto', 'none', '']:
+                data['net'] = 'tcp'
+            if str(data.get('tls', '')).lower() == 'auto':
+                data['tls'] = ''
+            if str(data.get('type', '')).lower() == 'auto':
+                data['type'] = 'none'
+            return f"vmess://{base64.b64encode(json.dumps(data, ensure_ascii=False).encode('utf-8')).decode('utf-8')}"
+        
+        main_part, name_part = link, ""
+        if '#' in link:
+            main_part, name_part = link.split('#', 1)
+        
+        base, query_part = main_part, ""
+        if '?' in main_part:
+            base, query_part = main_part.split('?', 1)
+
+        if query_part:
+            params = urllib.parse.parse_qs(query_part, keep_blank_values=True)
+            changed = False
+            
+            # VLESS encryption должен быть none, V2rayNG ломается от auto
+            if base.startswith('vless://'):
+                if 'encryption' not in params or params['encryption'][0].lower() in ['auto', '']:
+                    params['encryption'] = ['none']
+                    changed = True
+            
+            # type=auto меняем на tcp
+            if 'type' in params and params['type'][0].lower() == 'auto':
+                params['type'] = ['tcp']
+                changed = True
+            if 'net' in params and params['net'][0].lower() == 'auto':
+                params['net'] = ['tcp']
+                changed = True
+            
+            # security=auto удаляем
+            if 'security' in params and params['security'][0].lower() == 'auto':
+                del params['security']
+                changed = True
+
+            if changed:
+                new_query = urllib.parse.urlencode(params, doseq=True)
+                new_query = new_query.replace('+', '%20')
+                new_link = f"{base}?{new_query}"
+                if name_part:
+                    new_link += f"#{name_part}"
+                return new_link
+    except:
+        pass
+    return link
+
 def cc_to_flag(cc: str) -> str:
     if not cc or len(cc) != 2:
         return "🌐"
@@ -559,6 +617,62 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
+# НОВАЯ ФУНКЦИЯ: Проверка страны выхода через 3 разных API с голосованием
+def get_exit_country_via_proxy(opener, timeout):
+    results = []
+    
+    # 1. ip-api.com
+    try:
+        req = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
+        with opener.open(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            if data.get('status') == 'success' and data.get('countryCode'):
+                results.append(('ip-api', data['countryCode'].upper()))
+    except:
+        pass
+
+    # 2. ip2location.io
+    try:
+        req = urllib.request.Request("https://api.ip2location.io/", headers=HEADERS)
+        with opener.open(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            if data.get('country_code'):
+                results.append(('ip2location', data['country_code'].upper()))
+    except:
+        pass
+
+    # 3. ip.sb
+    try:
+        req = urllib.request.Request("https://api.ip.sb/geoip", headers=HEADERS)
+        with opener.open(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            cc = data.get('country_code') or data.get('country')
+            if cc:
+                results.append(('ip.sb', cc.upper()))
+    except:
+        pass
+
+    if not results:
+        return None
+
+    # Считаем голоса
+    cc_counts = {}
+    for _, cc in results:
+        cc_counts[cc] = cc_counts.get(cc, 0) + 1
+    
+    # Если 2 API дали одинаковый результат
+    for cc, count in cc_counts.items():
+        if count >= 2:
+            return cc
+            
+    # Если все дали разный результат, приоритет у ip-api
+    for name, cc in results:
+        if name == 'ip-api':
+            return cc
+            
+    # Иначе возвращаем первый попавшийся
+    return results[0][1]
+
 def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_success_count: int = 2):
     port = get_free_port()
     config = {
@@ -600,23 +714,8 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_succes
                 pass
 
         if success_count >= min_success_count:
-            try:
-                req_ip = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
-                with opener.open(req_ip, timeout=timeout) as resp_ip:
-                    data = json.loads(resp_ip.read().decode('utf-8'))
-                    cc = data.get('countryCode')
-            except Exception:
-                pass
-            
-            if not cc:
-                try:
-                    req_ip2 = urllib.request.Request("https://api.country.is/", headers=HEADERS)
-                    with opener.open(req_ip2, timeout=timeout) as resp_ip2:
-                        data2 = json.loads(resp_ip2.read().decode('utf-8'))
-                        cc = data2.get('country')
-                except Exception:
-                    pass
-            
+            # ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ С 3 API
+            cc = get_exit_country_via_proxy(opener, timeout)
             return True, cc, f"OK ({success_count}/3)"
 
         return False, None, f"Тест провален ({success_count}/3)"
@@ -683,7 +782,8 @@ def fetch_single_url_with_details(url: str) -> dict:
 
             raw_lines = [l.strip() for l in content.splitlines() if l.strip()]
             info['total_lines'] = len(raw_lines)
-            valid_configs = [l for l in raw_lines if l.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
+            # ПРИМЕНЯЕМ САНИТАЦИЮ СЮДА
+            valid_configs = [sanitize_v2rayng_link(l) for l in raw_lines if l.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
             info['configs'] = valid_configs
     except Exception as e:
         info['error'] = str(e)
@@ -728,7 +828,8 @@ def process_incoming_queue():
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
             for item in unique_lines:
                 if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-                    incoming_proxies.append(item)
+                    # ПРИМЕНЯЕМ САНИТАЦИЮ СЮДА
+                    incoming_proxies.append(sanitize_v2rayng_link(item))
                 else:
                     extracted = parse_ip_or_resolve(item)
                     for ip in extracted:
@@ -775,8 +876,6 @@ def get_config_dedup_key(link: str) -> tuple:
     path = urllib.parse.unquote(path) or "/"
     return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
 
-# ИСПРАВЛЕННАЯ УЛЬТА-СТРОГАЯ ДЕДУПЛИКАЦИЯ: Теперь учитывает ПУТЬ (path)!
-# Это критически важно, так как одинаковый IP и SNI, но разный path дают РАЗНЫЕ страны (Германия/Финляндия/Швеция)
 def get_final_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
@@ -827,7 +926,6 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-# ЛИМИТЫ: Приоритет на уникальные SNI для WL
 def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
@@ -847,8 +945,6 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
         limit = max_per_ip_wl if is_wl else max_per_ip_bl
         
         if is_wl:
-            # Сортируем конфиги так, чтобы уникальные SNI шли первыми.
-            # Это гарантирует, что мы возьмем по одному конфигу с каждого SNI, прежде чем брать второй конфиг с тем же SNI (но другим path).
             seen_snis = set()
             unique_sni_items = []
             other_items = []
@@ -1026,17 +1122,14 @@ def main():
                 else:
                     alive_bl_data.append(res)
 
-    # 1. Ультра-строгая дедупликация с учетом PATH срабатывает ПЕРВЫМ делом после пинга
     alive_wl_data = dedup_advanced(alive_wl_data, "WL (предварительно)")
     alive_bl_data = dedup_advanced(alive_bl_data, "BL (предварительно)")
 
-    # 2. Применяем лимиты к уже очищенным от дублей данным
     alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
     alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
-    # 3. Финальная сборка
     wl_set = set(alive_wl_clean)
     alive_full_raw = alive_wl_clean + alive_bl_clean
     alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
