@@ -94,7 +94,6 @@ def sanitize_v2rayng_link(link: str) -> str:
             b64_data = link.replace("vmess://", "").strip()
             decoded = safe_b64decode(b64_data)
             data = json.loads(decoded)
-            # V2rayNG не понимает "auto" в сети, меняем на tcp
             if str(data.get('net', '')).lower() in ['auto', 'none', '']:
                 data['net'] = 'tcp'
             if str(data.get('tls', '')).lower() == 'auto':
@@ -115,13 +114,11 @@ def sanitize_v2rayng_link(link: str) -> str:
             params = urllib.parse.parse_qs(query_part, keep_blank_values=True)
             changed = False
             
-            # VLESS encryption должен быть none, V2rayNG ломается от auto
             if base.startswith('vless://'):
                 if 'encryption' not in params or params['encryption'][0].lower() in ['auto', '']:
                     params['encryption'] = ['none']
                     changed = True
             
-            # type=auto меняем на tcp
             if 'type' in params and params['type'][0].lower() == 'auto':
                 params['type'] = ['tcp']
                 changed = True
@@ -129,7 +126,6 @@ def sanitize_v2rayng_link(link: str) -> str:
                 params['net'] = ['tcp']
                 changed = True
             
-            # security=auto удаляем
             if 'security' in params and params['security'][0].lower() == 'auto':
                 del params['security']
                 changed = True
@@ -714,7 +710,6 @@ def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_succes
                 pass
 
         if success_count >= min_success_count:
-            # ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ С 3 API
             cc = get_exit_country_via_proxy(opener, timeout)
             return True, cc, f"OK ({success_count}/3)"
 
@@ -782,7 +777,6 @@ def fetch_single_url_with_details(url: str) -> dict:
 
             raw_lines = [l.strip() for l in content.splitlines() if l.strip()]
             info['total_lines'] = len(raw_lines)
-            # ПРИМЕНЯЕМ САНИТАЦИЮ СЮДА
             valid_configs = [sanitize_v2rayng_link(l) for l in raw_lines if l.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
             info['configs'] = valid_configs
     except Exception as e:
@@ -828,7 +822,6 @@ def process_incoming_queue():
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
             for item in unique_lines:
                 if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-                    # ПРИМЕНЯЕМ САНИТАЦИЮ СЮДА
                     incoming_proxies.append(sanitize_v2rayng_link(item))
                 else:
                     extracted = parse_ip_or_resolve(item)
@@ -838,6 +831,30 @@ def process_incoming_queue():
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
     return incoming_proxies, incoming_raw_ips
+
+# НОВАЯ ФУНКЦИЯ: Загрузка прошлых живых конфигов
+def load_previous_alives():
+    prev_wl = []
+    prev_bl = []
+    
+    if os.path.exists('alive_bs.txt'):
+        try:
+            with open('alive_bs.txt', 'r', encoding='utf-8') as f:
+                decoded = safe_b64decode(f.read())
+                prev_wl = [sanitize_v2rayng_link(l.strip()) for l in decoded.splitlines() if l.strip().startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
+        except Exception:
+            pass
+            
+    if os.path.exists('alive_bl.txt'):
+        try:
+            with open('alive_bl.txt', 'r', encoding='utf-8') as f:
+                decoded = safe_b64decode(f.read())
+                prev_bl = [sanitize_v2rayng_link(l.strip()) for l in decoded.splitlines() if l.strip().startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
+        except Exception:
+            pass
+            
+    print(f"📂 Загружено из прошлых файлов: WL={len(prev_wl)}, BL={len(prev_bl)}")
+    return prev_wl, prev_bl
 
 def get_config_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
@@ -1087,6 +1104,8 @@ def main():
     alive_wl_data = []
     alive_bl_data = []
 
+    seen_links_for_ping = set()
+
     for link, src in clean_items:
         host, port, orig_name = parse_host_port_and_name(link)
         if not host or not port or not is_valid_public_host(host):
@@ -1096,13 +1115,31 @@ def main():
         if matched_ip:
             orig_flag = extract_clean_flag(orig_name)
             alive_wl_data.append((link, orig_flag))
+            seen_links_for_ping.add(link)
             continue
 
         target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
         if target_list == 'WL':
-            ping_wl.append((link, src))
+            if link not in seen_links_for_ping:
+                ping_wl.append((link, src))
+                seen_links_for_ping.add(link)
         else:
-            ping_bl.append((link, src))
+            if link not in seen_links_for_ping:
+                ping_bl.append((link, src))
+                seen_links_for_ping.add(link)
+
+    # ЗАГРУЗКА ПРОШЛЫХ ФАЙЛОВ И ДОБАВЛЕНИЕ ИХ НА ПРОВЕРКУ
+    prev_wl_links, prev_bl_links = load_previous_alives()
+    
+    for link in prev_wl_links:
+        if link not in seen_links_for_ping:
+            ping_wl.append((link, 'PREV_WL'))
+            seen_links_for_ping.add(link)
+            
+    for link in prev_bl_links:
+        if link not in seen_links_for_ping:
+            ping_bl.append((link, 'PREV_BL'))
+            seen_links_for_ping.add(link)
 
     print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
     
