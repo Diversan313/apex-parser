@@ -15,10 +15,13 @@ async def get_latest_link(client, chat, topic_id, keyword):
     try:
         async for message in client.iter_messages(chat, reply_to=topic_id, limit=5):
             if message and message.text:
+                # Ищем все ссылки в сообщении
                 urls = re.findall(r'https?://[^\s]+', message.text)
                 for url in urls:
-                    if keyword in url:
-                        return url
+                    # Очищаем ссылку от форматирования Telegram (кавычки, звездочки и т.д.)
+                    clean_url = url.strip('`*~_|>)]}')
+                    if keyword in clean_url:
+                        return clean_url
     except Exception as e:
         # Логируем без указания каналов и топиков
         print(f"⚠️ Ошибка при чтении источника в Telegram: {e}")
