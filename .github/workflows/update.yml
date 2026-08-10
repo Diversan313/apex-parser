@@ -76,12 +76,36 @@ jobs:
       - name: Run Parser Script
         run: python parser.py
 
+      - name: Sync Updated Sources to apex-sources
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
+          cd temp_src
+          
+          # Копируем обновленные файлы источников (с новыми ссылками из TG)
+          cp ../sources_wl.txt . 2>/dev/null || true
+          cp ../sources_bl.txt . 2>/dev/null || true
+          
+          # Очищаем очередь входящих
+          > incoming_sources.txt
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sources_wl.txt sources_bl.txt incoming_sources.txt
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "sync updated sources from TG and clear queue"
+            git push
+          fi
+          cd ..
+          rm -rf temp_src
+
       - name: Commit and Push Results to apex-parser
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Удаляем временные рабочие файлы (добавили sources_tg.txt)
+          # Удаляем временные рабочие файлы
           rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt sources_tg.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
           
           git fetch origin main
@@ -120,20 +144,3 @@ jobs:
           
           git remote add origin "https://bikinitw22:${GITVERSE_TOKEN}@gitverse.ru/bikinitw22/apelsintel.git"
           git push --force origin main
-
-      - name: Sync Incoming State (Clear apex-sources queue)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
-          cd temp_src
-          > incoming_sources.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add incoming_sources.txt
-          if ! git diff-index --quiet HEAD; then
-            git commit -m "clear incoming sources queue"
-            git push
-          fi
-          cd ..
-          rm -rf temp_src
