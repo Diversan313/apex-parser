@@ -23,7 +23,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install maxminddb
+          pip install maxminddb requests telethon
 
       - name: Download Xray Core
         run: |
@@ -47,6 +47,11 @@ jobs:
 
           curl -H "Authorization: token $GH_PAT" \
                -H "Accept: application/vnd.github.v3.raw" \
+               -L -o sources_tg.txt \
+               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt || touch sources_tg.txt
+
+          curl -H "Authorization: token $GH_PAT" \
+               -H "Accept: application/vnd.github.v3.raw" \
                -L -o incoming_sources.txt \
                https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt || touch incoming_sources.txt
 
@@ -61,6 +66,13 @@ jobs:
         run: |
           touch white_ip.txt
 
+      - name: Update Sources from Telegram
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
+        run: python parser_tg.py
+
       - name: Run Parser Script
         run: python parser.py
 
@@ -69,8 +81,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Удаляем временные рабочие файлы
-          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
+          # Удаляем временные рабочие файлы (добавили sources_tg.txt)
+          rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt sources_tg.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
           
           git fetch origin main
           git reset --soft origin/main
