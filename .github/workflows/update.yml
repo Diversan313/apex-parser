@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  workflow: write  # Обязательно для работы git reset --soft без ошибок
 
 jobs:
   update:
@@ -111,11 +110,11 @@ jobs:
           # Удаляем временные рабочие файлы
           rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt sources_tg.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
           
+          # УДАЛЯЕМ ПАПКУ .github, чтобы Git не пытался коммитить файлы воркфлоу (обход ошибки прав)
+          rm -rf .github
+          
           git fetch origin main
           git reset --soft origin/main
-          
-          # Исключаем файлы воркфлоу из коммита, чтобы не было ошибки прав
-          git reset -- .github/workflows/
           
           # Добавляем только нужные файлы
           git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt
