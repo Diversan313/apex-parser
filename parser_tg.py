@@ -20,7 +20,8 @@ async def get_latest_link(client, chat, topic_id, keyword):
                     if keyword in url:
                         return url
     except Exception as e:
-        print(f"⚠️ Ошибка при чтении {chat} (топик {topic_id}): {e}")
+        # Логируем без указания каналов и топиков
+        print(f"⚠️ Ошибка при чтении источника в Telegram: {e}")
     return None
 
 def update_source_file(target_file, tag_line, new_url):
@@ -39,21 +40,17 @@ def update_source_file(target_file, tag_line, new_url):
         
         if line.strip() == tag_line:
             tag_found = True
-            new_lines.append(line) # Сохраняем сам тег
+            new_lines.append(line)
             
-            # Если под тегом пустая строка или старая ссылка - заменяем/вставляем новую
             if i + 1 < len(lines):
                 next_line = lines[i+1]
                 if next_line.strip() == "" or not next_line.strip().startswith("#"):
-                    # Заменяем старую ссылку или пустоту на новую ссылку
                     new_lines.append(f"{new_url}\n")
                     i += 2
                 else:
-                    # Если под тегом сразу другой коммент, просто вставляем ссылку
                     new_lines.append(f"{new_url}\n")
                     i += 1
             else:
-                # Если тег в самом конце файла, просто дописываем ссылку
                 new_lines.append(f"{new_url}\n")
                 i += 1
             
@@ -63,7 +60,6 @@ def update_source_file(target_file, tag_line, new_url):
             new_lines.append(line)
             i += 1
 
-    # Если тега в файле вообще не было, добавляем его и ссылку в конец
     if not tag_found:
         if new_lines and not new_lines[-1].endswith('\n'):
             new_lines.append('\n')
@@ -74,18 +70,19 @@ def update_source_file(target_file, tag_line, new_url):
     with open(target_file, 'w', encoding='utf-8') as f:
         f.writelines(new_lines)
 
+    # Логируем без указания файла и самой ссылки
     if updated:
-        print(f"🔄 В {target_file} ссылка под тегом {tag_line} обновлена на {new_url}")
+        print("🔄 Файл источников успешно обновлен.")
     else:
-        print(f"❌ Не удалось обновить {target_file} для {tag_line}")
+        print("❌ Не удалось обновить файл источников.")
 
 async def main():
     if not SESSION_STRING:
-        print("⚠️ Переменная TG_SESSION_STRING не задана. Обновление отменено.")
+        print("⚠️ Переменная окружения не задана. Обновление отменено.")
         return
 
     if not os.path.exists(CONFIG_FILE):
-        print(f"⚠️ Файл {CONFIG_FILE} не найден. Нечего обновлять.")
+        print(f"⚠️ Файл конфигурации не найден. Нечего обновлять.")
         return
 
     print("🕵️ Подключаемся к Telegram...")
@@ -96,7 +93,7 @@ async def main():
         for config in configs:
             parts = config.split()
             if len(parts) < 4:
-                print(f"❌ Неверный формат: {config}. Нужно 4 параметра.")
+                print("❌ Неверный формат в конфиге (нужно 4 параметра). Пропускаем.")
                 continue
             
             topic_link = parts[0]
@@ -109,20 +106,21 @@ async def main():
 
             match = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', topic_link)
             if not match:
-                print(f"❌ Не удалось извлечь канал и топик из: {topic_link}")
+                print("❌ Не удалось извлечь данные из ссылки в конфиге. Пропускаем.")
                 continue
             
             chat = match.group(1)
             topic_id = int(match.group(2))
 
-            print(f"🔎 Ищем ссылку со словом '{keyword}' в {chat} (топик {topic_id})...")
+            # Скрываем, что именно мы ищем и где
+            print("🔎 Проверяем источник в Telegram...")
             new_url = await get_latest_link(client, chat, topic_id, keyword)
             
             if new_url:
-                print(f"✅ Найдено: {new_url}")
+                print("✅ Свежая ссылка найдена.")
                 update_source_file(target_file, tag_line, new_url)
             else:
-                print(f"❌ Ссылка со словом '{keyword}' не найдена в последних сообщениях.")
+                print("❌ Свежая ссылка не найдена.")
 
 if __name__ == "__main__":
     asyncio.run(main())
