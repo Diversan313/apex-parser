@@ -95,6 +95,7 @@ jobs:
           git add sources_wl.txt sources_bl.txt incoming_sources.txt
           if ! git diff-index --quiet HEAD; then
             git commit -m "sync updated sources from TG and clear queue"
+            git pull --rebase origin main || true
             git push
           else
             echo "No source changes to push."
@@ -110,17 +111,13 @@ jobs:
           # Удаляем временные рабочие файлы
           rm -f xray xray.zip GeoLite2-Country.mmdb sources_wl.txt sources_bl.txt sources_tg.txt incoming_sources.txt incoming_subs.txt white_ip_health.json
           
-          # УДАЛЯЕМ ПАПКУ .github, чтобы Git не пытался коммитить файлы воркфлоу (обход ошибки прав)
-          rm -rf .github
-          
-          git fetch origin main
-          git reset --soft origin/main
-          
           # Добавляем только нужные файлы
           git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt
           
           if ! git diff-index --quiet HEAD; then
             git commit -m "auto update proxies and white_ip"
+            # БЕЗОПАСНЫЙ ПУШ: сначала подтягиваем свежие изменения (чтобы не затереть твой YAML), потом пушим
+            git pull --rebase origin main
             git push origin main
           else
             echo "No changes."
@@ -163,6 +160,7 @@ jobs:
           git add incoming_sources.txt
           if ! git diff-index --quiet HEAD; then
             git commit -m "clear incoming sources queue"
+            git pull --rebase origin main || true
             git push
           fi
           cd ..
