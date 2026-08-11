@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 999999 # Бесконечный лимит для WL (только сортировка по SNI)
+MAX_CONFIGS_PER_IP_WL = 30     # Вернул как было для WL
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -867,43 +867,6 @@ def load_previous_alives():
     print(f"📂 Загружено из прошлых файлов: WL={len(prev_wl)}, BL={len(prev_bl)}")
     return prev_wl, prev_bl
 
-def get_config_dedup_key(link: str) -> tuple:
-    host, port, _ = parse_host_port_and_name(link)
-    if not host or not port:
-        return None
-    clean_host = host.strip('[] \t\r\n\'"').lower()
-    clean_ip = resolve_host_cached(clean_host) or clean_host
-    protocol = link.split('://')[0].lower() if '://' in link else ''
-    sni = extract_sni_from_link(link)
-    
-    net, path, pbk, uuid, security = "", "", "", "", ""
-    flow, sid, mode = "", "", ""
-    try:
-        if link.startswith("vmess://"):
-            b64_data = link.replace("vmess://", "").strip()
-            decoded = safe_b64decode(b64_data)
-            data = json.loads(decoded)
-            uuid = str(data.get('id', ''))
-            net = str(data.get('net', 'raw')).lower()
-            path = str(data.get('path', ''))
-            security = str(data.get('tls', ''))
-        else:
-            parsed = urllib.parse.urlparse(link)
-            uuid = parsed.username or ''
-            query_params = urllib.parse.parse_qs(parsed.query)
-            net = query_params.get('type', query_params.get('net', ['raw']))[0].lower()
-            path = query_params.get('path', [''])[0]
-            pbk = query_params.get('pbk', [''])[0]
-            security = query_params.get('security', [''])[0].lower()
-            flow = query_params.get('flow', [''])[0].lower()
-            sid = query_params.get('sid', [''])[0]
-            mode = query_params.get('mode', [''])[0].lower()
-    except Exception:
-        pass
-    
-    path = urllib.parse.unquote(path) or "/"
-    return (protocol, clean_ip, str(port), sni, net, path, pbk, uuid, security, flow, sid, mode)
-
 def get_final_dedup_key(link: str) -> tuple:
     host, port, _ = parse_host_port_and_name(link)
     if not host or not port:
@@ -934,25 +897,18 @@ def get_final_dedup_key(link: str) -> tuple:
     path = urllib.parse.unquote(path) or "/"
     return (protocol, clean_ip, str(port), sni, net, path, security)
 
-def clean_and_dedup(tagged_items: list) -> list:
-    seen_strings = set()
+def dedup_advanced(config_list: list, list_name: str = "") -> list:
     seen_keys = set()
-    valid_items = []
-    for link, source_tag in tagged_items:
-        link = link.strip()
-        if not link.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-            continue
-        if link in seen_strings:
-            continue
-        seen_strings.add(link)
-        key = get_config_dedup_key(link)
-        if not key:
-            continue
-        if key in seen_keys:
-            continue
-        seen_keys.add(key)
-        valid_items.append((link, source_tag))
-    return valid_items
+    result = []
+    for item in config_list:
+        link = item[0] if isinstance(item, (tuple, list)) else item
+        key = get_final_dedup_key(link)
+        if key and key not in seen_keys:
+            seen_keys.add(key)
+            result.append(item)
+    removed = len(config_list) - len(result)
+    print(f"🔍 Финальная дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
+    return result
 
 def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = False, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
@@ -970,7 +926,7 @@ def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = Fa
         
     for ip_str, items in grouped_by_ip.items():
         is_wl = is_wl_list or (ip_str in white_ips)
-        limit = 999999 if is_wl else max_per_ip_bl
+        limit = max_per_ip_wl if is_wl else max_per_ip_bl
         
         if is_wl:
             seen_snis = set()
@@ -1007,21 +963,8 @@ def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = Fa
             ip_counter[ip_str] += 1
             filtered.append(item)
 
-    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL: {'Бесконечно' if is_wl_list else max_per_ip_wl}, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
+    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl}, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
     return filtered
-
-def dedup_advanced(config_list: list, list_name: str = "") -> list:
-    seen_keys = set()
-    result = []
-    for item in config_list:
-        link = item[0] if isinstance(item, (tuple, list)) else item
-        key = get_final_dedup_key(link)
-        if key and key not in seen_keys:
-            seen_keys.add(key)
-            result.append(item)
-    removed = len(config_list) - len(result)
-    print(f"🔍 Финальная дедупликация {list_name}: было {len(config_list)}, осталось {len(result)} (удалено дубликатов: {removed})")
-    return result
 
 def rename_config(link: str, index: int, tag: str, detected_flag: str) -> str:
     new_name = f"{detected_flag} {tag} Сервер {index}"
@@ -1095,7 +1038,7 @@ def main():
 
     seen_links_for_ping = set()
 
-    # 1. Источники WL -> ВСЕГДА идут в WL
+    # 1. Источники WL -> ВСЕГДА идут в WL (пинг 1 из 3)
     for link, src in wl_fetched_with_source:
         link = sanitize_v2rayng_link(link)
         if link in seen_links_for_ping: continue
@@ -1138,11 +1081,23 @@ def main():
             ping_bl.append((link, 'PREV_BL'))
             seen_links_for_ping.add(link)
 
-    # Для WL: НИКАКИХ лимитов до пинга! Только базовая очистка от полных дублей.
-    clean_ping_wl = clean_and_dedup(ping_wl)
-    
-    # Для BL: лимиты до пинга
-    clean_ping_bl = clean_and_dedup(ping_bl)
+    # ДЛЯ WL: Никаких лимитов и сложной дедупликации ДО пинга! 
+    # Только базовая очистка от полных текстовых дублей, чтобы не пинговать одно и то же 100 раз.
+    seen_strs_wl = set()
+    clean_ping_wl = []
+    for link, src in ping_wl:
+        if link not in seen_strs_wl:
+            seen_strs_wl.add(link)
+            clean_ping_wl.append((link, src))
+            
+    # ДЛЯ BL: Лимиты и дедупликация до пинга остаются
+    seen_strs_bl = set()
+    clean_ping_bl = []
+    for link, src in ping_bl:
+        if link not in seen_strs_bl:
+            seen_strs_bl.add(link)
+            clean_ping_bl.append((link, src))
+            
     clean_ping_bl = limit_configs_per_ip(clean_ping_bl, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     print(f"\n📡 Отправка на проверку Xray: WL конфигов (1/3): {len(clean_ping_wl)} | BL конфигов (2/3): {len(clean_ping_bl)}")
@@ -1165,20 +1120,20 @@ def main():
                 else:
                     alive_bl_data.append(res)
 
-    # 4. Дедупликация ПОСЛЕ пинга
+    # 4. Дедупликация и лимиты ПОСЛЕ пинга
     alive_wl_data = dedup_advanced(alive_wl_data, "WL (предварительно)")
     alive_bl_data = dedup_advanced(alive_bl_data, "BL (предварительно)")
 
-    # 5. Применяем лимиты к уже очищенным от дублей данным (для WL - бесконечно, только сортировка по SNI)
-    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    # 5. Применяем лимиты к уже очищенным от дублей данным
+    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
-    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
     # 6. Финальная сборка
     wl_set = set(alive_wl_clean)
     alive_full_raw = alive_wl_clean + alive_bl_clean
-    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
