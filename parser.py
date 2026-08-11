@@ -23,7 +23,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 MAX_CONFIGS_PER_IP_BL = 2      # Жесткий лимит для BL
-MAX_CONFIGS_PER_IP_WL = 30     # Лимит для WL
+MAX_CONFIGS_PER_IP_WL = 999999 # Бесконечный лимит для WL (только сортировка по SNI)
 MAX_CONFIGS_PER_SUBNET_BL = 5  # Лимит на подсеть /24 в BL
 
 SSL_CONTEXT = ssl.create_default_context()
@@ -52,7 +52,6 @@ except ImportError:
 
 FLAG_REGEX = re.compile(r'[\U0001F1E6-\U0001F1FF]{2}')
 
-# РАСШИРЕННЫЙ СПИСОК ПОДСЕТЕЙ CLOUDFLARE
 CF_CIDRS = [
     "103.4.160.0/22", "103.5.72.0/22", "103.7.4.0/22", "103.8.4.0/22", "103.8.84.0/22",
     "103.16.0.0/12", "103.24.124.0/22", "103.27.248.0/22", "103.44.96.0/22", "103.252.104.0/22",
@@ -87,7 +86,6 @@ def safe_b64decode(s: str) -> str:
     s += '=' * (-len(s) % 4)
     return base64.b64decode(s).decode('utf-8', errors='ignore')
 
-# НОВАЯ ФУНКЦИЯ: Санирование ссылок, чтобы V2rayNG не ругался на "auto"
 def sanitize_v2rayng_link(link: str) -> str:
     try:
         if link.startswith("vmess://"):
@@ -419,47 +417,54 @@ def is_wl_by_keywords(link: str, orig_name: str = "") -> bool:
         pass
     return bool(WL_KEYWORDS_REGEX.search(full_text))
 
+RU_SNI_LIST = [
+    'www.vk.com', 'vk.com', 'm.vk.com', 'm1.vk.ru', 'st.vk.ru', 'id.vk.com', 'sun1-93.userapi.com',
+    'yandex.ru', 'api-maps.yandex.ru', 'wap.yandex.ru', '360.yandex.ru', 'smartcaptcha.yandexcloud.net',
+    'max.ru', 'web.max.ru', 'rutube.ru', 'storage.yandex.net', 'ads.x5.ru', '5post-gate.x5.ru',
+    '28.img.avito.st', 'cdn.tracker.yandex.net', 'id.pervye.ru', 'ya.ru', 'rzd.ru', 'live.ok.ru', 'id.ok.ru',
+    'qq.utiltools.ru', 'ru.muzgrape.space', 'flypobeda.ru', 'shopping-api-gateway.cdek.shopping',
+    'api.acquisition-gwe.plus.yandex.ru'
+]
+
 def is_ru_sni(link: str) -> bool:
     link_low = link.lower()
-    if bool(re.search(r'sni=[^&]*\.(ru|su)(?:&|$)', link_low)):
+    if bool(re.search(r'sni=[^&]*\.(ru|su|рф)(?:&|$)', link_low)):
         return True
+    for ru_sni in RU_SNI_LIST:
+        if f'sni={ru_sni}' in link_low:
+            return True
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "").strip()
             decoded = safe_b64decode(b64_data)
             data = json.loads(decoded)
-            if any(x.endswith(('.ru', '.su')) or '.ru:' in x for x in [data.get('sni', ''), data.get('host', ''), data.get('add', '')] if x):
+            sni_val = str(data.get('sni', '') or data.get('host', '') or data.get('add', '')).lower()
+            if any(s in sni_val for s in RU_SNI_LIST) or sni_val.endswith(('.ru', '.su', '.рф')):
                 return True
         except Exception:
             pass
     else:
         host, _, _ = parse_host_port_and_name(link)
-        if host and (host.lower().endswith(('.ru', '.su')) or '.ru]' in host.lower()):
+        if host and (host.lower().endswith(('.ru', '.su', '.рф')) or '.ru]' in host.lower()):
             return True
     return False
 
-def classify_config(link: str, white_ips: set, ru_sni_ratio: float = 0.3) -> str:
-    matched_ip = find_matched_ip_for_link(link, white_ips)
-    if matched_ip:
-        return 'WL'
-
+def is_wl_for_bl_source(link: str, white_ips: set) -> bool:
+    if find_matched_ip_for_link(link, white_ips):
+        return True
     host, _, orig_name = parse_host_port_and_name(link)
     if not host or not is_valid_public_host(host):
-        return 'BL'
-
+        return False
     if is_wl_by_keywords(link, orig_name):
-        return 'WL'
-
+        return True
+    if is_ru_sni(link):
+        return True
     clean_ip = resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
     if clean_ip:
         cc = fetch_country_from_ip(clean_ip)
         if cc and cc.upper() == 'RU':
-            return 'WL'
-
-    if is_ru_sni(link):
-        return 'WL' if random.random() < ru_sni_ratio else 'BL'
-
-    return 'BL'
+            return True
+    return False
 
 def link_to_xray_outbound(link: str):
     try:
@@ -574,19 +579,48 @@ def link_to_xray_outbound(link: str):
             path_val = query_params.get('path', ['/'])[0]
             host_val = query_params.get('host', [''])[0]
             header_type = query_params.get('headerType', ['none'])[0]
+            
+            # Парсинг параметра extra для сложных XHTTP конфигов
+            extra_raw = query_params.get('extra', [''])[0]
+            extra_data = {}
+            if extra_raw:
+                try:
+                    extra_data = json.loads(extra_raw)
+                except:
+                    pass
 
             if net == 'ws':
-                outbound["streamSettings"]["wsSettings"] = {"path": path_val, "headers": {"Host": host_val} if host_val else {}}
+                ws_settings = {"path": path_val, "headers": {"Host": host_val} if host_val else {}}
+                ws_settings.update(extra_data)
+                outbound["streamSettings"]["wsSettings"] = ws_settings
             elif net == 'grpc':
-                outbound["streamSettings"]["grpcSettings"] = {"serviceName": query_params.get('serviceName', [''])[0] or path_val.lstrip('/')}
+                grpc_settings = {"serviceName": query_params.get('serviceName', [''])[0] or path_val.lstrip('/')}
+                grpc_settings.update(extra_data)
+                outbound["streamSettings"]["grpcSettings"] = grpc_settings
             elif net in ['xhttp', 'splithttp']:
-                outbound["streamSettings"]["xhttpSettings"] = {"path": path_val, "host": host_val, "mode": query_params.get('mode', ['auto'])[0]}
+                xhttp_settings = {
+                    "path": path_val,
+                    "host": host_val,
+                    "mode": query_params.get('mode', ['auto'])[0]
+                }
+                xhttp_settings.update(extra_data)
+                if not xhttp_settings.get('path'):
+                    xhttp_settings['path'] = path_val or "/"
+                if not xhttp_settings.get('host'):
+                    xhttp_settings['host'] = host_val
+                outbound["streamSettings"]["xhttpSettings"] = xhttp_settings
             elif net == 'httpupgrade':
-                outbound["streamSettings"]["httpupgradeSettings"] = {"path": path_val, "host": host_val}
+                httpupgrade_settings = {"path": path_val, "host": host_val}
+                httpupgrade_settings.update(extra_data)
+                outbound["streamSettings"]["httpupgradeSettings"] = httpupgrade_settings
             elif net in ['http', 'h2']:
-                outbound["streamSettings"]["httpSettings"] = {"path": path_val, "host": [host_val] if host_val else []}
+                http_settings = {"path": path_val, "host": [host_val] if host_val else []}
+                http_settings.update(extra_data)
+                outbound["streamSettings"]["httpSettings"] = http_settings
             elif net in ['kcp', 'mkcp']:
-                outbound["streamSettings"]["kcpSettings"] = {"header": {"type": header_type}}
+                kcp_settings = {"header": {"type": header_type}}
+                kcp_settings.update(extra_data)
+                outbound["streamSettings"]["kcpSettings"] = kcp_settings
 
         return outbound
     except Exception:
@@ -613,11 +647,8 @@ def get_xray_cmd() -> list:
         exe = "xray"
     return [exe, "run", "-c", "stdin:"]
 
-# НОВАЯ ФУНКЦИЯ: Проверка страны выхода через 3 разных API с голосованием
 def get_exit_country_via_proxy(opener, timeout):
     results = []
-    
-    # 1. ip-api.com
     try:
         req = urllib.request.Request("http://ip-api.com/json?fields=countryCode", headers=HEADERS)
         with opener.open(req, timeout=timeout) as resp:
@@ -626,8 +657,6 @@ def get_exit_country_via_proxy(opener, timeout):
                 results.append(('ip-api', data['countryCode'].upper()))
     except:
         pass
-
-    # 2. ip2location.io
     try:
         req = urllib.request.Request("https://api.ip2location.io/", headers=HEADERS)
         with opener.open(req, timeout=timeout) as resp:
@@ -636,8 +665,6 @@ def get_exit_country_via_proxy(opener, timeout):
                 results.append(('ip2location', data['country_code'].upper()))
     except:
         pass
-
-    # 3. ip.sb
     try:
         req = urllib.request.Request("https://api.ip.sb/geoip", headers=HEADERS)
         with opener.open(req, timeout=timeout) as resp:
@@ -647,26 +674,17 @@ def get_exit_country_via_proxy(opener, timeout):
                 results.append(('ip.sb', cc.upper()))
     except:
         pass
-
     if not results:
         return None
-
-    # Считаем голоса
     cc_counts = {}
     for _, cc in results:
         cc_counts[cc] = cc_counts.get(cc, 0) + 1
-    
-    # Если 2 API дали одинаковый результат
     for cc, count in cc_counts.items():
         if count >= 2:
             return cc
-            
-    # Если все дали разный результат, приоритет у ip-api
     for name, cc in results:
         if name == 'ip-api':
             return cc
-            
-    # Иначе возвращаем первый попавшийся
     return results[0][1]
 
 def check_via_xray_detailed(outbound_obj: dict, timeout: float = 6.0, min_success_count: int = 2):
@@ -812,8 +830,8 @@ def fetch_links_parallel_with_source(url_file: str) -> list:
         print(f"⚠️ Ошибка чтения {url_file}: {e}")
     return links_with_source
 
+# Очередь ТГ берет ТОЛЬКО IP-адреса
 def process_incoming_queue():
-    incoming_proxies = []
     incoming_raw_ips = []
     if os.path.exists(INCOMING_FILE):
         try:
@@ -821,22 +839,17 @@ def process_incoming_queue():
                 lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
             unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
             for item in unique_lines:
-                if item.startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://')):
-                    incoming_proxies.append(sanitize_v2rayng_link(item))
-                else:
-                    extracted = parse_ip_or_resolve(item)
-                    for ip in extracted:
-                        incoming_raw_ips.append(ip)
-            print(f"📥 Из очереди забрано: {len(incoming_proxies)} прокси-ссылок и {len(incoming_raw_ips)} чистых IP.")
+                extracted = parse_ip_or_resolve(item)
+                for ip in extracted:
+                    incoming_raw_ips.append(ip)
+            print(f"📥 Из очереди забрано {len(incoming_raw_ips)} чистых IP (ссылки на конфиги игнорируются).")
         except Exception as e:
             print(f"⚠️ Ошибка чтения очереди {INCOMING_FILE}: {e}")
-    return incoming_proxies, incoming_raw_ips
+    return incoming_raw_ips
 
-# НОВАЯ ФУНКЦИЯ: Загрузка прошлых живых конфигов
 def load_previous_alives():
     prev_wl = []
     prev_bl = []
-    
     if os.path.exists('alive_bs.txt'):
         try:
             with open('alive_bs.txt', 'r', encoding='utf-8') as f:
@@ -844,7 +857,6 @@ def load_previous_alives():
                 prev_wl = [sanitize_v2rayng_link(l.strip()) for l in decoded.splitlines() if l.strip().startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
         except Exception:
             pass
-            
     if os.path.exists('alive_bl.txt'):
         try:
             with open('alive_bl.txt', 'r', encoding='utf-8') as f:
@@ -852,7 +864,6 @@ def load_previous_alives():
                 prev_bl = [sanitize_v2rayng_link(l.strip()) for l in decoded.splitlines() if l.strip().startswith(('vless://', 'vmess://', 'trojan://', 'ss://', 'hysteria2://', 'hy2://'))]
         except Exception:
             pass
-            
     print(f"📂 Загружено из прошлых файлов: WL={len(prev_wl)}, BL={len(prev_bl)}")
     return prev_wl, prev_bl
 
@@ -943,7 +954,7 @@ def clean_and_dedup(tagged_items: list) -> list:
         valid_items.append((link, source_tag))
     return valid_items
 
-def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
+def limit_configs_per_ip(items_list: list, white_ips: set, is_wl_list: bool = False, max_per_ip_bl: int = 2, max_per_ip_wl: int = 30, max_per_subnet_bl: int = 5) -> list:
     ip_counter = defaultdict(int)
     subnet_counter = defaultdict(int)
     filtered = []
@@ -958,8 +969,8 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
         grouped_by_ip[ip_str].append(item)
         
     for ip_str, items in grouped_by_ip.items():
-        is_wl = (ip_str in white_ips)
-        limit = max_per_ip_wl if is_wl else max_per_ip_bl
+        is_wl = is_wl_list or (ip_str in white_ips)
+        limit = 999999 if is_wl else max_per_ip_bl
         
         if is_wl:
             seen_snis = set()
@@ -996,7 +1007,7 @@ def limit_configs_per_ip(items_list: list, white_ips: set, max_per_ip_bl: int = 
             ip_counter[ip_str] += 1
             filtered.append(item)
 
-    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL:{max_per_ip_wl} с приоритетом уникальных SNI, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
+    print(f"✂️ Ограничение на IP (BL:{max_per_ip_bl}, WL: {'Бесконечно' if is_wl_list else max_per_ip_wl}, Subnet BL:{max_per_subnet_bl}): было {len(items_list)}, осталось {len(filtered)}.")
     return filtered
 
 def dedup_advanced(config_list: list, list_name: str = "") -> list:
@@ -1053,7 +1064,7 @@ def main():
 
     wl_fetched_with_source = fetch_links_parallel_with_source(wl_file)
     bl_fetched_with_source = fetch_links_parallel_with_source(bl_file)
-    incoming_proxies, incoming_raw_ips = process_incoming_queue()
+    incoming_raw_ips = process_incoming_queue()
 
     white_ips = set()
     if os.path.exists(WHITE_IP_FILE):
@@ -1077,28 +1088,6 @@ def main():
             f.write(f"{ip}\n")
     print(f"💾 База {WHITE_IP_FILE} сохранена. Всего IP: {len(white_ips)}")
 
-    tagged_items = []
-    for link, src in wl_fetched_with_source:
-        tagged_items.append((link, src))
-    for link, src in bl_fetched_with_source:
-        tagged_items.append((link, src))
-    for link in incoming_proxies:
-        tagged_items.append((link, 'INCOMING_TELEGRAM'))
-
-    clean_items = clean_and_dedup(tagged_items)
-    clean_items = limit_configs_per_ip(clean_items, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
-
-    all_ips = []
-    for link, _ in clean_items:
-        host, _, _ = parse_host_port_and_name(link)
-        if host:
-            clean_ip = resolve_host_cached(host.strip('[] \t\r\n\'"').lower())
-            if clean_ip:
-                all_ips.append(clean_ip)
-    unique_ips = list(set(all_ips))
-    for ip in unique_ips:
-        fetch_country_from_ip(ip)
-
     ping_wl = []
     ping_bl = []
     alive_wl_data = []
@@ -1106,51 +1095,68 @@ def main():
 
     seen_links_for_ping = set()
 
-    for link, src in clean_items:
-        host, port, orig_name = parse_host_port_and_name(link)
-        if not host or not port or not is_valid_public_host(host):
-            continue
+    # 1. Источники WL -> ВСЕГДА идут в WL
+    for link, src in wl_fetched_with_source:
+        link = sanitize_v2rayng_link(link)
+        if link in seen_links_for_ping: continue
+        
+        if find_matched_ip_for_link(link, white_ips):
+            orig_flag = extract_clean_flag(parse_host_port_and_name(link)[2])
+            alive_wl_data.append((link, orig_flag))
+            seen_links_for_ping.add(link)
+        else:
+            ping_wl.append((link, src))
+            seen_links_for_ping.add(link)
 
-        matched_ip = find_matched_ip_for_link(link, white_ips)
-        if matched_ip:
+    # 2. Источники BL -> Проверка на RU SNI / RU IP
+    for link, src in bl_fetched_with_source:
+        link = sanitize_v2rayng_link(link)
+        if link in seen_links_for_ping: continue
+        
+        host, _, orig_name = parse_host_port_and_name(link)
+        if not host or not is_valid_public_host(host): continue
+
+        if find_matched_ip_for_link(link, white_ips):
             orig_flag = extract_clean_flag(orig_name)
             alive_wl_data.append((link, orig_flag))
             seen_links_for_ping.add(link)
-            continue
-
-        target_list = classify_config(link, white_ips, ru_sni_ratio=0.3)
-        if target_list == 'WL':
-            if link not in seen_links_for_ping:
-                ping_wl.append((link, src))
-                seen_links_for_ping.add(link)
+        elif is_wl_for_bl_source(link, white_ips):
+            ping_wl.append((link, src))
+            seen_links_for_ping.add(link)
         else:
-            if link not in seen_links_for_ping:
-                ping_bl.append((link, src))
-                seen_links_for_ping.add(link)
+            ping_bl.append((link, src))
+            seen_links_for_ping.add(link)
 
-    # ЗАГРУЗКА ПРОШЛЫХ ФАЙЛОВ И ДОБАВЛЕНИЕ ИХ НА ПРОВЕРКУ
+    # 3. Загрузка прошлых живых конфигов
     prev_wl_links, prev_bl_links = load_previous_alives()
-    
     for link in prev_wl_links:
         if link not in seen_links_for_ping:
             ping_wl.append((link, 'PREV_WL'))
             seen_links_for_ping.add(link)
-            
     for link in prev_bl_links:
         if link not in seen_links_for_ping:
             ping_bl.append((link, 'PREV_BL'))
             seen_links_for_ping.add(link)
 
-    print(f"\n📡 Отправка на проверку Xray: WL конфигов: {len(ping_wl)} | BL конфигов: {len(ping_bl)}")
+    # Для WL: НИКАКИХ лимитов до пинга! Только базовая очистка от полных дублей.
+    clean_ping_wl = clean_and_dedup(ping_wl)
+    
+    # Для BL: лимиты до пинга
+    clean_ping_bl = clean_and_dedup(ping_bl)
+    clean_ping_bl = limit_configs_per_ip(clean_ping_bl, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+
+    print(f"\n📡 Отправка на проверку Xray: WL конфигов (1/3): {len(clean_ping_wl)} | BL конфигов (2/3): {len(clean_ping_bl)}")
     
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        wl_futures = {executor.submit(check_proxy_alive_detailed, link, 1): (link, src) for link, src in ping_wl}
+        # WL пинг: 1 из 3
+        wl_futures = {executor.submit(check_proxy_alive_detailed, link, 1): (link, src) for link, src in clean_ping_wl}
         for future in as_completed(wl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
                 alive_wl_data.append(res)
 
-        bl_futures = {executor.submit(check_proxy_alive_detailed, link, 2): (link, src) for link, src in ping_bl}
+        # BL пинг: 2 из 3
+        bl_futures = {executor.submit(check_proxy_alive_detailed, link, 2): (link, src) for link, src in clean_ping_bl}
         for future in as_completed(bl_futures):
             is_ok, res, reason, cc = future.result()
             if is_ok:
@@ -1159,17 +1165,20 @@ def main():
                 else:
                     alive_bl_data.append(res)
 
+    # 4. Дедупликация ПОСЛЕ пинга
     alive_wl_data = dedup_advanced(alive_wl_data, "WL (предварительно)")
     alive_bl_data = dedup_advanced(alive_bl_data, "BL (предварительно)")
 
-    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    # 5. Применяем лимиты к уже очищенным от дублей данным (для WL - бесконечно, только сортировка по SNI)
+    alive_wl_clean = limit_configs_per_ip(alive_wl_data, white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     
-    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_bl_limited = limit_configs_per_ip(alive_bl_data, white_ips, is_wl_list=False, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
     alive_bl_clean = filter_protocols_bl(alive_bl_limited, minority_ratio=0.10)
 
+    # 6. Финальная сборка
     wl_set = set(alive_wl_clean)
     alive_full_raw = alive_wl_clean + alive_bl_clean
-    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=MAX_CONFIGS_PER_IP_WL, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
+    alive_full_clean = limit_configs_per_ip(dedup_advanced(alive_full_raw, "FULL"), white_ips, is_wl_list=True, max_per_ip_bl=MAX_CONFIGS_PER_IP_BL, max_per_ip_wl=999999, max_per_subnet_bl=MAX_CONFIGS_PER_SUBNET_BL)
 
     final_wl = [rename_config(item[0], idx, "[WL]", item[1]) for idx, item in enumerate(alive_wl_clean, 1)]
     final_bl = [rename_config(item[0], idx, "[BL]", item[1]) for idx, item in enumerate(alive_bl_clean, 1)]
