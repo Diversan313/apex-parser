@@ -28,6 +28,15 @@ MMDB_URL = (
     "GeoLite2-Country.mmdb"
 )
 
+# Официальный SNI whitelist для мобильного БС (RU).
+# Скачивается с GitHub, хранится локально, обновляется при изменении.
+SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
+SNI_WHITELIST_URL = (
+    "https://raw.githubusercontent.com/"
+    "hxehex/russia-mobile-internet-whitelist/"
+    "main/whitelist.txt"
+)
+
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 
@@ -42,8 +51,9 @@ MAX_CONFIGS_PER_SUBNET_BL = 5
 # WL
 #
 # ВАЖНО:
-# До Xray WL НЕ РЕЖЕМ.
-# После проверки применяется максимум 30/IP.
+# white_ip → в БС БЕЗ Xray.
+# SNI из arch/lists/whitelist.txt → всегда WL.
+# Прочие .ru/.su SNI → WL с вероятностью RU_SNI_RATIO.
 # ============================================================
 
 MAX_CONFIGS_PER_IP_WL = 30
@@ -55,9 +65,7 @@ MAX_CONFIGS_PER_IP_WL = 30
 WL_MIN_SUCCESS_COUNT = 1
 BL_MIN_SUCCESS_COUNT = 2
 
-# Твоя логика RU SNI:
-# часть таких конфигов попадает в WL,
-# остальные остаются BL.
+# Не все .ru SNI реально в мобильном БС → только 30% в WL.
 RU_SNI_RATIO = 0.30
 
 # Таймауты
@@ -228,6 +236,203 @@ def init_geoip():
             )
         except Exception:
             GEO_READER = None
+
+
+# ============================================================
+# SNI MOBILE WHITELIST (arch/lists/whitelist.txt)
+# ============================================================
+
+# Множество доменов из официального списка БС.
+SNI_WHITELIST_SET = set()
+
+
+def update_sni_whitelist_file():
+    """
+    Скачивает whitelist SNI с GitHub в arch/lists/whitelist.txt.
+    Обновляет файл только если содержимое изменилось.
+    """
+
+    os.makedirs(
+        os.path.dirname(SNI_WHITELIST_PATH) or ".",
+        exist_ok=True,
+    )
+
+    try:
+        req = urllib.request.Request(
+            SNI_WHITELIST_URL,
+            headers=HEADERS,
+        )
+
+        with urllib.request.urlopen(
+            req,
+            timeout=30,
+            context=SSL_CONTEXT,
+        ) as response:
+            remote_data = response.read()
+
+        # Нормализуем переводы строк
+        try:
+            remote_text = remote_data.decode(
+                "utf-8",
+                errors="ignore",
+            )
+        except Exception:
+            remote_text = remote_data.decode(
+                "latin-1",
+                errors="ignore",
+            )
+
+        remote_text = remote_text.replace("\r\n", "\n").replace(
+            "\r", "\n"
+        )
+        if remote_text and not remote_text.endswith("\n"):
+            remote_text += "\n"
+
+        local_text = None
+        if os.path.exists(SNI_WHITELIST_PATH):
+            try:
+                with open(
+                    SNI_WHITELIST_PATH,
+                    "r",
+                    encoding="utf-8",
+                ) as f:
+                    local_text = f.read().replace(
+                        "\r\n", "\n"
+                    ).replace("\r", "\n")
+            except Exception:
+                local_text = None
+
+        if local_text is not None and local_text == remote_text:
+            print(
+                f"✅ SNI whitelist актуален: "
+                f"{SNI_WHITELIST_PATH}"
+            )
+            return True
+
+        with open(
+            SNI_WHITELIST_PATH,
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(remote_text)
+
+        lines = [
+            ln.strip()
+            for ln in remote_text.splitlines()
+            if ln.strip() and not ln.strip().startswith("#")
+        ]
+
+        print(
+            f"📥 SNI whitelist обновлён: "
+            f"{SNI_WHITELIST_PATH} "
+            f"({len(lines)} доменов)"
+        )
+        return True
+
+    except Exception as e:
+        if os.path.exists(SNI_WHITELIST_PATH):
+            print(
+                f"⚠️ Не удалось обновить SNI whitelist: {e}. "
+                f"Используем локальный файл."
+            )
+            return True
+
+        print(
+            f"⚠️ SNI whitelist недоступен: {e}"
+        )
+        return False
+
+
+def load_sni_whitelist():
+    """Читает arch/lists/whitelist.txt в SNI_WHITELIST_SET."""
+
+    global SNI_WHITELIST_SET
+
+    SNI_WHITELIST_SET = set()
+
+    if not os.path.exists(SNI_WHITELIST_PATH):
+        print(
+            f"⚠️ Файл {SNI_WHITELIST_PATH} не найден"
+        )
+        return
+
+    try:
+        with open(
+            SNI_WHITELIST_PATH,
+            "r",
+            encoding="utf-8",
+        ) as f:
+            for line in f:
+                line = line.strip().lower()
+                if not line or line.startswith("#"):
+                    continue
+                # убираем возможные схемы/пути
+                if "://" in line:
+                    try:
+                        line = urllib.parse.urlparse(
+                            line
+                        ).netloc or line
+                    except Exception:
+                        pass
+                line = (
+                    line.split("/")[0]
+                    .split("?")[0]
+                    .split("#")[0]
+                    .strip("[]")
+                    .lower()
+                )
+                if line:
+                    SNI_WHITELIST_SET.add(line)
+
+        print(
+            f"📋 SNI whitelist загружен: "
+            f"{len(SNI_WHITELIST_SET)} доменов"
+        )
+
+    except Exception as e:
+        print(
+            f"⚠️ Ошибка чтения SNI whitelist: {e}"
+        )
+        SNI_WHITELIST_SET = set()
+
+
+def init_sni_whitelist():
+    update_sni_whitelist_file()
+    load_sni_whitelist()
+
+
+def is_sni_in_mobile_whitelist(sni: str) -> bool:
+    """
+    Точное совпадение или subdomain для домена из списка.
+    Пример: list имеет vk.com → m.vk.com тоже матчится.
+    """
+
+    if not sni or not SNI_WHITELIST_SET:
+        return False
+
+    sni = sni.strip().lower().rstrip(".")
+
+    if not sni:
+        return False
+
+    if sni in SNI_WHITELIST_SET:
+        return True
+
+    # subdomain: foo.bar.vk.com при vk.com в списке
+    parts = sni.split(".")
+    for i in range(1, len(parts) - 1):
+        parent = ".".join(parts[i:])
+        if parent in SNI_WHITELIST_SET:
+            return True
+
+    return False
+
+
+def link_has_whitelisted_sni(link: str) -> bool:
+    sni = extract_sni_from_link(link)
+    if sni and is_sni_in_mobile_whitelist(sni):
+        return True
+    return False
 
 
 # ============================================================
@@ -1372,66 +1577,17 @@ def is_wl_by_keywords(
     )
 
 
-RU_SNI_LIST = [
-    "www.vk.com",
-    "vk.com",
-    "m.vk.com",
-    "m1.vk.ru",
-    "st.vk.ru",
-    "id.vk.com",
-    "sun1-93.userapi.com",
-    "yandex.ru",
-    "api-maps.yandex.ru",
-    "wap.yandex.ru",
-    "360.yandex.ru",
-    "smartcaptcha.yandexcloud.net",
-    "max.ru",
-    "web.max.ru",
-    "rutube.ru",
-    "storage.yandex.net",
-    "ads.x5.ru",
-    "5post-gate.x5.ru",
-    "28.img.avito.st",
-    "cdn.tracker.yandex.net",
-    "id.pervye.ru",
-    "ya.ru",
-    "rzd.ru",
-    "live.ok.ru",
-    "id.ok.ru",
-    "qq.utiltools.ru",
-    "ru.muzgrape.space",
-    "flypobeda.ru",
-    "shopping-api-gateway.cdek.shopping",
-    "api.acquisition-gwe.plus.yandex.ru",
-]
+def is_ru_sni(link: str) -> bool:
+    """
+    Только суффикс .ru / .su.
+    Точные домены БС — через arch/lists/whitelist.txt,
+    не через хардкод.
+    """
 
+    sni = extract_sni_from_link(link)
 
-def is_ru_sni(
-    link: str,
-) -> bool:
-
-    sni = extract_sni_from_link(
-        link
-    )
-
-    if sni:
-
-        if sni.endswith(
-            (
-                ".ru",
-                ".su",
-            )
-        ):
-            return True
-
-        if any(
-            sni == x
-            or sni.endswith(
-                "." + x
-            )
-            for x in RU_SNI_LIST
-        ):
-            return True
+    if sni and sni.endswith((".ru", ".su")):
+        return True
 
     link_low = link.lower()
 
@@ -1450,64 +1606,39 @@ def classify_config(
     ru_sni_ratio: float = RU_SNI_RATIO,
 ) -> str:
 
-    # 1. Реальный WL по IP
-    if find_matched_ip_for_link(
-        link,
-        white_ips,
-    ):
+    # 1. IP из white_ip.txt
+    if find_matched_ip_for_link(link, white_ips):
         return "WL"
 
-    host, _, orig_name = (
-        parse_host_port_and_name(
-            link
-        )
-    )
+    host, _, orig_name = parse_host_port_and_name(link)
 
-    if (
-        not host
-        or not is_valid_public_host(
-            host
-        )
-    ):
+    if not host or not is_valid_public_host(host):
         return "BL"
 
-    # 2. WL по словам
-    if is_wl_by_keywords(
-        link,
-        orig_name,
-    ):
+    # 2. Ключевые слова БС
+    if is_wl_by_keywords(link, orig_name):
         return "WL"
 
-    # 3. WL по стране endpoint
-    clean_ip = (
-        resolve_host_cached(
-            host.strip(
-                '[] \t\r\n\'"'
-            ).lower()
-        )
+    # 3. SNI из официального mobile whitelist
+    #    (arch/lists/whitelist.txt) → всегда WL
+    if link_has_whitelisted_sni(link):
+        return "WL"
+
+    # 4. Страна endpoint = RU
+    clean_ip = resolve_host_cached(
+        host.strip('[] \t\r\n\'"').lower()
     )
 
     if clean_ip:
-
-        cc = fetch_country_from_ip(
-            clean_ip
-        )
-
-        if (
-            cc
-            and cc.upper() == "RU"
-        ):
+        cc = fetch_country_from_ip(clean_ip)
+        if cc and cc.upper() == "RU":
             return "WL"
 
-    # 4. RU SNI → твоя вероятность 30%
-    if is_ru_sni(
-        link
-    ):
-
+    # 5. Прочие .ru/.su SNI → только доля RU_SNI_RATIO
+    if is_ru_sni(link):
         return (
             "WL"
-            if random.random()
-            < ru_sni_ratio
+            if random.random() < ru_sni_ratio
             else "BL"
         )
 
@@ -4275,21 +4406,54 @@ def get_wl_item_info(
     except Exception:
         pass
 
+    net = ""
+    uuid = ""
+    fp = ""
+    security = ""
+    mode = ""
+
+    try:
+        if link.startswith("vmess://"):
+            decoded = safe_b64decode(
+                link.replace("vmess://", "", 1).strip()
+            )
+            data = json.loads(decoded)
+            net = str(data.get("net", "raw")).lower()
+            uuid = str(data.get("id", ""))
+            fp = str(data.get("fp", "")).lower()
+            security = str(data.get("tls", "")).lower()
+        else:
+            parsed = urllib.parse.urlparse(link)
+            uuid = parsed.username or ""
+            qp = urllib.parse.parse_qs(
+                parsed.query,
+                keep_blank_values=True,
+            )
+            net = (
+                qp.get("type", qp.get("net", ["raw"]))[0]
+            ).lower()
+            fp = (qp.get("fp", [""])[0] or "").lower()
+            security = (
+                qp.get("security", [""])[0] or ""
+            ).lower()
+            mode = (qp.get("mode", [""])[0] or "").lower()
+    except Exception:
+        pass
+
     return {
         "link": link,
         "ip": ip_str,
         "flag": flag,
-        "sni": (
-            sni or ""
-        ).lower(),
-        "path": urllib.parse.unquote(
-            path
-        ),
+        "sni": (sni or "").lower(),
+        "path": urllib.parse.unquote(path),
         "source": (
-            item[2]
-            if len(item) > 2
-            else ""
+            item[2] if len(item) > 2 else ""
         ),
+        "net": net,
+        "uuid": uuid,
+        "fp": fp,
+        "security": security,
+        "mode": mode,
     }
 
 
@@ -4297,18 +4461,10 @@ def select_wl_diverse(
     alive_items: list,
 ) -> list:
     """
-    WL отбирается ПОСЛЕ проверки.
-
-    Не уничтожаем сотни SNI ДО теста.
+    WL diversity: max MAX_CONFIGS_PER_IP_WL на IP.
 
     Приоритет:
-      1. разные IP;
-      2. новые SNI;
-      3. новые флаги;
-      4. новый path;
-      5. новые SNI+path.
-
-    На один IP максимум MAX_CONFIGS_PER_IP_WL.
+      white_ip / RU SNI / Reality / новый UUID / новый path
     """
 
     if not alive_items:
@@ -4317,154 +4473,76 @@ def select_wl_diverse(
     grouped = defaultdict(list)
 
     for item in alive_items:
-        info = get_wl_item_info(
-            item
-        )
-
-        grouped[
-            info["ip"]
-        ].append(
-            (
-                item,
-                info,
-            )
-        )
+        info = get_wl_item_info(item)
+        grouped[info["ip"]].append((item, info))
 
     result = []
 
     for ip_str, entries in grouped.items():
-
         selected = []
-
         used_sni = set()
-        used_flags = set()
+        used_uuids = set()
         used_paths = set()
         used_pairs = set()
 
-        # Новые SNI из PREV_* не считаем
-        # новыми предпочтительными.
-        old_snis = set()
-
-        for item, info in entries:
-
-            if str(
-                info["source"]
-            ).startswith(
-                "PREV_"
-            ):
-
-                if info["sni"]:
-                    old_snis.add(
-                        info["sni"]
-                    )
-
-        def score(
-            entry,
-        ):
+        def score(entry):
             item, info = entry
-
             s = 0
+            src = str(info.get("source") or "")
 
-            # Новый SNI
-            if (
-                info["sni"]
-                and info["sni"]
-                not in used_sni
-            ):
+            if info["sni"] and info["sni"] not in used_sni:
                 s += 1000
 
-            # SNI, которого не было в старом списке
-            if (
-                info["sni"]
-                and info["sni"]
-                not in old_snis
-                and not str(
-                    info["source"]
-                ).startswith(
-                    "PREV_"
+            sni = info["sni"]
+            if info.get("security") == "reality":
+                s += 400
+
+            # Всё русское — высокий приоритет
+            if sni.endswith((".ru", ".su")) or any(
+                x in sni
+                for x in (
+                    "yandex",
+                    "vk.com",
+                    "vk.ru",
+                    "x5.ru",
+                    "max.ru",
+                    "gismeteo",
+                    "rutube",
+                    "rbc.ru",
+                    "ozone",
                 )
             ):
-                s += 700
+                s += 600
 
-            # Новый флаг
-            if (
-                info["flag"]
-                not in used_flags
-            ):
-                s += 500
-
-            # Новый SNI + path
-            pair = (
-                info["sni"],
-                info["path"],
-            )
-
-            if pair not in used_pairs:
+            if src.startswith("WHITE_IP"):
                 s += 300
+            if src.startswith("RU_EXIT"):
+                s += 250
 
-            # Новый path
-            if (
-                info["path"]
-                not in used_paths
-            ):
+            if info.get("uuid") and info["uuid"] not in used_uuids:
+                s += 450
+
+            pair = (info["sni"], info["path"])
+            if pair not in used_pairs:
+                s += 250
+            if info["path"] not in used_paths:
                 s += 100
-
-            # Новые конфиги чуть выше старых
-            if not str(
-                info["source"]
-            ).startswith(
-                "PREV_"
-            ):
-                s += 10
 
             return s
 
-        remaining = list(
-            entries
-        )
-
-        while (
-            remaining
-            and len(selected)
-            < MAX_CONFIGS_PER_IP_WL
-        ):
-
-            remaining.sort(
-                key=score,
-                reverse=True,
-            )
-
-            item, info = (
-                remaining.pop(0)
-            )
-
-            selected.append(
-                item
-            )
-
+        remaining = list(entries)
+        while remaining and len(selected) < MAX_CONFIGS_PER_IP_WL:
+            remaining.sort(key=score, reverse=True)
+            item, info = remaining.pop(0)
+            selected.append(item)
             if info["sni"]:
-                used_sni.add(
-                    info["sni"]
-                )
+                used_sni.add(info["sni"])
+            if info.get("uuid"):
+                used_uuids.add(info["uuid"])
+            used_paths.add(info["path"])
+            used_pairs.add((info["sni"], info["path"]))
 
-            used_flags.add(
-                info["flag"]
-            )
-
-            used_paths.add(
-                info["path"]
-            )
-
-            used_pairs.add(
-                (
-                    info["sni"],
-                    info["path"],
-                )
-            )
-
-        result.extend(
-            selected
-        )
+        result.extend(selected)
 
     print(
         f"🎨 WL diversity: "
@@ -4658,8 +4736,7 @@ def main():
     )
 
     print(
-        "⚙️ WL white_ip: БЕЗ Xray-теста "
-        "(как в stable old)"
+        "⚙️ WL white_ip: БЕЗ Xray-теста"
     )
 
     print(
@@ -4671,15 +4748,20 @@ def main():
     )
 
     print(
-        "⚙️ WL: IP/keywords/RU IP/RU SNI"
+        f"⚙️ WL: max {MAX_CONFIGS_PER_IP_WL}/IP"
+    )
+
+    print(
+        "⚙️ SNI из arch/lists/whitelist.txt → WL"
+    )
+
+    print(
+        f"⚙️ прочие .ru SNI → WL с шансом "
+        f"{int(RU_SNI_RATIO * 100)}%"
     )
 
     print(
         "⚙️ Старые alive-конфиги используются"
-    )
-
-    print(
-        "⚙️ BL /24 и протокольный фильтр сохраняются"
     )
 
     print_xray_version()
@@ -4966,13 +5048,8 @@ def main():
     # ========================================================
     # 8. PING WL
     #
-    # КАК В СТАРОМ СТАБИЛЬНОМ КОДЕ:
-    #   IP из white_ip → сразу в alive_wl БЕЗ Xray-теста.
-    #   Остальные WL (keywords / RU IP / RU SNI) → тест 1/3.
-    #
-    # На мобильном белом списке доступность IP важнее, чем
-    # успешный пинг с VPS. Xray с сервера отсекал живые
-    # grpc/xhttp/ws на белых IP.
+    # white_ip → сразу в alive_wl БЕЗ Xray (stable old).
+    # Остальные WL → тест 1/3.
     # ========================================================
 
     alive_wl_data = []
@@ -4993,57 +5070,35 @@ def main():
         )
 
         if matched_ip:
-            # Без Xray — как в parser stable old
-            host, _, orig_name = (
-                parse_host_port_and_name(
-                    link
-                )
+            host, _, orig_name = parse_host_port_and_name(
+                link
             )
+            orig_flag = extract_clean_flag(orig_name)
 
-            orig_flag = extract_clean_flag(
-                orig_name
-            )
-
-            # Если флага нет — пробуем страну endpoint
             if orig_flag == "🌐" and host:
-                clean_ip = (
-                    resolve_host_cached(
-                        host.strip(
-                            '[] \t\r\n\'"'
-                        ).lower()
-                    )
+                clean_ip = resolve_host_cached(
+                    host.strip('[] \t\r\n\'"').lower()
                 )
                 if clean_ip:
-                    cc = fetch_country_from_ip(
-                        clean_ip
-                    )
+                    cc = fetch_country_from_ip(clean_ip)
                     if cc:
-                        orig_flag = cc_to_flag(
-                            cc
-                        )
+                        orig_flag = cc_to_flag(cc)
 
+            # Метка WHITE_IP — единственный надёжный сигнал БС
             alive_wl_data.append(
                 (
                     link,
                     orig_flag,
-                    src,
+                    "WHITE_IP:" + str(src),
                 )
             )
             white_ip_trusted += 1
             continue
 
-        # Не white_ip — обычный Xray-тест
-        ping_wl.append(
-            (
-                link,
-                src,
-            )
-        )
+        ping_wl.append((link, src))
 
     # ========================================================
     # 9. PING BL
-    #
-    # BL тест 2/3.
     # ========================================================
 
     ping_bl = []
@@ -5054,25 +5109,14 @@ def main():
         if link in seen_bl:
             continue
 
-        seen_bl.add(
-            link
-        )
-
-        ping_bl.append(
-            (
-                link,
-                src,
-            )
-        )
+        seen_bl.add(link)
+        ping_bl.append((link, src))
 
     print(
         f"\n📡 Xray очередь:"
-        f"\n   WL white_ip (без теста): "
-        f"{white_ip_trusted}"
-        f"\n   WL на Xray-тест:         "
-        f"{len(ping_wl)}"
-        f"\n   BL на Xray-тест:         "
-        f"{len(ping_bl)}"
+        f"\n   WL white_ip (без теста): {white_ip_trusted}"
+        f"\n   WL на Xray-тест:         {len(ping_wl)}"
+        f"\n   BL на Xray-тест:         {len(ping_bl)}"
     )
 
     # ========================================================
@@ -5086,7 +5130,6 @@ def main():
 
     bl_ok = 0
     bl_fail = 0
-
     bl_ru_to_wl = 0
 
     with ThreadPoolExecutor(
@@ -5190,25 +5233,17 @@ def main():
 
             bl_ok += 1
 
-            # Живой BL с RU exit -> WL.
-            if (
-                cc
-                and cc.upper()
-                == "RU"
-            ):
-
+            # Всё русское → WL: живой BL с RU exit.
+            if cc and cc.upper() == "RU":
                 alive_wl_data.append(
                     (
                         res[0],
                         res[1],
-                        src,
+                        "RU_EXIT:" + str(src),
                     )
                 )
-
                 bl_ru_to_wl += 1
-
             else:
-
                 alive_bl_data.append(
                     (
                         res[0],
@@ -5236,22 +5271,16 @@ def main():
     )
 
     # ========================================================
-    # 12. WL DIVERSITY AFTER TEST
-    #
-    # Только сейчас применяем 30/IP.
+    # 12. WL DIVERSITY
     # ========================================================
 
-    alive_wl_clean = (
-        select_wl_diverse(
-            alive_wl_data
-        )
+    alive_wl_clean = select_wl_diverse(
+        alive_wl_data
     )
 
-    alive_wl_clean = (
-        dedup_advanced(
-            alive_wl_clean,
-            "WL после diversity",
-        )
+    alive_wl_clean = dedup_advanced(
+        alive_wl_clean,
+        "WL после diversity",
     )
 
     # ========================================================
@@ -5492,21 +5521,21 @@ def main():
     )
 
     print(
-        f"BL кандидатов:        {len(ping_bl)}"
+        f"BL кандидатов:           {len(ping_bl)}"
     )
 
     print(
-        f"BL живых:             {bl_ok}"
+        f"BL живых:                {bl_ok}"
     )
 
     print(
-        f"BL финал:             {len(final_bl)}"
+        f"BL финал:                {len(final_bl)}"
     )
+
 
     print(
-        f"BL RU → WL:           {bl_ru_to_wl}"
+        f"BL RU → WL:              {bl_ru_to_wl}"
     )
-
     print(
         f"FULL:                 {len(final_full)}"
     )
@@ -5529,5 +5558,6 @@ def main():
 if __name__ == "__main__":
 
     init_geoip()
+    init_sni_whitelist()
 
     main()
