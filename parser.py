@@ -51,7 +51,7 @@ MAX_CONFIGS_PER_SUBNET_BL = 5
 # WL
 #
 # ВАЖНО:
-# white_ip → в БС БЕЗ Xray.
+# white_ip → WL-пул + Xray-тест, дедуп только по живым.
 # SNI из arch/lists/whitelist.txt → всегда WL.
 # Прочие .ru/.su SNI → WL с вероятностью RU_SNI_RATIO.
 # ============================================================
@@ -4736,7 +4736,7 @@ def main():
     )
 
     print(
-        "⚙️ WL white_ip: БЕЗ Xray-теста"
+        "⚙️ WL white_ip: С Xray-тестом, потом дедуп"
     )
 
     print(
@@ -5048,14 +5048,15 @@ def main():
     # ========================================================
     # 8. PING WL
     #
-    # white_ip → сразу в alive_wl БЕЗ Xray (stable old).
-    # Остальные WL → тест 1/3.
+    # white_ip → тоже в Xray-очередь (метка WHITE_IP:...),
+    # но НЕ режем их BL-лимитами.
+    # Тест → только живые → дедуп/diversity.
     # ========================================================
 
     alive_wl_data = []
     ping_wl = []
     seen_wl = set()
-    white_ip_trusted = 0
+    white_ip_queued = 0
 
     for link, src in pre_ping_wl:
 
@@ -5070,29 +5071,15 @@ def main():
         )
 
         if matched_ip:
-            host, _, orig_name = parse_host_port_and_name(
-                link
-            )
-            orig_flag = extract_clean_flag(orig_name)
-
-            if orig_flag == "🌐" and host:
-                clean_ip = resolve_host_cached(
-                    host.strip('[] \t\r\n\'"').lower()
-                )
-                if clean_ip:
-                    cc = fetch_country_from_ip(clean_ip)
-                    if cc:
-                        orig_flag = cc_to_flag(cc)
-
-            # Метка WHITE_IP — единственный надёжный сигнал БС
-            alive_wl_data.append(
+            # Метка WHITE_IP сохраняется после теста
+            # для приоритета в diversity.
+            ping_wl.append(
                 (
                     link,
-                    orig_flag,
                     "WHITE_IP:" + str(src),
                 )
             )
-            white_ip_trusted += 1
+            white_ip_queued += 1
             continue
 
         ping_wl.append((link, src))
@@ -5114,8 +5101,9 @@ def main():
 
     print(
         f"\n📡 Xray очередь:"
-        f"\n   WL white_ip (без теста): {white_ip_trusted}"
-        f"\n   WL на Xray-тест:         {len(ping_wl)}"
+        f"\n   WL white_ip (с тестом):  {white_ip_queued}"
+        f"\n   WL heuristic на тест:    {len(ping_wl) - white_ip_queued}"
+        f"\n   WL всего на Xray:        {len(ping_wl)}"
         f"\n   BL на Xray-тест:         {len(ping_bl)}"
     )
 
@@ -5125,8 +5113,10 @@ def main():
 
     alive_bl_data = []
 
-    wl_ok = white_ip_trusted
+    wl_ok = 0
     wl_fail = 0
+    white_ip_ok = 0
+    white_ip_fail = 0
 
     bl_ok = 0
     bl_fail = 0
@@ -5137,7 +5127,7 @@ def main():
     ) as executor:
 
         # ----------------------------------------------------
-        # WL 1/3
+        # WL 1/3 (включая white_ip)
         # ----------------------------------------------------
 
         wl_futures = {
@@ -5169,10 +5159,12 @@ def main():
             except Exception:
                 continue
 
+            is_white = str(src).startswith("WHITE_IP")
+
             if is_ok:
 
                 # res = (link, flag)
-                # сохраняем source для diversity
+                # source сохраняем (WHITE_IP:... или обычный)
                 alive_wl_data.append(
                     (
                         res[0],
@@ -5182,15 +5174,24 @@ def main():
                 )
 
                 wl_ok += 1
+                if is_white:
+                    white_ip_ok += 1
 
             else:
 
                 wl_fail += 1
+                if is_white:
+                    white_ip_fail += 1
 
         print(
             f"\n🟢 WL тест завершён: "
             f"OK={wl_ok}, "
             f"FAIL={wl_fail}"
+        )
+        print(
+            f"   └ white_ip: "
+            f"OK={white_ip_ok}, "
+            f"FAIL={white_ip_fail}"
         )
 
         # ----------------------------------------------------
@@ -5505,11 +5506,15 @@ def main():
     print("=" * 70)
 
     print(
-        f"WL white_ip (без теста): {white_ip_trusted}"
+        f"WL white_ip в очереди:   {white_ip_queued}"
     )
 
     print(
-        f"WL на Xray:              {len(ping_wl)}"
+        f"WL white_ip живых:       {white_ip_ok}"
+    )
+
+    print(
+        f"WL на Xray всего:        {len(ping_wl)}"
     )
 
     print(
