@@ -2295,6 +2295,23 @@ def link_to_xray_outbound(
                     "authority"
                 ] = authority
 
+            # mode=gun / multi → multiMode в Xray
+            grpc_mode = first_param(
+                query_params,
+                "mode",
+                "",
+            ).lower()
+
+            if grpc_mode in (
+                "gun",
+                "multi",
+                "true",
+                "1",
+            ):
+                grpc_settings[
+                    "multiMode"
+                ] = True
+
             outbound[
                 "streamSettings"
             ]["grpcSettings"] = (
@@ -3649,9 +3666,11 @@ def get_final_dedup_key(
     """
     После теста.
 
-    Немного более грубый ключ:
-    одинаковый endpoint / SNI / transport / path /
-    security считается дублем.
+    Ключ должен различать разные аккаунты на
+    одном белом IP: UUID, mode, serviceName.
+
+    Иначе пачка рабочих конфигов на одном
+    endpoint+sni+path схлопывается в один.
     """
 
     host, port, _ = (
@@ -3691,6 +3710,12 @@ def get_final_dedup_key(
     path = "/"
     security = ""
     fp = ""
+    uuid = ""
+    mode = ""
+    service_name = ""
+    flow = ""
+    pbk = ""
+    sid = ""
 
     try:
 
@@ -3715,6 +3740,13 @@ def get_final_dedup_key(
 
             data = json.loads(
                 decoded
+            )
+
+            uuid = str(
+                data.get(
+                    "id",
+                    "",
+                )
             )
 
             net = str(
@@ -3756,6 +3788,11 @@ def get_final_dedup_key(
                 )
             )
 
+            uuid = (
+                parsed.username
+                or ""
+            )
+
             query_params = (
                 urllib.parse.parse_qs(
                     parsed.query,
@@ -3795,6 +3832,37 @@ def get_final_dedup_key(
                 )[0].lower()
             )
 
+            mode = (
+                query_params.get(
+                    "mode",
+                    [""],
+                )[0].lower()
+            )
+
+            flow = (
+                query_params.get(
+                    "flow",
+                    [""],
+                )[0].lower()
+            )
+
+            pbk = query_params.get(
+                "pbk",
+                [""],
+            )[0]
+
+            sid = query_params.get(
+                "sid",
+                [""],
+            )[0]
+
+            service_name = (
+                query_params.get(
+                    "serviceName",
+                    [""],
+                )[0]
+            )
+
     except Exception:
         pass
 
@@ -3814,6 +3882,12 @@ def get_final_dedup_key(
         path,
         security,
         fp,
+        uuid,
+        mode,
+        service_name,
+        flow,
+        pbk,
+        sid,
     )
 
 
@@ -4979,6 +5053,10 @@ def main():
             wl_futures
         ):
 
+            link, src = wl_futures[
+                future
+            ]
+
             try:
 
                 is_ok, res, reason, cc = (
@@ -4990,8 +5068,14 @@ def main():
 
             if is_ok:
 
+                # res = (link, flag)
+                # сохраняем source для diversity
                 alive_wl_data.append(
-                    res
+                    (
+                        res[0],
+                        res[1],
+                        src,
+                    )
                 )
 
                 wl_ok += 1
@@ -5026,6 +5110,10 @@ def main():
             bl_futures
         ):
 
+            link, src = bl_futures[
+                future
+            ]
+
             try:
 
                 is_ok, res, reason, cc = (
@@ -5050,7 +5138,11 @@ def main():
             ):
 
                 alive_wl_data.append(
-                    res
+                    (
+                        res[0],
+                        res[1],
+                        src,
+                    )
                 )
 
                 bl_ru_to_wl += 1
@@ -5058,7 +5150,11 @@ def main():
             else:
 
                 alive_bl_data.append(
-                    res
+                    (
+                        res[0],
+                        res[1],
+                        src,
+                    )
                 )
 
     print(
