@@ -3874,6 +3874,103 @@ def clean_and_dedup(
 
 
 # ============================================================
+# ADVANCED DEDUP
+# ============================================================
+
+def dedup_advanced(
+    items_list: list,
+    label: str = "",
+) -> list:
+    """
+    Дедупликация уже проверенных конфигов.
+
+    Используется ПОСЛЕ Xray.
+    Здесь элементы имеют формат:
+
+        (link, flag)
+
+    или совместимый tuple/list.
+
+    В отличие от clean_and_dedup():
+    - не требует source;
+    - использует get_final_dedup_key();
+    - сохраняет первый встретившийся рабочий конфиг;
+    - не режет количество конфигов;
+    - не меняет WL/BL классификацию;
+    - не применяет IP /24 лимиты;
+    - не фильтрует протоколы.
+
+    То есть эта функция решает только проблему дублей.
+    """
+
+    if not items_list:
+        print(
+            f"🧹 Дедуп {label}: "
+            f"было 0, осталось 0."
+        )
+        return []
+
+    seen_strings = set()
+    seen_keys = set()
+    result = []
+
+    for item in items_list:
+
+        if not isinstance(
+            item,
+            (tuple, list),
+        ):
+            continue
+
+        if not item:
+            continue
+
+        link = str(
+            item[0]
+        ).strip()
+
+        if not link.startswith(
+            SUPPORTED_PROTOCOLS
+        ):
+            continue
+
+        # Полный текстовый дубль.
+        if link in seen_strings:
+            continue
+
+        seen_strings.add(
+            link
+        )
+
+        # Логический дубль.
+        key = get_final_dedup_key(
+            link
+        )
+
+        if not key:
+            continue
+
+        if key in seen_keys:
+            continue
+
+        seen_keys.add(
+            key
+        )
+
+        result.append(
+            item
+        )
+
+    print(
+        f"🧹 Дедуп {label}: "
+        f"было {len(items_list)}, "
+        f"осталось {len(result)}."
+    )
+
+    return result
+
+
+# ============================================================
 # BL LIMIT
 # ============================================================
 
