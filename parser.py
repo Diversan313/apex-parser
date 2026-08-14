@@ -72,6 +72,12 @@ RU_SNI_RATIO = 0.30
 XRAY_START_TIMEOUT = 1.2
 XRAY_TEST_TIMEOUT = 6.0
 
+# TCP fallback для white_ip: с Azure/GitHub Actions
+# многие RU white IP банят датацентровый трафик,
+# Xray падает, а на мобильном БС конфиг живой.
+# Если Xray fail → проверяем TCP host:port.
+TCP_CHECK_TIMEOUT = 3.0
+
 
 # ============================================================
 # SSL
@@ -2989,6 +2995,70 @@ def check_via_xray_detailed(
                     pass
 
 
+def tcp_port_open(host: str, port: int, timeout: float = TCP_CHECK_TIMEOUT) -> bool:
+    """
+    Простая проверка, что host:port принимает TCP.
+    Нужна для white_ip: Xray с зарубежных Actions
+    часто режется, а порт на самом деле открыт.
+    """
+    if not host or not port:
+        return False
+
+    clean = host.strip('[] \t\r\n\'"')
+    try:
+        # IPv6 в скобках уже снят
+        infos = socket.getaddrinfo(
+            clean,
+            int(port),
+            type=socket.SOCK_STREAM,
+        )
+    except Exception:
+        return False
+
+    for family, socktype, proto, _, sockaddr in infos:
+        try:
+            s = socket.socket(family, socktype, proto)
+            s.settimeout(timeout)
+            s.connect(sockaddr)
+            s.close()
+            return True
+        except Exception:
+            try:
+                s.close()
+            except Exception:
+                pass
+            continue
+
+    return False
+
+
+def white_ip_tcp_fallback(link: str):
+    """
+    Fallback после fail Xray для конфигов с white_ip.
+    Возвращает (ok, (link, flag), reason, cc) в том же
+    формате, что check_proxy_alive_detailed.
+    """
+    host, port, orig_name = parse_host_port_and_name(link)
+
+    if not host or not port or not is_valid_public_host(host):
+        return False, None, "bad host/port", None
+
+    if not tcp_port_open(host, port, TCP_CHECK_TIMEOUT):
+        return False, None, "TCP closed", None
+
+    clean_ip = resolve_host_cached(
+        host.strip('[] \t\r\n\'"').lower()
+    )
+    cc = fetch_country_from_ip(clean_ip) if clean_ip else None
+    flag = (
+        cc_to_flag(cc)
+        if cc
+        else extract_clean_flag(orig_name)
+    )
+
+    return True, (link, flag), "TCP open (white_ip fallback)", cc
+
+
 def check_proxy_alive_detailed(
     link: str,
     min_success_count: int = 2,
@@ -4514,8 +4584,11 @@ def select_wl_diverse(
             ):
                 s += 600
 
-            if src.startswith("WHITE_IP"):
-                s += 300
+            # Xray-проверенный white_ip выше TCP-fallback
+            if src.startswith("WHITE_IP_TCP"):
+                s += 200
+            elif src.startswith("WHITE_IP"):
+                s += 400
             if src.startswith("RU_EXIT"):
                 s += 250
 
@@ -4736,7 +4809,7 @@ def main():
     )
 
     print(
-        "⚙️ WL white_ip: С Xray-тестом, потом дедуп"
+        "⚙️ WL white_ip: Xray, при fail → TCP fallback"
     )
 
     print(
@@ -5116,6 +5189,7 @@ def main():
     wl_ok = 0
     wl_fail = 0
     white_ip_ok = 0
+    white_ip_tcp_ok = 0
     white_ip_fail = 0
 
     bl_ok = 0
@@ -5163,8 +5237,7 @@ def main():
 
             if is_ok:
 
-                # res = (link, flag)
-                # source сохраняем (WHITE_IP:... или обычный)
+                # Xray OK — высший приоритет
                 alive_wl_data.append(
                     (
                         res[0],
@@ -5177,11 +5250,35 @@ def main():
                 if is_white:
                     white_ip_ok += 1
 
+            elif is_white:
+                # Xray с Actions часто банится на RU white IP.
+                # TCP open → считаем живым (метка WHITE_IP_TCP).
+                tcp_ok, tcp_res, tcp_reason, tcp_cc = (
+                    white_ip_tcp_fallback(link)
+                )
+
+                if tcp_ok and tcp_res:
+                    # src уже WHITE_IP:... → помечаем TCP
+                    tcp_src = "WHITE_IP_TCP:" + str(src)
+                    if tcp_src.startswith("WHITE_IP_TCP:WHITE_IP:"):
+                        tcp_src = "WHITE_IP_TCP:" + str(src)[len("WHITE_IP:"):]
+
+                    alive_wl_data.append(
+                        (
+                            tcp_res[0],
+                            tcp_res[1],
+                            tcp_src,
+                        )
+                    )
+                    wl_ok += 1
+                    white_ip_tcp_ok += 1
+                else:
+                    wl_fail += 1
+                    white_ip_fail += 1
+
             else:
 
                 wl_fail += 1
-                if is_white:
-                    white_ip_fail += 1
 
         print(
             f"\n🟢 WL тест завершён: "
@@ -5189,9 +5286,13 @@ def main():
             f"FAIL={wl_fail}"
         )
         print(
-            f"   └ white_ip: "
-            f"OK={white_ip_ok}, "
-            f"FAIL={white_ip_fail}"
+            f"   └ white_ip Xray OK:  {white_ip_ok}"
+        )
+        print(
+            f"   └ white_ip TCP OK:   {white_ip_tcp_ok}"
+        )
+        print(
+            f"   └ white_ip FAIL:     {white_ip_fail}"
         )
 
         # ----------------------------------------------------
@@ -5510,7 +5611,11 @@ def main():
     )
 
     print(
-        f"WL white_ip живых:       {white_ip_ok}"
+        f"WL white_ip Xray OK:     {white_ip_ok}"
+    )
+
+    print(
+        f"WL white_ip TCP OK:      {white_ip_tcp_ok}"
     )
 
     print(
