@@ -70,6 +70,9 @@ BL_MIN_SUCCESS_COUNT = 2
 # Не все .ru SNI реально в мобильном БС → только 30% в WL.
 RU_SNI_RATIO = 0.30
 
+# Сколько разных RU-релеев для теста white_ip (разные IP /24).
+MAX_RU_RELAYS = 3
+
 # Таймауты
 XRAY_START_TIMEOUT = 1.2
 XRAY_TEST_TIMEOUT = 6.0
@@ -3026,6 +3029,106 @@ def check_via_xray_detailed(
                     pass
 
 
+def pick_diverse_ru_relays(candidates: list, max_n: int = MAX_RU_RELAYS) -> list:
+    """
+    candidates: [(link, outbound), ...]
+    Берём до max_n релеев с разными IP, предпочтительно разными /24.
+    """
+    if not candidates:
+        return []
+
+    def host_ip(link: str):
+        host, _, _ = parse_host_port_and_name(link)
+        if not host:
+            return None, None
+        clean = host.strip('[] \t\r\n\'"').lower()
+        ip = resolve_host_cached(clean) or clean
+        subnet = None
+        try:
+            parts = str(ip).split(".")
+            if len(parts) == 4:
+                subnet = ".".join(parts[:3])
+        except Exception:
+            subnet = None
+        return ip, subnet
+
+    selected = []
+    used_ips = set()
+    used_subnets = set()
+
+    # 1-й проход: разные /24
+    for link, ob in candidates:
+        if len(selected) >= max_n:
+            break
+        ip, subnet = host_ip(link)
+        if not ip or ip in used_ips:
+            continue
+        if subnet and subnet in used_subnets:
+            continue
+        selected.append((link, ob, ip))
+        used_ips.add(ip)
+        if subnet:
+            used_subnets.add(subnet)
+
+    # 2-й проход: просто разные IP
+    if len(selected) < max_n:
+        for link, ob in candidates:
+            if len(selected) >= max_n:
+                break
+            ip, subnet = host_ip(link)
+            if not ip or ip in used_ips:
+                continue
+            selected.append((link, ob, ip))
+            used_ips.add(ip)
+
+    return selected
+
+
+def check_white_ip_via_relays(
+    link: str,
+    relays: list,
+    min_success_count: int = WL_MIN_SUCCESS_COUNT,
+):
+    """
+    Тестирует white_ip через каждый RU-релей по очереди.
+    Успех = прошёл хотя бы через ОДИН релей.
+    relays: [(link, outbound, ip), ...]
+    """
+    if not relays:
+        return check_proxy_alive_detailed(
+            link,
+            min_success_count,
+            relay_outbound=None,
+            skip_cf_filter=True,
+        )
+
+    last_fail = (False, None, "all relays failed", None)
+
+    for relay_link, relay_ob, relay_ip in relays:
+        try:
+            is_ok, res, reason, cc = check_proxy_alive_detailed(
+                link,
+                min_success_count,
+                relay_outbound=relay_ob,
+                skip_cf_filter=True,
+            )
+        except Exception as e:
+            last_fail = (
+                False,
+                None,
+                f"relay error: {e}",
+                None,
+            )
+            continue
+
+        if is_ok:
+            return is_ok, res, f"OK via {relay_ip}", cc
+
+        last_fail = (is_ok, res, reason, cc)
+
+    return last_fail
+
+
 def check_proxy_alive_detailed(
     link: str,
     min_success_count: int = 2,
@@ -4774,7 +4877,7 @@ def main():
     )
 
     print(
-        "⚙️ WL white_ip: тест через RU-релей (exit=RU)"
+        f"⚙️ WL white_ip: тест через до {MAX_RU_RELAYS} RU-релеев"
     )
 
     print(
@@ -5154,8 +5257,8 @@ def main():
 
     # Кандидаты в релей: (link, outbound_dict)
     ru_relay_candidates = []
+    ru_relays = []
     ru_relay_outbound = None
-    ru_relay_link = None
 
     with ThreadPoolExecutor(
         max_workers=MAX_WORKERS
@@ -5254,14 +5357,20 @@ def main():
                     (res[0], res[1], src)
                 )
 
-        # Выбираем первый валидный RU-релей
-        if ru_relay_candidates:
-            ru_relay_link, ru_relay_outbound = ru_relay_candidates[0]
+        # До 3 RU-релеев с разными IP /24
+        ru_relays = pick_diverse_ru_relays(
+            ru_relay_candidates,
+            MAX_RU_RELAYS,
+        )
+        ru_relay_outbound = bool(ru_relays)
+
+        if ru_relays:
             print(
-                f"\n🇷🇺 RU-релей найден "
-                f"({len(ru_relay_candidates)} канд.): "
-                f"{ru_relay_link[:80]}..."
+                f"\n🇷🇺 RU-релеи выбраны "
+                f"{len(ru_relays)}/{len(ru_relay_candidates)} канд.:"
             )
+            for i, (rl, _ob, rip) in enumerate(ru_relays, 1):
+                print(f"   [{i}] {rip}  {rl[:70]}...")
         else:
             print(
                 "\n⚠️ RU-релей НЕ найден — "
@@ -5270,22 +5379,15 @@ def main():
             )
 
         # ----------------------------------------------------
-        # ФАЗА 2: white_ip через RU-релей (или напрямую)
+        # ФАЗА 2: white_ip через каждый RU-релей (успех = любой)
         # ----------------------------------------------------
-
-        def _check_white(link, src):
-            return check_proxy_alive_detailed(
-                link,
-                WL_MIN_SUCCESS_COUNT,
-                relay_outbound=ru_relay_outbound,
-                skip_cf_filter=True,
-            )
 
         white_futures = {
             executor.submit(
-                _check_white,
+                check_white_ip_via_relays,
                 link,
-                src,
+                ru_relays,
+                WL_MIN_SUCCESS_COUNT,
             ): (link, src)
             for link, src in ping_wl_white
         }
@@ -5303,10 +5405,8 @@ def main():
 
             if is_ok:
                 tag = src
-                if ru_relay_outbound:
-                    # помечаем что прошли через релей
-                    if not str(tag).startswith("WHITE_IP:"):
-                        tag = "WHITE_IP:" + str(tag)
+                if not str(tag).startswith("WHITE_IP"):
+                    tag = "WHITE_IP:" + str(tag)
                 alive_wl_data.append(
                     (res[0], res[1], tag)
                 )
@@ -5316,9 +5416,13 @@ def main():
                 wl_fail += 1
                 white_ip_fail += 1
 
+        mode = (
+            f"через {len(ru_relays)} RU-релея"
+            if ru_relays
+            else "напрямую"
+        )
         print(
-            f"\n🟢 white_ip тест "
-            f"{'(через RU-релей)' if ru_relay_outbound else '(напрямую)'}: "
+            f"\n🟢 white_ip тест ({mode}): "
             f"OK={white_ip_ok}, FAIL={white_ip_fail}"
         )
 
@@ -5583,8 +5687,8 @@ def main():
     )
 
     print(
-        f"RU-релей:                "
-        f"{'да' if ru_relay_outbound else 'нет'}"
+        f"RU-релеи:                "
+        f"{len(ru_relays) if ru_relays else 0}"
     )
 
     print(
