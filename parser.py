@@ -11,7 +11,6 @@ import time
 import random
 import threading
 import ssl
-import copy
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -52,8 +51,7 @@ MAX_CONFIGS_PER_SUBNET_BL = 5
 # WL
 #
 # ВАЖНО:
-# white_ip тестируются ЧЕРЕЗ живой RU-релей (exit GeoIP=RU),
-# иначе Azure/Actions банится на белых RU IP.
+# white_ip → WL-пул + Xray-тест, дедуп только по живым.
 # SNI из arch/lists/whitelist.txt → всегда WL.
 # Прочие .ru/.su SNI → WL с вероятностью RU_SNI_RATIO.
 # ============================================================
@@ -69,9 +67,6 @@ BL_MIN_SUCCESS_COUNT = 2
 
 # Не все .ru SNI реально в мобильном БС → только 30% в WL.
 RU_SNI_RATIO = 0.30
-
-# Сколько разных RU-релеев для теста white_ip (разные IP /24).
-MAX_RU_RELAYS = 3
 
 # Таймауты
 XRAY_START_TIMEOUT = 1.2
@@ -2829,46 +2824,9 @@ def check_via_xray_detailed(
     outbound_obj: dict,
     timeout: float = XRAY_TEST_TIMEOUT,
     min_success_count: int = 2,
-    relay_outbound: dict = None,
 ):
-    """
-    Если relay_outbound задан — target ходит на сервер
-    через dialerProxy (цепочка Azure → RU-релей → white_ip).
-    """
 
     port = get_free_port()
-
-    target = copy.deepcopy(outbound_obj)
-    target["tag"] = "proxy"
-
-    outbounds = [target]
-
-    if relay_outbound:
-        relay = copy.deepcopy(relay_outbound)
-        relay["tag"] = "relay"
-        # убираем возможный dialerProxy у самого релея
-        try:
-            rs = relay.get("streamSettings") or {}
-            if isinstance(rs.get("sockopt"), dict):
-                rs["sockopt"].pop("dialerProxy", None)
-        except Exception:
-            pass
-
-        stream = target.setdefault("streamSettings", {})
-        if not isinstance(stream, dict):
-            stream = {}
-            target["streamSettings"] = stream
-        sockopt = stream.setdefault("sockopt", {})
-        if not isinstance(sockopt, dict):
-            sockopt = {}
-            stream["sockopt"] = sockopt
-        sockopt["dialerProxy"] = "relay"
-        outbounds.append(relay)
-
-    outbounds.append({
-        "tag": "direct",
-        "protocol": "freedom",
-    })
 
     config = {
         "log": {
@@ -2884,7 +2842,9 @@ def check_via_xray_detailed(
                 },
             }
         ],
-        "outbounds": outbounds,
+        "outbounds": [
+            outbound_obj
+        ],
     }
 
     proc = None
@@ -3029,111 +2989,9 @@ def check_via_xray_detailed(
                     pass
 
 
-def pick_diverse_ru_relays(candidates: list, max_n: int = MAX_RU_RELAYS) -> list:
-    """
-    candidates: [(link, outbound), ...]
-    Берём до max_n релеев с разными IP, предпочтительно разными /24.
-    """
-    if not candidates:
-        return []
-
-    def host_ip(link: str):
-        host, _, _ = parse_host_port_and_name(link)
-        if not host:
-            return None, None
-        clean = host.strip('[] \t\r\n\'"').lower()
-        ip = resolve_host_cached(clean) or clean
-        subnet = None
-        try:
-            parts = str(ip).split(".")
-            if len(parts) == 4:
-                subnet = ".".join(parts[:3])
-        except Exception:
-            subnet = None
-        return ip, subnet
-
-    selected = []
-    used_ips = set()
-    used_subnets = set()
-
-    # 1-й проход: разные /24
-    for link, ob in candidates:
-        if len(selected) >= max_n:
-            break
-        ip, subnet = host_ip(link)
-        if not ip or ip in used_ips:
-            continue
-        if subnet and subnet in used_subnets:
-            continue
-        selected.append((link, ob, ip))
-        used_ips.add(ip)
-        if subnet:
-            used_subnets.add(subnet)
-
-    # 2-й проход: просто разные IP
-    if len(selected) < max_n:
-        for link, ob in candidates:
-            if len(selected) >= max_n:
-                break
-            ip, subnet = host_ip(link)
-            if not ip or ip in used_ips:
-                continue
-            selected.append((link, ob, ip))
-            used_ips.add(ip)
-
-    return selected
-
-
-def check_white_ip_via_relays(
-    link: str,
-    relays: list,
-    min_success_count: int = WL_MIN_SUCCESS_COUNT,
-):
-    """
-    Тестирует white_ip через каждый RU-релей по очереди.
-    Успех = прошёл хотя бы через ОДИН релей.
-    relays: [(link, outbound, ip), ...]
-    """
-    if not relays:
-        return check_proxy_alive_detailed(
-            link,
-            min_success_count,
-            relay_outbound=None,
-            skip_cf_filter=True,
-        )
-
-    last_fail = (False, None, "all relays failed", None)
-
-    for relay_link, relay_ob, relay_ip in relays:
-        try:
-            is_ok, res, reason, cc = check_proxy_alive_detailed(
-                link,
-                min_success_count,
-                relay_outbound=relay_ob,
-                skip_cf_filter=True,
-            )
-        except Exception as e:
-            last_fail = (
-                False,
-                None,
-                f"relay error: {e}",
-                None,
-            )
-            continue
-
-        if is_ok:
-            return is_ok, res, f"OK via {relay_ip}", cc
-
-        last_fail = (is_ok, res, reason, cc)
-
-    return last_fail
-
-
 def check_proxy_alive_detailed(
     link: str,
     min_success_count: int = 2,
-    relay_outbound: dict = None,
-    skip_cf_filter: bool = False,
 ):
 
     host, port, orig_name = (
@@ -3157,7 +3015,9 @@ def check_proxy_alive_detailed(
             None,
         )
 
-    if (not skip_cf_filter) and is_cloudflare_or_warp(host):
+    if is_cloudflare_or_warp(
+        host
+    ):
         return (
             False,
             None,
@@ -3200,7 +3060,6 @@ def check_proxy_alive_detailed(
             outbound,
             timeout=XRAY_TEST_TIMEOUT,
             min_success_count=min_success_count,
-            relay_outbound=relay_outbound,
         )
     )
 
@@ -4877,7 +4736,7 @@ def main():
     )
 
     print(
-        f"⚙️ WL white_ip: тест через до {MAX_RU_RELAYS} RU-релеев"
+        "⚙️ WL white_ip: С Xray-тестом, потом дедуп"
     )
 
     print(
@@ -5187,15 +5046,15 @@ def main():
     )
 
     # ========================================================
-    # 8. SPLIT queues
+    # 8. PING WL
     #
-    # Фаза 1: heuristic WL + BL → ищем RU-релей (exit=RU, 2/3)
-    # Фаза 2: white_ip → тест ЧЕРЕЗ RU-релей
+    # white_ip → тоже в Xray-очередь (метка WHITE_IP:...),
+    # но НЕ режем их BL-лимитами.
+    # Тест → только живые → дедуп/diversity.
     # ========================================================
 
     alive_wl_data = []
-    ping_wl_normal = []
-    ping_wl_white = []
+    ping_wl = []
     seen_wl = set()
     white_ip_queued = 0
 
@@ -5212,15 +5071,22 @@ def main():
         )
 
         if matched_ip:
-            ping_wl_white.append(
+            # Метка WHITE_IP сохраняется после теста
+            # для приоритета в diversity.
+            ping_wl.append(
                 (
                     link,
                     "WHITE_IP:" + str(src),
                 )
             )
             white_ip_queued += 1
-        else:
-            ping_wl_normal.append((link, src))
+            continue
+
+        ping_wl.append((link, src))
+
+    # ========================================================
+    # 9. PING BL
+    # ========================================================
 
     ping_bl = []
     seen_bl = set()
@@ -5235,13 +5101,14 @@ def main():
 
     print(
         f"\n📡 Xray очередь:"
-        f"\n   WL white_ip (через RU-релей): {white_ip_queued}"
-        f"\n   WL heuristic (прямой тест):   {len(ping_wl_normal)}"
-        f"\n   BL на Xray-тест:              {len(ping_bl)}"
+        f"\n   WL white_ip (с тестом):  {white_ip_queued}"
+        f"\n   WL heuristic на тест:    {len(ping_wl) - white_ip_queued}"
+        f"\n   WL всего на Xray:        {len(ping_wl)}"
+        f"\n   BL на Xray-тест:         {len(ping_bl)}"
     )
 
     # ========================================================
-    # 9-10. TEST: phase1 (find RU relay) → phase2 (white_ip)
+    # 10. TEST WL + BL
     # ========================================================
 
     alive_bl_data = []
@@ -5255,17 +5122,12 @@ def main():
     bl_fail = 0
     bl_ru_to_wl = 0
 
-    # Кандидаты в релей: (link, outbound_dict)
-    ru_relay_candidates = []
-    ru_relays = []
-    ru_relay_outbound = None
-
     with ThreadPoolExecutor(
         max_workers=MAX_WORKERS
     ) as executor:
 
         # ----------------------------------------------------
-        # ФАЗА 1a: heuristic WL 1/3 (прямой, без релея)
+        # WL 1/3 (включая white_ip)
         # ----------------------------------------------------
 
         wl_futures = {
@@ -5277,39 +5139,63 @@ def main():
                 link,
                 src,
             )
-            for link, src in ping_wl_normal
+            for link, src in ping_wl
         }
 
-        for future in as_completed(wl_futures):
+        for future in as_completed(
+            wl_futures
+        ):
 
-            link, src = wl_futures[future]
+            link, src = wl_futures[
+                future
+            ]
 
             try:
-                is_ok, res, reason, cc = future.result()
+
+                is_ok, res, reason, cc = (
+                    future.result()
+                )
+
             except Exception:
                 continue
 
-            if is_ok:
-                alive_wl_data.append(
-                    (res[0], res[1], src)
-                )
-                wl_ok += 1
+            is_white = str(src).startswith("WHITE_IP")
 
-                # heuristic WL с RU exit тоже годится в релей
-                if cc and str(cc).upper() == "RU":
-                    ob = link_to_xray_outbound(link)
-                    if ob:
-                        ru_relay_candidates.append((link, ob))
+            if is_ok:
+
+                # res = (link, flag)
+                # source сохраняем (WHITE_IP:... или обычный)
+                alive_wl_data.append(
+                    (
+                        res[0],
+                        res[1],
+                        src,
+                    )
+                )
+
+                wl_ok += 1
+                if is_white:
+                    white_ip_ok += 1
+
             else:
+
                 wl_fail += 1
+                if is_white:
+                    white_ip_fail += 1
 
         print(
-            f"\n🟢 WL heuristic тест: "
-            f"OK={wl_ok}, FAIL={wl_fail}"
+            f"\n🟢 WL тест завершён: "
+            f"OK={wl_ok}, "
+            f"FAIL={wl_fail}"
+        )
+        print(
+            f"   └ white_ip: "
+            f"OK={white_ip_ok}, "
+            f"FAIL={white_ip_fail}"
         )
 
         # ----------------------------------------------------
-        # ФАЗА 1b: BL 2/3 — основной источник RU-релея
+        # BL 2/3
         # ----------------------------------------------------
 
         bl_futures = {
@@ -5324,23 +5210,32 @@ def main():
             for link, src in ping_bl
         }
 
-        for future in as_completed(bl_futures):
+        for future in as_completed(
+            bl_futures
+        ):
 
-            link, src = bl_futures[future]
+            link, src = bl_futures[
+                future
+            ]
 
             try:
-                is_ok, res, reason, cc = future.result()
+
+                is_ok, res, reason, cc = (
+                    future.result()
+                )
+
             except Exception:
                 continue
 
             if not is_ok:
+
                 bl_fail += 1
                 continue
 
             bl_ok += 1
 
-            if cc and str(cc).upper() == "RU":
-                # RU exit → в WL + кандидат в релей
+            # Всё русское → WL: живой BL с RU exit.
+            if cc and cc.upper() == "RU":
                 alive_wl_data.append(
                     (
                         res[0],
@@ -5349,82 +5244,14 @@ def main():
                     )
                 )
                 bl_ru_to_wl += 1
-                ob = link_to_xray_outbound(link)
-                if ob:
-                    ru_relay_candidates.append((link, ob))
             else:
                 alive_bl_data.append(
-                    (res[0], res[1], src)
+                    (
+                        res[0],
+                        res[1],
+                        src,
+                    )
                 )
-
-        # До 3 RU-релеев с разными IP /24
-        ru_relays = pick_diverse_ru_relays(
-            ru_relay_candidates,
-            MAX_RU_RELAYS,
-        )
-        ru_relay_outbound = bool(ru_relays)
-
-        if ru_relays:
-            print(
-                f"\n🇷🇺 RU-релеи выбраны "
-                f"{len(ru_relays)}/{len(ru_relay_candidates)} канд.:"
-            )
-            for i, (rl, _ob, rip) in enumerate(ru_relays, 1):
-                print(f"   [{i}] {rip}  {rl[:70]}...")
-        else:
-            print(
-                "\n⚠️ RU-релей НЕ найден — "
-                "white_ip тестируем напрямую "
-                "(могут баниться с Azure)"
-            )
-
-        # ----------------------------------------------------
-        # ФАЗА 2: white_ip через каждый RU-релей (успех = любой)
-        # ----------------------------------------------------
-
-        white_futures = {
-            executor.submit(
-                check_white_ip_via_relays,
-                link,
-                ru_relays,
-                WL_MIN_SUCCESS_COUNT,
-            ): (link, src)
-            for link, src in ping_wl_white
-        }
-
-        for future in as_completed(white_futures):
-
-            link, src = white_futures[future]
-
-            try:
-                is_ok, res, reason, cc = future.result()
-            except Exception:
-                white_ip_fail += 1
-                wl_fail += 1
-                continue
-
-            if is_ok:
-                tag = src
-                if not str(tag).startswith("WHITE_IP"):
-                    tag = "WHITE_IP:" + str(tag)
-                alive_wl_data.append(
-                    (res[0], res[1], tag)
-                )
-                wl_ok += 1
-                white_ip_ok += 1
-            else:
-                wl_fail += 1
-                white_ip_fail += 1
-
-        mode = (
-            f"через {len(ru_relays)} RU-релея"
-            if ru_relays
-            else "напрямую"
-        )
-        print(
-            f"\n🟢 white_ip тест ({mode}): "
-            f"OK={white_ip_ok}, FAIL={white_ip_fail}"
-        )
 
     print(
         f"\n🔴 BL тест завершён: "
@@ -5687,12 +5514,7 @@ def main():
     )
 
     print(
-        f"RU-релеи:                "
-        f"{len(ru_relays) if ru_relays else 0}"
-    )
-
-    print(
-        f"WL heuristic в очереди:  {len(ping_wl_normal)}"
+        f"WL на Xray всего:        {len(ping_wl)}"
     )
 
     print(
