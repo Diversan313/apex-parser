@@ -1,184 +1,129 @@
-name: Update Subscriptions
+import os
+import re
+import asyncio
+from telethon import TelegramClient
+from telethon.sessions import StringSession
 
-on:
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
+# Берем секреты из переменных окружения
+API_ID = int(os.environ.get('TG_API_ID', 0))
+API_HASH = os.environ.get('TG_API_HASH', '')
+SESSION_STRING = os.environ.get('TG_SESSION_STRING', '')
 
-permissions:
-  contents: write
+CONFIG_FILE = 'sources_tg.txt'
 
-concurrency:
-  group: apex-parser-update
-  cancel-in-progress: false
+async def get_latest_link(client, chat, topic_id, keyword):
+    try:
+        async for message in client.iter_messages(chat, reply_to=topic_id, limit=5):
+            if message and message.text:
+                # Ищем все ссылки в сообщении
+                urls = re.findall(r'https?://[^\s]+', message.text)
+                for url in urls:
+                    # Очищаем ссылку от форматирования Telegram (кавычки, звездочки и т.д.)
+                    clean_url = url.strip('`*~_|>)]}')
+                    if keyword in clean_url:
+                        return clean_url
+    except Exception as e:
+        # Логируем без указания каналов и топиков
+        print(f"⚠️ Ошибка при чтении источника в Telegram: {e}")
+    return None
 
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    timeout-minutes: 55
+def update_source_file(target_file, tag_line, new_url):
+    lines = []
+    if os.path.exists(target_file):
+        with open(target_file, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    tag_found = False
+    updated = False
+    new_lines = []
+    i = 0
+    
+    while i < len(lines):
+        line = lines[i]
+        
+        if line.strip() == tag_line:
+            tag_found = True
+            new_lines.append(line)
+            
+            if i + 1 < len(lines):
+                next_line = lines[i+1]
+                if next_line.strip() == "" or not next_line.strip().startswith("#"):
+                    new_lines.append(f"{new_url}\n")
+                    i += 2
+                else:
+                    new_lines.append(f"{new_url}\n")
+                    i += 1
+            else:
+                new_lines.append(f"{new_url}\n")
+                i += 1
+            
+            updated = True
+            continue
+        else:
+            new_lines.append(line)
+            i += 1
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    if not tag_found:
+        if new_lines and not new_lines[-1].endswith('\n'):
+            new_lines.append('\n')
+        new_lines.append(f"{tag_line}\n")
+        new_lines.append(f"{new_url}\n")
+        updated = True
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install maxminddb requests telethon
+    with open(target_file, 'w', encoding='utf-8') as f:
+        f.writelines(new_lines)
 
-      - name: Download Xray Core
-        run: |
-          curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
-               -o xray.zip \
-               https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
-          unzip -o xray.zip xray
-          chmod +x xray
+    # Логируем без указания файла и самой ссылки
+    if updated:
+        print("🔄 Файл источников успешно обновлен.")
+    else:
+        print("❌ Не удалось обновить файл источников.")
 
-      - name: Download GeoIP Database
-        run: |
-          curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
-               -o GeoLite2-Country.mmdb \
-               https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
+async def main():
+    if not SESSION_STRING:
+        print("⚠️ Переменная окружения не задана. Обновление отменено.")
+        return
 
-      - name: Clone apex-sources (fresh)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          rm -rf apex-sources
-          git clone --depth 20 https://$GH_PAT@github.com/Diversan313/apex-sources.git apex-sources
+    if not os.path.exists(CONFIG_FILE):
+        print(f"⚠️ Файл конфигурации не найден. Нечего обновлять.")
+        return
 
-      - name: Update Sources from Telegram
-        env:
-          TG_API_ID: ${{ secrets.TG_API_ID }}
-          TG_API_HASH: ${{ secrets.TG_API_HASH }}
-          TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-        working-directory: apex-sources
-        run: |
-          git fetch origin main
-          git checkout main
-          git reset --hard origin/main
-          python ../parser_tg.py
+    print("🕵️ Подключаемся к Telegram...")
+    async with TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH) as client:
+        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+            configs = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
-      - name: Push sources to apex-sources
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        working-directory: apex-sources
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+        for config in configs:
+            parts = config.split()
+            if len(parts) < 4:
+                print("❌ Неверный формат в конфиге (нужно 4 параметра). Пропускаем.")
+                continue
+            
+            topic_link = parts[0]
+            target_list = parts[1].upper()
+            tag = parts[2]
+            keyword = parts[3]
+            
+            tag_line = f"# TG:{tag}"
+            target_file = f"sources_{target_list.lower()}.txt"
 
-          > incoming_sources.txt
+            match = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', topic_link)
+            if not match:
+                print("❌ Не удалось извлечь данные из ссылки в конфиге. Пропускаем.")
+                continue
+            
+            chat = match.group(1)
+            topic_id = int(match.group(2))
 
-          git add sources_wl.txt sources_bl.txt incoming_sources.txt
+            # Скрываем, что именно мы ищем и где
+            print("🔎 Проверяем источник в Telegram...")
+            new_url = await get_latest_link(client, chat, topic_id, keyword)
+            
+            if new_url:
+                print("✅ Свежая ссылка найдена.")
+                update_source_file(target_file, tag_line, new_url)
+            else:
+                print("❌ Свежая ссылка не найдена.")
 
-          if git diff --cached --quiet; then
-            echo "No source changes to push."
-            exit 0
-          fi
-
-          git commit -m "sync updated sources from TG and clear queue"
-          git fetch origin main
-
-          if ! git rebase origin/main; then
-            echo "Rebase conflict — preferring origin/main for sources_*.txt"
-            git checkout --ours sources_wl.txt sources_bl.txt 2>/dev/null || true
-            git checkout --theirs incoming_sources.txt 2>/dev/null || true
-            git add sources_wl.txt sources_bl.txt incoming_sources.txt
-            GIT_EDITOR=true git rebase --continue || git rebase --abort
-          fi
-
-          git push origin main
-
-      - name: Copy sources for parser
-        run: |
-          cp apex-sources/sources_wl.txt sources_wl.txt 2>/dev/null || touch sources_wl.txt
-          cp apex-sources/sources_bl.txt sources_bl.txt 2>/dev/null || touch sources_bl.txt
-          cp apex-sources/sources_tg.txt sources_tg.txt 2>/dev/null || touch sources_tg.txt
-          cp apex-sources/incoming_sources.txt incoming_sources.txt 2>/dev/null || touch incoming_sources.txt
-          cp apex-sources/incoming_subs.txt incoming_subs.txt 2>/dev/null || touch incoming_subs.txt
-
-      - name: Ensure Base Files Exist
-        run: |
-          touch white_ip.txt
-          mkdir -p arch/lists
-
-      - name: Run Parser Script
-        run: python parser.py
-
-      - name: Commit and Push Results to apex-parser
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          mkdir -p /tmp/apex-out arch/lists
-          cp -f alive_bs.txt alive_bl.txt alive_full.txt white_ip.txt /tmp/apex-out/ 2>/dev/null || true
-          cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
-
-          rm -f xray xray.zip GeoLite2-Country.mmdb \
-                sources_wl.txt sources_bl.txt sources_tg.txt \
-                incoming_sources.txt incoming_subs.txt white_ip_health.json
-
-          git fetch origin main
-          git reset --hard origin/main
-
-          mkdir -p arch/lists
-          cp -f /tmp/apex-out/alive_bs.txt alive_bs.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/alive_bl.txt alive_bl.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/alive_full.txt alive_full.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/white_ip.txt white_ip.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
-
-          git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt \
-                  arch/lists/whitelist.txt
-
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git commit -m "auto update proxies and white_ip"
-            git push origin main
-          fi
-
-      - name: Deploy Subscriptions to GitVerse
-        env:
-          GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
-        run: |
-          if [ -z "$GITVERSE_TOKEN" ]; then
-            echo "ОШИБКА: Секрет GITVERSE_TOKEN не найден в GitHub Secrets!"
-            exit 1
-          fi
-
-          rm -rf deploy_gitverse
-          mkdir deploy_gitverse
-          cp alive_bs.txt alive_bl.txt alive_full.txt deploy_gitverse/ 2>/dev/null || true
-
-          cd deploy_gitverse
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b main
-          git add .
-          git commit -m "auto update subscriptions"
-          git remote add origin "https://bikinitw22:${GITVERSE_TOKEN}@gitverse.ru/bikinitw22/apelsintel.git"
-          git push --force origin main
-
-      - name: Clear incoming queue (final)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        working-directory: apex-sources
-        run: |
-          git fetch origin main
-          git checkout main
-          git reset --hard origin/main
-          > incoming_sources.txt
-          git add incoming_sources.txt
-          if ! git diff --cached --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git commit -m "clear incoming sources queue"
-            git push origin main
-          fi
+if __name__ == "__main__":
+    asyncio.run(main())
