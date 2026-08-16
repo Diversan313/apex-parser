@@ -15,7 +15,6 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
 
     steps:
       - name: Checkout Repository
@@ -71,19 +70,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           > incoming_sources.txt
-
           git add sources_wl.txt sources_bl.txt incoming_sources.txt
-
           if git diff --cached --quiet; then
             echo "No source changes to push."
             exit 0
           fi
-
           git commit -m "sync updated sources from TG and clear queue"
           git fetch origin main
-
           if ! git rebase origin/main; then
             echo "Rebase conflict — preferring origin/main for sources_*.txt"
             git checkout --ours sources_wl.txt sources_bl.txt 2>/dev/null || true
@@ -91,7 +85,6 @@ jobs:
             git add sources_wl.txt sources_bl.txt incoming_sources.txt
             GIT_EDITOR=true git rebase --continue || git rebase --abort
           fi
-
           git push origin main
 
       - name: Copy sources for parser
@@ -114,28 +107,22 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
           mkdir -p /tmp/apex-out arch/lists
           cp -f alive_bs.txt alive_bl.txt alive_full.txt white_ip.txt /tmp/apex-out/ 2>/dev/null || true
           cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
-
           rm -f xray xray.zip GeoLite2-Country.mmdb \
                 sources_wl.txt sources_bl.txt sources_tg.txt \
                 incoming_sources.txt incoming_subs.txt white_ip_health.json
-
           git fetch origin main
           git reset --hard origin/main
-
           mkdir -p arch/lists
           cp -f /tmp/apex-out/alive_bs.txt alive_bs.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_bl.txt alive_bl.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_full.txt alive_full.txt 2>/dev/null || true
           cp -f /tmp/apex-out/white_ip.txt white_ip.txt 2>/dev/null || true
           cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
-
           git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt \
                   arch/lists/whitelist.txt
-
           if git diff --cached --quiet; then
             echo "No changes."
           else
@@ -151,11 +138,9 @@ jobs:
             echo "ОШИБКА: Секрет GITVERSE_TOKEN не найден в GitHub Secrets!"
             exit 1
           fi
-
           rm -rf deploy_gitverse
           mkdir deploy_gitverse
           cp alive_bs.txt alive_bl.txt alive_full.txt deploy_gitverse/ 2>/dev/null || true
-
           cd deploy_gitverse
           git init
           git config user.name "github-actions[bot]"
