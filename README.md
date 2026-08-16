@@ -14,21 +14,39 @@
 </div>
 
 #### 🛡 WhiteList (Белые списки)
-[![Open Raw Link](https://img.shields.io/badge/Open_WL_Link-brightgreen?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt)
+
+**GitHub**
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt
 ```
 
+**GitVerse**
+```text
+https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.txt
+```
+
 #### 🌐 BlackList (Wi-Fi)
-[![Open Raw Link](https://img.shields.io/badge/Open_BL_Link-red?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt)
+
+**GitHub**
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt
 ```
 
+**GitVerse**
+```text
+https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.txt
+```
+
 #### 🚀 Full List (All-in-One)
-[![Open Raw Link](https://img.shields.io/badge/Open_Full_Link-blue?style=flat-square&logo=github)](https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt)
+
+**GitHub**
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt
+```
+
+**GitVerse**
+```text
+https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.txt
 ```
 
 ---
@@ -47,12 +65,29 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt
 
 ### Основные возможности
 
-- Сбор конфигураций из нескольких источников (подписки, Telegram).
+- Сбор конфигураций из нескольких источников (sources файлы с отобранными источниками, Telegram).
 - Разделение на WhiteList (для белых списков) и BlackList (для Wi-Fi использования).
 - Проверка живости конфигураций, дедупликация, геофильтрация, ограничение по IP и подсетям для уникальности.
 - Автоматическое формирование итоговых списков: `alive_bs.txt`, `alive_bl.txt`, `alive_full.txt`.
 - Поддержка как наиболее устойчивых протоколов (например VLESS и Hysteria2), так и других (VMess, Trojan, Shadowsocks и др.).
 - Интеграция с Telegram-ботом [@Sent1nel0_bot](https://t.me/Sent1nel0_bot) для удобного доступа, статистики и работы с закрытым apex-sources.
+
+### Проверенные приложения (кроме iOS / macOS)
+
+\* — не рекомендуется
+
+| Клиент | Платформы | Источник для скачивания |
+|--------|-----------|-------------------------|
+| **Exclave** | Android | [GitHub (Релизы)](https://github.com/dyhkwong/Exclave/releases) |
+| **v2rayNG** | Android | [GitHub (Релизы)](https://github.com/2dust/v2rayNG/releases) |
+| **v2rayN** | Windows, macOS, Linux | [GitHub (Релизы)](https://github.com/2dust/v2rayN/releases) |
+| **INCY** | Android, iOS, macOS | [GitHub](https://github.com/INCY-DEV/incy-platforms) |
+| **Karing** | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://karing.app) · [GitHub](https://github.com/KaringX/karing) |
+| **Streisand** | iOS, macOS | [App Store](https://apps.apple.com/app/streisand/id6450534064) |
+| **V2Box** | Android, iOS, macOS | [App Store](https://apps.apple.com/app/v2box-v2ray-client/id6446814690) · [Google Play](https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box) |
+| **Throne** | Windows, Linux, macOS | [GitHub](https://github.com/throneproj/Throne) |
+| **NekoBox** * | Android, Windows, Linux | [GitHub Android](https://github.com/MatsuriDayo/NekoBoxForAndroid/releases) · [GitHub Desktop](https://github.com/qr243vbi/nekobox) |
+| **Hiddify** * | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://hiddify.com) · [GitHub](https://github.com/hiddify/hiddify-app) |
 
 ### Что и для чего?
 
