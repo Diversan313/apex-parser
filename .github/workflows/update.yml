@@ -42,30 +42,45 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          curl --retry 5 --retry-delay 3 -H "Authorization: token $GH_PAT" \
-               -H "Accept: application/vnd.github.v3.raw" \
-               -L -o sources_wl.txt \
-               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt || touch sources_wl.txt
+          fetch_raw() {
+            local out="$1"
+            local url="$2"
+            local code
+            code=$(curl --retry 5 --retry-delay 5 --retry-all-errors \
+              -H "Authorization: token $GH_PAT" \
+              -H "Accept: application/vnd.github.v3.raw" \
+              -L -o "$out" -w "%{http_code}" "$url" || echo "000")
+            if [ "$code" != "200" ]; then
+              echo "WARN: $out fetch HTTP $code"
+              rm -f "$out"
+              touch "$out"
+              return 1
+            fi
+            if grep -qiE 'too many requests|rate limit exceeded|documentation_url|Not Found' "$out" 2>/dev/null; then
+              echo "WARN: $out looks like an API error page"
+              rm -f "$out"
+              touch "$out"
+              return 1
+            fi
+            return 0
+          }
 
-          curl --retry 5 --retry-delay 3 -H "Authorization: token $GH_PAT" \
-               -H "Accept: application/vnd.github.v3.raw" \
-               -L -o sources_bl.txt \
-               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt || touch sources_bl.txt
+          fetch_raw sources_wl.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" \
+            && echo ok_wl > /tmp/fetch_wl.ok || true
 
-          curl --retry 5 --retry-delay 3 -H "Authorization: token $GH_PAT" \
-               -H "Accept: application/vnd.github.v3.raw" \
-               -L -o sources_tg.txt \
-               https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt || touch sources_tg.txt
+          fetch_raw sources_bl.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" \
+            && echo ok_bl > /tmp/fetch_bl.ok || true
 
-          curl --retry 5 --retry-delay 3 -H "Authorization: token $GH_PAT" \
-               -H "Accept: application/vnd.github.v3.raw" \
-               -L -o incoming_sources.txt \
-               https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt || touch incoming_sources.txt
+          fetch_raw sources_tg.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
 
-          curl --retry 5 --retry-delay 3 -H "Authorization: token $GH_PAT" \
-               -H "Accept: application/vnd.github.v3.raw" \
-               -L -o incoming_subs.txt \
-               https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_subs.txt || touch incoming_subs.txt
+          fetch_raw incoming_sources.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt" || true
+
+          fetch_raw incoming_subs.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_subs.txt" || true
 
           curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
                -o GeoLite2-Country.mmdb \
@@ -73,7 +88,8 @@ jobs:
 
       - name: Ensure Base Files Exist
         run: |
-          touch white_ip.txt
+          touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt \
+                incoming_sources.txt incoming_subs.txt
           mkdir -p arch/lists
 
       - name: Update Sources from Telegram
@@ -97,8 +113,12 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
-          cp ../sources_wl.txt ./sources_wl.txt 2>/dev/null || true
-          cp ../sources_bl.txt ./sources_bl.txt 2>/dev/null || true
+          if [ -f /tmp/fetch_wl.ok ] && [ -s ../sources_wl.txt ]; then
+            cp ../sources_wl.txt ./sources_wl.txt
+          fi
+          if [ -f /tmp/fetch_bl.ok ] && [ -s ../sources_bl.txt ]; then
+            cp ../sources_bl.txt ./sources_bl.txt
+          fi
           > incoming_sources.txt
 
           git config user.name "github-actions[bot]"
@@ -119,11 +139,23 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          mkdir -p /tmp/apex-out arch/lists
+          cp -f alive_bs.txt alive_bl.txt alive_full.txt white_ip.txt /tmp/apex-out/ 2>/dev/null || true
+          cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
+
           rm -f xray xray.zip GeoLite2-Country.mmdb \
                 sources_wl.txt sources_bl.txt sources_tg.txt \
                 incoming_sources.txt incoming_subs.txt white_ip_health.json
 
+          git fetch origin main
+          git reset --hard origin/main
+
           mkdir -p arch/lists
+          cp -f /tmp/apex-out/alive_bs.txt alive_bs.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/alive_bl.txt alive_bl.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/alive_full.txt alive_full.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/white_ip.txt white_ip.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
 
           git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt \
                   arch/lists/whitelist.txt
@@ -132,7 +164,6 @@ jobs:
             echo "No changes."
           else
             git commit -m "auto update proxies and white_ip"
-            git pull --rebase --autostash origin main
             git push origin main
           fi
 
