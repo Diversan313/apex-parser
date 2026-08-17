@@ -63,6 +63,22 @@ jobs:
           git reset --hard origin/main
           python ../parser_tg.py
 
+      - name: Copy sources for parser
+        run: |
+          cp apex-sources/sources_wl.txt sources_wl.txt 2>/dev/null || touch sources_wl.txt
+          cp apex-sources/sources_bl.txt sources_bl.txt 2>/dev/null || touch sources_bl.txt
+          cp apex-sources/sources_tg.txt sources_tg.txt 2>/dev/null || touch sources_tg.txt
+          cp apex-sources/incoming_sources.txt incoming_sources.txt 2>/dev/null || touch incoming_sources.txt
+          cp apex-sources/incoming_subs.txt incoming_subs.txt 2>/dev/null || touch incoming_subs.txt
+
+      - name: Ensure Base Files Exist
+        run: |
+          touch white_ip.txt
+          mkdir -p arch/lists
+
+      - name: Run Parser Script
+        run: python parser.py
+
       - name: Push sources to apex-sources
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -86,22 +102,6 @@ jobs:
             GIT_EDITOR=true git rebase --continue || git rebase --abort
           fi
           git push origin main
-
-      - name: Copy sources for parser
-        run: |
-          cp apex-sources/sources_wl.txt sources_wl.txt 2>/dev/null || touch sources_wl.txt
-          cp apex-sources/sources_bl.txt sources_bl.txt 2>/dev/null || touch sources_bl.txt
-          cp apex-sources/sources_tg.txt sources_tg.txt 2>/dev/null || touch sources_tg.txt
-          cp apex-sources/incoming_sources.txt incoming_sources.txt 2>/dev/null || touch incoming_sources.txt
-          cp apex-sources/incoming_subs.txt incoming_subs.txt 2>/dev/null || touch incoming_subs.txt
-
-      - name: Ensure Base Files Exist
-        run: |
-          touch white_ip.txt
-          mkdir -p arch/lists
-
-      - name: Run Parser Script
-        run: python parser.py
 
       - name: Commit and Push Results to apex-parser
         run: |
@@ -150,20 +150,3 @@ jobs:
           git commit -m "auto update subscriptions"
           git remote add origin "https://bikinitw22:${GITVERSE_TOKEN}@gitverse.ru/bikinitw22/apelsintel.git"
           git push --force origin main
-
-      - name: Clear incoming queue (final)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        working-directory: apex-sources
-        run: |
-          git fetch origin main
-          git checkout main
-          git reset --hard origin/main
-          > incoming_sources.txt
-          git add incoming_sources.txt
-          if ! git diff --cached --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git commit -m "clear incoming sources queue"
-            git push origin main
-          fi
