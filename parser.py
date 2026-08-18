@@ -71,6 +71,7 @@ RU_SNI_RATIO = 0.30
 # Таймауты
 XRAY_START_TIMEOUT = 1.2
 XRAY_TEST_TIMEOUT = 6.0
+TCP_CHECK_TIMEOUT = 2.5
 
 
 # ============================================================
@@ -111,7 +112,16 @@ WL_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
     r"(бс|обход|глусилк(?:а|и|ок|ам|ах)?|"
     r"глушилк(?:а|и|ок|ам|ах)?|whitelist|lte|"
-    r"бел(?:ый|ые|ых)\s*списк(?:и|а|ов|ам|ах)?)"
+    r"бел(?:ый|ая|ое|ые|ых|ому|ым|ыми)?(?:\s*списк(?:и|а|ов|ам|ах)?)?)"
+    r"(?:$|[^a-zA-Zа-яА-Я0-9])"
+)
+
+# Принудительно в BL (ЧС), даже если есть другие WL-признаки
+BL_KEYWORDS_REGEX = re.compile(
+    r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
+    r"(?:bl|blacklist|black[\s_-]?list|"
+    r"чс|чёрн(?:ый|ая|ое|ые|ых|ому)?|черн(?:ый|ая|ое|ые|ых|ому)?)"
+    r"(?:\s*списк(?:и|а|ов|ам|ах)?)?"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
 )
 
@@ -1577,6 +1587,18 @@ def is_wl_by_keywords(
     )
 
 
+def is_bl_by_keywords(
+    link: str,
+    orig_name: str = "",
+) -> bool:
+    full_text = f"{link} {orig_name}"
+    try:
+        full_text = urllib.parse.unquote(full_text)
+    except Exception:
+        pass
+    return bool(BL_KEYWORDS_REGEX.search(full_text))
+
+
 def is_ru_sni(link: str) -> bool:
     """
     Только суффикс .ru / .su.
@@ -1615,7 +1637,11 @@ def classify_config(
     if not host or not is_valid_public_host(host):
         return "BL"
 
-    # 2. Ключевые слова БС
+    # 2. Ключевые слова ЧС / Blacklist → принудительно BL
+    if is_bl_by_keywords(link, orig_name):
+        return "BL"
+
+    # 3. Ключевые слова БС / Белый → WL
     if is_wl_by_keywords(link, orig_name):
         return "WL"
 
@@ -2989,6 +3015,36 @@ def check_via_xray_detailed(
                     pass
 
 
+def tcp_port_open(host: str, port: int, timeout: float = TCP_CHECK_TIMEOUT) -> bool:
+    """Быстрая проверка, что host:port принимает TCP. Без этого Xray не гоняем."""
+    if not host or not port:
+        return False
+    clean = host.strip('[] \t\r\n\'"')
+    try:
+        infos = socket.getaddrinfo(
+            clean, int(port), type=socket.SOCK_STREAM
+        )
+    except Exception:
+        return False
+
+    for family, socktype, proto, _canon, sockaddr in infos:
+        s = None
+        try:
+            s = socket.socket(family, socktype, proto)
+            s.settimeout(timeout)
+            s.connect(sockaddr)
+            return True
+        except Exception:
+            continue
+        finally:
+            if s is not None:
+                try:
+                    s.close()
+                except Exception:
+                    pass
+    return False
+
+
 def check_proxy_alive_detailed(
     link: str,
     min_success_count: int = 2,
@@ -3023,6 +3079,15 @@ def check_proxy_alive_detailed(
             None,
             "Отфильтрован "
             "(Cloudflare/WARP)",
+            None,
+        )
+
+    # TCP pre-check: полностью мёртвые host:port не гоняем через Xray
+    if not tcp_port_open(host, port):
+        return (
+            False,
+            None,
+            "TCP: порт закрыт/недоступен",
             None,
         )
 
@@ -3256,6 +3321,7 @@ def fetch_links_parallel_with_source(
         )
 
         successful_sources = 0
+        results_by_idx = {}
 
         with ThreadPoolExecutor(
             max_workers=MAX_WORKERS
@@ -3272,88 +3338,57 @@ def fetch_links_parallel_with_source(
                 )
             }
 
-            for future in as_completed(
-                futures
-            ):
-
-                idx = futures[
-                    future
-                ]
-
+            for future in as_completed(futures):
+                idx = futures[future]
                 try:
-                    res = (
-                        future.result()
-                    )
-
+                    res = future.result()
+                    results_by_idx[idx] = ("ok", res)
                 except Exception as e:
+                    results_by_idx[idx] = ("err", str(e))
 
-                    print(
-                        f"  ├─ ❌ Источник "
-                        f"#{idx}: {e}"
-                    )
+        # Печать строго по номеру источника (без URL — приватно)
+        for idx in range(1, len(urls) + 1):
+            kind, payload = results_by_idx.get(
+                idx, ("err", "нет ответа")
+            )
 
-                    continue
-
-                configs = res[
-                    "configs"
-                ]
-
-                status_str = (
-                    f"HTTP "
-                    f"{res['http_status']}"
-                    if res[
-                        "http_status"
-                    ]
-                    else "ОШИБКА"
-                )
-
-                b64_str = (
-                    " [Base64]"
-                    if res[
-                        "is_base64"
-                    ]
-                    else ""
-                )
-
-                err_str = (
-                    " (Ошибка: "
-                    f"{res['error']})"
-                    if res["error"]
-                    else ""
-                )
-
-                if (
-                    res[
-                        "http_status"
-                    ] in (
-                        200,
-                        204,
-                    )
-                    or configs
-                ):
-                    successful_sources += 1
-
+            if kind == "err":
                 print(
-                    f"  ├─ 🔗 Источник "
-                    f"#{idx:<3} | "
-                    f"Статус: "
-                    f"{status_str:<10} | "
-                    f"Размер: "
-                    f"{res['size_bytes']}B | "
-                    f"Конфигов: "
-                    f"{len(configs)}"
-                    f"{b64_str}"
-                    f"{err_str}"
+                    f"  ├─ ❌ Источник #{idx:<3} | "
+                    f"ОШИБКА | {payload}"
                 )
+                continue
 
-                for cfg in configs:
+            res = payload
+            configs = res["configs"]
 
-                    links_with_source.append(
-                        (
-                            cfg,
-                            res["url"],
-                        )
-                    )
+            status_str = (
+                f"HTTP {res['http_status']}"
+                if res["http_status"]
+                else "ОШИБКА"
+            )
+            b64_str = " [Base64]" if res["is_base64"] else ""
+            err_str = (
+                f" (Ошибка: {res['error']})"
+                if res["error"]
+                else ""
+            )
+
+            if res["http_status"] in (200, 204) or configs:
+                successful_sources += 1
+
+            print(
+                f"  ├─ 🔗 Источник #{idx:<3} | "
+                f"Статус: {status_str:<10} | "
+                f"Размер: {res['size_bytes']}B | "
+                f"Конфигов: {len(configs)}"
+                f"{b64_str}{err_str}"
+            )
+
+            for cfg in configs:
+                links_with_source.append(
+                    (cfg, f"src#{idx}")
+                )
 
         print(
             f"✅ Получено "
@@ -4736,7 +4771,7 @@ def main():
     )
 
     print(
-        "⚙️ WL white_ip: С Xray-тестом, потом дедуп"
+        "⚙️ WL white_ip: TCP → Xray, потом дедуп"
     )
 
     print(
