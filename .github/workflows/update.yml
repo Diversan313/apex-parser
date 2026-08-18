@@ -67,17 +67,22 @@ jobs:
 
           fetch_raw sources_wl.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" \
-            && echo ok_wl > /tmp/fetch_wl.ok || true
+            && echo ok > /tmp/fetch_wl.ok || true
 
           fetch_raw sources_bl.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" \
-            && echo ok_bl > /tmp/fetch_bl.ok || true
+            && echo ok > /tmp/fetch_bl.ok || true
 
           fetch_raw sources_tg.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
 
-          fetch_raw incoming_sources.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt" || true
+          if fetch_raw incoming_sources.txt \
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt"; then
+            cp incoming_sources.txt /tmp/incoming_snapshot.txt
+            echo ok > /tmp/fetch_incoming.ok
+          else
+            touch /tmp/incoming_snapshot.txt
+          fi
 
           fetch_raw incoming_subs.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_subs.txt" || true
@@ -119,13 +124,30 @@ jobs:
           if [ -f /tmp/fetch_bl.ok ] && [ -s ../sources_bl.txt ]; then
             cp ../sources_bl.txt ./sources_bl.txt
           fi
-          > incoming_sources.txt
+
+          # Очищаем очередь только от тех IP, что реально скачали в начале прогона.
+          # IP, добавленные во время длинного парсинга, остаются.
+          if [ -f /tmp/fetch_incoming.ok ]; then
+            # Удаляем только IP из снимка начала прогона; новые (добавленные позже) оставляем
+            if [ -f incoming_sources.txt ] && [ -s /tmp/incoming_snapshot.txt ]; then
+              awk 'NF && $0 !~ /^#/' /tmp/incoming_snapshot.txt | sort -u > /tmp/snap_norm.txt
+              awk 'NF && $0 !~ /^#/' incoming_sources.txt | sort -u > /tmp/cur_norm.txt
+              comm -13 /tmp/snap_norm.txt /tmp/cur_norm.txt > /tmp/incoming_kept.txt || true
+              cp /tmp/incoming_kept.txt incoming_sources.txt
+              echo "incoming queue updated (removed processed snapshot IPs)"
+            else
+              > incoming_sources.txt
+              echo "incoming queue cleared (snapshot empty or no current file)"
+            fi
+          else
+            echo "incoming fetch failed earlier — queue NOT cleared"
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sources_wl.txt sources_bl.txt incoming_sources.txt
           if ! git diff --cached --quiet; then
-            git commit -m "sync updated sources from TG and clear queue"
+            git commit -m "sync updated sources from TG and clear processed queue"
             git pull --rebase --autostash origin main || true
             git push origin main
           else
