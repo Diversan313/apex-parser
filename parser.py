@@ -110,7 +110,7 @@ GEO_LOCK = threading.Lock()
 
 WL_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
-    r"(бс|обход|глусилк(?:а|и|ок|ам|ах)?|"
+    r"(?:wl|бс|обход|глусилк(?:а|и|ок|ам|ах)?|"
     r"глушилк(?:а|и|ок|ам|ах)?|whitelist|lte|"
     r"бел(?:ый|ая|ое|ые|ых|ому|ым|ыми)?(?:\s*списк(?:и|а|ов|ам|ах)?)?)"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
@@ -120,9 +120,22 @@ WL_KEYWORDS_REGEX = re.compile(
 BL_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
     r"(?:bl|blacklist|black[\s_-]?list|"
+    r"блеклист|блаклист|блэклист|"
+    r"wifi|wi[\s_-]?fi|вай[\s_-]?фай|"
     r"чс|чёрн(?:ый|ая|ое|ые|ых|ому)?|черн(?:ый|ая|ое|ые|ых|ому)?)"
     r"(?:\s*списк(?:и|а|ов|ам|ах)?)?"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
+)
+
+# Только текстовые маркеры «подписка умерла».
+# 0.0.0.0 / 127.0.0.1 сюда НЕ входят — их и так отсекает
+# is_valid_public_host, а один мусорный конфиг не должен
+# красить всю подписку как Expired.
+EXPIRED_MARKERS_REGEX = re.compile(
+    r"(?i)(?:expired|истек|истекл[аои]|переехал|"
+    r"возьмите\s*новую|подписка\s*истекла|"
+    r"renew\s*sub|subscription\s*(?:expired|ended)|"
+    r"outdated|out\s*of\s*date)"
 )
 
 DOMAIN_REGEX = re.compile(
@@ -3160,120 +3173,367 @@ def check_proxy_alive_detailed(
 # FETCH SOURCE
 # ============================================================
 
+def xray_outbound_to_link(ob: dict) -> str:
+    """Xray outbound JSON → share-ссылка (vless/vmess/trojan/ss)."""
+    if not isinstance(ob, dict):
+        return ""
+    proto = str(ob.get("protocol") or "").lower()
+    if proto in ("freedom", "blackhole", "dns", "block", "direct"):
+        return ""
+
+    tag = str(ob.get("tag") or ob.get("remarks") or "xray")
+    settings = ob.get("settings") or {}
+    stream = ob.get("streamSettings") or {}
+    network = str(stream.get("network") or "tcp").lower()
+    security = str(stream.get("security") or "").lower()
+
+    try:
+        if proto == "vless":
+            vnext = (settings.get("vnext") or [{}])[0]
+            user = (vnext.get("users") or [{}])[0]
+            address = vnext.get("address") or ""
+            port = int(vnext.get("port") or 0)
+            uuid = user.get("id") or ""
+            if not address or not port or not uuid:
+                return ""
+            params = {
+                "encryption": user.get("encryption") or "none",
+                "type": network,
+            }
+            flow = user.get("flow") or ""
+            if flow:
+                params["flow"] = flow
+            if security:
+                params["security"] = security
+            if security == "reality":
+                rs = stream.get("realitySettings") or {}
+                if rs.get("publicKey"):
+                    params["pbk"] = rs["publicKey"]
+                if rs.get("serverName"):
+                    params["sni"] = rs["serverName"]
+                if rs.get("fingerprint"):
+                    params["fp"] = rs["fingerprint"]
+                if rs.get("shortId"):
+                    params["sid"] = rs["shortId"]
+                if rs.get("spiderX"):
+                    params["spx"] = rs["spiderX"]
+            elif security in ("tls", "xtls"):
+                ts = stream.get("tlsSettings") or {}
+                sni = (ts.get("serverName") or "")
+                if sni:
+                    params["sni"] = sni
+                fp = ((ts.get("fingerprint") if isinstance(ts, dict) else None)
+                      or (stream.get("tlsSettings") or {}).get("fingerprint"))
+                if fp:
+                    params["fp"] = fp
+            if network == "ws":
+                ws = stream.get("wsSettings") or {}
+                if ws.get("path"):
+                    params["path"] = ws["path"]
+                host = (ws.get("headers") or {}).get("Host") or (ws.get("headers") or {}).get("host")
+                if host:
+                    params["host"] = host
+            elif network == "grpc":
+                gs = stream.get("grpcSettings") or {}
+                if gs.get("serviceName"):
+                    params["serviceName"] = gs["serviceName"]
+                mode = gs.get("multiMode")
+                if mode is True or str(gs.get("mode") or "").lower() in ("multi", "true"):
+                    params["mode"] = "multi"
+                elif gs.get("mode"):
+                    params["mode"] = str(gs["mode"])
+            elif network in ("xhttp", "splithttp"):
+                xs = stream.get("xhttpSettings") or stream.get("splithttpSettings") or {}
+                if xs.get("path"):
+                    params["path"] = xs["path"]
+                if xs.get("host"):
+                    params["host"] = xs["host"]
+                if xs.get("mode"):
+                    params["mode"] = xs["mode"]
+            q = urllib.parse.urlencode(params, doseq=True)
+            return f"vless://{uuid}@{address}:{port}?{q}#{urllib.parse.quote(tag)}"
+
+        if proto == "trojan":
+            servers = (settings.get("servers") or [{}])[0]
+            address = servers.get("address") or ""
+            port = int(servers.get("port") or 0)
+            password = servers.get("password") or ""
+            if not address or not port or not password:
+                return ""
+            params = {"type": network}
+            if security:
+                params["security"] = security or "tls"
+            ts = stream.get("tlsSettings") or stream.get("realitySettings") or {}
+            if ts.get("serverName"):
+                params["sni"] = ts["serverName"]
+            if network == "ws":
+                ws = stream.get("wsSettings") or {}
+                if ws.get("path"):
+                    params["path"] = ws["path"]
+            q = urllib.parse.urlencode(params)
+            return f"trojan://{urllib.parse.quote(password)}@{address}:{port}?{q}#{urllib.parse.quote(tag)}"
+
+        if proto in ("shadowsocks", "ss"):
+            servers = (settings.get("servers") or [{}])[0]
+            address = servers.get("address") or ""
+            port = int(servers.get("port") or 0)
+            password = servers.get("password") or ""
+            method = servers.get("method") or "aes-128-gcm"
+            if not address or not port or not password:
+                return ""
+            userinfo = safe_b64encode(f"{method}:{password}").rstrip("=")
+            return f"ss://{userinfo}@{address}:{port}#{urllib.parse.quote(tag)}"
+
+        if proto == "vmess":
+            vnext = (settings.get("vnext") or [{}])[0]
+            user = (vnext.get("users") or [{}])[0]
+            address = vnext.get("address") or ""
+            port = int(vnext.get("port") or 0)
+            uuid = user.get("id") or ""
+            if not address or not port or not uuid:
+                return ""
+            obj = {
+                "v": "2",
+                "ps": tag,
+                "add": address,
+                "port": port,
+                "id": uuid,
+                "aid": user.get("alterId") or 0,
+                "scy": user.get("security") or "auto",
+                "net": network,
+                "type": "none",
+                "tls": security if security in ("tls", "reality") else "",
+            }
+            if network == "ws":
+                ws = stream.get("wsSettings") or {}
+                obj["path"] = ws.get("path") or "/"
+                obj["host"] = (ws.get("headers") or {}).get("Host") or ""
+            return "vmess://" + safe_b64encode(
+                json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
+            )
+    except Exception:
+        return ""
+    return ""
+
+
+def extract_configs_from_json_text(content: str) -> list:
+    """Достаёт share-ссылки из JSON-подписки / Xray config."""
+    content = content.strip()
+    if not content:
+        return []
+    try:
+        data = json.loads(content)
+    except Exception:
+        return []
+
+    found = []
+
+    def add_link(link: str):
+        if link and link.startswith(SUPPORTED_PROTOCOLS):
+            found.append(sanitize_v2rayng_link(link))
+
+    def walk(obj):
+        if isinstance(obj, str):
+            s = obj.strip()
+            if s.startswith(SUPPORTED_PROTOCOLS):
+                add_link(s)
+            return
+        if isinstance(obj, list):
+            for item in obj:
+                walk(item)
+            return
+        if not isinstance(obj, dict):
+            return
+        # Xray outbound
+        if "protocol" in obj and "settings" in obj:
+            link = xray_outbound_to_link(obj)
+            if link:
+                add_link(link)
+        # outbounds list
+        if "outbounds" in obj and isinstance(obj["outbounds"], list):
+            for ob in obj["outbounds"]:
+                link = xray_outbound_to_link(ob)
+                if link:
+                    # remarks на корне
+                    if obj.get("remarks") and link.startswith("vless://") and "#" in link:
+                        base, _ = link.split("#", 1)
+                        link = base + "#" + urllib.parse.quote(str(obj["remarks"]))
+                    add_link(link)
+        # vmess JSON object
+        if obj.get("add") and obj.get("id") and obj.get("port"):
+            try:
+                add_link(
+                    "vmess://"
+                    + safe_b64encode(
+                        json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
+                    )
+                )
+            except Exception:
+                pass
+        for v in obj.values():
+            walk(v)
+
+    walk(data)
+    # unique preserve order
+    return list(dict.fromkeys(found))
+
+
+def content_looks_expired(content: str, configs: list) -> bool:
+    """
+    Помечать источник Expired только если подписка реально
+    «мертвая», а не из‑за одного случайного конфига в сборнике.
+
+    Правила:
+    - 0.0.0.0 / localhost НЕ учитываем (отфильтруются позже).
+    - Маркеры в теле подписки смотрим БЕЗ share-ссылок
+      (баннер «подписка истекла» на уровне файла).
+    - Если конфигов много — нужен высокий % конфигов с маркером
+      (≥70%), один «expired» в имени не роняет всю подписку.
+    - Если конфигов ≤3 — expired только когда помечены все.
+    - Пустая подписка + баннер в тексте → Expired.
+    """
+    configs = list(configs or [])
+    body = content or ""
+
+    # убираем сами ссылки, чтобы не ловить expired внутри имени ноды
+    body_no_links = re.sub(
+        r"(?i)(?:vless|vmess|trojan|ss|hysteria2|hy2)://\S+",
+        " ",
+        body,
+    )
+    for c in configs:
+        if c:
+            body_no_links = body_no_links.replace(c, " ")
+
+    sub_level = bool(EXPIRED_MARKERS_REGEX.search(body_no_links))
+
+    expired_cfg = 0
+    for c in configs:
+        if c and EXPIRED_MARKERS_REGEX.search(c):
+            expired_cfg += 1
+
+    n = len(configs)
+
+    if n == 0:
+        return sub_level
+
+    if n <= 3:
+        # мало конфигов — только если все выглядят протухшими
+        return expired_cfg == n
+
+    ratio = expired_cfg / float(n)
+    # много рабочих + один мусорный «expired» → НЕ expired
+    if ratio >= 0.70:
+        return True
+    # баннер уровня подписки + хотя бы половина конфигов с маркером
+    if sub_level and ratio >= 0.50:
+        return True
+
+    return False
+
+
 def fetch_single_url_with_details(
     url: str,
+    retries: int = 2,
 ) -> dict:
 
-    url_clean = (
-        url.strip()
-        .replace(
-            " ",
-            "%20",
-        )
-    )
+    url_clean = url.strip().replace(" ", "%20")
 
     info = {
         "url": url,
         "http_status": None,
         "size_bytes": 0,
         "is_base64": False,
+        "is_json": False,
+        "is_expired": False,
         "total_lines": 0,
         "configs": [],
         "error": None,
+        "network_error": False,
     }
 
+    last_err = None
+    for attempt in range(max(1, retries + 1)):
+        try:
+            req = urllib.request.Request(url_clean, headers=HEADERS)
+            with urllib.request.urlopen(
+                req, timeout=12, context=SSL_CONTEXT
+            ) as response:
+                info["http_status"] = response.status
+                raw_data = response.read()
+                info["size_bytes"] = len(raw_data)
+                content = raw_data.decode("utf-8", errors="ignore")
+                info["network_error"] = False
+                last_err = None
+                break
+        except Exception as e:
+            last_err = e
+            info["network_error"] = True
+            info["error"] = f"{type(e).__name__}: {e}"
+            if attempt < retries:
+                time.sleep(1.0 + attempt)
+                continue
+            return info
+    else:
+        return info
+
     try:
+        stripped = content.strip()
+        valid_configs = []
 
-        req = urllib.request.Request(
-            url_clean,
-            headers=HEADERS,
-        )
+        # 1) plain share links
+        raw_lines = [l.strip() for l in content.splitlines() if l.strip()]
+        info["total_lines"] = len(raw_lines)
+        for line in raw_lines:
+            if line.startswith(SUPPORTED_PROTOCOLS):
+                valid_configs.append(sanitize_v2rayng_link(line))
 
-        with urllib.request.urlopen(
-            req,
-            timeout=12,
-            context=SSL_CONTEXT,
-        ) as response:
+        # 2) base64 subscription
+        if not valid_configs:
+            try:
+                decoded = safe_b64decode(stripped)
+                if any(p in decoded for p in SUPPORTED_PROTOCOLS):
+                    content = decoded
+                    info["is_base64"] = True
+                    raw_lines = [l.strip() for l in content.splitlines() if l.strip()]
+                    info["total_lines"] = len(raw_lines)
+                    for line in raw_lines:
+                        if line.startswith(SUPPORTED_PROTOCOLS):
+                            valid_configs.append(sanitize_v2rayng_link(line))
+            except Exception:
+                pass
 
-            info[
-                "http_status"
-            ] = response.status
-
-            raw_data = (
-                response.read()
-            )
-
-            info[
-                "size_bytes"
-            ] = len(
-                raw_data
-            )
-
-            content = raw_data.decode(
-                "utf-8",
-                errors="ignore",
-            )
-
-            if not any(
-                p in content
-                for p in SUPPORTED_PROTOCOLS
-            ):
-
+        # 3) JSON (array of links / Xray full config / vmess objects)
+        if not valid_configs:
+            json_configs = extract_configs_from_json_text(stripped)
+            if json_configs:
+                valid_configs = json_configs
+                info["is_json"] = True
+            else:
+                # maybe base64-wrapped JSON
                 try:
-
-                    decoded = (
-                        safe_b64decode(
-                            content
-                        )
-                    )
-
-                    if any(
-                        p in decoded
-                        for p in SUPPORTED_PROTOCOLS
-                    ):
-                        content = decoded
-                        info[
-                            "is_base64"
-                        ] = True
-
+                    decoded = safe_b64decode(stripped)
+                    json_configs = extract_configs_from_json_text(decoded)
+                    if json_configs:
+                        valid_configs = json_configs
+                        info["is_json"] = True
+                        info["is_base64"] = True
                 except Exception:
                     pass
+        elif stripped.startswith("{") or stripped.startswith("["):
+            # links found but also JSON — mark if JSON parse works
+            extra = extract_configs_from_json_text(stripped)
+            if extra:
+                info["is_json"] = True
+                for c in extra:
+                    if c not in valid_configs:
+                        valid_configs.append(c)
 
-            raw_lines = [
-                l.strip()
-                for l in content.splitlines()
-                if l.strip()
-            ]
-
-            info[
-                "total_lines"
-            ] = len(
-                raw_lines
-            )
-
-            valid_configs = []
-
-            for line in raw_lines:
-
-                if line.startswith(
-                    SUPPORTED_PROTOCOLS
-                ):
-
-                    valid_configs.append(
-                        sanitize_v2rayng_link(
-                            line
-                        )
-                    )
-
-            info[
-                "configs"
-            ] = valid_configs
+        info["configs"] = list(dict.fromkeys(valid_configs))
+        info["is_expired"] = content_looks_expired(content, info["configs"])
 
     except Exception as e:
-
-        info["error"] = (
-            f"{type(e).__name__}: {e}"
-        )
+        info["error"] = f"{type(e).__name__}: {e}"
 
     return info
 
@@ -3346,7 +3606,43 @@ def fetch_links_parallel_with_source(
                 except Exception as e:
                     results_by_idx[idx] = ("err", str(e))
 
-        # Печать строго по номеру источника (без URL — приватно)
+        # Повтор только для сетевых сбоев (не для пустых/битых подписок)
+        retry_idxs = []
+        for idx, (kind, payload) in results_by_idx.items():
+            if kind == "err":
+                retry_idxs.append(idx)
+            elif (
+                isinstance(payload, dict)
+                and payload.get("network_error")
+                and not payload.get("configs")
+            ):
+                retry_idxs.append(idx)
+
+        if retry_idxs:
+            print(
+                f"  ↺ Повтор сети для "
+                f"{len(retry_idxs)} источник(ов)..."
+            )
+            with ThreadPoolExecutor(
+                max_workers=MAX_WORKERS
+            ) as executor:
+                futures2 = {
+                    executor.submit(
+                        fetch_single_url_with_details,
+                        urls[idx - 1],
+                        2,
+                    ): idx
+                    for idx in retry_idxs
+                }
+                for future in as_completed(futures2):
+                    idx = futures2[future]
+                    try:
+                        res = future.result()
+                        results_by_idx[idx] = ("ok", res)
+                    except Exception as e:
+                        results_by_idx[idx] = ("err", str(e))
+
+        # Печать строго по номеру источника (без URL)
         for idx in range(1, len(urls) + 1):
             kind, payload = results_by_idx.get(
                 idx, ("err", "нет ответа")
@@ -3360,29 +3656,36 @@ def fetch_links_parallel_with_source(
                 continue
 
             res = payload
-            configs = res["configs"]
+            configs = res.get("configs") or []
 
             status_str = (
                 f"HTTP {res['http_status']}"
-                if res["http_status"]
+                if res.get("http_status")
                 else "ОШИБКА"
             )
-            b64_str = " [Base64]" if res["is_base64"] else ""
+            fmt_parts = []
+            if res.get("is_base64"):
+                fmt_parts.append("Base64")
+            if res.get("is_json"):
+                fmt_parts.append("JSON")
+            if res.get("is_expired"):
+                fmt_parts.append("Expired")
+            fmt_str = f" [{'/'.join(fmt_parts)}]" if fmt_parts else ""
             err_str = (
                 f" (Ошибка: {res['error']})"
-                if res["error"]
+                if res.get("error") and not configs
                 else ""
             )
 
-            if res["http_status"] in (200, 204) or configs:
+            if res.get("http_status") in (200, 204) or configs:
                 successful_sources += 1
 
             print(
                 f"  ├─ 🔗 Источник #{idx:<3} | "
                 f"Статус: {status_str:<10} | "
-                f"Размер: {res['size_bytes']}B | "
+                f"Размер: {res.get('size_bytes', 0)}B | "
                 f"Конфигов: {len(configs)}"
-                f"{b64_str}{err_str}"
+                f"{fmt_str}{err_str}"
             )
 
             for cfg in configs:
