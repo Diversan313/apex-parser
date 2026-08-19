@@ -66,12 +66,10 @@ jobs:
           }
 
           fetch_raw sources_wl.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" \
-            && echo ok > /tmp/fetch_wl.ok || true
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" || true
 
           fetch_raw sources_bl.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" \
-            && echo ok > /tmp/fetch_bl.ok || true
+            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" || true
 
           fetch_raw sources_tg.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
@@ -97,7 +95,7 @@ jobs:
                 incoming_sources.txt incoming_subs.txt
           mkdir -p arch/lists
 
-      - name: Update Sources from Telegram
+      - name: Update Sources from Telegram (local for this run)
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
@@ -107,9 +105,12 @@ jobs:
       - name: Run Parser Script
         run: python parser.py
 
-      - name: Sync Updated Sources to apex-sources
+      - name: Sync apex-sources (TG on latest + clear processed queue)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         run: |
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
@@ -118,26 +119,18 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
-          if [ -f /tmp/fetch_wl.ok ] && [ -s ../sources_wl.txt ]; then
-            cp ../sources_wl.txt ./sources_wl.txt
-          fi
-          if [ -f /tmp/fetch_bl.ok ] && [ -s ../sources_bl.txt ]; then
-            cp ../sources_bl.txt ./sources_bl.txt
-          fi
+          # TG правит ТОЛЬКО свежий main — ручные правки не затираются старым снимком
+          python ../parser_tg.py
 
-          # Очищаем очередь только от тех IP, что реально скачали в начале прогона.
-          # IP, добавленные во время длинного парсинга, остаются.
+          # Очищаем очередь только от IP, обработанных в начале этого прогона
           if [ -f /tmp/fetch_incoming.ok ]; then
-            # Удаляем только IP из снимка начала прогона; новые (добавленные позже) оставляем
             if [ -f incoming_sources.txt ] && [ -s /tmp/incoming_snapshot.txt ]; then
               awk 'NF && $0 !~ /^#/' /tmp/incoming_snapshot.txt | sort -u > /tmp/snap_norm.txt
               awk 'NF && $0 !~ /^#/' incoming_sources.txt | sort -u > /tmp/cur_norm.txt
               comm -13 /tmp/snap_norm.txt /tmp/cur_norm.txt > /tmp/incoming_kept.txt || true
               cp /tmp/incoming_kept.txt incoming_sources.txt
-              echo "incoming queue updated (removed processed snapshot IPs)"
             else
               > incoming_sources.txt
-              echo "incoming queue cleared (snapshot empty or no current file)"
             fi
           else
             echo "incoming fetch failed earlier — queue NOT cleared"
@@ -147,7 +140,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sources_wl.txt sources_bl.txt incoming_sources.txt
           if ! git diff --cached --quiet; then
-            git commit -m "sync updated sources from TG and clear processed queue"
+            git commit -m "sync TG sources and clear processed queue"
             git pull --rebase --autostash origin main || true
             git push origin main
           else
@@ -178,9 +171,9 @@ jobs:
           cp -f /tmp/apex-out/alive_full.txt alive_full.txt 2>/dev/null || true
           cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
 
-          # white_ip — только накопление: объединяем origin + результат парсера
-          # (никогда не удаляем уже записанные IP)
-          cat white_ip.txt /tmp/apex-out/white_ip.txt 2>/dev/null             | awk 'NF && $0 !~ /^#/'             | sort -u > /tmp/white_ip_merged.txt
+          cat white_ip.txt /tmp/apex-out/white_ip.txt 2>/dev/null \
+            | awk 'NF && $0 !~ /^#/' \
+            | sort -u > /tmp/white_ip_merged.txt
           cp /tmp/white_ip_merged.txt white_ip.txt
 
           git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt \
