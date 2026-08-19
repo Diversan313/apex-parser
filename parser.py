@@ -132,8 +132,10 @@ BL_KEYWORDS_REGEX = re.compile(
 # is_valid_public_host, а один мусорный конфиг не должен
 # красить всю подписку как Expired.
 EXPIRED_MARKERS_REGEX = re.compile(
-    r"(?i)(?:expired|истек|истекл[аои]|переехал|"
+    r"(?i)(?:expired|истек\w*|переехал\w*|"
     r"возьмите\s*новую|подписка\s*истекла|"
+    r"недействительн\w*|не\s*действует|невалидн\w*|"
+    r"invalid(?:ated)?|disabled|заблокир\w*|blocked|deactivated|"
     r"renew\s*sub|subscription\s*(?:expired|ended)|"
     r"outdated|out\s*of\s*date)"
 )
@@ -480,6 +482,18 @@ def safe_b64encode(s: str) -> str:
     return base64.b64encode(
         s.encode("utf-8")
     ).decode("utf-8")
+
+
+def fmt_bytes(n: int) -> str:
+    try:
+        n = int(n or 0)
+    except Exception:
+        n = 0
+    if n >= 1024 * 1024:
+        return f"{n / (1024 * 1024):.1f}MB"
+    if n >= 1024:
+        return f"{n / 1024:.1f}KB"
+    return f"{n}B"
 
 
 # ============================================================
@@ -3311,13 +3325,34 @@ def xray_outbound_to_link(ob: dict) -> str:
             return "vmess://" + safe_b64encode(
                 json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
             )
+
+        if proto in ("hysteria2", "hy2"):
+            servers = (settings.get("servers") or [{}])[0]
+            address = servers.get("address") or ""
+            port = int(servers.get("port") or 0)
+            password = servers.get("password") or ""
+            if not address or not port:
+                return ""
+            params = {}
+            ts = stream.get("tlsSettings") or {}
+            if ts.get("serverName"):
+                params["sni"] = ts["serverName"]
+            if ts.get("allowInsecure"):
+                params["insecure"] = "1"
+            q = urllib.parse.urlencode(params)
+            auth = urllib.parse.quote(password) if password else ""
+            return (
+                f"hysteria2://{auth}@{address}:{port}"
+                + (f"?{q}" if q else "")
+                + f"#{urllib.parse.quote(tag)}"
+            )
     except Exception:
         return ""
     return ""
 
 
 def extract_configs_from_json_text(content: str) -> list:
-    """Достаёт share-ссылки из JSON-подписки / Xray config."""
+    """Достаёт share-ссылки из JSON-подписки / Xray config (без двойного счёта)."""
     content = content.strip()
     if not content:
         return []
@@ -3327,12 +3362,23 @@ def extract_configs_from_json_text(content: str) -> list:
         return []
 
     found = []
+    seen_keys = set()
+
+    def link_key(link: str) -> str:
+        # без #имени — одно и то же соединение не дублируем
+        return link.split("#", 1)[0]
 
     def add_link(link: str):
-        if link and link.startswith(SUPPORTED_PROTOCOLS):
-            found.append(sanitize_v2rayng_link(link))
+        if not link or not link.startswith(SUPPORTED_PROTOCOLS):
+            return
+        link = sanitize_v2rayng_link(link)
+        k = link_key(link)
+        if k in seen_keys:
+            return
+        seen_keys.add(k)
+        found.append(link)
 
-    def walk(obj):
+    def walk(obj, root_remarks=None):
         if isinstance(obj, str):
             s = obj.strip()
             if s.startswith(SUPPORTED_PROTOCOLS):
@@ -3340,25 +3386,39 @@ def extract_configs_from_json_text(content: str) -> list:
             return
         if isinstance(obj, list):
             for item in obj:
-                walk(item)
+                walk(item, root_remarks)
             return
         if not isinstance(obj, dict):
             return
-        # Xray outbound
+
+        remarks = obj.get("remarks") or root_remarks
+
+        # Полный Xray config: берём только outbounds, внутрь settings не лезем повторно
+        if isinstance(obj.get("outbounds"), list):
+            for ob in obj["outbounds"]:
+                link = xray_outbound_to_link(ob)
+                if not link:
+                    continue
+                if remarks and "#" in link:
+                    base, _ = link.split("#", 1)
+                    link = base + "#" + urllib.parse.quote(str(remarks))
+                add_link(link)
+            for k, v in obj.items():
+                if k == "outbounds":
+                    continue
+                walk(v, remarks)
+            return
+
+        # Одиночный outbound
         if "protocol" in obj and "settings" in obj:
             link = xray_outbound_to_link(obj)
             if link:
+                if remarks and "#" in link:
+                    base, _ = link.split("#", 1)
+                    link = base + "#" + urllib.parse.quote(str(remarks))
                 add_link(link)
-        # outbounds list
-        if "outbounds" in obj and isinstance(obj["outbounds"], list):
-            for ob in obj["outbounds"]:
-                link = xray_outbound_to_link(ob)
-                if link:
-                    # remarks на корне
-                    if obj.get("remarks") and link.startswith("vless://") and "#" in link:
-                        base, _ = link.split("#", 1)
-                        link = base + "#" + urllib.parse.quote(str(obj["remarks"]))
-                    add_link(link)
+            return
+
         # vmess JSON object
         if obj.get("add") and obj.get("id") and obj.get("port"):
             try:
@@ -3370,12 +3430,13 @@ def extract_configs_from_json_text(content: str) -> list:
                 )
             except Exception:
                 pass
+            return
+
         for v in obj.values():
-            walk(v)
+            walk(v, remarks)
 
     walk(data)
-    # unique preserve order
-    return list(dict.fromkeys(found))
+    return found
 
 
 def content_looks_expired(content: str, configs: list) -> bool:
@@ -3417,15 +3478,18 @@ def content_looks_expired(content: str, configs: list) -> bool:
     if n == 0:
         return sub_level
 
+    # Баннер «недействительна/истекла» в теле + мало конфигов → Expired
+    if sub_level and n <= 5:
+        return True
+
     if n <= 3:
-        # мало конфигов — только если все выглядят протухшими
+        # мало конфигов — если все (или единственный) с маркером в имени
         return expired_cfg == n
 
     ratio = expired_cfg / float(n)
     # много рабочих + один мусорный «expired» → НЕ expired
     if ratio >= 0.70:
         return True
-    # баннер уровня подписки + хотя бы половина конфигов с маркером
     if sub_level and ratio >= 0.50:
         return True
 
@@ -3683,7 +3747,7 @@ def fetch_links_parallel_with_source(
             print(
                 f"  ├─ 🔗 Источник #{idx:<3} | "
                 f"Статус: {status_str:<10} | "
-                f"Размер: {res.get('size_bytes', 0)}B | "
+                f"Размер: {fmt_bytes(res.get('size_bytes', 0))} | "
                 f"Конфигов: {len(configs)}"
                 f"{fmt_str}{err_str}"
             )
