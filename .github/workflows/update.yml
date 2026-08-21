@@ -77,9 +77,9 @@ jobs:
           fetch_raw incoming_sources.txt \
             "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt" || true
 
-          # ЗАПАСНОЙ КАНАЛ: если файл пустой или не скачался, пробуем через GitHub API
+          # Fallback mechanism if raw download fails
           if [ ! -s incoming_sources.txt ]; then
-            echo "⚠️ incoming_sources.txt пустой, пробуем скачать через GitHub API..."
+            echo "incoming_sources.txt is empty, trying GitHub API..."
             curl -s -H "Authorization: token $GH_PAT" \
                  -H "Accept: application/vnd.github.v3.raw" \
                  -L -o incoming_sources.txt \
@@ -99,7 +99,7 @@ jobs:
                 incoming_sources.txt incoming_subs.txt
           mkdir -p arch/lists
 
-      - name: Update Sources from Telegram (local for this run)
+      - name: Update Sources from Telegram
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
@@ -109,22 +109,22 @@ jobs:
       - name: Run Parser Script
         run: python parser.py
 
-      - name: Force add incoming IPs to white_ip
+      - name: Merge incoming IPs to white_ip
         run: |
-          # Гарантированно добавляем все IP из очереди в white_ip.txt, обходя любые баги парсера
+          # Add new IP addresses from the incoming queue to the database
           if [ -s incoming_sources.txt ]; then
             grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' incoming_sources.txt > /tmp/incoming_ips.txt
             if [ -s /tmp/incoming_ips.txt ]; then
               touch white_ip.txt
               cat white_ip.txt /tmp/incoming_ips.txt | awk 'NF && $0 !~ /^#/' | sort -u > /tmp/white_ip_updated.txt
               cp /tmp/white_ip_updated.txt white_ip.txt
-              echo "✅ Принудительно добавлены IP из incoming_sources.txt в white_ip.txt"
+              echo "Incoming IPs merged successfully."
             fi
           else
-            echo "⚠️ incoming_sources.txt пустой!"
+            echo "Incoming sources file is empty."
           fi
 
-      - name: Sync apex-sources (TG on latest + clear processed queue)
+      - name: Sync apex-sources
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           TG_API_ID: ${{ secrets.TG_API_ID }}
@@ -138,28 +138,28 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
-          # TG правит ТОЛЬКО свежий main — ручные правки не затираются старым снимком
+          # Update sources from Telegram on the latest main branch
           python ../parser_tg.py
 
-          # Очищаем очередь ТОЛЬКО от IP, которые успешно попали в white_ip.txt
+          # Clean the incoming queue by removing successfully processed IPs
           if [ -f ../white_ip.txt ]; then
-            # Извлекаем все IP из только что сгенерированного white_ip.txt
-            grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' ../white_ip.txt | sort -u > /tmp/processed_ips.txt
+            # Extract and normalize IPs from white_ip.txt
+            grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' ../white_ip.txt | tr -d '[:space:]' | sort -u > /tmp/processed_ips.txt
             
-            # Фильтруем текущую очередь: оставляем только те строки, которых НЕТ в processed_ips
+            # Filter the incoming queue, keeping only IPs that were not processed
             if [ -f incoming_sources.txt ]; then
-              grep -vxFf /tmp/processed_ips.txt incoming_sources.txt > /tmp/incoming_kept.txt || true
+              awk 'NR==FNR{ips[$0];next} {line=$0; gsub(/[[:space:]]/,"",line); if (!(line in ips)) print line}' /tmp/processed_ips.txt incoming_sources.txt > /tmp/incoming_kept.txt
               cp /tmp/incoming_kept.txt incoming_sources.txt
             fi
           else
-            echo "⚠️ white_ip.txt не найден, очередь не очищается во избежание потери данных!"
+            echo "white_ip.txt not found. Queue cleanup skipped."
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sources_wl.txt sources_bl.txt incoming_sources.txt
           if ! git diff --cached --quiet; then
-            git commit -m "sync TG sources and clear processed IPs"
+            git commit -m "Sync sources and clear processed queue"
             git pull --rebase --autostash origin main || true
             git push origin main
           else
@@ -210,7 +210,7 @@ jobs:
           GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
         run: |
           if [ -z "$GITVERSE_TOKEN" ]; then
-            echo "ОШИБКА: Секрет GITVERSE_TOKEN не найден в GitHub Secrets!"
+            echo "ERROR: GITVERSE_TOKEN secret is missing."
             exit 1
           fi
 
