@@ -5,7 +5,7 @@
 **Warrior of Internet Freedom**
 
 [![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Sent1nel0_bot)
-[![License](https://img.shields.io/badge/Status-FREE_FOR_USE-brightgreen?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)](LICENSE)
 
 ---
 
@@ -56,6 +56,9 @@ https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.t
 **apex-parser** — открытый проект, созданный с нуля для автоматического сбора, фильтрации, проверки и публикации рабочих конфигураций.
 
 Цель проекта — автоматизировать сбор, проверку и агрегацию сетевых конфигураций из открытых источников, предоставляя актуальные списки для мобильного интернета (белые списки) и глобального Wi-Fi использования.
+
+**FNAP** (Free Network Access Provider) — собственный термин проекта, обозначающий модель работы **Sentinel**: бесплатное предоставление доступа к агрегированным сетевым конфигурациям без коммерческой составляющей. Это авторское обозначение роли конкретного компонента проекта, а не заявление о юридическом статусе оператора связи или провайдера в официальном смысле.
+
 Весь код, представленный в данном репозитории (за исключением закрытых уникальных частей проекта в **apex-sources**), полностью открыт для использования, изучения, доработки и распространения.
 
 Это один из немногих проектов, который действительно открыл уникальный код и свои наработки для сообщества. В отличие от большинства аналогичных решений, которые работают исключительно на закрытых машинах авторов, здесь логика доступна каждому.
@@ -101,6 +104,7 @@ https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.t
 
 Если вы разработчик и хотите подробнее разобрать логику и правила работы, то вам в [Инструкция и логика](https://github.com/Diversan313/apex-parser/wiki/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F-%D0%B8-%D0%BB%D0%BE%D0%B3%D0%B8%D0%BA%D0%B0).
 
+Полные условия использования и политика обработки данных — в [DISCLAIMER.md](https://github.com/Diversan313/apex-parser/blob/main/DISCLAIMER.md).
 
 ### Закрытый репозиторий apex-sources
 
