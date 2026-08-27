@@ -11,6 +11,7 @@ import time
 import random
 import threading
 import ssl
+from datetime import datetime, timezone
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -5952,6 +5953,40 @@ def main():
     )
 
     print("=" * 70)
+
+    # stats/latest.json — машинная сводка для бота / badge / CI
+    try:
+        os.makedirs("stats", exist_ok=True)
+        stats = {
+            "updated_at": datetime.now(timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "wl": len(final_wl),
+            "bl": len(final_bl),
+            "full": len(final_full),
+            "white_ip": len(white_ips),
+            "wl_tested": len(ping_wl),
+            "bl_tested": len(ping_bl),
+            "wl_ok": wl_ok,
+            "bl_ok": bl_ok,
+            "bl_ru_to_wl": bl_ru_to_wl,
+            "white_ip_queued": white_ip_queued,
+            "white_ip_ok": white_ip_ok,
+        }
+        with open(
+            os.path.join("stats", "latest.json"),
+            "w",
+            encoding="utf-8",
+        ) as sf:
+            json.dump(
+                stats,
+                sf,
+                ensure_ascii=False,
+                indent=2,
+            )
+            sf.write("\n")
+        print("stats/latest.json записан")
+    except Exception as e:
+        print(f"⚠️ Не удалось записать stats/latest.json: {e}")
 
     print(
         "✨ Готово!"
