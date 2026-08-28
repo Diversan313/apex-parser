@@ -141,10 +141,20 @@ jobs:
           # Update sources from Telegram on the latest main branch
           python ../parser_tg.py
 
-          # Clear the incoming queue completely after successful processing
+          # Убираем из очереди ТОЛЬКО те записи, что реально были обработаны
+          # в этом запуске (снимок из шага "Fetch Sources"). Всё, что пришло
+          # позже за время выполнения (~40 мин) и подтянулось сюда через
+          # git reset --hard, остаётся в очереди для следующего запуска —
+          # иначе оно бы стиралось, так и не попав в white_ip.txt.
           if [ -f ../white_ip.txt ]; then
-            > incoming_sources.txt
-            echo "Incoming sources queue cleared successfully."
+            if [ -s ../incoming_sources.txt ] && [ -s incoming_sources.txt ]; then
+              grep -vFxf ../incoming_sources.txt incoming_sources.txt > /tmp/remaining_incoming.txt || true
+              mv /tmp/remaining_incoming.txt incoming_sources.txt
+            elif [ -s ../incoming_sources.txt ]; then
+              # Локальной свежей версии нет — значит нечего оставлять
+              > incoming_sources.txt
+            fi
+            echo "Incoming sources queue: cleared processed items, kept late arrivals."
           else
             echo "white_ip.txt not found. Queue cleanup skipped."
           fi
