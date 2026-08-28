@@ -25,6 +25,11 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bs.txt
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.txt
 ```
 
+**jsDelivr**
+```text
+https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/alive_bs.txt
+```
+
 #### 🌐 BlackList (Wi-Fi)
 
 **GitHub**
@@ -37,6 +42,11 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_bl.txt
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.txt
 ```
 
+**jsDelivr**
+```text
+https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/alive_bl.txt
+```
+
 #### 🚀 Full List (All-in-One)
 
 **GitHub**
@@ -47,6 +57,11 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/alive_full.txt
 **GitVerse**
 ```text
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.txt
+```
+
+**jsDelivr**
+```text
+https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/alive_full.txt
 ```
 
 ---
