@@ -83,13 +83,15 @@ https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.t
 | **Exclave** | Android | [GitHub (Релизы)](https://github.com/dyhkwong/Exclave/releases) |
 | **v2rayNG** | Android | [GitHub (Релизы)](https://github.com/2dust/v2rayNG/releases) |
 | **v2rayN** | Windows, macOS, Linux | [GitHub (Релизы)](https://github.com/2dust/v2rayN/releases) |
+| **Throne** | Windows, Linux, macOS | [GitHub](https://github.com/throneproj/Throne) |
 | **INCY** | Android, iOS, macOS | [GitHub](https://github.com/INCY-DEV/incy-platforms) |
 | **Karing** | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://karing.app) · [GitHub](https://github.com/KaringX/karing) |
 | **Streisand** | iOS, macOS | [App Store](https://apps.apple.com/app/streisand/id6450534064) |
 | **V2Box** | Android, iOS, macOS | [App Store](https://apps.apple.com/app/v2box-v2ray-client/id6446814690) · [Google Play](https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box) |
-| **Throne** | Windows, Linux, macOS | [GitHub](https://github.com/throneproj/Throne) |
 | **NekoBox** * | Android, Windows, Linux | [GitHub Android](https://github.com/MatsuriDayo/NekoBoxForAndroid/releases) · [GitHub Desktop](https://github.com/qr243vbi/nekobox) |
 | **Hiddify** * | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://hiddify.com) · [GitHub](https://github.com/hiddify/hiddify-app) |
+
+Клиент **Happ** и похожие из списка клиенты не рассчитаны на подписки такого объёма (плохо справляются с большим количеством конфигов) — лучше используйте один из клиентов вверху списка (автор сидит на них).
 
 ### Что и для чего?
 
