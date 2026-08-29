@@ -773,8 +773,10 @@ def main():
     # 18. SAVE
     # ========================================================
 
+    os.makedirs("subs/main", exist_ok=True)
+
     with open(
-        "alive_bs.txt",
+        "subs/main/alive_bs.txt",
         "w",
         encoding="utf-8",
     ) as f:
@@ -788,7 +790,7 @@ def main():
         )
 
     with open(
-        "alive_bl.txt",
+        "subs/main/alive_bl.txt",
         "w",
         encoding="utf-8",
     ) as f:
@@ -802,7 +804,7 @@ def main():
         )
 
     with open(
-        "alive_full.txt",
+        "subs/main/alive_full.txt",
         "w",
         encoding="utf-8",
     ) as f:

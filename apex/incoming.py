@@ -104,13 +104,13 @@ def load_previous_alives():
     prev_bl = []
 
     if os.path.exists(
-        "alive_bs.txt"
+        "subs/main/alive_bs.txt"
     ):
 
         try:
 
             with open(
-                "alive_bs.txt",
+                "subs/main/alive_bs.txt",
                 "r",
                 encoding="utf-8",
             ) as f:
@@ -135,13 +135,13 @@ def load_previous_alives():
             pass
 
     if os.path.exists(
-        "alive_bl.txt"
+        "subs/main/alive_bl.txt"
     ):
 
         try:
 
             with open(
-                "alive_bl.txt",
+                "subs/main/alive_bl.txt",
                 "r",
                 encoding="utf-8",
             ) as f:
