@@ -153,14 +153,6 @@ def link_to_xray_outbound(
 
         protocol = protocol.lower()
 
-        # В этой проверке Hysteria2 по-прежнему
-        # не запускаем через Xray HTTP-inbound.
-        if protocol in (
-            "hysteria2",
-            "hy2",
-        ):
-            return None
-
         query_params = {}
 
         if "?" in rest:
@@ -182,6 +174,133 @@ def link_to_xray_outbound(
         outbound = {
             "streamSettings": {}
         }
+
+        # ====================================================
+        # HYSTERIA2 / HY2
+        # ====================================================
+
+        if protocol in (
+            "hysteria2",
+            "hy2",
+        ):
+
+            auth = ""
+            host_port = rest
+
+            if "@" in rest:
+                auth, host_port = rest.rsplit("@", 1)
+                auth = urllib.parse.unquote(auth)
+
+            # Port hopping: "host:443,5000-6000" → берём первый порт
+            host_port = host_port.split(",")[0].strip()
+            if "-" in host_port.rsplit(":", 1)[-1]:
+                # host:5000-6000 → host:5000
+                hp, prange = host_port.rsplit(":", 1)
+                host_port = f"{hp}:{prange.split('-')[0]}"
+
+            host, port = parse_host_port(host_port)
+
+            if not host or not port:
+                return None
+
+            if not auth:
+                auth = first_param(query_params, "auth", "") or first_param(
+                    query_params, "password", ""
+                )
+
+            sni = (
+                first_param(query_params, "sni", "")
+                or first_param(query_params, "peer", "")
+                or host
+            )
+
+            allow_insecure = parse_bool_param(
+                query_params,
+                "allowInsecure",
+                "insecure",
+                default=False,
+            )
+
+            alpn_raw = first_param(query_params, "alpn", "h3")
+            alpn_list = [x.strip() for x in alpn_raw.split(",") if x.strip()] or ["h3"]
+
+            fp = first_param(query_params, "fp", "") or first_param(
+                query_params, "fingerprint", ""
+            )
+
+            tls_settings: Dict[str, Any] = {
+                "serverName": sni,
+                "allowInsecure": allow_insecure,
+                "alpn": alpn_list,
+            }
+            if fp:
+                tls_settings["fingerprint"] = fp
+
+            pin = first_param(query_params, "pinSHA256", "")
+            if pin:
+                tls_settings["pinnedPeerCertSha256"] = pin.replace(":", "").lower()
+
+            hysteria_settings: Dict[str, Any] = {
+                "version": 2,
+                "auth": auth,
+            }
+
+            # Bandwidth (опционально, brutal)
+            up = first_param(query_params, "up", "") or first_param(
+                query_params, "upmbps", ""
+            )
+            down = first_param(query_params, "down", "") or first_param(
+                query_params, "downmbps", ""
+            )
+            if up:
+                hysteria_settings["up"] = (
+                    up
+                    if "mbps" in up.lower() or "mb" in up.lower()
+                    else f"{up} mbps"
+                )
+            if down:
+                hysteria_settings["down"] = (
+                    down
+                    if "mbps" in down.lower() or "mb" in down.lower()
+                    else f"{down} mbps"
+                )
+
+            outbound.update(
+                {
+                    "protocol": "hysteria",
+                    "settings": {
+                        "version": 2,
+                        "address": host,
+                        "port": port,
+                    },
+                    "streamSettings": {
+                        "network": "hysteria",
+                        "security": "tls",
+                        "tlsSettings": tls_settings,
+                        "hysteriaSettings": hysteria_settings,
+                    },
+                }
+            )
+
+            # Salamander / Gecko obfuscation via finalmask
+            obfs = first_param(query_params, "obfs", "").lower()
+            obfs_password = first_param(
+                query_params, "obfs-password", ""
+            ) or first_param(query_params, "obfsPassword", "")
+
+            if obfs in ("salamander", "gecko") and obfs_password:
+                outbound["streamSettings"]["finalmask"] = {
+                    "udp": [
+                        {
+                            "type": "salamander",
+                            "settings": {
+                                "password": obfs_password,
+                            },
+                        }
+                    ]
+                }
+
+            return outbound
 
         # ====================================================
         # SHADOWSOCKS
@@ -1437,28 +1556,23 @@ def check_proxy_alive_detailed(
             None,
         )
 
-    # TCP pre-check: полностью мёртвые host:port не гоняем через Xray
-    if not tcp_port_open(host, port):
-        return (
-            False,
-            None,
-            "TCP: порт закрыт/недоступен",
-            None,
-        )
-
-    if link.startswith(
+    is_hysteria2 = link.startswith(
         (
             "hysteria2://",
             "hy2://",
         )
-    ):
-        return (
-            False,
-            None,
-            "Hysteria2 не поддерживается "
-            "этим Xray-check",
-            None,
-        )
+    )
+
+    # TCP pre-check только для TCP-протоколов.
+    # Hysteria2 работает поверх UDP/QUIC — TCP-проверка бессмысленна.
+    if not is_hysteria2:
+        if not tcp_port_open(host, port):
+            return (
+                False,
+                None,
+                "TCP: порт закрыт/недоступен",
+                None,
+            )
 
     outbound = (
         link_to_xray_outbound(
@@ -1679,4 +1793,3 @@ def xray_outbound_to_link(ob: dict) -> str:
     except Exception:
         return ""
     return ""
-
