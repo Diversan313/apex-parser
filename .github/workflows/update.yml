@@ -97,17 +97,17 @@ jobs:
         run: |
           touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt \
                 incoming_sources.txt incoming_subs.txt
-          mkdir -p arch/lists stats
+          mkdir -p arch/lists stats subs/main
 
       - name: Update Sources from Telegram
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-        run: python parser_tg.py
+        run: python -m apex.modules.parser_tg
 
       - name: Run Parser Script
-        run: python parser.py
+        run: python -m apex.parser
 
       - name: Merge incoming IPs to white_ip
         run: |
@@ -139,7 +139,7 @@ jobs:
           git reset --hard origin/main
 
           # Update sources from Telegram on the latest main branch
-          python ../parser_tg.py
+          PYTHONPATH=.. python -m apex.modules.parser_tg
 
           # Убираем из очереди ТОЛЬКО те записи, что реально были обработаны
           # в этом запуске (снимок из шага "Fetch Sources"). Всё, что пришло
@@ -177,8 +177,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          mkdir -p /tmp/apex-out arch/lists stats
-          cp -f alive_bs.txt alive_bl.txt alive_full.txt white_ip.txt /tmp/apex-out/ 2>/dev/null || true
+          mkdir -p /tmp/apex-out arch/lists stats subs/main
+          cp -f subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt white_ip.txt /tmp/apex-out/ 2>/dev/null || true
           cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
           cp -f stats/latest.json /tmp/apex-out/latest.json 2>/dev/null || true
 
@@ -189,10 +189,10 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
 
-          mkdir -p arch/lists stats
-          cp -f /tmp/apex-out/alive_bs.txt alive_bs.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/alive_bl.txt alive_bl.txt 2>/dev/null || true
-          cp -f /tmp/apex-out/alive_full.txt alive_full.txt 2>/dev/null || true
+          mkdir -p arch/lists stats subs/main
+          cp -f /tmp/apex-out/alive_bs.txt subs/main/alive_bs.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/alive_bl.txt subs/main/alive_bl.txt 2>/dev/null || true
+          cp -f /tmp/apex-out/alive_full.txt subs/main/alive_full.txt 2>/dev/null || true
           cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
           cp -f /tmp/apex-out/latest.json stats/latest.json 2>/dev/null || true
 
@@ -201,7 +201,7 @@ jobs:
             | sort -V -u > /tmp/white_ip_merged.txt
           cp /tmp/white_ip_merged.txt white_ip.txt
 
-          git add white_ip.txt alive_bs.txt alive_bl.txt alive_full.txt \
+          git add white_ip.txt subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
                   arch/lists/whitelist.txt stats/latest.json
 
           if git diff --cached --quiet; then
@@ -223,7 +223,7 @@ jobs:
 
           rm -rf deploy_gitverse
           mkdir deploy_gitverse
-          cp alive_bs.txt alive_bl.txt alive_full.txt deploy_gitverse/ 2>/dev/null || true
+          cp subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt deploy_gitverse/ 2>/dev/null || true
 
           cd deploy_gitverse
           git init
@@ -256,3 +256,4 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
