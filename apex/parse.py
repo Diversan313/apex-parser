@@ -46,7 +46,11 @@ def parse_host_port(
                 .lstrip(":")
                 .split("/")[0]
                 .split("?")[0]
+                .split(",")[0]
             )
+            # range "5000-6000" → 5000
+            if "-" in port_str:
+                port_str = port_str.split("-", 1)[0]
 
             return (
                 host,
@@ -66,7 +70,11 @@ def parse_host_port(
                 port_str
                 .split("/")[0]
                 .split("?")[0]
+                .split(",")[0]
             )
+            # Port hopping / range: "443,5000-6000" or "5000-6000"
+            if "-" in port_str:
+                port_str = port_str.split("-", 1)[0]
 
             return (
                 host,
@@ -575,4 +583,3 @@ def find_matched_ip_for_link(
             return resolved_ip
 
     return None
-
