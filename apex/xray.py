@@ -177,6 +177,15 @@ def link_to_xray_outbound(
 
         # ====================================================
         # HYSTERIA2 / HY2
+        #
+        # Актуальная схема Xray (method, не network):
+        #   protocol: "hysteria"
+        #   settings: { version: 2, address, port }
+        #   streamSettings.method: "hysteria"
+        #   streamSettings.hysteriaSettings: { version: 2, auth }
+        #   streamSettings.tlsSettings: { serverName, allowInsecure, alpn, ... }
+        #   streamSettings.finalmask.udp: [ { type: salamander, settings: { password } } ]
+        #   streamSettings.finalmask.quicParams: { brutalUp, brutalDown, udpHop }
         # ====================================================
 
         if protocol in (
@@ -185,21 +194,41 @@ def link_to_xray_outbound(
         ):
 
             auth = ""
-            host_port = rest
+            host_port_raw = rest
 
             if "@" in rest:
-                auth, host_port = rest.rsplit("@", 1)
+                auth, host_port_raw = rest.rsplit("@", 1)
                 auth = urllib.parse.unquote(auth)
 
-            # Port hopping: "host:443,5000-6000" → берём первый порт
-            host_port = host_port.split(",")[0].strip()
-            if "-" in host_port.rsplit(":", 1)[-1]:
-                # host:5000-6000 → host:5000
-                hp, prange = host_port.rsplit(":", 1)
-                host_port = f"{hp}:{prange.split('-')[0]}"
+            # Сохраняем полный port-list для udpHop, для settings.port — первый порт.
+            # Форматы URI: host:443 | host:443,5000-6000 | host:20000-50000
+            port_list_str = ""
+            if ":" in host_port_raw:
+                # отделяем host от port-части (с учётом IPv6 [addr]:ports)
+                if host_port_raw.startswith("["):
+                    if "]" not in host_port_raw:
+                        return None
+                    host_only, port_part = host_port_raw.split("]", 1)
+                    host_only = host_only + "]"
+                    port_part = port_part.lstrip(":")
+                else:
+                    host_only, port_part = host_port_raw.rsplit(":", 1)
+                port_list_str = port_part.strip().rstrip("/")
+            else:
+                host_only = host_port_raw
+                port_list_str = "443"
 
-            host, port = parse_host_port(host_port)
+            # Первый порт для settings.port
+            first_port_str = port_list_str.split(",")[0].strip()
+            if "-" in first_port_str:
+                first_port_str = first_port_str.split("-", 1)[0].strip()
 
+            try:
+                port = int(first_port_str)
+            except (TypeError, ValueError):
+                return None
+
+            host = host_only.strip()
             if not host or not port:
                 return None
 
@@ -208,11 +237,11 @@ def link_to_xray_outbound(
                     query_params, "password", ""
                 )
 
-            sni = (
-                first_param(query_params, "sni", "")
-                or first_param(query_params, "peer", "")
-                or host
+            # SNI: только явный sni/peer; host — fallback только если нет явного
+            sni_explicit = first_param(query_params, "sni", "") or first_param(
+                query_params, "peer", ""
             )
+            sni = sni_explicit or host
 
             allow_insecure = parse_bool_param(
                 query_params,
@@ -221,8 +250,12 @@ def link_to_xray_outbound(
                 default=False,
             )
 
-            alpn_raw = first_param(query_params, "alpn", "h3")
-            alpn_list = [x.strip() for x in alpn_raw.split(",") if x.strip()] or ["h3"]
+            # ALPN: default h3 только если пользователь ничего не передал
+            alpn_raw = first_param(query_params, "alpn", "")
+            if alpn_raw:
+                alpn_list = [x.strip() for x in alpn_raw.split(",") if x.strip()]
+            else:
+                alpn_list = ["h3"]
 
             fp = first_param(query_params, "fp", "") or first_param(
                 query_params, "fingerprint", ""
@@ -245,25 +278,102 @@ def link_to_xray_outbound(
                 "auth": auth,
             }
 
-            # Bandwidth (опционально, brutal)
+            # Bandwidth → finalmask.quicParams (актуальная схема Xray)
+            # Поддерживаем и legacy up/down в hysteriaSettings для совместимости.
+            def _norm_bw(val: str) -> str:
+                v = (val or "").strip()
+                if not v:
+                    return ""
+                low = v.lower().replace(" ", "")
+                if any(
+                    u in low
+                    for u in (
+                        "bps",
+                        "kbps",
+                        "mbps",
+                        "gbps",
+                        "tbps",
+                        "kb",
+                        "mb",
+                        "gb",
+                        "tb",
+                        "k",
+                        "m",
+                        "g",
+                    )
+                ):
+                    return v
+                # голое число → Mbps
+                try:
+                    float(v)
+                    return f"{v} mbps"
+                except ValueError:
+                    return v
+
             up = first_param(query_params, "up", "") or first_param(
                 query_params, "upmbps", ""
             )
             down = first_param(query_params, "down", "") or first_param(
                 query_params, "downmbps", ""
             )
-            if up:
-                hysteria_settings["up"] = (
-                    up
-                    if "mbps" in up.lower() or "mb" in up.lower()
-                    else f"{up} mbps"
+            up_n = _norm_bw(up)
+            down_n = _norm_bw(down)
+            if up_n:
+                hysteria_settings["up"] = up_n
+            if down_n:
+                hysteria_settings["down"] = down_n
+
+            # finalmask
+            finalmask: Dict[str, Any] = {}
+
+            # Port hopping → quicParams.udpHop
+            # multi-port если в URI больше одного сегмента или есть range
+            is_multi = (
+                "," in port_list_str
+                or ("-" in port_list_str and port_list_str != first_port_str)
+            )
+            quic_params: Dict[str, Any] = {}
+            if is_multi:
+                quic_params["udpHop"] = {
+                    "ports": port_list_str,
+                }
+            if up_n:
+                quic_params["brutalUp"] = up_n
+            if down_n:
+                quic_params["brutalDown"] = down_n
+            if quic_params:
+                finalmask["quicParams"] = quic_params
+
+            # Salamander / Gecko
+            obfs = first_param(query_params, "obfs", "").lower()
+            obfs_password = first_param(
+                query_params, "obfs-password", ""
+            ) or first_param(query_params, "obfsPassword", "")
+
+            if obfs in ("salamander", "gecko") and obfs_password:
+                sal_settings: Dict[str, Any] = {"password": obfs_password}
+                # gecko: опциональный packetSize из query, если есть
+                pkt = first_param(query_params, "obfs-packet-size", "") or first_param(
+                    query_params, "packetSize", ""
                 )
-            if down:
-                hysteria_settings["down"] = (
-                    down
-                    if "mbps" in down.lower() or "mb" in down.lower()
-                    else f"{down} mbps"
-                )
+                if obfs == "gecko" and pkt:
+                    sal_settings["packetSize"] = pkt
+                finalmask["udp"] = [
+                    {
+                        "type": "salamander",
+                        "settings": sal_settings,
+                    }
+                ]
+
+            stream: Dict[str, Any] = {
+                # Актуальный ключ Xray — method (network — устаревший alias)
+                "method": "hysteria",
+                "security": "tls",
+                "tlsSettings": tls_settings,
+                "hysteriaSettings": hysteria_settings,
+            }
+            if finalmask:
+                stream["finalmask"] = finalmask
 
             outbound.update(
                 {
@@ -273,32 +383,9 @@ def link_to_xray_outbound(
                         "address": host,
                         "port": port,
                     },
-                    "streamSettings": {
-                        "network": "hysteria",
-                        "security": "tls",
-                        "tlsSettings": tls_settings,
-                        "hysteriaSettings": hysteria_settings,
-                    },
+                    "streamSettings": stream,
                 }
             )
-
-            # Salamander / Gecko obfuscation via finalmask
-            obfs = first_param(query_params, "obfs", "").lower()
-            obfs_password = first_param(
-                query_params, "obfs-password", ""
-            ) or first_param(query_params, "obfsPassword", "")
-
-            if obfs in ("salamander", "gecko") and obfs_password:
-                outbound["streamSettings"]["finalmask"] = {
-                    "udp": [
-                        {
-                            "type": "salamander",
-                            "settings": {
-                                "password": obfs_password,
-                            },
-                        }
-                    ]
-                }
 
             return outbound
 
@@ -1642,7 +1729,10 @@ def xray_outbound_to_link(ob: dict) -> str:
     tag = str(ob.get("tag") or ob.get("remarks") or "xray")
     settings = ob.get("settings") or {}
     stream = ob.get("streamSettings") or {}
-    network = str(stream.get("network") or "tcp").lower()
+    # Актуальный ключ — method; network оставлен как fallback для старых JSON
+    network = str(
+        stream.get("method") or stream.get("network") or "tcp"
+    ).lower()
     security = str(stream.get("security") or "").lower()
 
     try:
@@ -1770,26 +1860,97 @@ def xray_outbound_to_link(ob: dict) -> str:
                 json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
             )
 
-        if proto in ("hysteria2", "hy2"):
-            servers = (settings.get("servers") or [{}])[0]
-            address = servers.get("address") or ""
-            port = int(servers.get("port") or 0)
-            password = servers.get("password") or ""
+        # Hysteria2: Xray protocol == "hysteria"
+        # (старые/чужие JSON могли писать hysteria2/hy2 — тоже принимаем)
+        if proto in ("hysteria", "hysteria2", "hy2"):
+            # Наша структура: settings.address / settings.port
+            # Чужие/старые: settings.servers[0]
+            address = settings.get("address") or ""
+            port = settings.get("port") or 0
+            if not address or not port:
+                servers = (settings.get("servers") or [{}])[0]
+                address = servers.get("address") or address
+                port = servers.get("port") or port
+
+            try:
+                port = int(port)
+            except (TypeError, ValueError):
+                return ""
+
             if not address or not port:
                 return ""
-            params = {}
+
+            # auth: hysteriaSettings.auth (наш формат)
+            # fallback: servers[0].password / settings.password
+            hy = stream.get("hysteriaSettings") or {}
+            password = (
+                hy.get("auth")
+                or settings.get("password")
+                or ((settings.get("servers") or [{}])[0].get("password") if settings.get("servers") else "")
+                or ""
+            )
+
+            params: Dict[str, str] = {}
+
+            # TLS
             ts = stream.get("tlsSettings") or {}
-            if ts.get("serverName"):
-                params["sni"] = ts["serverName"]
+            sni = ts.get("serverName") or ""
+            if sni:
+                params["sni"] = str(sni)
             if ts.get("allowInsecure"):
                 params["insecure"] = "1"
+            alpn = ts.get("alpn")
+            if isinstance(alpn, list) and alpn:
+                params["alpn"] = ",".join(str(x) for x in alpn)
+            elif isinstance(alpn, str) and alpn:
+                params["alpn"] = alpn
+            fp = ts.get("fingerprint") or ""
+            if fp:
+                params["fp"] = str(fp)
+            pin = ts.get("pinnedPeerCertSha256") or ""
+            if pin:
+                params["pinSHA256"] = str(pin)
+
+            # Bandwidth: quicParams.brutal* предпочтительнее, иначе hy.up/down
+            fm = stream.get("finalmask") or {}
+            qp = fm.get("quicParams") or {}
+            up = qp.get("brutalUp") or hy.get("up") or ""
+            down = qp.get("brutalDown") or hy.get("down") or ""
+            if up:
+                params["up"] = str(up)
+            if down:
+                params["down"] = str(down)
+
+            # Port hopping
+            udp_hop = qp.get("udpHop") or {}
+            hop_ports = udp_hop.get("ports") or ""
+            port_in_uri = str(port)
+            if hop_ports:
+                port_in_uri = str(hop_ports)
+
+            # Salamander / Gecko
+            for mask in (fm.get("udp") or []):
+                if not isinstance(mask, dict):
+                    continue
+                if str(mask.get("type") or "").lower() == "salamander":
+                    ms = mask.get("settings") or {}
+                    pw = ms.get("password") or ""
+                    if pw:
+                        params["obfs"] = "salamander"
+                        params["obfs-password"] = str(pw)
+                    if ms.get("packetSize"):
+                        params["obfs"] = "gecko"
+                        params["obfs-packet-size"] = str(ms["packetSize"])
+                    break
+
             q = urllib.parse.urlencode(params)
-            auth = urllib.parse.quote(password) if password else ""
+            auth = urllib.parse.quote(str(password), safe="") if password else ""
             return (
-                f"hysteria2://{auth}@{address}:{port}"
+                f"hysteria2://{auth}@{address}:{port_in_uri}"
                 + (f"?{q}" if q else "")
                 + f"#{urllib.parse.quote(tag)}"
             )
     except Exception:
         return ""
     return ""
+
