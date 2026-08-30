@@ -85,7 +85,7 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 - Сбор конфигураций из нескольких источников (sources файлы с отобранными источниками, Telegram модуль).
 - Разделение на WhiteList (для белых списков) и BlackList (для Wi-Fi использования).
 - Проверка живости конфигураций, дедупликация, геофильтрация, ограничение по IP и подсетям для уникальности.
-- Автоматическое формирование итоговых списков: `alive_bs.txt`, `alive_bl.txt`, `alive_full.txt`.
+- Автоматическое формирование итоговых списков: `alive_bs.txt`, `alive_bl.txt`, `alive_full.txt` (в `subs/main/`).
 - Поддержка как наиболее устойчивых протоколов (например VLESS и Hysteria2), так и других (VMess, Trojan, Shadowsocks и др.).
 - Интеграция с Telegram-ботом [@Sent1nel0_bot](https://t.me/Sent1nel0_bot) для удобного доступа, статистики и работы с закрытым apex-sources.
 
@@ -110,12 +110,15 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 
 ### Что и для чего?
 
-- `parser.py` — основной открытый код парсера.
-- `parser_tg.py` — модуль обновления источников через Telegram.
+- `apex/` — основной набор парсера (`main.py`, `parse.py`, `xray.py`, `fetch.py`, `dedup.py`, `classify.py`, `geoip.py` и др.).
+- `apex/parser.py` — точка входа.
+- `apex/modules/parser_tg.py` — модуль обновления источников через Telegram.
 - `white_ip.txt` — список белых IP-адресов для белых списков.
-- `alive_*.txt` — публикуемые готовые списки рабочих конфигураций.
+- `subs/main/alive_*.txt` — публикуемые готовые списки рабочих конфигураций.
 - `arch/` — архив, вспомогательные данные.
+- `stats/` — статистика.
 - `.github/workflows/` — автоматизация обновлений.
+- `requirements.txt` — зависимости (Python 3.10+).
 
 Весь этот код можно свободно использовать, модифицировать и запускать у себя.
 
@@ -163,3 +166,4 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 ---
 
 *Проект создан и поддерживается как pet-проект в области сетевых технологий. Код написан с нуля, через собственные ошибки и решения. Если вы используете или дорабатываете проект — будет приятно узнать об этом.*
+
