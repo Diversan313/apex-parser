@@ -57,6 +57,8 @@ from .diversify import (
     select_wl_diverse,
     filter_protocols_bl,
     rename_config,
+    links_to_clash_yaml,
+    sanitize_proxy_link,
 )
 
 def main():
@@ -714,60 +716,47 @@ def main():
     )
 
     # ========================================================
-    # 17. RENAME
+    # 17. SANITIZE + RENAME
+    #    Грязные type/security/flow чистим, совсем битые — отсекаем.
+    #    Нумерация сплошная (без дыр). Без лишних логов.
     # ========================================================
 
-    final_wl = [
-        rename_config(
-            item[0],
-            idx,
-            "[WL]",
-            item[1],
-        )
-        for idx, item in enumerate(
-            alive_wl_clean,
-            1,
-        )
-    ]
-
-    final_bl = [
-        rename_config(
-            item[0],
-            idx,
-            "[BL]",
-            item[1],
-        )
-        for idx, item in enumerate(
-            alive_bl_clean,
-            1,
-        )
-    ]
-
-    final_full = []
-
-    for idx, item in enumerate(
-        alive_full_clean,
-        1,
-    ):
-
-        key = get_final_dedup_key(
-            item[0]
-        )
-
-        tag = (
-            "[WL]"
-            if key in wl_keys
-            else "[BL]"
-        )
-
-        final_full.append(
-            rename_config(
-                item[0],
-                idx,
-                tag,
-                item[1],
+    def _build_renamed(items, tag_fn):
+        out = []
+        for item in items:
+            cleaned = sanitize_proxy_link(item[0])
+            if not cleaned:
+                continue
+            idx = len(out) + 1
+            tag = tag_fn(item)
+            out.append(
+                rename_config(
+                    cleaned,
+                    idx,
+                    tag,
+                    item[1],
+                )
             )
-        )
+        return out
+
+    final_wl = _build_renamed(
+        alive_wl_clean,
+        lambda _item: "[WL]",
+    )
+
+    final_bl = _build_renamed(
+        alive_bl_clean,
+        lambda _item: "[BL]",
+    )
+
+    final_full = _build_renamed(
+        alive_full_clean,
+        lambda item: (
+            "[WL]"
+            if get_final_dedup_key(item[0]) in wl_keys
+            else "[BL]"
+        ),
+    )
 
     # ========================================================
     # 18. SAVE
@@ -775,17 +764,15 @@ def main():
 
     os.makedirs("subs/main", exist_ok=True)
 
+    # ---------- base64 (как раньше) ----------
     with open(
         "subs/main/alive_bs.txt",
         "w",
         encoding="utf-8",
     ) as f:
-
         f.write(
             safe_b64encode(
-                "\n".join(
-                    final_wl
-                )
+                "\n".join(final_wl)
             )
         )
 
@@ -794,12 +781,9 @@ def main():
         "w",
         encoding="utf-8",
     ) as f:
-
         f.write(
             safe_b64encode(
-                "\n".join(
-                    final_bl
-                )
+                "\n".join(final_bl)
             )
         )
 
@@ -808,14 +792,67 @@ def main():
         "w",
         encoding="utf-8",
     ) as f:
-
         f.write(
             safe_b64encode(
-                "\n".join(
-                    final_full
-                )
+                "\n".join(final_full)
             )
         )
+
+    # ---------- plain text (рядом с base64) ----------
+    with open(
+        "subs/main/alive_plain_bs.txt",
+        "w",
+        encoding="utf-8",
+    ) as f:
+        f.write("\n".join(final_wl))
+        if final_wl:
+            f.write("\n")
+
+    with open(
+        "subs/main/alive_plain_bl.txt",
+        "w",
+        encoding="utf-8",
+    ) as f:
+        f.write("\n".join(final_bl))
+        if final_bl:
+            f.write("\n")
+
+    with open(
+        "subs/main/alive_plain_full.txt",
+        "w",
+        encoding="utf-8",
+    ) as f:
+        f.write("\n".join(final_full))
+        if final_full:
+            f.write("\n")
+
+    # ---------- Clash YAML ----------
+    try:
+        with open(
+            "subs/main/alive_bs.yaml",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(links_to_clash_yaml(final_wl))
+
+        with open(
+            "subs/main/alive_bl.yaml",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(links_to_clash_yaml(final_bl))
+
+        with open(
+            "subs/main/alive_full.yaml",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(links_to_clash_yaml(final_full))
+        print("💾 YAML (Clash): alive_*.yaml записаны")
+    except Exception as e:
+        print(f"⚠️ Не удалось записать YAML: {e}")
+
+    print("💾 Plain text: alive_plain_*.txt записаны")
 
     # ========================================================
     # CLOSE GEO
