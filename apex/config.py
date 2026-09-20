@@ -33,16 +33,16 @@ XRAY_TEST_TIMEOUT = 6.0             # сек, проверка через xray
 TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
 
 # Фильтры
-REMOVE_CF_WARP = False               # отсекать Cloudflare / WARP
+REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
 REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopback
 KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
 # Вывод файлов
 WRITE_BASE64 = True                 # alive_*.txt (base64)
-WRITE_PLAIN = False                  # alive_plain_*.txt
-WRITE_YAML = False                   # alive_*.yaml (Clash)
-WRITE_FULL = False                   # писать full-списки (иначе только WL/BL)
-WRITE_LATEST_JSON = False            # stats/latest.json
+WRITE_PLAIN = True                  # alive_plain_*.txt
+WRITE_YAML = True                   # alive_*.yaml (Clash)
+WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
+WRITE_LATEST_JSON = True            # stats/latest.json
 WRITE_COUNTRY = False               # списки по странам
 DELETE_MISSING_COUNTRIES = False    # удалять старые country-файлы
 WRITE_OTHER_AI = False              # отдельный список под AI
