@@ -18,6 +18,13 @@ from .config import (
     WL_MIN_SUCCESS_COUNT,
     BL_MIN_SUCCESS_COUNT,
     RU_SNI_RATIO,
+    WRITE_BASE64,
+    WRITE_PLAIN,
+    WRITE_YAML,
+    WRITE_FULL,
+    WRITE_LATEST_JSON,
+    RENAME_PREFIX_WL,
+    RENAME_PREFIX_BL,
 )
 from . import config as cfg
 from .geoip import init_geoip
@@ -741,20 +748,20 @@ def main():
 
     final_wl = _build_renamed(
         alive_wl_clean,
-        lambda _item: "[WL]",
+        lambda _item: RENAME_PREFIX_WL,
     )
 
     final_bl = _build_renamed(
         alive_bl_clean,
-        lambda _item: "[BL]",
+        lambda _item: RENAME_PREFIX_BL,
     )
 
     final_full = _build_renamed(
         alive_full_clean,
         lambda item: (
-            "[WL]"
+            RENAME_PREFIX_WL
             if get_final_dedup_key(item[0]) in wl_keys
-            else "[BL]"
+            else RENAME_PREFIX_BL
         ),
     )
 
@@ -764,95 +771,101 @@ def main():
 
     os.makedirs("subs/main", exist_ok=True)
 
-    # ---------- base64 (как раньше) ----------
-    with open(
-        "subs/main/alive_bs.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write(
-            safe_b64encode(
-                "\n".join(final_wl)
+    # ---------- base64 ----------
+    if WRITE_BASE64:
+        with open(
+            "subs/main/alive_bs.txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(
+                safe_b64encode(
+                    "\n".join(final_wl)
+                )
             )
-        )
 
-    with open(
-        "subs/main/alive_bl.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write(
-            safe_b64encode(
-                "\n".join(final_bl)
+        with open(
+            "subs/main/alive_bl.txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(
+                safe_b64encode(
+                    "\n".join(final_bl)
+                )
             )
-        )
 
-    with open(
-        "subs/main/alive_full.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write(
-            safe_b64encode(
-                "\n".join(final_full)
-            )
-        )
+        if WRITE_FULL:
+            with open(
+                "subs/main/alive_full.txt",
+                "w",
+                encoding="utf-8",
+            ) as f:
+                f.write(
+                    safe_b64encode(
+                        "\n".join(final_full)
+                    )
+                )
+        print("💾 Base64: alive_*.txt записаны")
 
-    # ---------- plain text (рядом с base64) ----------
-    with open(
-        "subs/main/alive_plain_bs.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write("\n".join(final_wl))
-        if final_wl:
-            f.write("\n")
+    # ---------- plain text ----------
+    if WRITE_PLAIN:
+        with open(
+            "subs/main/alive_plain_bs.txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write("\n".join(final_wl))
+            if final_wl:
+                f.write("\n")
 
-    with open(
-        "subs/main/alive_plain_bl.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write("\n".join(final_bl))
-        if final_bl:
-            f.write("\n")
+        with open(
+            "subs/main/alive_plain_bl.txt",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write("\n".join(final_bl))
+            if final_bl:
+                f.write("\n")
 
-    with open(
-        "subs/main/alive_plain_full.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write("\n".join(final_full))
-        if final_full:
-            f.write("\n")
+        if WRITE_FULL:
+            with open(
+                "subs/main/alive_plain_full.txt",
+                "w",
+                encoding="utf-8",
+            ) as f:
+                f.write("\n".join(final_full))
+                if final_full:
+                    f.write("\n")
+        print("💾 Plain text: alive_plain_*.txt записаны")
 
     # ---------- Clash YAML ----------
-    try:
-        with open(
-            "subs/main/alive_bs.yaml",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(links_to_clash_yaml(final_wl))
+    if WRITE_YAML:
+        try:
+            with open(
+                "subs/main/alive_bs.yaml",
+                "w",
+                encoding="utf-8",
+            ) as f:
+                f.write(links_to_clash_yaml(final_wl))
 
-        with open(
-            "subs/main/alive_bl.yaml",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(links_to_clash_yaml(final_bl))
+            with open(
+                "subs/main/alive_bl.yaml",
+                "w",
+                encoding="utf-8",
+            ) as f:
+                f.write(links_to_clash_yaml(final_bl))
 
-        with open(
-            "subs/main/alive_full.yaml",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(links_to_clash_yaml(final_full))
-        print("💾 YAML (Clash): alive_*.yaml записаны")
-    except Exception as e:
-        print(f"⚠️ Не удалось записать YAML: {e}")
-
-    print("💾 Plain text: alive_plain_*.txt записаны")
+            if WRITE_FULL:
+                with open(
+                    "subs/main/alive_full.yaml",
+                    "w",
+                    encoding="utf-8",
+                ) as f:
+                    f.write(links_to_clash_yaml(final_full))
+            print("💾 YAML (Clash): alive_*.yaml записаны")
+        except Exception as e:
+            print(f"⚠️ Не удалось записать YAML: {e}")
 
     # ========================================================
     # CLOSE GEO
@@ -921,38 +934,39 @@ def main():
     print("=" * 70)
 
     # stats/latest.json — машинная сводка для бота / badge / CI
-    try:
-        os.makedirs("stats", exist_ok=True)
-        stats = {
-            "updated_at": datetime.now(timezone.utc)
-            .strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "wl": len(final_wl),
-            "bl": len(final_bl),
-            "full": len(final_full),
-            "white_ip": len(white_ips),
-            "wl_tested": len(ping_wl),
-            "bl_tested": len(ping_bl),
-            "wl_ok": wl_ok,
-            "bl_ok": bl_ok,
-            "bl_ru_to_wl": bl_ru_to_wl,
-            "white_ip_queued": white_ip_queued,
-            "white_ip_ok": white_ip_ok,
-        }
-        with open(
-            os.path.join("stats", "latest.json"),
-            "w",
-            encoding="utf-8",
-        ) as sf:
-            json.dump(
-                stats,
-                sf,
-                ensure_ascii=False,
-                indent=2,
-            )
-            sf.write("\n")
-        print("stats/latest.json записан")
-    except Exception as e:
-        print(f"⚠️ Не удалось записать stats/latest.json: {e}")
+    if WRITE_LATEST_JSON:
+        try:
+            os.makedirs("stats", exist_ok=True)
+            stats = {
+                "updated_at": datetime.now(timezone.utc)
+                .strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "wl": len(final_wl),
+                "bl": len(final_bl),
+                "full": len(final_full),
+                "white_ip": len(white_ips),
+                "wl_tested": len(ping_wl),
+                "bl_tested": len(ping_bl),
+                "wl_ok": wl_ok,
+                "bl_ok": bl_ok,
+                "bl_ru_to_wl": bl_ru_to_wl,
+                "white_ip_queued": white_ip_queued,
+                "white_ip_ok": white_ip_ok,
+            }
+            with open(
+                os.path.join("stats", "latest.json"),
+                "w",
+                encoding="utf-8",
+            ) as sf:
+                json.dump(
+                    stats,
+                    sf,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+                sf.write("\n")
+            print("stats/latest.json записан")
+        except Exception as e:
+            print(f"⚠️ Не удалось записать stats/latest.json: {e}")
 
     print(
         "✨ Готово!"
