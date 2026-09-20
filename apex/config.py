@@ -1,78 +1,66 @@
-"""Константы, пути, regex, кэши, SSL."""
+"""Константы, пути, regex, кэши, SSL, флаги вывода."""
 import os
 import re
 import ssl
 import threading
 import ipaddress
 
-# ============================================================
-# НАСТРОЙКИ И ФАЙЛЫ
-# ============================================================
-
+# Пути и файлы
 WHITE_IP_FILE = "white_ip.txt"
 INCOMING_FILE = "incoming_sources.txt"
-
 MMDB_PATH = "GeoLite2-Country.mmdb"
-MMDB_URL = (
-    "https://github.com/P3TERX/GeoLite.mmdb/raw/download/"
-    "GeoLite2-Country.mmdb"
-)
-
-# Официальный SNI whitelist для мобильного БС (RU).
-# Скачивается с GitHub, хранится локально, обновляется при изменении.
+MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
-SNI_WHITELIST_URL = (
-    "https://raw.githubusercontent.com/"
-    "hxehex/russia-mobile-internet-whitelist/"
-    "main/whitelist.txt"
-)
+SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
 
+# Параллелизм
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 
-# ============================================================
-# BL - ОСТАВЛЯЕМ ТВОЮ ЛОГИКУ
-# ============================================================
+# Лимиты уникальности
+MAX_CONFIGS_PER_IP_WL = 30          # макс. конфигов на один IP в WL
+MAX_CONFIGS_PER_IP_BL = 2           # макс. конфигов на один IP в BL
+MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
 
-MAX_CONFIGS_PER_IP_BL = 2
-MAX_CONFIGS_PER_SUBNET_BL = 5
+# WL / SNI
+RU_SNI_RATIO = 0.30                 # доля прочих .ru/.su SNI → WL (0.0–1.0)
 
-# ============================================================
-# WL
-#
-# ВАЖНО:
-# white_ip → WL-пул + Xray-тест, дедуп только по живым.
-# SNI из arch/lists/whitelist.txt → всегда WL.
-# Прочие .ru/.su SNI → WL с вероятностью RU_SNI_RATIO.
-# ============================================================
+# Xray / сетевые тесты
+WL_MIN_SUCCESS_COUNT = 1            # успешных тестов для WL
+BL_MIN_SUCCESS_COUNT = 2            # успешных тестов для BL
+XRAY_START_TIMEOUT = 1.2            # сек, старт xray
+XRAY_TEST_TIMEOUT = 6.0             # сек, проверка через xray
+TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
 
-MAX_CONFIGS_PER_IP_WL = 30
+# Фильтры
+REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
+REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopback
+KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
-# ============================================================
-# Xray tests
-# ============================================================
+# Вывод файлов
+WRITE_BASE64 = True                 # alive_*.txt (base64)
+WRITE_PLAIN = True                  # alive_plain_*.txt
+WRITE_YAML = True                   # alive_*.yaml (Clash)
+WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
+WRITE_LATEST_JSON = True            # stats/latest.json
+WRITE_COUNTRY = False               # списки по странам
+DELETE_MISSING_COUNTRIES = False    # удалять старые country-файлы
+WRITE_OTHER_AI = False              # отдельный список под AI
+WRITE_OTHER_TORRENT = False         # отдельный список под торрент
 
-WL_MIN_SUCCESS_COUNT = 1
-BL_MIN_SUCCESS_COUNT = 2
+# Rename (имя в клиенте)
+RENAME_PREFIX_WL = "[WL]"
+RENAME_PREFIX_BL = "[BL]"
+RENAME_PREFIX_AI = "[AI]"
+RENAME_PREFIX_TORRENT = "[TR]"
+# Плейсхолдеры: {flag} {tag} {index}
+# Пример: 🇳🇱 [WL] Сервер 12
+RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"
 
-# Не все .ru SNI реально в мобильном БС → только 30% в WL.
-RU_SNI_RATIO = 0.30
-
-# Таймауты
-XRAY_START_TIMEOUT = 1.2
-XRAY_TEST_TIMEOUT = 6.0
-TCP_CHECK_TIMEOUT = 2.5
-
-
-# ============================================================
-# SSL
-# ============================================================
-
+# SSL / HTTP
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
 SSL_CONTEXT.verify_mode = ssl.CERT_NONE
-
-
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -82,22 +70,13 @@ HEADERS = {
     "Accept": "*/*",
 }
 
-
-# ============================================================
-# CACHE
-# ============================================================
-
+# Cache
 DNS_CACHE = {}
 DNS_LOCK = threading.Lock()
-
 GEO_ONLINE_CACHE = {}
 GEO_LOCK = threading.Lock()
 
-
-# ============================================================
-# REGEX
-# ============================================================
-
+# Regex
 WL_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
     r"(?:wl|бс|обход|глусилк(?:а|и|ок|ам|ах)?|"
@@ -105,8 +84,6 @@ WL_KEYWORDS_REGEX = re.compile(
     r"бел(?:ый|ая|ое|ые|ых|ому|ым|ыми)?(?:\s*списк(?:и|а|ов|ам|ах)?)?)"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
 )
-
-# Принудительно в BL (ЧС), даже если есть другие WL-признаки
 BL_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
     r"(?:bl|blacklist|black[\s_-]?list|"
@@ -116,11 +93,6 @@ BL_KEYWORDS_REGEX = re.compile(
     r"(?:\s*списк(?:и|а|ов|ам|ах)?)?"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
 )
-
-# Только текстовые маркеры «подписка умерла».
-# 0.0.0.0 / 127.0.0.1 сюда НЕ входят — их и так отсекает
-# is_valid_public_host, а один мусорный конфиг не должен
-# красить всю подписку как Expired.
 EXPIRED_MARKERS_REGEX = re.compile(
     r"(?i)(?:expired|истек\w*|переехал\w*|"
     r"возьмите\s*новую|подписка\s*истекла|"
@@ -129,17 +101,12 @@ EXPIRED_MARKERS_REGEX = re.compile(
     r"renew\s*sub|subscription\s*(?:expired|ended)|"
     r"outdated|out\s*of\s*date)"
 )
-
 DOMAIN_REGEX = re.compile(
     r"^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
     r"[a-z0-9-]{2,63}$",
     re.IGNORECASE,
 )
-
-FLAG_REGEX = re.compile(
-    r"[\U0001F1E6-\U0001F1FF]{2}"
-)
-
+FLAG_REGEX = re.compile(r"[\U0001F1E6-\U0001F1FF]{2}")
 SUPPORTED_PROTOCOLS = (
     "vless://",
     "vmess://",
@@ -149,25 +116,7 @@ SUPPORTED_PROTOCOLS = (
     "hy2://",
 )
 
-
-# ============================================================
-# MAXMIND
-# ============================================================
-
-try:
-    import maxminddb
-except ImportError:
-    maxminddb = None
-
-GEO_READER = None
-
-
-# ============================================================
-# CLOUDFLARE
-#
-# НЕ МЕНЯЮ ТВОЙ ФИЛЬТР.
-# ============================================================
-
+# Cloudflare
 CF_CIDRS = [
     "103.4.160.0/22",
     "103.5.72.0/22",
@@ -200,21 +149,11 @@ CF_CIDRS = [
     "8.50.0.0/22",
     "8.52.0.0/22",
 ]
+CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
 
-CF_NETWORKS = [
-    ipaddress.ip_network(cidr)
-    for cidr in CF_CIDRS
-]
-
-
-
-# ============================================================
-# MAXMIND (инициализируется в geoip.init_geoip)
-# ============================================================
-
+# MaxMind (инициализируется в geoip.init_geoip)
 try:
     import maxminddb
 except ImportError:
     maxminddb = None
-
 GEO_READER = None
