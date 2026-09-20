@@ -24,6 +24,8 @@ from .config import (
     BL_MIN_SUCCESS_COUNT,
     SUPPORTED_PROTOCOLS,
     HEADERS,
+    REMOVE_CF_WARP,
+    REMOVE_PRIVATE_INVALID,
 )
 from .parse import parse_host_port, parse_host_port_and_name, extract_sni_from_link
 from .utils import safe_b64decode, safe_b64encode, cc_to_flag, extract_clean_flag
@@ -1617,12 +1619,17 @@ def check_proxy_alive_detailed(
         )
     )
 
-    if (
-        not host
-        or not port
-        or not is_valid_public_host(
-            host
+    if not host or not port:
+        return (
+            False,
+            None,
+            "Некорректный формат "
+            "хоста/порта",
+            None,
         )
+
+    if REMOVE_PRIVATE_INVALID and not is_valid_public_host(
+        host
     ):
         return (
             False,
@@ -1632,7 +1639,7 @@ def check_proxy_alive_detailed(
             None,
         )
 
-    if is_cloudflare_or_warp(
+    if REMOVE_CF_WARP and is_cloudflare_or_warp(
         host
     ):
         return (
