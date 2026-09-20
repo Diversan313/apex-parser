@@ -9,6 +9,7 @@ from .config import (
     INCOMING_FILE,
     MAX_QUEUE_LIMIT,
     SUPPORTED_PROTOCOLS,
+    KEEP_PREV_ALIVES,
 )
 from .utils import safe_b64decode, sanitize_v2rayng_link
 from .parse import parse_ip_or_resolve
@@ -102,6 +103,16 @@ def load_previous_alives():
 
     prev_wl = []
     prev_bl = []
+
+    if not KEEP_PREV_ALIVES:
+        print(
+            "📂 KEEP_PREV_ALIVES=False — "
+            "прошлые alive не загружаем"
+        )
+        return (
+            prev_wl,
+            prev_bl,
+        )
 
     if os.path.exists(
         "subs/main/alive_bs.txt"
