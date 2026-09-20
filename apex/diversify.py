@@ -8,7 +8,11 @@ import urllib.parse
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from .config import MAX_CONFIGS_PER_IP_WL, SUPPORTED_PROTOCOLS
+from .config import (
+    MAX_CONFIGS_PER_IP_WL,
+    SUPPORTED_PROTOCOLS,
+    RENAME_TEMPLATE,
+)
 from .parse import parse_host_port, parse_host_port_and_name, extract_sni_from_link
 from .utils import extract_clean_flag, cc_to_flag, safe_b64decode
 from .geoip import resolve_host_cached
@@ -507,12 +511,20 @@ def rename_config(
     Всегда принудительно переименовывает конфиг.
     Для vmess — обновляет ps внутри JSON.
     Для остальных — заменяет/добавляет fragment (#name).
-    Гарантирует, что имя будет вида: {flag} {tag} Сервер {N}
+    Имя строится по RENAME_TEMPLATE из config
+    ({flag}, {tag}, {index}).
     """
     flag = (detected_flag or "").strip() or "🌐"
     if not isinstance(flag, str):
         flag = "🌐"
-    new_name = f"{flag} {tag} Сервер {index}"
+    try:
+        new_name = RENAME_TEMPLATE.format(
+            flag=flag,
+            tag=tag,
+            index=index,
+        )
+    except Exception:
+        new_name = f"{flag} {tag} Сервер {index}"
     quoted_name = urllib.parse.quote(new_name, safe="")
 
     if not link or not isinstance(link, str):
