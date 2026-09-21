@@ -43,10 +43,10 @@ WRITE_PLAIN = True                  # alive_plain_*.txt
 WRITE_YAML = True                   # alive_*.yaml (Clash)
 WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
 WRITE_LATEST_JSON = True            # stats/latest.json
-WRITE_COUNTRY = False               # списки по странам
-DELETE_MISSING_COUNTRIES = False    # удалять старые country-папки
-WRITE_OTHER_AI = False              # отдельный список под AI
-WRITE_OTHER_TORRENT = False         # отдельный список под торрент
+WRITE_COUNTRY = True                # списки по странам
+DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
+WRITE_OTHER_AI = True               # отдельный список под AI
+WRITE_OTHER_TORRENT = True          # отдельный список под торрент
 
 # Rename (имя в клиенте)
 RENAME_PREFIX_WL = "[WL]"
