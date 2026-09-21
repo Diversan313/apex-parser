@@ -18,7 +18,7 @@ MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 
 # Лимиты уникальности
-MAX_CONFIGS_PER_IP_WL = 30          # макс. конфигов на один IP в WL
+MAX_CONFIGS_PER_IP_WL = 5          # макс. конфигов на один IP в WL
 MAX_CONFIGS_PER_IP_BL = 2           # макс. конфигов на один IP в BL
 MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
 
