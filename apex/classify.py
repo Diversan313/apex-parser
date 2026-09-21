@@ -1,4 +1,4 @@
-"""Классификация конфигов: WL / BL по keywords, SNI, RU."""
+"""Классификация конфигов: WL / BL по keywords, SNI, RU. AI / Torrent."""
 from __future__ import annotations
 
 import re
@@ -9,6 +9,9 @@ from typing import Tuple
 from .config import (
     WL_KEYWORDS_REGEX,
     BL_KEYWORDS_REGEX,
+    AI_KEYWORDS_REGEX,
+    TORRENT_KEYWORDS_REGEX,
+    TORRENT_NEGATIVE_REGEX,
     RU_SNI_RATIO,
 )
 from .sni_whitelist import link_has_whitelisted_sni, is_sni_in_mobile_whitelist
@@ -23,41 +26,50 @@ from .geoip import (
     is_valid_public_host,
 )
 
+def _prepare_text(link: str, orig_name: str = "") -> str:
+    full_text = f"{link} {orig_name}"
+    try:
+        full_text = urllib.parse.unquote(full_text)
+    except Exception:
+        pass
+    return full_text
+
+
 def is_wl_by_keywords(
     link: str,
     orig_name: str = "",
 ) -> bool:
-
-    full_text = (
-        f"{link} {orig_name}"
-    )
-
-    try:
-        full_text = (
-            urllib.parse.unquote(
-                full_text
-            )
-        )
-    except Exception:
-        pass
-
-    return bool(
-        WL_KEYWORDS_REGEX.search(
-            full_text
-        )
-    )
+    return bool(WL_KEYWORDS_REGEX.search(_prepare_text(link, orig_name)))
 
 
 def is_bl_by_keywords(
     link: str,
     orig_name: str = "",
 ) -> bool:
-    full_text = f"{link} {orig_name}"
-    try:
-        full_text = urllib.parse.unquote(full_text)
-    except Exception:
-        pass
-    return bool(BL_KEYWORDS_REGEX.search(full_text))
+    return bool(BL_KEYWORDS_REGEX.search(_prepare_text(link, orig_name)))
+
+
+def is_ai_by_keywords(
+    link: str,
+    orig_name: str = "",
+) -> bool:
+    return bool(AI_KEYWORDS_REGEX.search(_prepare_text(link, orig_name)))
+
+
+def is_torrent_by_keywords(
+    link: str,
+    orig_name: str = "",
+) -> bool:
+    """
+    Положительное совпадение по torrent-ключевым словам,
+    но если рядом есть негатив (NOT / НЕ / НЕ ДЛЯ и т.п.) — False.
+    """
+    text = _prepare_text(link, orig_name)
+    if not TORRENT_KEYWORDS_REGEX.search(text):
+        return False
+    if TORRENT_NEGATIVE_REGEX.search(text):
+        return False
+    return True
 
 
 def is_ru_sni(link: str) -> bool:
@@ -66,14 +78,11 @@ def is_ru_sni(link: str) -> bool:
     Точные домены БС — через arch/lists/whitelist.txt,
     не через хардкод.
     """
-
     sni = extract_sni_from_link(link)
-
     if sni and sni.endswith((".ru", ".su")):
         return True
 
     link_low = link.lower()
-
     if re.search(
         r"sni=[^&]*\.(ru|su)(?:&|$)",
         link_low,
@@ -130,4 +139,3 @@ def classify_config(
         )
 
     return "BL"
-
