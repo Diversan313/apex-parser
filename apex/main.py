@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import json
+import shutil
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import defaultdict
@@ -18,13 +19,6 @@ from .config import (
     WL_MIN_SUCCESS_COUNT,
     BL_MIN_SUCCESS_COUNT,
     RU_SNI_RATIO,
-    WRITE_BASE64,
-    WRITE_PLAIN,
-    WRITE_YAML,
-    WRITE_FULL,
-    WRITE_LATEST_JSON,
-    RENAME_PREFIX_WL,
-    RENAME_PREFIX_BL,
 )
 from . import config as cfg
 from .geoip import init_geoip
@@ -40,7 +34,13 @@ from .parse import (
     find_matched_ip_for_link,
 )
 from .geoip import is_valid_public_host
-from .classify import classify_config, is_wl_by_keywords, is_bl_by_keywords
+from .classify import (
+    classify_config,
+    is_wl_by_keywords,
+    is_bl_by_keywords,
+    is_ai_by_keywords,
+    is_torrent_by_keywords,
+)
 from .xray import (
     check_proxy_alive_detailed,
     link_to_xray_outbound,
@@ -67,6 +67,35 @@ from .diversify import (
     links_to_clash_yaml,
     sanitize_proxy_link,
 )
+
+
+def _write_subscription_files(base_dir: str, prefix: str, links: list) -> None:
+    """
+    Пишет base64 / plain / yaml для списка links
+    с учётом WRITE_BASE64 / WRITE_PLAIN / WRITE_YAML.
+    """
+    os.makedirs(base_dir, exist_ok=True)
+
+    if cfg.WRITE_BASE64:
+        path = os.path.join(base_dir, f"alive_{prefix}.txt")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(safe_b64encode("\n".join(links)))
+
+    if cfg.WRITE_PLAIN:
+        path = os.path.join(base_dir, f"alive_plain_{prefix}.txt")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(links))
+            if links:
+                f.write("\n")
+
+    if cfg.WRITE_YAML:
+        path = os.path.join(base_dir, f"alive_{prefix}.yaml")
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(links_to_clash_yaml(links))
+        except Exception as e:
+            print(f"⚠️ Не удалось записать YAML {path}: {e}")
+
 
 def main():
 
@@ -137,9 +166,7 @@ def main():
         )
     )
 
-    incoming_proxies, incoming_raw_ips = (
-        process_incoming_queue()
-    )
+    incoming_raw_ips = process_incoming_queue()
 
     # ========================================================
     # 2. WHITE IP
@@ -256,16 +283,6 @@ def main():
             )
         )
 
-    # Telegram
-    for link in incoming_proxies:
-
-        tagged_items.append(
-            (
-                link,
-                "INCOMING_TELEGRAM",
-            )
-        )
-
     # PREVIOUS WL
     for link in prev_wl_links:
 
@@ -303,21 +320,13 @@ def main():
     )
 
     # ========================================================
-    # 6. CLASSIFY FIRST
-    #
-    # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ:
-    #
-    # Раньше BL limit применялся к ВСЕМ конфигам
-    # ДО classify_config().
-    #
-    # Поэтому WL по keyword/RU-IP/RU-SNI мог
-    # быть ошибочно ограничен как BL.
-    #
-    # Теперь сначала классифицируем.
+    # 6. CLASSIFY FIRST + AI / TORRENT tags
     # ========================================================
 
     pre_ping_wl = []
     pre_ping_bl = []
+    ai_links = set()
+    torrent_links = set()
 
     for link, src in clean_items:
 
@@ -335,6 +344,12 @@ def main():
             )
         ):
             continue
+
+        # AI / Torrent — по оригинальному имени и ссылке
+        if is_ai_by_keywords(link, orig_name):
+            ai_links.add(link)
+        if is_torrent_by_keywords(link, orig_name):
+            torrent_links.add(link)
 
         category = classify_config(
             link,
@@ -364,12 +379,12 @@ def main():
         f"\n🧠 Классификация ДО пинга:"
         f"\n   WL: {len(pre_ping_wl)}"
         f"\n   BL: {len(pre_ping_bl)}"
+        f"\n   AI-кандидаты: {len(ai_links)}"
+        f"\n   Torrent-кандидаты: {len(torrent_links)}"
     )
 
     # ========================================================
     # 7. ONLY BL LIMIT
-    #
-    # WL не режем здесь вообще.
     # ========================================================
 
     pre_ping_bl = (
@@ -386,10 +401,6 @@ def main():
 
     # ========================================================
     # 8. PING WL
-    #
-    # white_ip → тоже в Xray-очередь (метка WHITE_IP:...),
-    # но НЕ режем их BL-лимитами.
-    # Тест → только живые → дедуп/diversity.
     # ========================================================
 
     alive_wl_data = []
@@ -410,8 +421,6 @@ def main():
         )
 
         if matched_ip:
-            # Метка WHITE_IP сохраняется после теста
-            # для приоритета в diversity.
             ping_wl.append(
                 (
                     link,
@@ -502,13 +511,13 @@ def main():
 
             if is_ok:
 
-                # res = (link, flag)
-                # source сохраняем (WHITE_IP:... или обычный)
+                # (link, flag, src, cc)
                 alive_wl_data.append(
                     (
                         res[0],
                         res[1],
                         src,
+                        cc,
                     )
                 )
 
@@ -580,6 +589,7 @@ def main():
                         res[0],
                         res[1],
                         "RU_EXIT:" + str(src),
+                        cc,
                     )
                 )
                 bl_ru_to_wl += 1
@@ -589,6 +599,7 @@ def main():
                         res[0],
                         res[1],
                         src,
+                        cc,
                     )
                 )
 
@@ -636,10 +647,6 @@ def main():
 
     # ========================================================
     # 14. BL LIMIT AFTER TEST
-    #
-    # Сохраняем:
-    # IP = 2
-    # /24 = 5
     # ========================================================
 
     alive_bl_limited = (
@@ -650,8 +657,6 @@ def main():
 
     # ========================================================
     # 15. BL PROTOCOL FILTER
-    #
-    # НЕ МЕНЯЕМ.
     # ========================================================
 
     alive_bl_clean = (
@@ -724,8 +729,6 @@ def main():
 
     # ========================================================
     # 17. SANITIZE + RENAME
-    #    Грязные type/security/flow чистим, совсем битые — отсекаем.
-    #    Нумерация сплошная (без дыр). Без лишних логов.
     # ========================================================
 
     def _build_renamed(items, tag_fn):
@@ -748,31 +751,30 @@ def main():
 
     final_wl = _build_renamed(
         alive_wl_clean,
-        lambda _item: RENAME_PREFIX_WL,
+        lambda _item: cfg.RENAME_PREFIX_WL,
     )
 
     final_bl = _build_renamed(
         alive_bl_clean,
-        lambda _item: RENAME_PREFIX_BL,
+        lambda _item: cfg.RENAME_PREFIX_BL,
     )
 
     final_full = _build_renamed(
         alive_full_clean,
         lambda item: (
-            RENAME_PREFIX_WL
+            cfg.RENAME_PREFIX_WL
             if get_final_dedup_key(item[0]) in wl_keys
-            else RENAME_PREFIX_BL
+            else cfg.RENAME_PREFIX_BL
         ),
     )
 
     # ========================================================
-    # 18. SAVE
+    # 18. SAVE MAIN
     # ========================================================
 
     os.makedirs("subs/main", exist_ok=True)
 
-    # ---------- base64 ----------
-    if WRITE_BASE64:
+    if cfg.WRITE_BASE64:
         with open(
             "subs/main/alive_bs.txt",
             "w",
@@ -795,7 +797,7 @@ def main():
                 )
             )
 
-        if WRITE_FULL:
+        if cfg.WRITE_FULL:
             with open(
                 "subs/main/alive_full.txt",
                 "w",
@@ -806,10 +808,8 @@ def main():
                         "\n".join(final_full)
                     )
                 )
-        print("💾 Base64: alive_*.txt записаны")
 
-    # ---------- plain text ----------
-    if WRITE_PLAIN:
+    if cfg.WRITE_PLAIN:
         with open(
             "subs/main/alive_plain_bs.txt",
             "w",
@@ -828,7 +828,7 @@ def main():
             if final_bl:
                 f.write("\n")
 
-        if WRITE_FULL:
+        if cfg.WRITE_FULL:
             with open(
                 "subs/main/alive_plain_full.txt",
                 "w",
@@ -837,10 +837,8 @@ def main():
                 f.write("\n".join(final_full))
                 if final_full:
                     f.write("\n")
-        print("💾 Plain text: alive_plain_*.txt записаны")
 
-    # ---------- Clash YAML ----------
-    if WRITE_YAML:
+    if cfg.WRITE_YAML:
         try:
             with open(
                 "subs/main/alive_bs.yaml",
@@ -856,7 +854,7 @@ def main():
             ) as f:
                 f.write(links_to_clash_yaml(final_bl))
 
-            if WRITE_FULL:
+            if cfg.WRITE_FULL:
                 with open(
                     "subs/main/alive_full.yaml",
                     "w",
@@ -866,6 +864,108 @@ def main():
             print("💾 YAML (Clash): alive_*.yaml записаны")
         except Exception as e:
             print(f"⚠️ Не удалось записать YAML: {e}")
+
+    if cfg.WRITE_PLAIN:
+        print("💾 Plain text: alive_plain_*.txt записаны")
+
+    # ========================================================
+    # 19. OTHER: AI / TORRENT / COUNTRIES
+    # ========================================================
+
+    # --- AI ---
+    if cfg.WRITE_OTHER_AI:
+        ai_items = [
+            item for item in alive_full_clean
+            if item[0] in ai_links
+        ]
+        if ai_items:
+            final_ai = _build_renamed(
+                ai_items,
+                lambda _item: cfg.RENAME_PREFIX_AI,
+            )
+            _write_subscription_files(
+                "subs/other/AI",
+                "AI",
+                final_ai,
+            )
+            print(f"💾 AI: {len(final_ai)} конфигов → subs/other/AI/")
+        else:
+            print("💾 AI: 0 конфигов — файлы не перезаписываем")
+
+    # --- TORRENT ---
+    if cfg.WRITE_OTHER_TORRENT:
+        torrent_items = [
+            item for item in alive_full_clean
+            if item[0] in torrent_links
+        ]
+        if torrent_items:
+            final_torrent = _build_renamed(
+                torrent_items,
+                lambda _item: cfg.RENAME_PREFIX_TORRENT,
+            )
+            _write_subscription_files(
+                "subs/other/torrent",
+                "torrent",
+                final_torrent,
+            )
+            print(
+                f"💾 Torrent: {len(final_torrent)} конфигов "
+                f"→ subs/other/torrent/"
+            )
+        else:
+            print(
+                "💾 Torrent: 0 конфигов — файлы не перезаписываем"
+            )
+
+    # --- COUNTRIES ---
+    if cfg.WRITE_COUNTRY:
+        countries_dir = "subs/other/countries"
+        os.makedirs(countries_dir, exist_ok=True)
+
+        by_cc = defaultdict(list)
+        for item in alive_full_clean:
+            cc = None
+            if len(item) > 3 and item[3]:
+                cc = str(item[3]).upper()
+            if not cc or len(cc) != 2:
+                continue
+            by_cc[cc].append(item)
+
+        active_ccs = set(by_cc.keys())
+
+        for cc, items in sorted(by_cc.items()):
+            final_cc = _build_renamed(
+                items,
+                lambda _item: (
+                    cfg.RENAME_PREFIX_WL
+                    if get_final_dedup_key(_item[0]) in wl_keys
+                    else cfg.RENAME_PREFIX_BL
+                ),
+            )
+            if not final_cc:
+                continue
+            cc_dir = os.path.join(countries_dir, cc)
+            _write_subscription_files(cc_dir, cc, final_cc)
+
+        print(
+            f"💾 Countries: {len(active_ccs)} стран "
+            f"→ subs/other/countries/"
+        )
+
+        if cfg.DELETE_MISSING_COUNTRIES:
+            try:
+                for name in os.listdir(countries_dir):
+                    path = os.path.join(countries_dir, name)
+                    if (
+                        os.path.isdir(path)
+                        and name.isalpha()
+                        and len(name) == 2
+                        and name.upper() not in active_ccs
+                    ):
+                        shutil.rmtree(path, ignore_errors=True)
+                        print(f"   🗑 удалена папка страны {name}")
+            except Exception as e:
+                print(f"⚠️ Ошибка очистки стран: {e}")
 
     # ========================================================
     # CLOSE GEO
@@ -934,7 +1034,7 @@ def main():
     print("=" * 70)
 
     # stats/latest.json — машинная сводка для бота / badge / CI
-    if WRITE_LATEST_JSON:
+    if cfg.WRITE_LATEST_JSON:
         try:
             os.makedirs("stats", exist_ok=True)
             stats = {
