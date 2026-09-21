@@ -15,84 +15,40 @@ from .utils import safe_b64decode, sanitize_v2rayng_link
 from .parse import parse_ip_or_resolve
 
 def process_incoming_queue():
-
-    incoming_proxies = []
+    """
+    Читает incoming_sources.txt.
+    Берёт только IP-адреса.
+    """
     incoming_raw_ips = []
 
-    if not os.path.exists(
-        INCOMING_FILE
-    ):
-        return (
-            incoming_proxies,
-            incoming_raw_ips,
-        )
+    if not os.path.exists(INCOMING_FILE):
+        return incoming_raw_ips
 
     try:
-
-        with open(
-            INCOMING_FILE,
-            "r",
-            encoding="utf-8",
-        ) as f:
-
+        with open(INCOMING_FILE, "r", encoding="utf-8") as f:
             lines = [
                 line.strip()
                 for line in f
-                if (
-                    line.strip()
-                    and not line.strip().startswith(
-                        "#"
-                    )
-                )
+                if line.strip() and not line.strip().startswith("#")
             ]
 
-        unique_lines = list(
-            dict.fromkeys(
-                lines
-            )
-        )[
-            :MAX_QUEUE_LIMIT
-        ]
+        unique_lines = list(dict.fromkeys(lines))[:MAX_QUEUE_LIMIT]
 
         for item in unique_lines:
-
-            if item.startswith(
-                SUPPORTED_PROTOCOLS
-            ):
-
-                incoming_proxies.append(
-                    sanitize_v2rayng_link(
-                        item
-                    )
-                )
-
-            else:
-
-                incoming_raw_ips.extend(
-                    parse_ip_or_resolve(
-                        item
-                    )
-                )
+            # Proxy-ссылки полностью игнорируем
+            if item.startswith(SUPPORTED_PROTOCOLS):
+                continue
+            incoming_raw_ips.extend(parse_ip_or_resolve(item))
 
         print(
             f"📥 Из очереди забрано: "
-            f"{len(incoming_proxies)} "
-            f"прокси-ссылок и "
-            f"{len(incoming_raw_ips)} "
-            f"чистых IP."
+            f"{len(incoming_raw_ips)} чистых IP."
         )
 
     except Exception as e:
+        print(f"⚠️ Ошибка чтения очереди: {e}")
 
-        print(
-            f"⚠️ Ошибка чтения очереди: "
-            f"{e}"
-        )
-
-    return (
-        incoming_proxies,
-        incoming_raw_ips,
-    )
+    return incoming_raw_ips
 
 
 # ============================================================
@@ -186,4 +142,3 @@ def load_previous_alives():
         prev_wl,
         prev_bl,
     )
-
