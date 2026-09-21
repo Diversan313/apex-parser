@@ -44,7 +44,7 @@ WRITE_YAML = True                   # alive_*.yaml (Clash)
 WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
 WRITE_LATEST_JSON = True            # stats/latest.json
 WRITE_COUNTRY = False               # списки по странам
-DELETE_MISSING_COUNTRIES = False    # удалять старые country-файлы
+DELETE_MISSING_COUNTRIES = False    # удалять старые country-папки
 WRITE_OTHER_AI = False              # отдельный список под AI
 WRITE_OTHER_TORRENT = False         # отдельный список под торрент
 
@@ -91,6 +91,24 @@ BL_KEYWORDS_REGEX = re.compile(
     r"wifi|wi[\s_-]?fi|вай[\s_-]?фай|"
     r"чс|чёрн(?:ый|ая|ое|ые|ых|ому)?|черн(?:ый|ая|ое|ые|ых|ому)?)"
     r"(?:\s*списк(?:и|а|ов|ам|ах)?)?"
+    r"(?:$|[^a-zA-Zа-яА-Я0-9])"
+)
+AI_KEYWORDS_REGEX = re.compile(
+    r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
+    r"(?:ии|нейро(?:сеть|нка|нки)?|"
+    r"ai|gemini|perplexity|claude|grok)"
+    r"(?:$|[^a-zA-Zа-яА-Я0-9])"
+)
+TORRENT_KEYWORDS_REGEX = re.compile(
+    r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
+    r"(?:torrent|p2p|bittorrent|"
+    r"торрент|торент|п2п|пи2пи|питупи)"
+    r"(?:$|[^a-zA-Zа-яА-Я0-9])"
+)
+TORRENT_NEGATIVE_REGEX = re.compile(
+    r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
+    r"(?:not|no|dont\s*use|don't\s*use|"
+    r"не|не\s*для|нельзя|запрещено)"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
 )
 EXPIRED_MARKERS_REGEX = re.compile(
