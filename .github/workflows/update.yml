@@ -97,7 +97,8 @@ jobs:
         run: |
           touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt \
                 incoming_sources.txt incoming_subs.txt
-          mkdir -p arch/lists stats subs/main
+          mkdir -p arch/lists stats subs/main \
+                   subs/other/AI subs/other/torrent subs/other/countries
 
       - name: Update Sources from Telegram
         env:
@@ -177,11 +178,20 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          mkdir -p /tmp/apex-out arch/lists stats subs/main
+          mkdir -p /tmp/apex-out arch/lists stats subs/main \
+                   subs/other/AI subs/other/torrent subs/other/countries
+
+          # main lists
           cp -f subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
                 subs/main/alive_plain_bs.txt subs/main/alive_plain_bl.txt subs/main/alive_plain_full.txt \
                 subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
                 white_ip.txt /tmp/apex-out/ 2>/dev/null || true
+
+          # other: AI / torrent / countries (preserve tree)
+          if [ -d subs/other ]; then
+            cp -a subs/other /tmp/apex-out/other 2>/dev/null || true
+          fi
+
           cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
           cp -f stats/latest.json /tmp/apex-out/latest.json 2>/dev/null || true
 
@@ -192,7 +202,10 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
 
-          mkdir -p arch/lists stats subs/main
+          mkdir -p arch/lists stats subs/main \
+                   subs/other/AI subs/other/torrent subs/other/countries
+
+          # restore main lists
           cp -f /tmp/apex-out/alive_bs.txt subs/main/alive_bs.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_bl.txt subs/main/alive_bl.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_full.txt subs/main/alive_full.txt 2>/dev/null || true
@@ -202,6 +215,13 @@ jobs:
           cp -f /tmp/apex-out/alive_bs.yaml subs/main/alive_bs.yaml 2>/dev/null || true
           cp -f /tmp/apex-out/alive_bl.yaml subs/main/alive_bl.yaml 2>/dev/null || true
           cp -f /tmp/apex-out/alive_full.yaml subs/main/alive_full.yaml 2>/dev/null || true
+
+          # restore other/
+          if [ -d /tmp/apex-out/other ]; then
+            rm -rf subs/other
+            cp -a /tmp/apex-out/other subs/other
+          fi
+
           cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
           cp -f /tmp/apex-out/latest.json stats/latest.json 2>/dev/null || true
 
@@ -214,7 +234,8 @@ jobs:
                   subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
                   subs/main/alive_plain_bs.txt subs/main/alive_plain_bl.txt subs/main/alive_plain_full.txt \
                   subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
-                  arch/lists/whitelist.txt stats/latest.json
+                  arch/lists/whitelist.txt stats/latest.json \
+                  subs/other/
 
           if git diff --cached --quiet; then
             echo "No changes."
@@ -239,6 +260,11 @@ jobs:
              subs/main/alive_plain_bs.txt subs/main/alive_plain_bl.txt subs/main/alive_plain_full.txt \
              subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
              deploy_gitverse/ 2>/dev/null || true
+
+          # other (AI / torrent / countries) — опционально
+          if [ -d subs/other ]; then
+            cp -a subs/other deploy_gitverse/other 2>/dev/null || true
+          fi
 
           cd deploy_gitverse
           git init
@@ -271,5 +297,4 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
-
 
