@@ -1,31 +1,6 @@
 proxies:
   - name: "🇨🇦 [BL] Сервер 1"
     type: vless
-    server: 66.70.179.198
-    port: 2053
-    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
-      short-id: "83f8317a948bb769"
-  - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 66.70.179.198
-    port: 2053
-    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
-      short-id: "83f8317a948bb769"
-  - name: "🇨🇦 [BL] Сервер 3"
-    type: vless
     server: 51.79.29.205
     port: 443
     uuid: "2cb2774b-475b-4759-f6f2-18b70e8501f8"
@@ -37,7 +12,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GCANC7DeRAKLmXKEWXd2bkRwKl1XTyuWy1ObBB0AKC0"
-  - name: "🇨🇦 [BL] Сервер 4"
+  - name: "🇨🇦 [BL] Сервер 2"
     type: vless
     server: 158.69.112.254
     port: 443
@@ -51,12 +26,37 @@ proxies:
     reality-opts:
       public-key: "wo417FrFdjy7ZhccQ-VWGZEKcoCHSEfyWcJT1pIVc1Y"
       short-id: "3d3c1e645f763ee3"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: 66.70.179.198
+    port: 2053
+    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
+      short-id: "83f8317a948bb769"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: vless
+    server: 66.70.179.198
+    port: 2053
+    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
+      short-id: "83f8317a948bb769"
   - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -70,7 +70,7 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -87,6 +87,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -100,7 +101,6 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -114,6 +114,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "google.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -127,7 +128,6 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "google.com"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -135,15 +135,15 @@ proxies:
       short-id: "0e"
   - name: "🇨🇦 [BL] Сервер 11"
     type: ss
-    server: 51.222.141.125
-    port: 445
-    password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 12"
-    type: ss
     server: 51.79.49.116
     port: 8882
     password: "kDWvXYZoTBcGkC4"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 12"
+    type: ss
+    server: 51.222.141.125
+    port: 445
+    password: "zDNVedRFPQexG9v"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 13"
     type: ss
@@ -177,11 +177,17 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 18"
     type: ss
-    server: 15.235.75.71
-    port: 8388
-    password: "FD3rCuOsxOay"
-    cipher: "chacha20-ietf-poly1305"
+    server: 51.222.12.127
+    port: 445
+    password: "zDNVedRFPQexG9v"
+    cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 19"
+    type: ss
+    server: 51.222.12.127
+    port: 445
+    password: "zDNVedRFPQexG9v"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 20"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -191,9 +197,3 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇨🇦 [BL] Сервер 20"
-    type: ss
-    server: 51.222.12.127
-    port: 445
-    password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
