@@ -1,6 +1,34 @@
 proxies:
   - name: "🇹🇼 [BL] Сервер 1"
     type: vless
+    server: 35.201.230.136
+    port: 443
+    uuid: "18eef0d3-35b3-4a5f-97a1-7b5264530dd8"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Uq9Q8VXK9VkVOJ1M5PfORTqMhjjGoIS40-V0tAG_1FM"
+      short-id: "5e13a6d43d0644c9"
+  - name: "🇹🇼 [BL] Сервер 2"
+    type: vless
+    server: 35.201.230.136
+    port: 443
+    uuid: "18eef0d3-35b3-4a5f-97a1-7b5264530dd8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Uq9Q8VXK9VkVOJ1M5PfORTqMhjjGoIS40-V0tAG_1FM"
+      short-id: "5e13a6d43d0644c9"
+  - name: "🇹🇼 [BL] Сервер 3"
+    type: vless
     server: hinet1.2yly.com
     port: 24215
     uuid: "19d5a678-8396-4e3b-93da-ece618d0e83a"
@@ -11,9 +39,9 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mdWKUPMVTtTbDqK10BPb89OcqBC2-Lx-4NOYtqc1GWE"
-  - name: "🇹🇼 [BL] Сервер 2"
+  - name: "🇹🇼 [BL] Сервер 4"
     type: vless
-    server: 118.167.206.152
+    server: hinet1.2yly.com
     port: 24215
     uuid: "19d5a678-8396-4e3b-93da-ece618d0e83a"
     network: "tcp"
@@ -23,34 +51,6 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mdWKUPMVTtTbDqK10BPb89OcqBC2-Lx-4NOYtqc1GWE"
-  - name: "🇹🇼 [BL] Сервер 3"
-    type: vless
-    server: 35.201.230.136
-    port: 443
-    uuid: "18eef0d3-35b3-4a5f-97a1-7b5264530dd8"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Uq9Q8VXK9VkVOJ1M5PfORTqMhjjGoIS40-V0tAG_1FM"
-      short-id: "5e13a6d43d0644c9"
-  - name: "🇹🇼 [BL] Сервер 4"
-    type: vless
-    server: 35.201.230.136
-    port: 443
-    uuid: "18eef0d3-35b3-4a5f-97a1-7b5264530dd8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Uq9Q8VXK9VkVOJ1M5PfORTqMhjjGoIS40-V0tAG_1FM"
-      short-id: "5e13a6d43d0644c9"
   - name: "🇹🇼 [BL] Сервер 5"
     type: vless
     server: 104.199.134.231
@@ -87,7 +87,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.amd.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -98,10 +98,10 @@ proxies:
     server: 35.194.157.16
     port: 43450
     uuid: "64d77a12-ad6b-4d85-a349-bd287535af1c"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.amd.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -112,7 +112,7 @@ proxies:
     server: 35.221.158.209
     port: 32981
     uuid: "41b96ee9-ee5e-455f-9753-187a9dead97a"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
@@ -126,7 +126,7 @@ proxies:
     server: 35.221.158.209
     port: 32981
     uuid: "41b96ee9-ee5e-455f-9753-187a9dead97a"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
@@ -164,6 +164,20 @@ proxies:
       public-key: "LXPNhrAGxr_QE4YCdJfKE40ebsPNIHnLbydhl6bipCo"
       short-id: "97101ba788915e5a"
   - name: "🇹🇼 [BL] Сервер 13"
+    type: ss
+    server: r3mrcg001286ek2.cybervena.com
+    port: 50099
+    password: "7e731ec3-f8e1-43f6-92cf-3978d14705c4"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇹🇼 [BL] Сервер 14"
+    type: vmess
+    server: 165.154.195.38
+    port: 35034
+    uuid: "959a8caf-4cea-43d0-a548-3628e7ddfafc"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+  - name: "🇹🇼 [BL] Сервер 15"
     type: vmess
     server: 165.154.195.38
     port: 35034
