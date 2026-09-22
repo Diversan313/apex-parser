@@ -95,8 +95,19 @@ BL_KEYWORDS_REGEX = re.compile(
 )
 AI_KEYWORDS_REGEX = re.compile(
     r"(?i)(?:^|[^a-zA-Zа-яА-Я0-9])"
-    r"(?:ии|нейро(?:сеть|нка|нки)?|"
-    r"ai|gemini|perplexity|claude|grok)"
+    r"(?:"
+    r"ии|нейро|нейро(?:сеть|нка|нки|сети)?|нейросет(?:ь|и|ей|ям|ями|ях)?|"
+    r"искусственн(?:ый|ая|ое|ые)\s*интеллект(?:а|у|ом|е)?|"
+    r"ai|a\.i\.|llm|llms|gpt|chatgpt|chat[\s_-]?gpt|"
+    r"openai|open[\s_-]?ai|"
+    r"gemini|bard|claude|anthropic|grok|xai|x\.ai|"
+    r"perplexity|copilot|bing[\s_-]?chat|"
+    r"deepseek|qwen|llama|mistral|mixtral|phi[\s_-]?3?|"
+    r"yi[\s_-]?large|yi[\s_-]?34b|command[\s_-]?r|"
+    r"midjourney|stable[\s_-]?diffusion|sdxl|flux|"
+    r"dall[\s_-]?e|dalle|sora|runway|"
+    r"джбт|джпт|джипити|джи[\s_-]?пити"
+    r")"
     r"(?:$|[^a-zA-Zа-яА-Я0-9])"
 )
 TORRENT_KEYWORDS_REGEX = re.compile(
