@@ -85,7 +85,7 @@ proxies:
     server: 87.76.179.117
     port: 7443
     uuid: "cb15d1b0-e48b-4c4c-b98a-fa1103aa3723"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.samsung.com"
     client-fingerprint: "firefox"
@@ -99,7 +99,7 @@ proxies:
     server: 87.76.179.117
     port: 7443
     uuid: "cb15d1b0-e48b-4c4c-b98a-fa1103aa3723"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.samsung.com"
     client-fingerprint: "firefox"
@@ -113,9 +113,9 @@ proxies:
     server: 212.227.235.66
     port: 2053
     uuid: "ead0dd61-d398-40ad-80d6-a0e1e516d7d3"
-    network: "tcp"
+    network: "raw"
     servername: "www.apple.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -126,21 +126,31 @@ proxies:
     server: 212.227.235.66
     port: 2053
     uuid: "ead0dd61-d398-40ad-80d6-a0e1e516d7d3"
-    network: "raw"
+    network: "tcp"
     servername: "www.apple.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "7Y6Xb5Ql_03K25x8yKUSOKI2JTOMyv2nyCcFza90uxk"
       short-id: "29e8dcd2b37aaa7f"
   - name: "🇪🇸 [BL] Сервер 11"
+    type: ss
+    server: 108.181.121.226
+    port: 8388
+    password: "WSyL4XTwNsdv"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇪🇸 [BL] Сервер 12"
+    type: ss
+    server: 108.181.121.226
+    port: 8388
+    password: "WSyL4XTwNsdv"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇪🇸 [BL] Сервер 13"
     type: vmess
-    server: 85.90.217.42
+    server: 66.163.118.73
     port: 22324
     uuid: "04621bae-ab36-11ec-b909-0242ac120002"
     cipher: "auto"
     alterId: 0
     network: "tcp"
-    ws-opts:
-      path: "/"
