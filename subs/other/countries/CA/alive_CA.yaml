@@ -74,6 +74,7 @@ proxies:
     uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
     network: "tcp"
     servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -86,7 +87,6 @@ proxies:
     uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
     network: "tcp"
     servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -97,7 +97,7 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -111,7 +111,7 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -180,7 +180,7 @@ proxies:
     server: 130.107.73.148
     port: 41373
     uuid: "a71c8954-66a8-4321-bedb-2336230d81ce"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "google.com"
     client-fingerprint: "chrome"
@@ -194,7 +194,7 @@ proxies:
     server: 130.107.73.148
     port: 41373
     uuid: "a71c8954-66a8-4321-bedb-2336230d81ce"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "google.com"
     client-fingerprint: "chrome"
@@ -211,9 +211,9 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 17"
     type: ss
-    server: 51.222.200.165
-    port: 5000
-    password: "Y6R9pAtvxxzmGC"
+    server: 51.79.49.116
+    port: 8882
+    password: "kDWvXYZoTBcGkC4"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 18"
     type: ss
@@ -223,23 +223,33 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 19"
     type: ss
+    server: 51.222.200.165
+    port: 5000
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 20"
+    type: ss
     server: 51.79.64.198
     port: 8119
     password: "cdBIDV42DCwnfIN"
     cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 20"
-    type: ss
-    server: 51.222.155.32
-    port: 5003
-    password: "g5MeD6Ft3CWlJId"
-    cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 21"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    ws-opts:
+      path: "/"
+  - name: "🇨🇦 [BL] Сервер 22"
     type: ss
     server: yyz-ca-01.blncvpn4u.cc
     port: 9443
     password: "eveaaTOb8ji8yntw2Z9yWUG0d6Ir8Ld8m3ymH8THdC5egiTH1mXCiBc0Skr7FibH"
     cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 22"
+  - name: "🇨🇦 [BL] Сервер 23"
     type: ss
     server: yyz-ca-01.blncvpn4u.cc
     port: 9443
