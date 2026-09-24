@@ -1,20 +1,6 @@
 proxies:
   - name: "🇧🇬 [BL] Сервер 1"
     type: vless
-    server: bolgarka.drop0chka.work
-    port: 443
-    uuid: "f495298f-2bdb-4fd8-9ac9-5dd33d1b482a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bolgarka.drop0chka.work"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "W-zf_ncm9sYALF5EqvUsxqTkYGdAw-tQczT2SqwVMGE"
-      short-id: "ff776ff77be48b88"
-  - name: "🇧🇬 [BL] Сервер 2"
-    type: vless
     server: 131.123.42.16
     port: 443
     uuid: "f495298f-2bdb-4fd8-9ac9-5dd33d1b482a"
@@ -22,6 +8,20 @@ proxies:
     flow: "xtls-rprx-vision"
     servername: "bolgarka.drop0chka.work"
     client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "W-zf_ncm9sYALF5EqvUsxqTkYGdAw-tQczT2SqwVMGE"
+      short-id: "ff776ff77be48b88"
+  - name: "🇧🇬 [BL] Сервер 2"
+    type: vless
+    server: bolgarka.drop0chka.work
+    port: 443
+    uuid: "f495298f-2bdb-4fd8-9ac9-5dd33d1b482a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "bolgarka.drop0chka.work"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
@@ -59,7 +59,7 @@ proxies:
     server: 131.123.41.18
     port: 443
     uuid: "54ee5e59-55a3-4599-83ff-0c67b3f411b2"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "sheetpeek.com"
     client-fingerprint: "chrome"
