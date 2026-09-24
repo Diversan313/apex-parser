@@ -44,19 +44,6 @@ proxies:
   - name: "🇨🇦 [BL] Сервер 4"
     type: vless
     server: 51.79.29.205
-    port: 443
-    uuid: "2cb2774b-475b-4759-f6f2-18b70e8501f8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "play-apps-features.googleusercontent.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GCANC7DeRAKLmXKEWXd2bkRwKl1XTyuWy1ObBB0AKC0"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: vless
-    server: 51.79.29.205
     port: 10103
     uuid: "f6c29358-4b06-445a-bf01-360a418aca1e"
     network: "tcp"
@@ -67,6 +54,19 @@ proxies:
     tls: true
     reality-opts:
       public-key: "BEbRvaOBf0Vm-HovuysfKge6jHMgK4AGl4U0kA7w8QI"
+  - name: "🇨🇦 [BL] Сервер 5"
+    type: vless
+    server: 51.79.29.205
+    port: 443
+    uuid: "2cb2774b-475b-4759-f6f2-18b70e8501f8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "play-apps-features.googleusercontent.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GCANC7DeRAKLmXKEWXd2bkRwKl1XTyuWy1ObBB0AKC0"
   - name: "🇨🇦 [BL] Сервер 6"
     type: vless
     server: 158.69.112.254
@@ -125,7 +125,7 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -139,7 +139,7 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
@@ -184,9 +184,9 @@ proxies:
     udp: true
   - name: "🇨🇦 [BL] Сервер 15"
     type: ss
-    server: 51.79.49.116
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
+    server: 51.222.141.125
+    port: 445
+    password: "zDNVedRFPQexG9v"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 16"
     type: ss
@@ -202,14 +202,12 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 18"
     type: vmess
-    server: 23.162.200.198
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    server: 66.163.113.176
+    port: 22324
+    uuid: "04621bae-ab36-11ec-b909-0242ac120002"
     cipher: "auto"
     alterId: 0
     network: "tcp"
-    ws-opts:
-      path: "/"
   - name: "🇨🇦 [BL] Сервер 19"
     type: ss
     server: 15.235.75.71
@@ -222,3 +220,13 @@ proxies:
     port: 8388
     password: "FD3rCuOsxOay"
     cipher: "chacha20-ietf-poly1305"
+  - name: "🇨🇦 [BL] Сервер 21"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    ws-opts:
+      path: "/"
