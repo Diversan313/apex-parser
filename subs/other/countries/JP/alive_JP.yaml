@@ -4,7 +4,7 @@ proxies:
     server: 34.84.126.188
     port: 443
     uuid: "51a43b75-c84b-46eb-885e-c24e7819cd0b"
-    network: "raw"
+    network: "tcp"
     servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
@@ -17,7 +17,7 @@ proxies:
     server: 34.84.126.188
     port: 443
     uuid: "51a43b75-c84b-46eb-885e-c24e7819cd0b"
-    network: "tcp"
+    network: "raw"
     servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
@@ -75,7 +75,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.tesla.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
@@ -89,7 +89,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.tesla.com"
-    client-fingerprint: "random"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -127,7 +127,7 @@ proxies:
     server: 18.183.215.124
     port: 28573
     uuid: "871bfce7-8440-4394-8d82-56b51f20fdad"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
@@ -141,7 +141,7 @@ proxies:
     server: 18.183.215.124
     port: 28573
     uuid: "871bfce7-8440-4394-8d82-56b51f20fdad"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
@@ -151,20 +151,6 @@ proxies:
       public-key: "1DJr9toke7FRuSXjibBVuNvRnLnJnN5kXwUBG6Romzg"
       short-id: "03653bc03be10c97"
   - name: "🇯🇵 [BL] Сервер 13"
-    type: vless
-    server: 38.207.130.15
-    port: 443
-    uuid: "ce7beb9a-5dc1-47b3-b3ff-94521430c446"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "yp.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "sDKrtAJk2VP_w1w7cFi2O86RdlvQ2E2An5xsRdJlgGE"
-      short-id: "5ea30fc4"
-  - name: "🇯🇵 [BL] Сервер 14"
     type: vless
     server: jumpernode.online
     port: 443
@@ -178,87 +164,45 @@ proxies:
     reality-opts:
       public-key: "sDKrtAJk2VP_w1w7cFi2O86RdlvQ2E2An5xsRdJlgGE"
       short-id: "6d962e8d8a0dce"
+  - name: "🇯🇵 [BL] Сервер 14"
+    type: vless
+    server: 156.246.88.125
+    port: 26518
+    uuid: "e01fcb68-3112-49da-b85d-dffb799cfc9b"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "github.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1fa6iCY7vhoQyKu91FeaK04FN-mr1qeHnrtdyLZ79mk"
+      short-id: "6caead99"
   - name: "🇯🇵 [BL] Сервер 15"
-    type: vless
-    server: 156.246.88.125
-    port: 26518
-    uuid: "e01fcb68-3112-49da-b85d-dffb799cfc9b"
+    type: vmess
+    server: 45.32.57.118
+    port: 4433
+    uuid: "35b89832-0a7c-48dd-8d1c-a2891b522195"
+    cipher: "auto"
+    alterId: 0
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "github.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1fa6iCY7vhoQyKu91FeaK04FN-mr1qeHnrtdyLZ79mk"
-      short-id: "6caead99"
   - name: "🇯🇵 [BL] Сервер 16"
-    type: vless
-    server: 156.246.88.125
-    port: 26518
-    uuid: "e01fcb68-3112-49da-b85d-dffb799cfc9b"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "github.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1fa6iCY7vhoQyKu91FeaK04FN-mr1qeHnrtdyLZ79mk"
-      short-id: "6caead99"
-  - name: "🇯🇵 [BL] Сервер 17"
-    type: vless
-    server: 103.75.118.228
-    port: 11452
-    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
-      short-id: "48050fab"
-  - name: "🇯🇵 [BL] Сервер 18"
-    type: vless
-    server: 103.75.118.228
-    port: 11452
-    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
+    type: vmess
+    server: 45.32.57.118
+    port: 4433
+    uuid: "35b89832-0a7c-48dd-8d1c-a2891b522195"
+    cipher: "auto"
+    alterId: 0
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
-      short-id: "48050fab"
-  - name: "🇯🇵 [BL] Сервер 19"
-    type: ss
-    server: 84.247.155.196
-    port: 80
-    password: "3eOFeNssde7PYYMv"
-    cipher: "aes-256-gcm"
-  - name: "🇯🇵 [BL] Сервер 20"
+  - name: "🇯🇵 [BL] Сервер 17"
     type: ss
     server: 84.247.155.196
     port: 443
     password: "3eOFeNssde7PYYMv"
     cipher: "aes-256-gcm"
-  - name: "🇯🇵 [BL] Сервер 21"
-    type: vmess
-    server: 45.32.57.118
-    port: 4433
-    uuid: "35b89832-0a7c-48dd-8d1c-a2891b522195"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-  - name: "🇯🇵 [BL] Сервер 22"
-    type: vmess
-    server: 45.32.57.118
-    port: 4433
-    uuid: "35b89832-0a7c-48dd-8d1c-a2891b522195"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
+  - name: "🇯🇵 [BL] Сервер 18"
+    type: ss
+    server: 84.247.155.196
+    port: 80
+    password: "3eOFeNssde7PYYMv"
+    cipher: "aes-256-gcm"
