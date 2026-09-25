@@ -38,10 +38,21 @@ jobs:
           unzip -o xray.zip xray
           chmod +x xray
 
-      - name: Fetch Sources
+      - name: Fetch White IP
+        run: |
+          # Public apex-white-ip — без токена
+          curl --retry 5 --retry-delay 3 --retry-all-errors -L \
+               -o white_ip.txt \
+               "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt" \
+            || touch white_ip.txt
+          echo "White IP lines: $(grep -cve '^\s*$' white_ip.txt 2>/dev/null || echo 0)"
+
+      - name: Fetch Sources (private)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
+          # При SECURE_SOURCES_GITHUB=True workflow кладёт файлы в корень.
+          # При SECURE=False парсер читает apex/sources/ из checkout — этот шаг просто no-op при ошибке.
           fetch_raw() {
             local out="$1"
             local url="$2"
@@ -65,29 +76,17 @@ jobs:
             return 0
           }
 
-          fetch_raw sources_wl.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" || true
-
-          fetch_raw sources_bl.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" || true
-
-          fetch_raw sources_tg.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
-
-          fetch_raw incoming_sources.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_sources.txt" || true
-
-          # Fallback mechanism if raw download fails
-          if [ ! -s incoming_sources.txt ]; then
-            echo "incoming_sources.txt is empty, trying GitHub API..."
-            curl -s -H "Authorization: token $GH_PAT" \
-                 -H "Accept: application/vnd.github.v3.raw" \
-                 -L -o incoming_sources.txt \
-                 "https://api.github.com/repos/Diversan313/apex-sources/contents/incoming_sources.txt" || true
+          if [ -n "$GH_PAT" ]; then
+            fetch_raw sources_wl.txt \
+              "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" || true
+            fetch_raw sources_bl.txt \
+              "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" || true
+            fetch_raw sources_tg.txt \
+              "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
+          else
+            echo "GH_PAT not set — skip private sources (ожидаются apex/sources/)"
+            touch sources_wl.txt sources_bl.txt sources_tg.txt
           fi
-
-          fetch_raw incoming_subs.txt \
-            "https://raw.githubusercontent.com/Diversan313/apex-sources/main/incoming_subs.txt" || true
 
           curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
                -o GeoLite2-Country.mmdb \
@@ -95,35 +94,26 @@ jobs:
 
       - name: Ensure Base Files Exist
         run: |
-          touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt \
-                incoming_sources.txt incoming_subs.txt
+          touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt
           mkdir -p arch/lists stats subs/main \
-                   subs/other/AI subs/other/torrent subs/other/countries
+                   subs/other/AI subs/other/torrent subs/other/countries \
+                   apex/sources
 
       - name: Update Sources from Telegram
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-        run: python -m apex.modules.parser_tg
+        run: |
+          # Без TG_SESSION_STRING parser_tg сразу выходит
+          if [ -n "$TG_SESSION_STRING" ]; then
+            python -m apex.modules.parser_tg
+          else
+            echo "TG_SESSION_STRING not set — skip parser_tg"
+          fi
 
       - name: Run Parser Script
         run: python -m apex.parser
-
-      - name: Merge incoming IPs to white_ip
-        run: |
-          # Add new IP addresses from the incoming queue to the database
-          if [ -s incoming_sources.txt ]; then
-            grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' incoming_sources.txt > /tmp/incoming_ips.txt
-            if [ -s /tmp/incoming_ips.txt ]; then
-              touch white_ip.txt
-              cat white_ip.txt /tmp/incoming_ips.txt | awk 'NF && $0 !~ /^#/' | sort -V -u > /tmp/white_ip_updated.txt
-              cp /tmp/white_ip_updated.txt white_ip.txt
-              echo "Incoming IPs merged successfully."
-            fi
-          else
-            echo "Incoming sources file is empty."
-          fi
 
       - name: Sync apex-sources
         env:
@@ -132,6 +122,11 @@ jobs:
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         run: |
+          if [ -z "$GH_PAT" ]; then
+            echo "GH_PAT not set — skip sync apex-sources"
+            exit 0
+          fi
+
           git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
 
@@ -139,32 +134,15 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
-          # Update sources from Telegram on the latest main branch
-          PYTHONPATH=.. python -m apex.modules.parser_tg
-
-          # Убираем из очереди ТОЛЬКО те записи, что реально были обработаны
-          # в этом запуске (снимок из шага "Fetch Sources"). Всё, что пришло
-          # позже за время выполнения (~40 мин) и подтянулось сюда через
-          # git reset --hard, остаётся в очереди для следующего запуска —
-          # иначе оно бы стиралось, так и не попав в white_ip.txt.
-          if [ -f ../white_ip.txt ]; then
-            if [ -s ../incoming_sources.txt ] && [ -s incoming_sources.txt ]; then
-              grep -vFxf ../incoming_sources.txt incoming_sources.txt > /tmp/remaining_incoming.txt || true
-              mv /tmp/remaining_incoming.txt incoming_sources.txt
-            elif [ -s ../incoming_sources.txt ]; then
-              # Локальной свежей версии нет — значит нечего оставлять
-              > incoming_sources.txt
-            fi
-            echo "Incoming sources queue: cleared processed items, kept late arrivals."
-          else
-            echo "white_ip.txt not found. Queue cleanup skipped."
+          if [ -n "$TG_SESSION_STRING" ]; then
+            PYTHONPATH=.. python -m apex.modules.parser_tg
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sources_wl.txt sources_bl.txt incoming_sources.txt
+          git add sources_wl.txt sources_bl.txt sources_tg.txt 2>/dev/null || true
           if ! git diff --cached --quiet; then
-            git commit -m "Sync sources and clear processed queue"
+            git commit -m "Sync sources from Telegram"
             git pull --rebase --autostash origin main || true
             git push origin main
           else
@@ -187,7 +165,7 @@ jobs:
                 subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
                 white_ip.txt /tmp/apex-out/ 2>/dev/null || true
 
-          # other: AI / torrent / countries (preserve tree)
+          # other: AI / torrent / countries
           if [ -d subs/other ]; then
             cp -a subs/other /tmp/apex-out/other 2>/dev/null || true
           fi
@@ -196,8 +174,7 @@ jobs:
           cp -f stats/latest.json /tmp/apex-out/latest.json 2>/dev/null || true
 
           rm -f xray xray.zip GeoLite2-Country.mmdb \
-                sources_wl.txt sources_bl.txt sources_tg.txt \
-                incoming_sources.txt incoming_subs.txt white_ip_health.json
+                sources_wl.txt sources_bl.txt sources_tg.txt
 
           git fetch origin main
           git reset --hard origin/main
@@ -205,7 +182,6 @@ jobs:
           mkdir -p arch/lists stats subs/main \
                    subs/other/AI subs/other/torrent subs/other/countries
 
-          # restore main lists
           cp -f /tmp/apex-out/alive_bs.txt subs/main/alive_bs.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_bl.txt subs/main/alive_bl.txt 2>/dev/null || true
           cp -f /tmp/apex-out/alive_full.txt subs/main/alive_full.txt 2>/dev/null || true
@@ -216,7 +192,6 @@ jobs:
           cp -f /tmp/apex-out/alive_bl.yaml subs/main/alive_bl.yaml 2>/dev/null || true
           cp -f /tmp/apex-out/alive_full.yaml subs/main/alive_full.yaml 2>/dev/null || true
 
-          # restore other/
           if [ -d /tmp/apex-out/other ]; then
             rm -rf subs/other
             cp -a /tmp/apex-out/other subs/other
@@ -225,10 +200,10 @@ jobs:
           cp -f /tmp/apex-out/whitelist.txt arch/lists/whitelist.txt 2>/dev/null || true
           cp -f /tmp/apex-out/latest.json stats/latest.json 2>/dev/null || true
 
-          cat white_ip.txt /tmp/apex-out/white_ip.txt 2>/dev/null \
-            | awk 'NF && $0 !~ /^#/' \
-            | sort -V -u > /tmp/white_ip_merged.txt
-          cp /tmp/white_ip_merged.txt white_ip.txt
+          # white_ip: берём свежий из /tmp (уже скачан/обновлён парсером)
+          if [ -f /tmp/apex-out/white_ip.txt ]; then
+            cp -f /tmp/apex-out/white_ip.txt white_ip.txt
+          fi
 
           git add white_ip.txt \
                   subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
@@ -261,7 +236,6 @@ jobs:
              subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
              deploy_gitverse/ 2>/dev/null || true
 
-          # other (AI / torrent / countries) — опционально
           if [ -d subs/other ]; then
             cp -a subs/other deploy_gitverse/other 2>/dev/null || true
           fi
@@ -275,7 +249,6 @@ jobs:
           git commit -m "auto update subscriptions"
           git remote add origin "https://bikinitw22:${GITVERSE_TOKEN}@gitverse.ru/bikinitw22/apelsintel.git"
 
-          # Retry loop for GitVerse push
           max_retries=5
           retry_count=0
           success=false
