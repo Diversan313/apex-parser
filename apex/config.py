@@ -7,23 +7,31 @@ import ipaddress
 
 # Пути и файлы
 WHITE_IP_FILE = "white_ip.txt"
-INCOMING_FILE = "incoming_sources.txt"
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
 SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
+
+# Sources / white_ip
+SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
+SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
+ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
+SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
+WHITE_IP_URL = (
+    "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"
+)  # пусто = локал white_ip.txt
 
 # Параллелизм
 MAX_QUEUE_LIMIT = 1000
 MAX_WORKERS = 15
 
 # Лимиты уникальности
-MAX_CONFIGS_PER_IP_WL = 5          # макс. конфигов на один IP в WL
+MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
 MAX_CONFIGS_PER_IP_BL = 2           # макс. конфигов на один IP в BL
 MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
 
 # WL / SNI
-RU_SNI_RATIO = 0.0                 # доля прочих .ru/.su SNI → WL (0.0–1.0)
+RU_SNI_RATIO = 0.0                  # доля прочих .ru/.su SNI → WL (0.0–1.0)
 
 # Xray / сетевые тесты
 WL_MIN_SUCCESS_COUNT = 1            # успешных тестов для WL
