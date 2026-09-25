@@ -27,19 +27,6 @@ proxies:
   - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 51.79.29.205
-    port: 443
-    uuid: "2cb2774b-475b-4759-f6f2-18b70e8501f8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "play-apps-features.googleusercontent.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GCANC7DeRAKLmXKEWXd2bkRwKl1XTyuWy1ObBB0AKC0"
-  - name: "🇨🇦 [BL] Сервер 4"
-    type: vless
-    server: 51.79.29.205
     port: 10103
     uuid: "f6c29358-4b06-445a-bf01-360a418aca1e"
     network: "tcp"
@@ -50,12 +37,25 @@ proxies:
     tls: true
     reality-opts:
       public-key: "BEbRvaOBf0Vm-HovuysfKge6jHMgK4AGl4U0kA7w8QI"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: vless
+    server: 51.79.29.205
+    port: 443
+    uuid: "2cb2774b-475b-4759-f6f2-18b70e8501f8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "play-apps-features.googleusercontent.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GCANC7DeRAKLmXKEWXd2bkRwKl1XTyuWy1ObBB0AKC0"
   - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: 158.69.112.254
     port: 443
     uuid: "661f395d-b153-4199-a04b-693f5fe7f261"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.speedtest.net"
     client-fingerprint: "chrome"
@@ -69,7 +69,7 @@ proxies:
     server: 158.69.112.254
     port: 443
     uuid: "661f395d-b153-4199-a04b-693f5fe7f261"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.speedtest.net"
     client-fingerprint: "chrome"
@@ -163,3 +163,9 @@ proxies:
     port: 445
     password: "zDNVedRFPQexG9v"
     cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 16"
+    type: ss
+    server: 142.4.216.225
+    port: 443
+    password: "mrs2e9a"
+    cipher: "chacha20-ietf-poly1305"
