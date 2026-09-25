@@ -145,7 +145,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.intel.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -159,7 +159,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.intel.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -170,14 +170,14 @@ proxies:
     server: 134.122.154.210
     port: 443
     uuid: "7f549a50-4655-46b6-962d-183cfc532fc9"
-    network: "raw"
+    network: "tcp"
     udp: true
   - name: "🇸🇬 [BL] Сервер 14"
     type: vless
     server: 134.122.154.210
     port: 443
     uuid: "7f549a50-4655-46b6-962d-183cfc532fc9"
-    network: "tcp"
+    network: "raw"
     udp: true
   - name: "🇸🇬 [BL] Сервер 15"
     type: vless
@@ -210,20 +210,6 @@ proxies:
   - name: "🇸🇬 [BL] Сервер 17"
     type: vless
     server: 3.0.111.82
-    port: 17623
-    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
-      short-id: "48050fab"
-  - name: "🇸🇬 [BL] Сервер 18"
-    type: vless
-    server: 3.0.111.82
     port: 12972
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
     network: "raw"
@@ -235,7 +221,27 @@ proxies:
     reality-opts:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
+  - name: "🇸🇬 [BL] Сервер 18"
+    type: vless
+    server: 3.0.111.82
+    port: 17623
+    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
+      short-id: "48050fab"
   - name: "🇸🇬 [BL] Сервер 19"
+    type: ss
+    server: 158.178.229.235
+    port: 56927
+    password: "4nphreJpAUpxvkVQmO2l37kEup8qRu7pcSYU0JbJLVM="
+    cipher: "2022-blake3-chacha20-poly1305"
+  - name: "🇸🇬 [BL] Сервер 20"
     type: ss
     server: 158.178.229.235
     port: 56927
