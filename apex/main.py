@@ -10,7 +10,6 @@ from collections import defaultdict
 
 from .config import (
     WHITE_IP_FILE,
-    INCOMING_FILE,
     MAX_WORKERS,
     MAX_QUEUE_LIMIT,
     MAX_CONFIGS_PER_IP_WL,
@@ -51,7 +50,13 @@ from .fetch import (
     extract_configs_from_json_text,
     content_looks_expired,
 )
-from .incoming import process_incoming_queue, load_previous_alives
+from .incoming import (
+    load_previous_alives,
+    resolve_source_files,
+    download_white_ip,
+    load_white_ips,
+    save_white_ips,
+)
 from .dedup import (
     get_config_dedup_key,
     get_final_dedup_key,
@@ -134,120 +139,36 @@ def main():
 
     print_xray_version()
 
-    wl_file = (
-        "sources_wl.txt"
-        if os.path.exists(
-            "sources_wl.txt"
-        )
-        else "source_wl.txt"
-    )
-
-    bl_file = (
-        "sources_bl.txt"
-        if os.path.exists(
-            "sources_bl.txt"
-        )
-        else "source_bl.txt"
-    )
-
-    # ========================================================
-    # 1. SOURCES
-    # ========================================================
-
-    wl_fetched = (
-        fetch_links_parallel_with_source(
-            wl_file
-        )
-    )
-
-    bl_fetched = (
-        fetch_links_parallel_with_source(
-            bl_file
-        )
-    )
-
-    incoming_raw_ips = process_incoming_queue()
-
-    # ========================================================
-    # 2. WHITE IP
-    # ========================================================
-
-    white_ips = set()
-
-    if os.path.exists(
-        WHITE_IP_FILE
-    ):
-
-        try:
-
-            with open(
-                WHITE_IP_FILE,
-                "r",
-                encoding="utf-8",
-            ) as f:
-
-                for line in f:
-
-                    white_ips.update(
-                        parse_ip_or_resolve(
-                            line
-                        )
-                    )
-
-        except Exception as e:
-
-            print(
-                f"⚠️ Ошибка чтения "
-                f"{WHITE_IP_FILE}: {e}"
-            )
-
-    for item in incoming_raw_ips:
-
-        white_ips.update(
-            parse_ip_or_resolve(
-                item
-            )
-        )
-
-    def ip_sort_key(ip):
-
-        try:
-            return (
-                0,
-                ipaddress.ip_address(
-                    ip
-                )
-            )
-
-        except ValueError:
-
-            return (
-                1,
-                ip,
-            )
-
-    with open(
-        WHITE_IP_FILE,
-        "w",
-        encoding="utf-8",
-    ) as f:
-
-        for ip in sorted(
-            list(
-                white_ips
-            ),
-            key=ip_sort_key,
-        ):
-
-            f.write(
-                ip
-                + "\n"
-            )
-
     print(
-        f"💾 White IP база: "
-        f"{len(white_ips)} IP"
+        f"⚙️ SECURE_SOURCES_GITHUB={cfg.SECURE_SOURCES_GITHUB} "
+        f"SPLIT_SOURCES={cfg.SPLIT_SOURCES} "
+        f"ENABLE_TG_SOURCES={cfg.ENABLE_TG_SOURCES}"
     )
+
+    # ========================================================
+    # 1. WHITE IP (remote → local)
+    # ========================================================
+
+    download_white_ip()
+    white_ips = load_white_ips()
+    save_white_ips(white_ips)
+    print(f"💾 White IP база: {len(white_ips)} IP")
+
+    # ========================================================
+    # 2. SOURCES
+    # ========================================================
+
+    wl_file, bl_file = resolve_source_files()
+    print(f"📂 Sources: WL={wl_file}  BL={bl_file}")
+
+    if wl_file == bl_file:
+        # один sources.txt — общий пул, классификация только по keywords/IP/SNI
+        all_fetched = fetch_links_parallel_with_source(wl_file)
+        wl_fetched = all_fetched
+        bl_fetched = []
+    else:
+        wl_fetched = fetch_links_parallel_with_source(wl_file)
+        bl_fetched = fetch_links_parallel_with_source(bl_file)
 
     # ========================================================
     # 3. OLD ALIVE
