@@ -20,7 +20,7 @@ proxies:
     uuid: "0eed6293-8cf1-4e77-ac10-9c3d50d0b2f8"
     network: "tcp"
     servername: "www.apple.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -33,7 +33,7 @@ proxies:
     uuid: "0eed6293-8cf1-4e77-ac10-9c3d50d0b2f8"
     network: "tcp"
     servername: "www.apple.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -55,20 +55,32 @@ proxies:
     udp: true
   - name: "🇹🇷 [BL] Сервер 6"
     type: vless
-    server: 93.114.98.221
-    port: 8443
-    uuid: "552ca1e2-d1d4-4d9d-b0ea-9fabd287ad14"
-    network: "tcp"
-    udp: true
-  - name: "🇹🇷 [BL] Сервер 7"
-    type: vless
-    server: 93.114.98.221
+    server: tr.drive-host.uk
     port: 443
-    uuid: "552ca1e2-d1d4-4d9d-b0ea-9fabd287ad14"
+    uuid: "5a6042e9-013f-4be4-a0d3-1fd4b9bd414b"
     network: "tcp"
-    servername: "00iwuafi1019.dopgangster.com"
+    flow: "xtls-rprx-vision"
+    servername: "tr.drive-host.uk"
+    client-fingerprint: "random"
     udp: true
     tls: true
+    reality-opts:
+      public-key: "OkpVqxUj7ycs77ceBMx3hzabS-5kk8nKVQUs0Ow1nkQ"
+      short-id: "f74c6a18133e2e72"
+  - name: "🇹🇷 [BL] Сервер 7"
+    type: vless
+    server: 212.64.211.207
+    port: 443
+    uuid: "5a6042e9-013f-4be4-a0d3-1fd4b9bd414b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tr.drive-host.uk"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "OkpVqxUj7ycs77ceBMx3hzabS-5kk8nKVQUs0Ow1nkQ"
+      short-id: "f74c6a18133e2e72"
   - name: "🇹🇷 [BL] Сервер 8"
     type: vless
     server: 78.135.73.47
