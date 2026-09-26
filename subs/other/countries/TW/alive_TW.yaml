@@ -1,18 +1,6 @@
 proxies:
   - name: "🇹🇼 [BL] Сервер 1"
     type: vless
-    server: hinet1.2yly.com
-    port: 24215
-    uuid: "19d5a678-8396-4e3b-93da-ece618d0e83a"
-    network: "tcp"
-    servername: "addons.mozilla.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mdWKUPMVTtTbDqK10BPb89OcqBC2-Lx-4NOYtqc1GWE"
-  - name: "🇹🇼 [BL] Сервер 2"
-    type: vless
     server: 118.167.230.191
     port: 24215
     uuid: "19d5a678-8396-4e3b-93da-ece618d0e83a"
@@ -23,12 +11,24 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mdWKUPMVTtTbDqK10BPb89OcqBC2-Lx-4NOYtqc1GWE"
+  - name: "🇹🇼 [BL] Сервер 2"
+    type: vless
+    server: hinet1.2yly.com
+    port: 24215
+    uuid: "19d5a678-8396-4e3b-93da-ece618d0e83a"
+    network: "tcp"
+    servername: "addons.mozilla.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "mdWKUPMVTtTbDqK10BPb89OcqBC2-Lx-4NOYtqc1GWE"
   - name: "🇹🇼 [BL] Сервер 3"
     type: vless
     server: 104.199.134.231
     port: 28364
     uuid: "3a62a0c2-ba80-43a9-b757-9aca88b0552e"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
@@ -42,7 +42,7 @@ proxies:
     server: 104.199.134.231
     port: 28364
     uuid: "3a62a0c2-ba80-43a9-b757-9aca88b0552e"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.sony.com"
     client-fingerprint: "firefox"
