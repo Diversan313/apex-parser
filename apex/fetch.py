@@ -15,7 +15,6 @@ from .config import (
     HEADERS,
     SSL_CONTEXT,
     MAX_WORKERS,
-    MAX_QUEUE_LIMIT,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
 )
