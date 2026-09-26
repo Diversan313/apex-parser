@@ -11,7 +11,6 @@ from collections import defaultdict
 from .config import (
     WHITE_IP_FILE,
     MAX_WORKERS,
-    MAX_QUEUE_LIMIT,
     MAX_CONFIGS_PER_IP_WL,
     MAX_CONFIGS_PER_IP_BL,
     MAX_CONFIGS_PER_SUBNET_BL,
