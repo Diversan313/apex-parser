@@ -15,7 +15,7 @@ SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-inte
 # Sources / white_ip
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
 SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
-ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
+ENABLE_TG_SOURCES = False            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
 WHITE_IP_URL = (
     "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"
@@ -27,7 +27,7 @@ MAX_WORKERS = 15
 
 # Лимиты уникальности
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
-MAX_CONFIGS_PER_IP_BL = 2           # макс. конфигов на один IP в BL
+MAX_CONFIGS_PER_IP_BL = 1           # макс. конфигов на один IP в BL
 MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
 
 # WL / SNI
