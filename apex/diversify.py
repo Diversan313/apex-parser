@@ -12,6 +12,7 @@ from .config import (
     MAX_CONFIGS_PER_IP_WL,
     SUPPORTED_PROTOCOLS,
     RENAME_TEMPLATE,
+    UTF8_CONFIG_NAMES,
 )
 from .parse import parse_host_port, parse_host_port_and_name, extract_sni_from_link
 from .utils import extract_clean_flag, cc_to_flag, safe_b64decode
@@ -525,7 +526,11 @@ def rename_config(
         )
     except Exception:
         new_name = f"{flag} {tag} Сервер {index}"
-    quoted_name = urllib.parse.quote(new_name, safe="")
+    # fragment: сырой UTF-8 или percent-encode
+    if UTF8_CONFIG_NAMES:
+        frag_name = new_name
+    else:
+        frag_name = urllib.parse.quote(new_name, safe="")
 
     if not link or not isinstance(link, str):
         return link
@@ -554,16 +559,16 @@ def rename_config(
                 payload.encode("utf-8")
             ).decode("utf-8")
             # для единообразия добавляем и #name (многие клиенты его показывают)
-            return "vmess://" + encoded + "#" + quoted_name
+            return "vmess://" + encoded + "#" + frag_name
         except Exception:
             # fallback: хотя бы fragment
             main = link.split("#", 1)[0]
-            return main + "#" + quoted_name
+            return main + "#" + frag_name
 
     # ---- все остальные протоколы (vless/trojan/ss/hy2/...) ----
     if "://" in link:
         main_part = link.split("#", 1)[0]
-        return main_part + "#" + quoted_name
+        return main_part + "#" + frag_name
 
     return link
 
