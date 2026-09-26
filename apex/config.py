@@ -63,6 +63,7 @@ RENAME_PREFIX_TORRENT = "[TR]"
 # Плейсхолдеры: {flag} {tag} {index}
 # Пример: 🇳🇱 [WL] Сервер 12
 RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"
+UTF8_CONFIG_NAMES = False           # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
 
 # SSL / HTTP
 SSL_CONTEXT = ssl.create_default_context()
