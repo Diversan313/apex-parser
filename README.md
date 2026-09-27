@@ -4,7 +4,7 @@
 
 **Warrior of Internet Freedom**
 
-[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge\&logo=telegram)](https://t.me/Sent1nel0_bot)
+[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Sent1nel0_bot)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)](LICENSE)
 
 ---
@@ -21,36 +21,12 @@
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bs.txt
 ```
 
-**GitVerse**
-
-```text
-https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.txt
-```
-
-**jsDelivr**
-
-```text
-https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bs.txt
-```
-
 #### 🌐 BlackList (Wi-Fi)
 
 **GitHub**
 
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bl.txt
-```
-
-**GitVerse**
-
-```text
-https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.txt
-```
-
-**jsDelivr**
-
-```text
-https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.txt
 ```
 
 #### 🚀 Full List (All-in-One)
@@ -61,24 +37,23 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.txt
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_full.txt
 ```
 
-**GitVerse**
+### Форматы и зеркала
 
-```text
-https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.txt
-```
+| Список           | Base64                                                                                                                                                                                                                                                                                        | Plain                                                                                                                                                                                                                                                                                                           | YAML                                                                                                                                                                                                                                                                                             |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 🛡 **WhiteList** | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bs.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bs.txt)       | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_plain_bs.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_plain_bs.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_plain_bs.txt)       | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bs.yaml) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.yaml) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bs.yaml)       |
+| 🌐 **BlackList** | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bl.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.txt)       | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_plain_bl.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_plain_bl.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_plain_bl.txt)       | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bl.yaml) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.yaml) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.yaml)       |
+| 🚀 **Full List** | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_full.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt) | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_plain_full.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_plain_full.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_plain_full.txt) | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_full.yaml) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.yaml) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.yaml) |
 
-**jsDelivr**
-
-```text
-https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
-```
+---
 
 ### 🧩 Other
 
-| Список         | Описание                     | Base64                                                                                                        | Plain                                                                                                              | YAML                                                                                                         |
-| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| 🤖 **AI**      | Конфигурации для AI-сервисов | [Base64](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.txt)           | [Plain](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_plain_AI.txt)           | [YAML](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.yaml)           |
-| 🧲 **Torrent** | Конфигурации для torrent     | [Base64](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.txt) | [Plain](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_plain_torrent.txt) | [YAML](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.yaml) |
+| Список         | Base64                                                                                                                                                                                                                                                                                                                                 | Plain                                                                                                                                                                                                                                                                                                                                                    | YAML                                                                                                                                                                                                                                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🤖 **AI**      | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/AI/alive_AI.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/AI/alive_AI.txt)                               | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_plain_AI.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/AI/alive_plain_AI.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/AI/alive_plain_AI.txt)                               | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.yaml) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/AI/alive_AI.yaml) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/AI/alive_AI.yaml)                               |
+| 🧲 **Torrent** | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/torrent/alive_torrent.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/torrent/alive_torrent.txt) | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_plain_torrent.txt) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/torrent/alive_plain_torrent.txt) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/torrent/alive_plain_torrent.txt) | [GitHub](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.yaml) · [GitVerse](https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/other/torrent/alive_torrent.yaml) · [jsDelivr](https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/other/torrent/alive_torrent.yaml) |
+
 
 <details>
 <summary><b>🌍 Countries</b></summary>
@@ -148,7 +123,7 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countr
 
 ### Проверенные приложения (кроме iOS / macOS)
 
-* — не рекомендуется
+\* — не рекомендуется
 
 | Клиент        | Платформы                           | Источник для скачивания                                                                                                                                       |
 | ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
