@@ -4,7 +4,7 @@
 
 **Warrior of Internet Freedom**
 
-[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Sent1nel0_bot)
+[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Sent1nel0__bot-2CA5E0?style=for-the-badge\&logo=telegram)](https://t.me/Sent1nel0_bot)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)](LICENSE)
 
 ---
@@ -16,16 +16,19 @@
 #### 🛡 WhiteList (Белые списки)
 
 **GitHub**
+
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bs.txt
 ```
 
 **GitVerse**
+
 ```text
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bs.txt
 ```
 
 **jsDelivr**
+
 ```text
 https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bs.txt
 ```
@@ -33,16 +36,19 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bs.txt
 #### 🌐 BlackList (Wi-Fi)
 
 **GitHub**
+
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_bl.txt
 ```
 
 **GitVerse**
+
 ```text
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_bl.txt
 ```
 
 **jsDelivr**
+
 ```text
 https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.txt
 ```
@@ -50,19 +56,60 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_bl.txt
 #### 🚀 Full List (All-in-One)
 
 **GitHub**
+
 ```text
 https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/main/alive_full.txt
 ```
 
 **GitVerse**
+
 ```text
 https://gitverse.ru/api/repos/bikinitw22/apelsintel/raw/branch/main/alive_full.txt
 ```
 
 **jsDelivr**
+
 ```text
 https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 ```
+
+### 🧩 Other
+
+| Список         | Описание                     | Base64                                                                                                        | Plain                                                                                                              | YAML                                                                                                         |
+| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| 🤖 **AI**      | Конфигурации для AI-сервисов | [Base64](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.txt)           | [Plain](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_plain_AI.txt)           | [YAML](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/AI/alive_AI.yaml)           |
+| 🧲 **Torrent** | Конфигурации для torrent     | [Base64](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.txt) | [Plain](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_plain_torrent.txt) | [YAML](https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/torrent/alive_torrent.yaml) |
+
+<details>
+<summary><b>🌍 Countries</b></summary>
+
+Для каждой страны доступны три формата: **Base64**, **Plain** и **YAML**.
+
+Замените `XX` на двухбуквенный код нужной страны.
+
+**Base64**
+
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countries/XX/alive_XX.txt
+```
+
+**Plain**
+
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countries/XX/alive_plain_XX.txt
+```
+
+**YAML**
+
+```text
+https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countries/XX/alive_XX.yaml
+```
+
+Примеры кодов: `NL` — Нидерланды · `DE` — Германия · `US` — США.
+
+Полный список доступных стран: [Countries](https://github.com/Diversan313/apex-parser/tree/main/subs/other/countries).
+
+</details>
 
 ---
 
@@ -82,43 +129,58 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 
 ### Основные возможности
 
-- Сбор конфигураций из нескольких источников (sources файлы с отобранными источниками, Telegram модуль).
-- Разделение на WhiteList (для белых списков) и BlackList (для Wi-Fi использования).
-- Проверка живости конфигураций, дедупликация, геофильтрация, ограничение по IP и подсетям для уникальности.
-- Автоматическое формирование итоговых списков: `alive_bs.txt`, `alive_bl.txt`, `alive_full.txt` (в `subs/main/`).
-- Поддержка как наиболее устойчивых протоколов (например VLESS и Hysteria2), так и других (VMess, Trojan, Shadowsocks и др.).
-- Интеграция с Telegram-ботом [@Sent1nel0_bot](https://t.me/Sent1nel0_bot) для удобного доступа, статистики и работы с закрытым apex-sources.
+* Сбор конфигураций из нескольких источников (sources-файлы с отобранными источниками, Telegram-модуль).
+* Разделение на WhiteList (для белых списков) и BlackList (для Wi-Fi использования).
+* Дополнительная классификация: AI и Torrent.
+* Проверка живости конфигураций, дедупликация, геофильтрация, ограничение по IP и подсетям для уникальности.
+* Автоматическое формирование итоговых списков в `subs/main/`:
+
+  * `alive_*.txt`  (Base64)
+  * `alive_plain_*.txt` (Plain)
+  * `alive_*.yaml` (YAML / Clash)
+* Дополнительные списки в `subs/other/`:
+
+  * AI (`alive_AI.*`)
+  * Torrent (`alive_torrent.*`)
+  * списки по странам (`countries/`)
+* Поддержка протоколов: VLESS, Hysteria2, VMess, Trojan, Shadowsocks и др.
+* Интеграция с Telegram-ботом [@Sent1nel0_bot](https://t.me/Sent1nel0_bot) для удобного доступа, статистики и работы с закрытым apex-sources.
 
 ### Проверенные приложения (кроме iOS / macOS)
 
-\* — не рекомендуется
+* — не рекомендуется
 
-| Клиент | Платформы | Источник для скачивания |
-|--------|-----------|-------------------------|
-| **Exclave** | Android | [GitHub (Релизы)](https://github.com/dyhkwong/Exclave/releases) |
-| **v2rayNG** | Android | [GitHub (Релизы)](https://github.com/2dust/v2rayNG/releases) |
-| **v2rayN** | Windows, macOS, Linux | [GitHub (Релизы)](https://github.com/2dust/v2rayN/releases) |
-| **Throne** | Windows, Linux, macOS | [GitHub](https://github.com/throneproj/Throne) |
-| **INCY** | Android, iOS, macOS | [GitHub](https://github.com/INCY-DEV/incy-platforms) |
-| **Karing** | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://karing.app) · [GitHub](https://github.com/KaringX/karing) |
-| **Streisand** | iOS, macOS | [App Store](https://apps.apple.com/app/streisand/id6450534064) |
-| **V2Box** | Android, iOS, macOS | [App Store](https://apps.apple.com/app/v2box-v2ray-client/id6446814690) · [Google Play](https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box) |
-| **NekoBox** * | Android, Windows, Linux | [GitHub Android](https://github.com/MatsuriDayo/NekoBoxForAndroid/releases) · [GitHub Desktop](https://github.com/qr243vbi/nekobox) |
-| **Hiddify** * | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://hiddify.com) · [GitHub](https://github.com/hiddify/hiddify-app) |
+| Клиент        | Платформы                           | Источник для скачивания                                                                                                                                       |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Exclave**   | Android                             | [GitHub (Релизы)](https://github.com/dyhkwong/Exclave/releases)                                                                                               |
+| **v2rayNG**   | Android                             | [GitHub (Релизы)](https://github.com/2dust/v2rayNG/releases)                                                                                                  |
+| **v2rayN**    | Windows, macOS, Linux               | [GitHub (Релизы)](https://github.com/2dust/v2rayN/releases)                                                                                                   |
+| **Throne**    | Windows, Linux, macOS               | [GitHub](https://github.com/throneproj/Throne)                                                                                                                |
+| **INCY**      | Android, iOS, macOS                 | [GitHub](https://github.com/INCY-DEV/incy-platforms)                                                                                                          |
+| **Karing**    | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://karing.app) · [GitHub](https://github.com/KaringX/karing)                                                                          |
+| **Streisand** | iOS, macOS                          | [App Store](https://apps.apple.com/app/streisand/id6450534064)                                                                                                |
+| **V2Box**     | Android, iOS, macOS                 | [App Store](https://apps.apple.com/app/v2box-v2ray-client/id6446814690) · [Google Play](https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box) |
+| **NekoBox** * | Android, Windows, Linux             | [GitHub Android](https://github.com/MatsuriDayo/NekoBoxForAndroid/releases) · [GitHub Desktop](https://github.com/qr243vbi/nekobox)                           |
+| **Hiddify** * | Android, iOS, Windows, macOS, Linux | [Официальный сайт](https://hiddify.com) · [GitHub](https://github.com/hiddify/hiddify-app)                                                                    |
 
 Клиент **Happ** и похожие из списка клиенты не рассчитаны на подписки такого объёма (плохо справляются с большим количеством конфигов) — лучше используйте один из клиентов вверху списка (автор сидит на них).
 
 ### Что и для чего?
 
-- `apex/` — основной набор парсера (`main.py`, `parse.py`, `xray.py`, `fetch.py`, `dedup.py`, `classify.py`, `geoip.py` и др.).
-- `apex/parser.py` — точка входа.
-- `apex/modules/parser_tg.py` — модуль обновления источников через Telegram.
-- `white_ip.txt` — список белых IP-адресов для белых списков.
-- `subs/main/alive_*.txt` — публикуемые готовые списки рабочих конфигураций.
-- `arch/` — архив, вспомогательные данные.
-- `stats/` — статистика.
-- `.github/workflows/` — автоматизация обновлений.
-- `requirements.txt` — зависимости (Python 3.10+).
+* `apex/` — основной набор парсера:
+
+  * `main.py` — основная логика
+  * `parser.py` — точка входа (wrapper)
+  * `parse.py`, `xray.py`, `fetch.py`, `dedup.py`, `classify.py`, `geoip.py`
+  * `diversify.py`, `incoming.py`, `sni_whitelist.py`, `utils.py`, `config.py`
+  * `modules/parser_tg.py` — модуль обновления источников через Telegram
+* `white_ip.txt` — список белых IP-адресов для белых списков
+* `subs/main/` — публикуемые готовые списки (`alive_*.txt`, `alive_plain_*.txt`, `alive_*.yaml`)
+* `subs/other/` — дополнительные списки (AI, Torrent, countries)
+* `arch/` — архив, вспомогательные данные
+* `stats/` — статистика
+* `.github/workflows/` — автоматизация обновлений
+* `requirements.txt` — зависимости (Python 3.10+)
 
 Весь этот код можно свободно использовать, модифицировать и запускать у себя.
 
@@ -128,42 +190,41 @@ https://cdn.jsdelivr.net/gh/Diversan313/apex-parser/subs/main/alive_full.txt
 
 ### Закрытый репозиторий apex-sources
 
-Для стабильной и защищённой работы основной логики используется закрытый репозиторий **apex-sources**.  
+Для стабильной и защищённой работы основной логики используется закрытый репозиторий **apex-sources**.
 Он содержит уникальные части бэкенда, которые намеренно не публикуются в открытом доступе.
 
 Ключевые файлы и их назначение:
 
-- **sources_wl.txt** — перечень источников для WhiteList (белые списки). Источники, оптимизированные под мобильный интернет.
-- **sources_bl.txt** — перечень источников для BlackList (Wi-Fi). Источники, используемые для Wi-Fi с зарубежными локациями.
-- **sources_tg.txt** — конфигурация Telegram-источников. Указывает, из каких топиков и каналов автоматически подтягиваются свежие ссылки.
-- **incoming_sources.txt** / **incoming_subs.txt** — файлы для работы и связи бота с apex-sources.
+* **sources_wl.txt** — перечень источников для WhiteList (белые списки). Источники, оптимизированные под мобильный интернет.
+* **sources_bl.txt** — перечень источников для BlackList (Wi-Fi). Источники, используемые для Wi-Fi с зарубежными локациями.
+* **sources_tg.txt** — конфигурация Telegram-источников. Указывает, из каких топиков и каналов автоматически подтягиваются свежие ссылки.
+* **incoming_subs.txt** — файл для работы и связи бота с apex-sources.
 
-Остальные файлы в закрытом репозитории носят вспомогательный характер (резервные копии, временные данные) и иногда могут использоваться как среда для тестирования.  
+Остальные файлы в закрытом репозитории носят вспомогательный характер (резервные копии, временные данные) и иногда могут использоваться как среда для тестирования.
 Основная публичная логика и готовые результаты всегда находятся в открытом репозитории **apex-parser**.
 
 Закрытый репозиторий обеспечивает защиту уникальных источников и настроек, при этом результаты работы регулярно публикуются в открытый доступ.
 
 ### Лицензия и использование (MIT)
 
-Код открытого репозитория доступен свободно по лицензии **MIT**.  
-Вы можете использовать его в личных и коммерческих целях, дорабатывать, запускать на своих серверах и делиться улучшениями.  
+Код открытого репозитория доступен свободно по лицензии **MIT**.
+Вы можете использовать его в личных и коммерческих целях, дорабатывать, запускать на своих серверах и делиться улучшениями.
 Уникальные части бэкенда (закрытый репозиторий) остаются приватными и не предназначены для публичного распространения.
 
 ### Спасибо
 
 Благодарность проектам, инструментам и источникам, которые используются или вдохновили **apex-parser**:
 
-- [Xray-core (Project X)](https://github.com/XTLS/Xray-core) — ядро для проверки живости конфигураций
-- [ip-api.com](https://ip-api.com/), [ip.sb](https://ip.sb/), [ip2location.io](https://www.ip2location.io/) — онлайн GeoIP-сервисы
-- [cron-job.org](https://cron-job.org/) — сервис для запуска Github Actions по расписанию
-- [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) / [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb) — оффлайн база GeoIP
-- [hxehex/russia-mobile-internet-whitelist](https://github.com/hxehex/russia-mobile-internet-whitelist) — SNI-список для мобильного интернета
-- [RKP_bypass_configs](https://github.com/RKPchannel/RKP_bypass_configs) (RKP)
-- [zieng2/wl](https://github.com/zieng2/wl) (zieng)
-- [goida-vpn-configs](https://github.com/AvenCores/goida-vpn-configs) (Avencores)
-- [MIFA](https://t.me/mifa_world)
+* [Xray-core (Project X)](https://github.com/XTLS/Xray-core) — ядро для проверки живости конфигураций
+* [ip-api.com](https://ip-api.com/), [ip.sb](https://ip.sb/), [ip2location.io](https://www.ip2location.io/) — онлайн GeoIP-сервисы
+* [cron-job.org](https://cron-job.org/) — сервис для запуска Github Actions по расписанию
+* [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) / [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb) — оффлайн база GeoIP
+* [hxehex/russia-mobile-internet-whitelist](https://github.com/hxehex/russia-mobile-internet-whitelist) — SNI-список для мобильного интернета
+* [RKP_bypass_configs](https://github.com/RKPchannel/RKP_bypass_configs) (RKP)
+* [zieng2/wl](https://github.com/zieng2/wl) (zieng)
+* [goida-vpn-configs](https://github.com/AvenCores/goida-vpn-configs) (Avencores)
+* [MIFA](https://t.me/mifa_world)
 
 ---
 
 *Проект создан и поддерживается как pet-проект в области сетевых технологий. Код написан с нуля, через собственные ошибки и решения. Если вы используете или дорабатываете проект — будет приятно узнать об этом.*
-
