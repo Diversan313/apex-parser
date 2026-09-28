@@ -18,7 +18,7 @@ proxies:
     server: 138.124.180.137
     port: 443
     uuid: "5234b2b7-5e07-422c-8159-d62a676c00c6"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -28,20 +28,6 @@ proxies:
       public-key: "GBdkyDLfr0LIZo_94Xv8ycAKOmkjArYzwJAEMhuXX2c"
       short-id: "33acba1b"
   - name: "🇱🇻 [BL] Сервер 3"
-    type: vless
-    server: 195.123.212.60
-    port: 15392
-    uuid: "de78ba38-5600-47d1-b93b-b45bdf280ac0"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "intel.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TgaE-83sqLrJ6auwPP2Nq7vDO_xuFqa6uMnG4Au18jg"
-      short-id: "82"
-  - name: "🇱🇻 [BL] Сервер 4"
     type: vless
     server: 31.76.62.32
     port: 443
@@ -55,3 +41,23 @@ proxies:
     reality-opts:
       public-key: "C4kK4uxh9a5ym0-JmcaTwkUwkB0FTRjSAIlHLTKRHlo"
       short-id: "84341e3e"
+  - name: "🇱🇻 [BL] Сервер 4"
+    type: vless
+    server: 195.123.212.60
+    port: 15392
+    uuid: "de78ba38-5600-47d1-b93b-b45bdf280ac0"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "intel.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TgaE-83sqLrJ6auwPP2Nq7vDO_xuFqa6uMnG4Au18jg"
+      short-id: "82"
+  - name: "🇱🇻 [BL] Сервер 5"
+    type: ss
+    server: 109.248.148.139
+    port: 11469
+    password: "ce45b16adec66e4a199d92b9689eae9f"
+    cipher: "aes-128-gcm"
