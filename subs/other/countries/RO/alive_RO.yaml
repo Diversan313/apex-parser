@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇷🇴 [WL] Сервер 1"
+  - name: "🇷🇴 [BL] Сервер 1"
     type: vless
     server: 46.28.67.55
     port: 443
@@ -15,19 +15,32 @@ proxies:
       short-id: "d06d78e974491b6e"
   - name: "🇷🇴 [BL] Сервер 2"
     type: vless
-    server: 46.28.67.55
+    server: 178.214.211.162
     port: 443
-    uuid: "d1a6a033-fdbd-46a6-a177-3370ba042b9f"
-    network: "raw"
+    uuid: "55b237c9-02d3-44a8-a61c-033455da3fa8"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    servername: "assets.web-assets.cfd"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
-      public-key: "i2dJ1_XGDpp50qpEclh6SWSWkxt4B0t2hi2qOVQbeSU"
-      short-id: "d06d78e974491b6e"
+      public-key: "xweejWIAaEbPuyKn4UpPWe9eEaEx2y-DgGCS1Egtlk4"
+      short-id: "1b2a3f"
   - name: "🇷🇴 [BL] Сервер 3"
+    type: vless
+    server: 85.115.209.170
+    port: 2018
+    uuid: "834e5553-d80e-4078-8d7e-482fafe9bbaf"
+    network: "tcp"
+    servername: "gemini.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Sn8z3wbt2Zpoo3mO3HLW6TZTjN8231Ylka7apFNb2X0"
+      short-id: "cd5f260bcdd9c92d"
+  - name: "🇷🇴 [BL] Сервер 4"
     type: vless
     server: 146.70.124.85
     port: 443
@@ -41,17 +54,3 @@ proxies:
     reality-opts:
       public-key: "byzvlw97wjAAAfHs5AZRV0P0H6_JKBEZ4yfLS0HNewE"
       short-id: "fe24f8a0a560056e"
-  - name: "🇷🇴 [BL] Сервер 4"
-    type: vless
-    server: 178.214.211.162
-    port: 443
-    uuid: "55b237c9-02d3-44a8-a61c-033455da3fa8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "assets.web-assets.cfd"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xweejWIAaEbPuyKn4UpPWe9eEaEx2y-DgGCS1Egtlk4"
-      short-id: "1b2a3f"
