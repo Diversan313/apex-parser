@@ -1,31 +1,32 @@
 proxies:
   - name: "🇱🇻 [BL] Сервер 1"
     type: vless
-    server: 195.123.213.28
-    port: 443
-    uuid: "02fcc1a4-ee90-4970-8bbb-4ffaa8109d24"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
-      short-id: "5c256336e3b673fa"
-  - name: "🇱🇻 [BL] Сервер 2"
-    type: vless
     server: 31.57.28.147
     port: 443
     uuid: "2412bd96-925b-43f2-81d1-0ed4f0793699"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "download-cdn.jetbrains.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
       public-key: "d7yg69dK4DkaV1EPpQcgd4GBncMN9u1o1Nk9u-i7wGc"
       short-id: "7a18a196e730e1d5"
+  - name: "🇱🇻 [BL] Сервер 2"
+    type: vless
+    server: 195.123.213.28
+    port: 443
+    uuid: "02fcc1a4-ee90-4970-8bbb-4ffaa8109d24"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
+      short-id: "5c256336e3b673fa"
   - name: "🇱🇻 [BL] Сервер 3"
     type: vless
     server: 31.58.46.45
@@ -34,7 +35,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "media.web-assets.cfd"
-    client-fingerprint: "random"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
