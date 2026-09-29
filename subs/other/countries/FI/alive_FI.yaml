@@ -1,19 +1,6 @@
 proxies:
   - name: "🇫🇮 [WL] Сервер 1"
     type: vless
-    server: 139.100.236.123
-    port: 66
-    uuid: "513daaf3-51b4-4811-81fd-f6ef7061b7cd"
-    network: "tcp"
-    udp: true
-  - name: "🇫🇮 [WL] Сервер 2"
-    type: ss
-    server: 139.100.236.123
-    port: 77
-    password: "5oqJfg8HYHNhmlereZ3BWWx31INfoXTJ"
-    cipher: "chacha20-ietf-poly1305"
-  - name: "🇫🇮 [WL] Сервер 3"
-    type: vless
     server: 31.76.245.63
     port: 443
     uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
@@ -21,6 +8,34 @@ proxies:
     flow: "xtls-rprx-vision"
     servername: "dzen.ru"
     client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SibLV5WBGdljTiUCmKx77KhHQfErCwjDMD_ZLoha3js"
+      short-id: "a1b2c3d4e5f67890"
+  - name: "🇫🇮 [WL] Сервер 2"
+    type: vless
+    server: 31.76.245.63
+    port: 443
+    uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "dzen.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SibLV5WBGdljTiUCmKx77KhHQfErCwjDMD_ZLoha3js"
+      short-id: "a1b2c3d4e5f67890"
+  - name: "🇫🇮 [WL] Сервер 3"
+    type: vless
+    server: 31.76.245.63
+    port: 443
+    uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "dzen.ru"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -31,10 +46,9 @@ proxies:
     server: 31.76.245.63
     port: 443
     uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "dzen.ru"
-    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -45,7 +59,7 @@ proxies:
     server: 31.76.245.63
     port: 443
     uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "dzen.ru"
     client-fingerprint: "chrome"
@@ -55,33 +69,6 @@ proxies:
       public-key: "SibLV5WBGdljTiUCmKx77KhHQfErCwjDMD_ZLoha3js"
       short-id: "a1b2c3d4e5f67890"
   - name: "🇫🇮 [WL] Сервер 6"
-    type: vless
-    server: 31.76.245.63
-    port: 443
-    uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dzen.ru"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SibLV5WBGdljTiUCmKx77KhHQfErCwjDMD_ZLoha3js"
-      short-id: "a1b2c3d4e5f67890"
-  - name: "🇫🇮 [WL] Сервер 7"
-    type: vless
-    server: 31.76.245.63
-    port: 443
-    uuid: "d72f05b0-b182-4783-a6f2-21cecc7d841a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dzen.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SibLV5WBGdljTiUCmKx77KhHQfErCwjDMD_ZLoha3js"
-      short-id: "a1b2c3d4e5f67890"
-  - name: "🇫🇮 [WL] Сервер 8"
     type: vless
     server: 45.81.33.194
     port: 443
@@ -95,7 +82,7 @@ proxies:
     reality-opts:
       public-key: "c7ZErLG_xbyKs-WwNIoBuH4GTEVoNuwXz4bulmhGkmM"
       short-id: "a50a8dd7"
-  - name: "🇫🇮 [BL] Сервер 9"
+  - name: "🇫🇮 [BL] Сервер 7"
     type: vless
     server: 185.79.138.71
     port: 448
@@ -108,7 +95,7 @@ proxies:
     reality-opts:
       public-key: "CsDgNRcCwCkPIslfZpKTIK71KFpIFNsotbdzKcZVoH8"
       short-id: "cd21e552537c7c0b"
-  - name: "🇫🇮 [BL] Сервер 10"
+  - name: "🇫🇮 [BL] Сервер 8"
     type: vless
     server: 171.22.129.93
     port: 443
@@ -122,7 +109,7 @@ proxies:
     reality-opts:
       public-key: "1mbH_m6yUCtJzgC_f25LOE7nexg7uTQMaUAgIbo_-2s"
       short-id: "eaf543e7ff60ea78"
-  - name: "🇫🇮 [BL] Сервер 11"
+  - name: "🇫🇮 [BL] Сервер 9"
     type: vless
     server: 103.245.229.32
     port: 443
@@ -136,7 +123,48 @@ proxies:
     reality-opts:
       public-key: "sUDdxp5g9lRHlVEH6meJWXah84yhLDyVI7KuZhW-MTQ"
       short-id: "b4e44a"
+  - name: "🇫🇮 [BL] Сервер 10"
+    type: vless
+    server: fi.omuservice.tech
+    port: 443
+    uuid: "228ecfd3-9bf0-42fd-a50e-581f84022513"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.nl.ozone.nl"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "KEoz-uTjqCGwtNakCD-XewbDk_8Vwm_nFv0zg3c2Syg"
+      short-id: "ad4090b0"
+  - name: "🇫🇮 [BL] Сервер 11"
+    type: vless
+    server: 95.216.27.15
+    port: 2053
+    uuid: "1c81f6d3-5771-4c5d-9fdd-1655eff50634"
+    network: "tcp"
+    servername: "www.google.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4nfogj5mHqNowtSn_2sXS3xTX8vcH75rFEU2BWvyekM"
+      short-id: "d368b94e275ab080"
   - name: "🇫🇮 [BL] Сервер 12"
+    type: vless
+    server: 31.77.199.147
+    port: 4443
+    uuid: "20dd9433-389e-4573-ba7b-689619cf13da"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "images.unsplash.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GvkQwcZWiXQBLzEhTVfQkyPpdgo6Opc3RtLsED9sA0A"
+      short-id: "7da2eae792187ab9"
+  - name: "🇫🇮 [BL] Сервер 13"
     type: vless
     server: 144.31.27.215
     port: 43000
@@ -150,20 +178,6 @@ proxies:
     reality-opts:
       public-key: "dxCQnOekn14riFxt3vdwDNydvW47FsmwFG6BJ2mUgEg"
       short-id: "568d87a47271344e"
-  - name: "🇫🇮 [BL] Сервер 13"
-    type: vless
-    server: 87.239.249.137
-    port: 443
-    uuid: "67eb6b17-7797-4ded-bf52-423c4c5f6cbd"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.foxsports.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "G7bpUPFSW28-oE6ff8qZac1_apU6PiJ-GHmi7tAPDSY"
-      short-id: "91af08b1ce1f"
   - name: "🇫🇮 [BL] Сервер 14"
     type: vless
     server: 65.109.28.164
@@ -180,42 +194,56 @@ proxies:
       short-id: "90ec9bba2019"
   - name: "🇫🇮 [BL] Сервер 15"
     type: vless
-    server: 95.216.27.15
-    port: 2053
-    uuid: "1c81f6d3-5771-4c5d-9fdd-1655eff50634"
-    network: "tcp"
-    servername: "www.google.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "4nfogj5mHqNowtSn_2sXS3xTX8vcH75rFEU2BWvyekM"
-      short-id: "d368b94e275ab080"
-  - name: "🇫🇮 [BL] Сервер 16"
-    type: vless
     server: 45.149.147.97
     port: 443
     uuid: "f28e0ce1-ed75-4e90-b069-5215a80dfb4a"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "google.com"
-    client-fingerprint: "safari"
     udp: true
     tls: true
     reality-opts:
       public-key: "AcuvO982QLzf76fVydfSuJIiF5520rmj7AxpaxyRwUg"
       short-id: "d345ad4657adeef9"
-  - name: "🇫🇮 [BL] Сервер 17"
+  - name: "🇫🇮 [BL] Сервер 16"
     type: vless
-    server: 31.77.199.147
-    port: 4443
-    uuid: "20dd9433-389e-4573-ba7b-689619cf13da"
+    server: 87.239.249.137
+    port: 443
+    uuid: "67eb6b17-7797-4ded-bf52-423c4c5f6cbd"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "images.unsplash.com"
+    servername: "www.foxsports.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "G7bpUPFSW28-oE6ff8qZac1_apU6PiJ-GHmi7tAPDSY"
+      short-id: "91af08b1ce1f"
+  - name: "🇫🇮 [BL] Сервер 17"
+    type: vless
+    server: fin-02.node.lumixnet.com
+    port: 443
+    uuid: "95f1d2a2-0320-4681-8a2f-a517e1dda132"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fin-02.node.lumixnet.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "vEXgvoW9iQo6iiKT71cNt1CC3cAB4IWswAn-cScDz1A"
+      short-id: "bd8a588cebc3395a"
+  - name: "🇫🇮 [BL] Сервер 18"
+    type: vless
+    server: 193.23.201.172
+    port: 443
+    uuid: "c47b421f-65f1-4190-b7ba-bd2045086fe4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "yahoo.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "GvkQwcZWiXQBLzEhTVfQkyPpdgo6Opc3RtLsED9sA0A"
-      short-id: "7da2eae792187ab9"
+      public-key: "diw5L3O4EkRQGWDSfdpQooPUc3zBTItooeOQ_fIDFWI"
+      short-id: "7f2e9c4b1a8d6e53"
