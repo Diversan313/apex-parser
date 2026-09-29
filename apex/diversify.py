@@ -364,6 +364,7 @@ def filter_protocols_bl(
 
 _VALID_NETWORKS = frozenset({
     "tcp", "raw", "ws", "http", "h2", "grpc", "gun", "quic", "kcp", "mkcp",
+    "xhttp", "splithttp", "httpupgrade",
 })
 _VALID_SECURITY = frozenset({
     "reality", "tls", "xtls", "none", "auto", "",
@@ -379,6 +380,14 @@ def _clean_param_value(raw: str) -> str:
     if not raw:
         return ""
     val = raw.split("#", 1)[0]
+    # Легитимные значения с пробелом (например, hysteria2 up/down "50 mbps")
+    # не чистим — иначе параметр обрежется до бесполезного числа.
+    if re.fullmatch(
+        r"\d+(?:\.\d+)?\s*(?:mbps|kbps|bps)",
+        val.strip(),
+        re.IGNORECASE,
+    ):
+        return val.strip()
     val = re.split(r"[\s@\U0001F300-\U0001F9FF]+", val, maxsplit=1)[0]
     return val.strip().strip("'\"")
 
@@ -434,11 +443,12 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
         return None
 
     try:
-        userinfo, hostport = rest.rsplit("@", 1)
-        host_port_part = hostport.split("?", 1)[0]
-        query = ""
-        if "?" in hostport:
-            query = hostport.split("?", 1)[1]
+        # Query отделяем ДО поиска userinfo: в query бывает мусорный '@'
+        # ("type=tcp#1 @channel") — rsplit("@") по всей строке тогда
+        # принимает за хост часть после него и перекорёживает ссылку.
+        main_rest, _, query = rest.partition("?")
+        userinfo, hostport = main_rest.rsplit("@", 1)
+        host_port_part = hostport
 
         params = urllib.parse.parse_qs(query, keep_blank_values=True)
         cleaned: Dict[str, str] = {}
@@ -451,9 +461,11 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
 
             if key_l in ("type", "net", "network"):
                 val = _clean_param_value(raw_val).lower()
-                if val not in _VALID_NETWORKS:
-                    val = "tcp"
-                cleaned["type"] = val
+                # Нераспознанный транспорт НЕ переписываем в tcp:
+                # ссылка уже прошла тест как есть, перепишем — сломаем
+                # (исторический баг: type=xhttp молча становился tcp).
+                if val:
+                    cleaned[key_l] = val
             elif key_l == "security":
                 val = _clean_param_value(raw_val).lower()
                 if val not in _VALID_SECURITY:
@@ -489,7 +501,11 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
         if "type" not in cleaned and proto in ("vless", "trojan"):
             cleaned["type"] = "tcp"
 
-        new_query = urllib.parse.urlencode(cleaned, doseq=False)
+        new_query = urllib.parse.urlencode(
+            cleaned,
+            doseq=False,
+            quote_via=urllib.parse.quote,
+        )
         new_rest = f"{userinfo}@{host_port_part}"
         if new_query:
             new_rest += "?" + new_query
@@ -577,6 +593,36 @@ def rename_config(
 # ============================================================
 # CLASH YAML (базовый экспорт для Clash / Mihomo / Meta)
 # ============================================================
+
+def _add_transport_opts(proxy: Dict[str, Any], network: str, pget) -> None:
+    """
+    Дописывает в Clash-proxy transport-опции (ws / grpc / xhttp) для
+    vless и trojan — раньше они терялись и конфиг в Clash был нерабочим.
+    """
+    network = (network or "tcp").lower()
+
+    if network == "ws":
+        proxy["ws-opts"] = {"path": pget("path", "/") or "/"}
+        if pget("host"):
+            proxy["ws-opts"]["headers"] = {"Host": pget("host")}
+
+    elif network == "grpc":
+        service_name = pget("serviceName") or pget("path", "").lstrip("/")
+        if service_name:
+            proxy["grpc-opts"] = {"grpc-service-name": service_name}
+        if pget("mode", "").lower() in ("multi", "gun"):
+            proxy["grpc-opts"]["grpc-mode"] = pget("mode", "").lower()
+
+    elif network in ("xhttp", "splithttp"):
+        # mihomo: xhttp эмулируется через network: http + mode
+        proxy["network"] = "xhttp"
+        opts = {"path": pget("path", "/") or "/"}
+        if pget("host"):
+            opts["host"] = pget("host")
+        if pget("mode"):
+            opts["mode"] = pget("mode")
+        proxy["xhttp-opts"] = opts
+
 
 def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
     """
@@ -689,6 +735,7 @@ def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
             flow = pget("flow")
             if flow:
                 proxy["flow"] = flow
+            _add_transport_opts(proxy, proxy.get("network") or "tcp", pget)
             return proxy
 
         if proto == "trojan":
@@ -704,6 +751,7 @@ def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
                 proxy["sni"] = pget("sni")
             if pget("fp"):
                 proxy["client-fingerprint"] = pget("fp")
+            _add_transport_opts(proxy, pget("type", "tcp"), pget)
             return proxy
 
         if proto == "ss":
@@ -733,10 +781,31 @@ def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
                 "type": "hysteria2",
                 "server": host,
                 "port": int(port),
-                "password": userinfo,
+                "password": urllib.parse.unquote(userinfo),
             }
             if pget("sni"):
                 proxy["sni"] = pget("sni")
+            if pget("insecure", "") in ("1", "true"):
+                proxy["skip-cert-verify"] = True
+            pin = pget("pinSHA256")
+            if pin:
+                proxy["fingerprint"] = pin
+            up = pget("up") or pget("upmbps")
+            down = pget("down") or pget("downmbps")
+            if up:
+                proxy["up"] = up
+            if down:
+                proxy["down"] = down
+            # Port hopping: исходная port-часть URI ("443,5000-6000")
+            raw_ports = hostport.split("?")[0].rsplit(":", 1)[-1]
+            if raw_ports and ("," in raw_ports or "-" in raw_ports):
+                proxy["ports"] = raw_ports
+            obfs = pget("obfs", "").lower()
+            if obfs in ("salamander", "gecko"):
+                proxy["obfs"] = "salamander"
+                obfs_pw = pget("obfs-password") or pget("obfsPassword")
+                if obfs_pw:
+                    proxy["obfs-password"] = obfs_pw
             return proxy
 
     except Exception:
@@ -793,6 +862,13 @@ def links_to_clash_yaml(links: List[str]) -> str:
             "client-fingerprint",
             "udp",
             "tls",
+            "skip-cert-verify",
+            "fingerprint",
+            "up",
+            "down",
+            "ports",
+            "obfs",
+            "obfs-password",
         ):
             if key not in p:
                 continue
@@ -820,6 +896,16 @@ def links_to_clash_yaml(links: List[str]) -> str:
                 out.append("      headers:")
                 for hk, hv in headers.items():
                     out.append(f'        {hk}: "{_yaml_escape(str(hv))}"')
+
+        if "grpc-opts" in p and isinstance(p["grpc-opts"], dict):
+            out.append("    grpc-opts:")
+            for gk, gv in p["grpc-opts"].items():
+                out.append(f'      {gk}: "{_yaml_escape(str(gv))}"')
+
+        if "xhttp-opts" in p and isinstance(p["xhttp-opts"], dict):
+            out.append("    xhttp-opts:")
+            for xk, xv in p["xhttp-opts"].items():
+                out.append(f'      {xk}: "{_yaml_escape(str(xv))}"')
 
     out.append("")
     return "\n".join(out)
