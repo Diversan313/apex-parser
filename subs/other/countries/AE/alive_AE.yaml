@@ -1,12 +1,26 @@
 proxies:
-  - name: "🇦🇪 [BL] Сервер 1"
+  - name: "🇦🇪 [WL] Сервер 1"
+    type: vless
+    server: 46.253.143.185
+    port: 25947
+    uuid: "a9c66e1a-798e-437f-b0bf-f06c32a9666a"
+    network: "tcp"
+    servername: "vk.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "CQlKsUxdTGqcS0I4ZZUzUzIvWzOowSeaPbWk0IKaxC0"
+      short-id: "650ae4b84a581e1c"
+  - name: "🇦🇪 [BL] Сервер 2"
     type: vless
     server: 146.70.102.82
     port: 443
     uuid: "31fd2fde-ca69-450e-8c03-eaad819b06b9"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.datadoghq.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
