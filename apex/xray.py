@@ -1762,8 +1762,11 @@ def xray_outbound_to_link(ob: dict) -> str:
                 params["security"] = security
             if security == "reality":
                 rs = stream.get("realitySettings") or {}
-                if rs.get("publicKey"):
-                    params["pbk"] = rs["publicKey"]
+                # Актуальный Xray хранит public key в "password",
+                # старые/чужие JSON — в "publicKey". Читаем оба.
+                pbk = rs.get("publicKey") or rs.get("password")
+                if pbk:
+                    params["pbk"] = pbk
                 if rs.get("serverName"):
                     params["sni"] = rs["serverName"]
                 if rs.get("fingerprint"):
