@@ -80,6 +80,14 @@ def update_source_file(target_file, tag_line, new_url):
         print("❌ Не удалось обновить файл источников.")
 
 async def main():
+    try:
+        from apex.config import ENABLE_TG_SOURCES
+        if not ENABLE_TG_SOURCES:
+            print("⚠️ ENABLE_TG_SOURCES=False — обновление TG-источников отключено.")
+            return
+    except ImportError:
+        pass  # модуль запущен вне пакета apex — ориентируемся только на env
+
     if not SESSION_STRING:
         print("⚠️ Переменная окружения не задана. Обновление отменено.")
         return
