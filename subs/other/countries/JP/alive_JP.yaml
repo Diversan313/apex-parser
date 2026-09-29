@@ -64,20 +64,6 @@ proxies:
     udp: true
   - name: "🇯🇵 [BL] Сервер 6"
     type: vless
-    server: 43.133.11.187
-    port: 443
-    uuid: "4192524f-09f0-414f-88fd-7a14378491c7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ueVbgAT9A7SkGgua_uljhQsvpnRUQlfdc7meiqcaxXE"
-      short-id: "913e9b95fbc71278"
-  - name: "🇯🇵 [BL] Сервер 7"
-    type: vless
     server: 13.231.19.51
     port: 11690
     uuid: "e2b8b217-cffb-4d66-9b8b-eca6e4334032"
@@ -90,6 +76,20 @@ proxies:
     reality-opts:
       public-key: "Bv3z0_uFRabB9C4CFpNfqepZUyeO4YTh1duJdMBNLkg"
       short-id: "034885e346fd30"
+  - name: "🇯🇵 [BL] Сервер 7"
+    type: vless
+    server: 43.133.11.187
+    port: 443
+    uuid: "4192524f-09f0-414f-88fd-7a14378491c7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ueVbgAT9A7SkGgua_uljhQsvpnRUQlfdc7meiqcaxXE"
+      short-id: "913e9b95fbc71278"
   - name: "🇯🇵 [BL] Сервер 8"
     type: vless
     server: 18.183.215.124
@@ -126,7 +126,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -147,12 +147,6 @@ proxies:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
   - name: "🇯🇵 [BL] Сервер 12"
-    type: ss
-    server: 84.247.155.196
-    port: 443
-    password: "3eOFeNssde7PYYMv"
-    cipher: "aes-256-gcm"
-  - name: "🇯🇵 [BL] Сервер 13"
     type: vmess
     server: 45.32.57.118
     port: 4433
@@ -160,3 +154,15 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
+  - name: "🇯🇵 [BL] Сервер 13"
+    type: ss
+    server: 84.247.155.196
+    port: 443
+    password: "3eOFeNssde7PYYMv"
+    cipher: "aes-256-gcm"
+  - name: "🇯🇵 [BL] Сервер 14"
+    type: ss
+    server: 103.115.18.145
+    port: 10090
+    password: "9cfaa78d51ac366f"
+    cipher: "aes-256-gcm"
