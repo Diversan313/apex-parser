@@ -1,6 +1,34 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
+    server: 85.209.135.145
+    port: 443
+    uuid: "ddae04fe-48ce-0002-b562-7a65c70ecbdf"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "lk-1.yes-on.ru"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EroArXWVxIMXclqgp4WNolB5vtfWSZEF1wjb_t1QrBE"
+      short-id: "a150dcf9"
+  - name: "🇫🇷 [WL] Сервер 2"
+    type: vless
+    server: lk-1.yes-on.ru
+    port: 443
+    uuid: "ddae04fe-48ce-0002-b562-7a65c70ecbdf"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "lk-1.yes-on.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EroArXWVxIMXclqgp4WNolB5vtfWSZEF1wjb_t1QrBE"
+      short-id: "a150dcf9"
+  - name: "🇫🇷 [WL] Сервер 3"
+    type: vless
     server: 79.137.192.2
     port: 443
     uuid: "2412bd96-925b-43f2-81d1-0ed4f0793699"
@@ -12,7 +40,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "zcA1E7_aUxhHP1B4po52NeviW16smzEqcyb2qiQYaTc"
-  - name: "🇫🇷 [BL] Сервер 2"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
     server: 194.76.154.31
     port: 40443
@@ -25,7 +53,7 @@ proxies:
     reality-opts:
       public-key: "MN6QjUHDUXyteMdR-cDna89fq4X3qgQhLnNqTtRUbBQ"
       short-id: "a8ae"
-  - name: "🇫🇷 [BL] Сервер 3"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 31.77.227.10
     port: 52006
@@ -35,74 +63,7 @@ proxies:
     servername: "fr.setlisting.ru"
     udp: true
     tls: true
-  - name: "🇫🇷 [BL] Сервер 4"
-    type: vless
-    server: 185.171.202.105
-    port: 443
-    uuid: "4bdeee92-97e8-414d-bef6-ec1d5e2ab73b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fra.loozerp.wiki"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "bZpzmeWiEJyJQy0W2hHc34Nr6BuFXj1UDd80Cbwh1Fk"
-      short-id: "ff776ff77be48b88"
-  - name: "🇫🇷 [BL] Сервер 5"
-    type: vless
-    server: 79.137.192.2
-    port: 443
-    uuid: "2412bd96-925b-43f2-81d1-0ed4f0793699"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cdn.cloudflare.steamstatic.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zcA1E7_aUxhHP1B4po52NeviW16smzEqcyb2qiQYaTc"
   - name: "🇫🇷 [BL] Сервер 6"
-    type: vless
-    server: 185.236.8.32
-    port: 443
-    uuid: "5dff1842-c02f-4dd4-b1ad-2e597b99dc31"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nl32.mech-pro.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IpIQVFjMfPawsv21a7wYOmTU2vX42ZGaYVBMJ98GZCQ"
-      short-id: "b67ffe05"
-  - name: "🇫🇷 [BL] Сервер 7"
-    type: vless
-    server: 62.210.91.10
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-      short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 8"
-    type: vless
-    server: 62.210.91.2
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-      short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
     server: 172.239.19.53
     port: 56890
@@ -116,7 +77,73 @@ proxies:
     reality-opts:
       public-key: "rLwUhSlO07MqPfOOvNjRfmFSHrByCO7r4NpgTt2YkCE"
       short-id: "13500590"
+  - name: "🇫🇷 [BL] Сервер 7"
+    type: vless
+    server: 79.137.192.2
+    port: 443
+    uuid: "2412bd96-925b-43f2-81d1-0ed4f0793699"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cdn.cloudflare.steamstatic.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "zcA1E7_aUxhHP1B4po52NeviW16smzEqcyb2qiQYaTc"
+  - name: "🇫🇷 [BL] Сервер 8"
+    type: vless
+    server: fra.loozerp.wiki
+    port: 443
+    uuid: "4bdeee92-97e8-414d-bef6-ec1d5e2ab73b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fra.loozerp.wiki"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "bZpzmeWiEJyJQy0W2hHc34Nr6BuFXj1UDd80Cbwh1Fk"
+      short-id: "ff776ff77be48b88"
+  - name: "🇫🇷 [BL] Сервер 9"
+    type: vless
+    server: 185.236.8.32
+    port: 443
+    uuid: "5dff1842-c02f-4dd4-b1ad-2e597b99dc31"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "nl32.mech-pro.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "IpIQVFjMfPawsv21a7wYOmTU2vX42ZGaYVBMJ98GZCQ"
+      short-id: "b67ffe05"
   - name: "🇫🇷 [BL] Сервер 10"
+    type: vless
+    server: 62.210.91.10
+    port: 23576
+    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fuck.rkn"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
+      short-id: "01"
+  - name: "🇫🇷 [BL] Сервер 11"
+    type: vless
+    server: 62.210.91.2
+    port: 23576
+    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fuck.rkn"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
+      short-id: "01"
+  - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 137.74.16.237
     port: 443
@@ -130,7 +157,7 @@ proxies:
     reality-opts:
       public-key: "7LSzvilTVKGMtBDuKGeMrLtlhY7tQf5YcG566dEgO0I"
       short-id: "b390e0a721d242b0"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 51.77.217.70
     port: 2053
@@ -143,7 +170,7 @@ proxies:
     reality-opts:
       public-key: "g63cT3uI0Y5iUtj3m__RYz7nmR1eIK4AYikdnZCl63w"
       short-id: "bfe58beb41f1d09f"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: vless
     server: 145.223.68.58
     port: 443
@@ -157,7 +184,7 @@ proxies:
     reality-opts:
       public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
       short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: nasnet-162191099-direct.mbghalibaf.com
     port: 443
@@ -168,7 +195,7 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 195.154.118.134
     port: 443
@@ -182,7 +209,7 @@ proxies:
     reality-opts:
       public-key: "YhT24GkuI1r7Fwo8pxIYH3CmTtbRlYs5X7fWtYp3vTY"
       short-id: "05f4f85fdc6c1379"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [BL] Сервер 17"
     type: ss
     server: 51.255.13.232
     port: 8388
