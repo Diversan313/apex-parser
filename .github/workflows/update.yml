@@ -105,11 +105,12 @@ jobs:
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         run: |
-          # Без TG_SESSION_STRING parser_tg сразу выходит
-          if [ -n "$TG_SESSION_STRING" ]; then
+          # parser_tg гоняем только если ENABLE_TG_SOURCES=True и есть сессия
+          TG_ENABLED=$(python -c "from apex.config import ENABLE_TG_SOURCES; print(int(ENABLE_TG_SOURCES))" 2>/dev/null || echo 0)
+          if [ "$TG_ENABLED" = "1" ] && [ -n "$TG_SESSION_STRING" ]; then
             python -m apex.modules.parser_tg
           else
-            echo "TG_SESSION_STRING not set — skip parser_tg"
+            echo "ENABLE_TG_SOURCES=$TG_ENABLED / TG_SESSION_STRING set: $([ -n "$TG_SESSION_STRING" ] && echo yes || echo no) — skip parser_tg"
           fi
 
       - name: Run Parser Script
@@ -134,8 +135,11 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
-          if [ -n "$TG_SESSION_STRING" ]; then
+          TG_ENABLED=$(PYTHONPATH=.. python -c "from apex.config import ENABLE_TG_SOURCES; print(int(ENABLE_TG_SOURCES))" 2>/dev/null || echo 0)
+          if [ "$TG_ENABLED" = "1" ] && [ -n "$TG_SESSION_STRING" ]; then
             PYTHONPATH=.. python -m apex.modules.parser_tg
+          else
+            echo "ENABLE_TG_SOURCES=$TG_ENABLED — skip parser_tg in sync"
           fi
 
           git config user.name "github-actions[bot]"
@@ -270,4 +274,5 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
