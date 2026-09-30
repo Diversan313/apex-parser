@@ -15,7 +15,7 @@ SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-inte
 # Sources / white_ip
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
 SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
-ENABLE_TG_SOURCES = False           # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
+ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
 WHITE_IP_URL = (
     "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"
