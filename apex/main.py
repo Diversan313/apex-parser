@@ -971,6 +971,8 @@ def main():
                 "bl_ru_to_wl": bl_ru_to_wl,
                 "white_ip_queued": white_ip_queued,
                 "white_ip_ok": white_ip_ok,
+                "ai": len(final_ai) if cfg.WRITE_OTHER_AI and ai_items else 0,
+                "torrent": len(final_torrent) if cfg.WRITE_OTHER_TORRENT and torrent_items else 0,
             }
             with open(
                 os.path.join("stats", "latest.json"),
