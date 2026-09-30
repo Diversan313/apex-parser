@@ -502,8 +502,8 @@ def main():
 
             bl_ok += 1
 
-            # Всё русское → WL: живой BL с RU exit.
-            if cc and cc.upper() == "RU":
+            # Всё русское → WL (если включено в конфиге): живой BL с RU exit.
+            if cc and cc.upper() == "RU" and cfg.BL_RU_TO_WL:
                 alive_wl_data.append(
                     (
                         res[0],
@@ -582,7 +582,7 @@ def main():
     alive_bl_clean = (
         filter_protocols_bl(
             alive_bl_limited,
-            minority_ratio=0.10,
+            minority_ratio=cfg.BL_MINORITY_RATIO,
         )
     )
 

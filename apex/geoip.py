@@ -341,20 +341,10 @@ def is_cloudflare_or_warp(
 
         elif ip_obj.version == 6:
 
-            if str(
-                ip_obj
-            ).startswith(
-                (
-                    "2400:cb00:",
-                    "2606:4700:",
-                    "2803:f800:",
-                    "2405:b500:",
-                    "2405:8100:",
-                    "2a06:98c0:",
-                    "2c0f:f248:",
-                )
-            ):
-                return True
+            for network in config.CF_IPV6_NETWORKS:
+
+                if ip_obj in network:
+                    return True
 
     except Exception:
         return True

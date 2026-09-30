@@ -6,7 +6,7 @@ import json
 import re
 import urllib.parse
 
-from .config import FLAG_REGEX
+from ..config import FLAG_REGEX
 
 def safe_b64decode(s: str) -> str:
     s = s.strip()

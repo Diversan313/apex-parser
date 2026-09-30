@@ -17,6 +17,7 @@ from .config import (
     MAX_WORKERS,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
+    DECRYPT_HAPP,
 )
 from .utils import (
     safe_b64decode,
@@ -26,6 +27,7 @@ from .utils import (
 )
 from .parse import parse_host_port
 from .xray import xray_outbound_to_link
+from .utils import happ
 
 def extract_configs_from_json_text(content: str) -> list:
     """Достаёт share-ссылки из JSON-подписки / Xray config (без двойного счёта)."""
@@ -172,9 +174,28 @@ def content_looks_expired(content: str, configs: list) -> bool:
     return False
 
 
+def fix_github_url(url: str) -> str:
+    """
+    raw.githubusercontent.com/.../commit/<sha>/file → ветка main/master.
+
+    Ссылка на файл в конкретном коммите умирает, когда SHA выпадает из
+    истории (rebase, squash, очистка). Заменяем на живую ветку, чтобы
+    источник не умирал сам по себе.
+    """
+    m = re.match(
+        r"^(https://raw\.githubusercontent\.com/[^/]+/[^/]+)/"
+        r"(?:commit/[0-9a-fA-F]{40}|[0-9a-fA-F]{40})/(.+)$",
+        url.strip(),
+    )
+    if not m:
+        return url
+    return f"{m.group(1)}/main/{m.group(2)}"
+
+
 def fetch_single_url_with_details(
     url: str,
     retries: int = 2,
+    _depth: int = 0,
 ) -> dict:
 
     url_clean = url.strip().replace(" ", "%20")
@@ -186,6 +207,7 @@ def fetch_single_url_with_details(
         "is_base64": False,
         "is_json": False,
         "is_expired": False,
+        "happ_decrypted": 0,
         "total_lines": 0,
         "configs": [],
         "error": None,
@@ -195,7 +217,9 @@ def fetch_single_url_with_details(
     last_err = None
     for attempt in range(max(1, retries + 1)):
         try:
-            req = urllib.request.Request(url_clean, headers=HEADERS)
+            req = urllib.request.Request(
+                fix_github_url(url_clean), headers=HEADERS
+            )
             with urllib.request.urlopen(
                 req, timeout=12, context=SSL_CONTEXT
             ) as response:
@@ -266,6 +290,21 @@ def fetch_single_url_with_details(
             if extra:
                 info["is_json"] = True
                 for c in extra:
+                    if c not in valid_configs:
+                        valid_configs.append(c)
+
+        # 4) happ://crypt* — зашифрованные ссылки на подписки:
+        #    расшифровываем → URL подписки → качаем её как вложенный источник.
+        if DECRYPT_HAPP and "happ://" in content and _depth == 0:
+            for h_link in happ.extract_happ_links(content):
+                sub_url = happ.happ_link_to_subscription_url(h_link)
+                if not sub_url:
+                    continue
+                nested = fetch_single_url_with_details(
+                    sub_url, retries=1, _depth=_depth + 1
+                )
+                info["happ_decrypted"] += 1
+                for c in nested.get("configs") or []:
                     if c not in valid_configs:
                         valid_configs.append(c)
 
@@ -408,6 +447,8 @@ def fetch_links_parallel_with_source(
                 fmt_parts.append("Base64")
             if res.get("is_json"):
                 fmt_parts.append("JSON")
+            if res.get("happ_decrypted"):
+                fmt_parts.append(f"Happ:{res['happ_decrypted']}")
             if res.get("is_expired"):
                 fmt_parts.append("Expired")
             fmt_str = f" [{'/'.join(fmt_parts)}]" if fmt_parts else ""

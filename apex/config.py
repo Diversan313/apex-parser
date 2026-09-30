@@ -16,6 +16,7 @@ SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-inte
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
 SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
 ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
+DECRYPT_HAPP = True                 # расшифровывать happ://crypt* ссылки в источниках
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
 WHITE_IP_URL = (
     "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"
@@ -31,6 +32,10 @@ MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
 
 # WL / SNI
 RU_SNI_RATIO = 0.0                  # доля прочих .ru/.su SNI → WL (0.0–1.0)
+
+# BL
+BL_RU_TO_WL = True                  # живые BL с RU-выходом перекидывать в WL
+BL_MINORITY_RATIO = 0.10            # доля старых протоколов (vmess/trojan/ss) в BL
 
 # Xray / сетевые тесты
 WL_MIN_SUCCESS_COUNT = 1            # успешных тестов для WL
@@ -63,7 +68,7 @@ RENAME_PREFIX_TORRENT = "[TR]"
 # Плейсхолдеры: {flag} {tag} {index}
 # Пример: 🇳🇱 [WL] Сервер 12
 RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"
-UTF8_CONFIG_NAMES = True           # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
+UTF8_CONFIG_NAMES = True            # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
 
 # SSL / HTTP
 SSL_CONTEXT = ssl.create_default_context()
@@ -187,6 +192,20 @@ CF_CIDRS = [
     "8.52.0.0/22",
 ]
 CF_NETWORKS = [ipaddress.ip_network(cidr) for cidr in CF_CIDRS]
+
+# Cloudflare IPv6
+CF_IPV6_CIDRS = [
+    "2400:cb00::/32",
+    "2606:4700::/32",
+    "2803:f800::/32",
+    "2405:b500::/32",
+    "2405:8100::/32",
+    "2a06:98c0::/29",
+    "2c0f:f248::/32",
+]
+CF_IPV6_NETWORKS = [
+    ipaddress.ip_network(cidr) for cidr in CF_IPV6_CIDRS
+]
 
 # MaxMind (инициализируется в geoip.init_geoip)
 try:
