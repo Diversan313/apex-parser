@@ -29,6 +29,7 @@ MAX_WORKERS = 15                    # потоки RD теста Xray
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
 MAX_CONFIGS_PER_IP_BL = 1           # макс. конфигов на один IP в BL
 MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
+EXOTIC_MAX_NODES = 5                # страна «экзотическая», если в ней нод <= N
 
 # WL / SNI
 RU_SNI_RATIO = 0.0                  # доля прочих .ru/.su SNI → WL (0.0–1.0)
@@ -50,18 +51,17 @@ REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopb
 KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
 # Вывод файлов
+WRITE_LATEST_JSON = True            # stats/latest.json
 WRITE_BASE64 = True                 # alive_*.txt (base64)
 WRITE_PLAIN = True                  # alive_plain_*.txt
 WRITE_YAML = True                   # alive_*.yaml (Clash)
 WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
-WRITE_LATEST_JSON = True            # stats/latest.json
-WRITE_COUNTRY = True                # списки по странам
-DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 WRITE_OTHER_AI = True               # отдельный список под AI
 WRITE_OTHER_TORRENT = True          # отдельный список под торрент
 WRITE_OTHER_PROTOCOLS = True        # разбивка по протоколам в subs/other/protocols/
 WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод) в subs/other/exotic/
-EXOTIC_MAX_NODES = 10               # страна «экзотическая», если в ней нод <= N
+WRITE_COUNTRY = True                # списки по странам
+DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 
 # Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
 GITVERSE_ENABLED = True             # False = шаг деплоя на GitVerse пропускается
