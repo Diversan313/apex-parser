@@ -59,6 +59,14 @@ WRITE_COUNTRY = True                # списки по странам
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 WRITE_OTHER_AI = True               # отдельный список под AI
 WRITE_OTHER_TORRENT = True          # отдельный список под торрент
+WRITE_OTHER_PROTOCOLS = True        # разбивка по протоколам в subs/other/protocols/
+WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод) в subs/other/exotic/
+EXOTIC_MAX_NODES = 10               # страна «экзотическая», если в ней нод <= N
+
+# Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
+GITVERSE_ENABLED = True             # False = шаг деплоя на GitVerse пропускается
+GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
+GITVERSE_USER = "bikinitw22"
 
 # Rename (имя в клиенте)
 RENAME_PREFIX_WL = "[WL]"

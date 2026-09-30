@@ -228,10 +228,19 @@ jobs:
         env:
           GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
         run: |
+          # Вкл/выкл зеркала и адрес репо берём из apex/config.py:
+          # GITVERSE_ENABLED=False — шаг пропускается.
+          GITVERSE_ON=$(python -c "from apex.config import GITVERSE_ENABLED; print(int(GITVERSE_ENABLED))" 2>/dev/null || echo 0)
+          if [ "$GITVERSE_ON" != "1" ]; then
+            echo "GITVERSE_ENABLED=False — skip GitVerse deploy"
+            exit 0
+          fi
           if [ -z "$GITVERSE_TOKEN" ]; then
             echo "ERROR: GITVERSE_TOKEN secret is missing."
             exit 1
           fi
+          GITVERSE_REPO=$(python -c "from apex.config import GITVERSE_REPO; print(GITVERSE_REPO)")
+          GITVERSE_USER=$(python -c "from apex.config import GITVERSE_USER; print(GITVERSE_USER)")
 
           rm -rf deploy_gitverse
           mkdir deploy_gitverse
@@ -251,7 +260,7 @@ jobs:
           git checkout -b main
           git add .
           git commit -m "auto update subscriptions"
-          git remote add origin "https://bikinitw22:${GITVERSE_TOKEN}@gitverse.ru/bikinitw22/apelsintel.git"
+          git remote add origin "https://${GITVERSE_USER}:${GITVERSE_TOKEN}@${GITVERSE_REPO#https://}"
 
           max_retries=5
           retry_count=0

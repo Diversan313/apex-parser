@@ -101,6 +101,25 @@ def _write_subscription_files(base_dir: str, prefix: str, links: list) -> None:
             print(f"⚠️ Не удалось записать YAML {path}: {e}")
 
 
+def _make_full_tag_fn(ai_links, torrent_links, wl_keys):
+    """
+    Тег для FULL и сборных списков: AI > TR > WL > BL.
+    FULL же все-таки — показываем все вариации тегов.
+    """
+    def tag(item):
+        link = item[0]
+        if link in ai_links:
+            return cfg.RENAME_PREFIX_AI
+        if link in torrent_links:
+            return cfg.RENAME_PREFIX_TORRENT
+        return (
+            cfg.RENAME_PREFIX_WL
+            if get_final_dedup_key(link) in wl_keys
+            else cfg.RENAME_PREFIX_BL
+        )
+    return tag
+
+
 def main():
 
     print(
@@ -679,13 +698,11 @@ def main():
         lambda _item: cfg.RENAME_PREFIX_BL,
     )
 
+    full_tag = _make_full_tag_fn(ai_links, torrent_links, wl_keys)
+
     final_full = _build_renamed(
         alive_full_clean,
-        lambda item: (
-            cfg.RENAME_PREFIX_WL
-            if get_final_dedup_key(item[0]) in wl_keys
-            else cfg.RENAME_PREFIX_BL
-        ),
+        full_tag,
     )
 
     # ========================================================
@@ -838,18 +855,19 @@ def main():
             )
 
     # --- COUNTRIES ---
+    # Группировка по странам нужна и для country-списков, и для exotic.
+    by_cc = defaultdict(list)
+    for item in alive_full_clean:
+        cc = None
+        if len(item) > 3 and item[3]:
+            cc = str(item[3]).upper()
+        if not cc or len(cc) != 2:
+            continue
+        by_cc[cc].append(item)
+
     if cfg.WRITE_COUNTRY:
         countries_dir = "subs/other/countries"
         os.makedirs(countries_dir, exist_ok=True)
-
-        by_cc = defaultdict(list)
-        for item in alive_full_clean:
-            cc = None
-            if len(item) > 3 and item[3]:
-                cc = str(item[3]).upper()
-            if not cc or len(cc) != 2:
-                continue
-            by_cc[cc].append(item)
 
         active_ccs = set(by_cc.keys())
 
@@ -886,6 +904,59 @@ def main():
                         print(f"   🗑 удалена папка страны {name}")
             except Exception as e:
                 print(f"⚠️ Ошибка очистки стран: {e}")
+
+    # --- PROTOCOLS ---
+    if cfg.WRITE_OTHER_PROTOCOLS:
+        protocols_dir = "subs/other/protocols"
+        os.makedirs(protocols_dir, exist_ok=True)
+
+        by_proto = defaultdict(list)
+        for item in alive_full_clean:
+            proto = item[0].split("://", 1)[0].lower()
+            if proto == "hy2":
+                proto = "hysteria2"
+            by_proto[proto].append(item)
+
+        for proto, items in sorted(by_proto.items()):
+            final_proto = _build_renamed(items, full_tag)
+            if not final_proto:
+                continue
+            proto_dir = os.path.join(protocols_dir, proto)
+            _write_subscription_files(proto_dir, proto, final_proto)
+
+        print(
+            f"💾 Protocols: {len(by_proto)} протоколов "
+            f"({', '.join(sorted(by_proto))}) → subs/other/protocols/"
+        )
+
+    # --- EXOTIC ---
+    # Редкие страны: если в стране нод <= EXOTIC_MAX_NODES —
+    # её конфиги идут и в общий экзотический список.
+    if cfg.WRITE_OTHER_EXOTIC:
+        exotic_items = [
+            item
+            for items in by_cc.values()
+            if len(items) <= cfg.EXOTIC_MAX_NODES
+            for item in items
+        ]
+        if exotic_items:
+            final_exotic = _build_renamed(exotic_items, full_tag)
+            _write_subscription_files(
+                "subs/other/exotic",
+                "exotic",
+                final_exotic,
+            )
+            exotic_ccs = {
+                cc for cc, items in by_cc.items()
+                if len(items) <= cfg.EXOTIC_MAX_NODES
+            }
+            print(
+                f"💾 Exotic: {len(final_exotic)} конфигов из "
+                f"{len(exotic_ccs)} редких стран "
+                f"(лимит {cfg.EXOTIC_MAX_NODES} нод) → subs/other/exotic/"
+            )
+        else:
+            print("💾 Exotic: 0 конфигов — файлы не перезаписываем")
 
     # ========================================================
     # CLOSE GEO
