@@ -14,7 +14,7 @@ SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
 SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
 
 # Hysteria2: отдельное официальное ядро для теста(только hy2)
-HYSTERIA2_CORE = False
+HYSTERIA2_CORE = True
 HY2_CORE_FILE = "hysteria2.exe" if os.name == "nt" else "hysteria2"
 HY2_CORE_URL_WINDOWS = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-windows-amd64.exe"
 HY2_CORE_URL_LINUX = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64"
