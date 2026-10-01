@@ -48,6 +48,8 @@ TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
 # Фильтры
 REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
 REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopback
+REMOVE_UNSAFE = True                # отсекать небезопасные: allowInsecure=1, plaintext без TLS
+HEAL_CONFIG = True                  # вычищать рекламный мусор из параметров ссылок
 KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
 # Вывод файлов
@@ -60,13 +62,13 @@ WRITE_OTHER_AI = True               # отдельный список под AI
 WRITE_OTHER_TORRENT = True          # отдельный список под торрент
 WRITE_OTHER_PROTOCOLS = True        # разбивка по протоколам в subs/other/protocols/
 WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод) в subs/other/exotic/
-WRITE_COUNTRY = True                # списки по странам
+WRITE_OTHER_COUNTRIES = True        # списки по странам
+WRITE_OTHER_CONTINENTS = True       # списки по континентам subs/other/continents/
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 
 # Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
-GITVERSE_ENABLED = True             # False = шаг деплоя на GitVerse пропускается
+GITVERSE_ENABLED = True             # False = GitVerse пропускается
 GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
-GITVERSE_USER = "bikinitw22"
 
 # Rename (имя в клиенте)
 RENAME_PREFIX_WL = "[WL]"
