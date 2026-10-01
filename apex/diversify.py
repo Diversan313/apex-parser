@@ -9,6 +9,7 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from .config import (
+    HEAL_CONFIG,
     MAX_CONFIGS_PER_IP_WL,
     SUPPORTED_PROTOCOLS,
     RENAME_TEMPLATE,
@@ -375,6 +376,40 @@ _VALID_FLOW = frozenset({
 })
 
 
+# ============================================================
+# HEAL: чистка рекламного мусора из параметров
+# ============================================================
+
+# Ключи-реклама: значение им не нужно вообще
+_AD_PARAM_KEYS = frozenset({
+    "telegram", "tg", "channel", "t.me", "invite", "promo", "ad",
+})
+
+
+def _is_repeated_junk(val: str) -> bool:
+    """v2rayNplus--v2rayNplus--v2rayNplus / Cfox_Server---Cfox_Server---…"""
+    tokens = [t for t in re.split(r"-{2,}|,+|@+", val) if t]
+    return len(tokens) >= 3 and len(set(tokens)) == 1
+
+
+def _has_ad_marker(val: str) -> bool:
+    low = val.lower()
+    return "telegram" in low or "t.me/" in low
+
+
+def _heal_param(key_l: str, val: str):
+    """→ (оставить ли параметр, значение). Рекламу выкидываем целиком."""
+    if not val:
+        return False, ""
+    if key_l in _AD_PARAM_KEYS:
+        return False, ""
+    if _is_repeated_junk(val):
+        return False, ""
+    if _has_ad_marker(val):
+        return False, ""
+    return True, val
+
+
 def _clean_param_value(raw: str) -> str:
     """Убирает мусор после #, пробелов, emoji и т.п. из значения параметра."""
     if not raw:
@@ -458,6 +493,13 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
                 continue
             raw_val = values[0]
             key_l = key.lower()
+
+            # HEAL: рекламный мусор (Telegram=..., повторяющийся хлам
+            # в alpn/host) — параметр выбрасывается целиком
+            if HEAL_CONFIG:
+                keep, _ = _heal_param(key_l, raw_val)
+                if not keep:
+                    continue
 
             if key_l in ("type", "net", "network"):
                 val = _clean_param_value(raw_val).lower()
