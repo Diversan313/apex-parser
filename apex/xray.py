@@ -1,9 +1,11 @@
 """Xray: конвертация ссылок в outbound, проверка живости (часть 1)."""
 from __future__ import annotations
 
+import io
 import json
 import base64
 import urllib.parse
+import urllib.request
 import re
 import os
 import socket
@@ -16,7 +18,9 @@ import random
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from . import config as cfg
 from .config import (
+    SSL_CONTEXT,
     XRAY_START_TIMEOUT,
     XRAY_TEST_TIMEOUT,
     TCP_CHECK_TIMEOUT,
@@ -1134,6 +1138,61 @@ def link_to_xray_outbound(
 # XRAY RUNTIME / ALIVE CHECKS
 # ============================================================
 
+def xray_core_ready() -> bool:
+    """Бинарь Xray есть рядом с проектом?"""
+    name = "xray.exe" if os.name == "nt" else "xray"
+    return os.path.exists(name)
+
+
+def ensure_xray_core() -> bool:
+    """
+    Гарантирует наличие бинаря Xray: если его нет в корне и включён
+    AUTO_DOWNLOAD_XRAY — скачивает с GitHub releases нужной платформы
+    и распаковывает. На Actions это no-op (там ставится шагом workflow),
+    локально решает установку без ручных действий.
+    """
+    if xray_core_ready():
+        return True
+    if not cfg.AUTO_DOWNLOAD_XRAY:
+        return False
+
+    import zipfile
+
+    url = (
+        cfg.XRAY_CORE_URL_WINDOWS
+        if os.name == "nt"
+        else cfg.XRAY_CORE_URL_LINUX
+    )
+    member = "xray.exe" if os.name == "nt" else "xray"
+
+    print("📥 Скачиваю ядро Xray...")
+
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers=HEADERS)
+            with urllib.request.urlopen(req, timeout=300, context=SSL_CONTEXT) as resp:
+                data = resp.read()
+            break
+        except Exception as e:
+            if attempt == 2:
+                print(f"⚠️ Не удалось скачать ядро Xray: {e}")
+                return False
+            print(f"   ↺ попытка {attempt + 2}/3...")
+
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as zf:
+            target = next(n for n in zf.namelist() if n.split("/")[-1] == member)
+            with open(member, "wb") as f:
+                f.write(zf.read(target))
+        if os.name != "nt":
+            os.chmod(member, 0o755)
+        print(f"✅ Ядро Xray готово: {member} ({len(data) // 1024 // 1024} MB архив)")
+        return True
+    except Exception as e:
+        print(f"⚠️ Не удалось распаковать ядро Xray: {e}")
+        return False
+
+
 def get_xray_executable():
     if os.name == "nt":
         candidates = [
@@ -1208,6 +1267,207 @@ def get_xray_cmd() -> list:
         "-c",
         "stdin:",
     ]
+
+
+# ============================================================
+# HYSTERIA2 (официальное ядро, опционально)
+# ============================================================
+
+def get_hy2_executable() -> str:
+    return cfg.HY2_CORE_FILE
+
+
+def hy2_core_ready() -> bool:
+    return os.path.exists(get_hy2_executable())
+
+
+def download_hy2_core() -> bool:
+    """Скачивает официальное ядро hysteria2, если его ещё нет."""
+    exe = get_hy2_executable()
+    if os.path.exists(exe):
+        return True
+
+    url = (
+        cfg.HY2_CORE_URL_WINDOWS
+        if os.name == "nt"
+        else cfg.HY2_CORE_URL_LINUX
+    )
+
+    print("📥 Скачиваю ядро Hysteria2...")
+
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers=HEADERS)
+            with urllib.request.urlopen(req, timeout=300, context=SSL_CONTEXT) as resp:
+                data = resp.read()
+            with open(exe, "wb") as f:
+                f.write(data)
+            break
+        except Exception as e:
+            if attempt == 2:
+                print(f"⚠️ Не удалось скачать ядро Hysteria2: {e}")
+                return False
+            print(f"   ↺ попытка {attempt + 2}/3...")
+
+    if os.name != "nt":
+        os.chmod(exe, 0o755)
+    print(f"✅ Ядро Hysteria2 скачано: {exe} ({len(data) // 1024 // 1024} MB)")
+    return True
+
+
+def _hy2_client_config_text(link: str, local_port: int) -> str:
+    """hysteria2-ссылка → YAML-конфиг клиента официального ядра (без pyyaml)."""
+    host, port, _ = parse_host_port_and_name(link)
+    clean = link.split("#", 1)[0]
+    params = {}
+    if "?" in clean:
+        params = urllib.parse.parse_qs(
+            clean.split("?", 1)[1], keep_blank_values=True
+        )
+
+    def p(name, default=""):
+        return str(params.get(name, [default])[0] or default)
+
+    auth = ""
+    rest = clean.split("://", 1)[1]
+    if "@" in rest.split("?", 1)[0]:
+        auth = urllib.parse.unquote(rest.split("?", 1)[0].rsplit("@", 1)[0])
+    if not auth:
+        auth = p("auth") or p("password")
+
+    sni = p("sni") or p("peer") or host
+    insecure = p("allowInsecure") or p("insecure")
+    # server всегда в кавычках: "[2001:db8::1]:443" без кавычек YAML не парсится
+    lines = [
+        f"server: {_yaml_q(f'{host}:{port}')}",
+        f"auth: {_yaml_q(auth)}",
+        "tls:",
+        f"  sni: {_yaml_q(sni)}",
+        f"  insecure: {'true' if insecure.lower() in ('1', 'true') else 'false'}",
+    ]
+
+    # pinSHA256 — пин серверного сертификата (официальное поле TLS-секции)
+    pin = p("pinSHA256")
+    if pin:
+        lines.append(f"  pinSHA256: {_yaml_q(pin)}")
+
+    # ECH — Encrypted Client Hello: base64-конфиг с сервера
+    # parse_qs декодирует '+' как пробел — в base64 возвращаем на место
+    ech = p("ech").replace(" ", "+")
+    if ech:
+        lines.append(f"  ech: {_yaml_q(ech)}")
+
+    lines += [
+        "http:",
+        f"  listen: 127.0.0.1:{local_port}",
+    ]
+
+    # obfs: тип берём из ссылки — salamander И gecko (это разные типы
+    # в официальном ядре, gecko не превращаем в salamander)
+    obfs = p("obfs").lower()
+    obfs_pw = p("obfs-password") or p("obfsPassword")
+    if obfs in ("salamander", "gecko") and obfs_pw:
+        lines += [
+            "obfs:",
+            f"  type: {obfs}",
+            f"  {obfs}:",
+            f"    password: {_yaml_q(obfs_pw)}",
+        ]
+        pkt = p("obfs-packet-size") or p("packetSize")
+        if obfs == "gecko" and pkt.isdigit() and 512 <= int(pkt) <= 2048:
+            lines += [
+                f"    minPacketSize: {pkt}",
+                f"    maxPacketSize: {pkt}",
+            ]
+
+    up = p("up") or p("upmbps")
+    down = p("down") or p("downmbps")
+    if up or down:
+        lines.append("bandwidth:")
+        if up:
+            lines.append(f"  up: {_yaml_q(up if ' ' in up else up + ' mbps')}")
+        if down:
+            lines.append(f"  down: {_yaml_q(down if ' ' in down else down + ' mbps')}")
+
+    return "\n".join(lines) + "\n"
+
+
+def _yaml_q(s: str) -> str:
+    s = str(s).replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{s}"'
+
+
+def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int = 1):
+    """
+    Тест hy2 через официальное ядро (http-proxy listener).
+    Возвращает (is_ok, cc, reason) — как check_via_xray_detailed.
+    """
+    if not hy2_core_ready() and not download_hy2_core():
+        return False, None, "Ядро Hysteria2 недоступно"
+
+    port = get_free_port()
+    conf_text = _hy2_client_config_text(link, port)
+
+    fd, conf_path = tempfile.mkstemp(suffix=".yaml")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(conf_text)
+
+        proc = None
+        try:
+            proc = subprocess.Popen(
+                [get_hy2_executable(), "client", "-c", conf_path],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+            # ядро стартует дольше Xray (QUIC handshake)
+            if not wait_for_port(port, timeout=5.0):
+                return False, None, "Локальное ядро Hysteria2 не запустилось"
+
+            opener = urllib.request.build_opener(
+                urllib.request.ProxyHandler({
+                    "http": f"http://127.0.0.1:{port}",
+                    "https": f"http://127.0.0.1:{port}",
+                })
+            )
+
+            test_urls = [
+                "https://www.gstatic.com/generate_204",
+                "https://cp.cloudflare.com/generate_204",
+                "https://www.microsoft.com/connecttest.txt",
+            ]
+            success = 0
+            for url_t in test_urls:
+                try:
+                    req = urllib.request.Request(url_t, headers=HEADERS)
+                    with opener.open(req, timeout=timeout) as resp:
+                        if resp.status in (200, 204):
+                            success += 1
+                except Exception:
+                    pass
+
+            if success < min_success_count:
+                return False, None, f"Hysteria2: тест провален ({success}/3)"
+
+            cc = get_exit_country_via_proxy(opener, timeout)
+            return True, cc, f"Hysteria2 OK ({success}/3)"
+
+        finally:
+            if proc:
+                try:
+                    proc.terminate()
+                    proc.wait(timeout=1)
+                except Exception:
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+    finally:
+        try:
+            os.remove(conf_path)
+        except Exception:
+            pass
 
 
 # ============================================================
@@ -1682,6 +1942,29 @@ def check_proxy_alive_detailed(
             "JSON для Xray",
             None,
         )
+
+    # Hysteria2: если включено официальное ядро — тестируем им,
+    # Xray остаётся fallback'ом (часть hy2-серверов Xray не берёт).
+    if is_hysteria2 and cfg.HYSTERIA2_CORE:
+        hy_ok, hy_cc, hy_reason = check_via_hysteria2(
+            link,
+            timeout=XRAY_TEST_TIMEOUT + 2,
+            min_success_count=min_success_count,
+        )
+        if not hy_ok:
+            hy_ok, hy_cc, hy_reason = check_via_xray_detailed(
+                outbound,
+                timeout=XRAY_TEST_TIMEOUT,
+                min_success_count=min_success_count,
+            )
+        if hy_ok:
+            final_flag = (
+                cc_to_flag(hy_cc)
+                if hy_cc
+                else extract_clean_flag(orig_name)
+            )
+            return (True, (link, final_flag), hy_reason, hy_cc)
+        return (False, None, hy_reason, None)
 
     is_ok, cc, reason = (
         check_via_xray_detailed(
