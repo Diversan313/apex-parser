@@ -1,10 +1,24 @@
 proxies:
   - name: "🇱🇻 [BL] Сервер 1"
     type: vless
+    server: 2.26.88.52
+    port: 443
+    uuid: "f0a52dd3-4377-4402-a450-210bc81bcf25"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sh-lv-01.mintrocket.org"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "gcx8FNkRv0rdkd0kRhgSLWDXqVc7KgAw4rnYaYx9JgE"
+      short-id: "338e250284b889ba"
+  - name: "🇱🇻 [BL] Сервер 2"
+    type: vless
     server: 138.124.180.137
     port: 443
     uuid: "5234b2b7-5e07-422c-8159-d62a676c00c6"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -13,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "GBdkyDLfr0LIZo_94Xv8ycAKOmkjArYzwJAEMhuXX2c"
       short-id: "33acba1b"
-  - name: "🇱🇻 [BL] Сервер 2"
+  - name: "🇱🇻 [BL] Сервер 3"
     type: vless
     server: 195.123.212.60
     port: 15392
