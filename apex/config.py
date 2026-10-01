@@ -7,20 +7,33 @@ import ipaddress
 
 # Пути и файлы
 WHITE_IP_FILE = "white_ip.txt"
+WHITE_IP_URL = "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"  # пусто = локал white_ip.txt
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
 SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
 
-# Sources / white_ip
+# Hysteria2: отдельное официальное ядро для теста(только hy2)
+HYSTERIA2_CORE = False
+HY2_CORE_FILE = "hysteria2.exe" if os.name == "nt" else "hysteria2"
+HY2_CORE_URL_WINDOWS = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-windows-amd64.exe"
+HY2_CORE_URL_LINUX = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64"
+
+# Ядро Xray
+AUTO_DOWNLOAD_XRAY = True           # качать ядро Xray, если его нет в корне (win/linux)
+XRAY_CORE_URL_WINDOWS = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip"
+XRAY_CORE_URL_LINUX = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
+
+# Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
+GITVERSE_ENABLED = True             # False = GitVerse пропускается
+GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
+
+# Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
 SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
 ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 DECRYPT_HAPP = True                 # расшифровывать happ://crypt* ссылки в источниках
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
-WHITE_IP_URL = (
-    "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"
-)  # пусто = локал white_ip.txt
 
 # Параллелизм
 MAX_WORKERS = 15                    # потоки RD теста Xray
@@ -65,10 +78,6 @@ WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод
 WRITE_OTHER_COUNTRIES = True        # списки по странам
 WRITE_OTHER_CONTINENTS = True       # списки по континентам subs/other/continents/
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
-
-# Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
-GITVERSE_ENABLED = True             # False = GitVerse пропускается
-GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
 
 # Rename (имя в клиенте)
 RENAME_PREFIX_WL = "[WL]"
