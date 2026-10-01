@@ -112,7 +112,7 @@ proxies:
     port: 443
     password: "ymk9eBP4Ams3-ncYCV4kDAezUzBfkR8x"
     sni: "isq.ichost.cloud"
-    client-fingerprint: "safari"
+    client-fingerprint: "ios"
     udp: true
   - name: "🇪🇪 [WL] Сервер 11"
     type: trojan
@@ -128,7 +128,7 @@ proxies:
     port: 443
     password: "ymk9eBP4Ams3-ncYCV4kDAezUzBfkR8x"
     sni: "isq.ichost.cloud"
-    client-fingerprint: "ios"
+    client-fingerprint: "safari"
     udp: true
   - name: "🇪🇪 [WL] Сервер 13"
     type: vless
@@ -149,9 +149,10 @@ proxies:
     server: 95.85.224.51
     port: 443
     uuid: "342ab7e4-5a89-0001-8809-304120d4aa83"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "max.ru"
+    client-fingerprint: "qq"
     udp: true
     tls: true
     reality-opts:
@@ -162,10 +163,9 @@ proxies:
     server: 95.85.224.51
     port: 443
     uuid: "342ab7e4-5a89-0001-8809-304120d4aa83"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "max.ru"
-    client-fingerprint: "qq"
     udp: true
     tls: true
     reality-opts:
@@ -211,20 +211,6 @@ proxies:
     tls: true
   - name: "🇪🇪 [BL] Сервер 19"
     type: vless
-    server: 13.143.182.136
-    port: 443
-    uuid: "a449b942-e70d-4124-96c1-a489e701d7ee"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "13.143.182.136.sslip.io"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "vAQygk0va4NfFlaglXIM9SO_kAC3idQqyrZ9iiAT1F8"
-      short-id: "356adabd64bb58ba"
-  - name: "🇪🇪 [BL] Сервер 20"
-    type: vless
     server: 143.246.41.123
     port: 25895
     uuid: "f90b7d43-69e2-4b46-a672-8029bc6796a2"
@@ -236,21 +222,7 @@ proxies:
     reality-opts:
       public-key: "jOVKSP-bS9OkILJ8Epz8hadh6qhavCrOiJYeF0NCn0k"
       short-id: "a73f0410d728c823"
-  - name: "🇪🇪 [BL] Сервер 21"
-    type: vless
-    server: 93.89.220.37
-    port: 443
-    uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ibm.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
-      short-id: "e88cb983f3c97528"
-  - name: "🇪🇪 [BL] Сервер 22"
+  - name: "🇪🇪 [BL] Сервер 20"
     type: vless
     server: ee174.mech-pro.online
     port: 443
@@ -264,16 +236,7 @@ proxies:
     reality-opts:
       public-key: "jbiddtGRgeBvlkjbuA3aU-WPjKgEX87tOVh1mFfvOUI"
       short-id: "16e0f049"
-  - name: "🇪🇪 [BL] Сервер 23"
-    type: vless
-    server: lat1.xt-game.top
-    port: 443
-    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    udp: true
-    tls: true
-  - name: "🇪🇪 [BL] Сервер 24"
+  - name: "🇪🇪 [BL] Сервер 21"
     type: vless
     server: lat2.xt-game.top
     port: 443
@@ -282,7 +245,16 @@ proxies:
     flow: "xtls-rprx-vision"
     udp: true
     tls: true
-  - name: "🇪🇪 [BL] Сервер 25"
+  - name: "🇪🇪 [BL] Сервер 22"
+    type: vless
+    server: lat1.xt-game.top
+    port: 443
+    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    udp: true
+    tls: true
+  - name: "🇪🇪 [BL] Сервер 23"
     type: vless
     server: es1.xt-game.top
     port: 443
@@ -291,3 +263,17 @@ proxies:
     flow: "xtls-rprx-vision"
     udp: true
     tls: true
+  - name: "🇪🇪 [BL] Сервер 24"
+    type: vless
+    server: 93.89.220.37
+    port: 443
+    uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ibm.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
+      short-id: "e88cb983f3c97528"
