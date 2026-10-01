@@ -30,13 +30,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Download Xray Core
-        run: |
-          curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
-               -o xray.zip \
-               https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
-          unzip -o xray.zip xray
-          chmod +x xray
+      # Ядро Xray больше не качается здесь: парсер сам скачивает его
+      # по платформе при AUTO_DOWNLOAD_XRAY=True (apex/config.py)
 
       - name: Fetch White IP
         run: |
@@ -284,6 +279,7 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
 
 
