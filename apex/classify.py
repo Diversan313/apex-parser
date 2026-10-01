@@ -139,3 +139,58 @@ def classify_config(
         )
 
     return "BL"
+
+
+# ============================================================
+# UNSAFE FILTER
+# ============================================================
+
+def is_unsafe_config(link: str) -> bool:
+    """
+    Небезопасные конфиги (для REMOVE_UNSAFE):
+    - allowInsecure / insecure = 1 — глушит проверку сертификата,
+      открывает MITM;
+    - plaintext-транспорт без TLS/Reality у vless / vmess
+      (trojan и hysteria2 всегда шифрованы, ss — шифрован методом).
+    """
+    try:
+        if link.startswith("vmess://"):
+            from .utils import safe_b64decode
+            import json as _json
+            data = _json.loads(
+                safe_b64decode(link.replace("vmess://", "", 1).strip())
+            )
+            if str(data.get("tls", "")).lower() not in ("tls", "reality"):
+                return True
+            if str(data.get("allowInsecure", "")).lower() in ("1", "true"):
+                return True
+            return False
+
+        if link.startswith(("trojan://", "ss://", "hysteria2://", "hy2://")):
+            # шифрованы протоколом; проверяем только insecure-параметр
+            params = urllib.parse.parse_qs(
+                link.split("?", 1)[1].split("#", 1)[0],
+                keep_blank_values=True,
+            ) if "?" in link else {}
+            insecure = str(
+                params.get("allowInsecure", params.get("insecure", [""]))[0]
+            ).lower()
+            return insecure in ("1", "true")
+
+        if link.startswith("vless://"):
+            params = urllib.parse.parse_qs(
+                link.split("?", 1)[1].split("#", 1)[0],
+                keep_blank_values=True,
+            ) if "?" in link else {}
+            security = str(params.get("security", [""])[0]).lower()
+            if security not in ("tls", "reality"):
+                return True
+            insecure = str(
+                params.get("allowInsecure", params.get("insecure", [""]))[0]
+            ).lower()
+            return insecure in ("1", "true")
+
+    except Exception:
+        pass
+
+    return False
