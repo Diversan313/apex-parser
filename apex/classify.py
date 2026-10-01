@@ -160,7 +160,7 @@ def is_unsafe_config(link: str) -> bool:
             data = _json.loads(
                 safe_b64decode(link.replace("vmess://", "", 1).strip())
             )
-            if str(data.get("tls", "")).lower() not in ("tls", "reality"):
+            if str(data.get("tls", "")).lower() not in ("tls", "reality", "xtls"):
                 return True
             if str(data.get("allowInsecure", "")).lower() in ("1", "true"):
                 return True
@@ -183,7 +183,7 @@ def is_unsafe_config(link: str) -> bool:
                 keep_blank_values=True,
             ) if "?" in link else {}
             security = str(params.get("security", [""])[0]).lower()
-            if security not in ("tls", "reality"):
+            if security not in ("tls", "reality", "xtls"):
                 return True
             insecure = str(
                 params.get("allowInsecure", params.get("insecure", [""]))[0]
