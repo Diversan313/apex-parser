@@ -240,7 +240,8 @@ jobs:
             exit 1
           fi
           GITVERSE_REPO=$(python -c "from apex.config import GITVERSE_REPO; print(GITVERSE_REPO)")
-          GITVERSE_USER=$(python -c "from apex.config import GITVERSE_USER; print(GITVERSE_USER)")
+          # логин и путь к репо — из самой ссылки: https://gitverse.ru/USER/REPO.git
+          GITVERSE_USER=$(echo "$GITVERSE_REPO" | sed -E 's#https?://[^/]+/([^/]+)/.*#\1#')
 
           rm -rf deploy_gitverse
           mkdir deploy_gitverse
@@ -283,5 +284,6 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
 
