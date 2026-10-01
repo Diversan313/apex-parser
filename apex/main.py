@@ -34,6 +34,7 @@ from .parse import (
 from .geoip import is_valid_public_host
 from .classify import (
     classify_config,
+    is_unsafe_config,
     is_wl_by_keywords,
     is_bl_by_keywords,
     is_ai_by_keywords,
@@ -267,7 +268,14 @@ def main():
     ai_links = set()
     torrent_links = set()
 
+    unsafe_dropped = 0
+
     for link, src in clean_items:
+
+        # REMOVE_UNSAFE: allowInsecure / plaintext без TLS — мимо
+        if cfg.REMOVE_UNSAFE and is_unsafe_config(link):
+            unsafe_dropped += 1
+            continue
 
         host, port, orig_name = (
             parse_host_port_and_name(
@@ -865,7 +873,7 @@ def main():
             continue
         by_cc[cc].append(item)
 
-    if cfg.WRITE_COUNTRY:
+    if cfg.WRITE_OTHER_COUNTRIES:
         countries_dir = "subs/other/countries"
         os.makedirs(countries_dir, exist_ok=True)
 
@@ -927,6 +935,41 @@ def main():
         print(
             f"💾 Protocols: {len(by_proto)} протоколов "
             f"({', '.join(sorted(by_proto))}) → subs/other/protocols/"
+        )
+
+    # --- CONTINENTS ---
+    if cfg.WRITE_OTHER_CONTINENTS:
+        from .utils.geo_data import continent_for_cc
+
+        by_continent = defaultdict(list)
+        unknown_cc = 0
+        for item in alive_full_clean:
+            cc = None
+            if len(item) > 3 and item[3]:
+                cc = str(item[3]).upper()
+            if not cc or len(cc) != 2:
+                continue
+            continent = continent_for_cc(cc)
+            if not continent:
+                unknown_cc += 1
+                continue
+            by_continent[continent].append(item)
+
+        for continent, items in sorted(by_continent.items()):
+            final_cont = _build_renamed(items, full_tag)
+            if not final_cont:
+                continue
+            _write_subscription_files(
+                os.path.join("subs/other/continents", continent),
+                continent,
+                final_cont,
+            )
+
+        print(
+            f"💾 Continents: {len(by_continent)} континентов "
+            f"({', '.join(sorted(by_continent))})"
+            + (f", {unknown_cc} нод без континента" if unknown_cc else "")
+            + " → subs/other/continents/"
         )
 
     # --- EXOTIC ---
