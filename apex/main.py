@@ -42,6 +42,7 @@ from .classify import (
 )
 from .xray import (
     check_proxy_alive_detailed,
+    ensure_xray_core,
     link_to_xray_outbound,
     print_xray_version,
 )
@@ -155,6 +156,9 @@ def main():
     print(
         "⚙️ Старые alive-конфиги используются"
     )
+
+    if cfg.AUTO_DOWNLOAD_XRAY:
+        ensure_xray_core()
 
     print_xray_version()
 
