@@ -21,6 +21,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -42,19 +43,6 @@ proxies:
       short-id: "33c0b6e213"
   - name: "🇪🇸 [BL] Сервер 4"
     type: vless
-    server: es2.h1cloud.net
-    port: 25535
-    uuid: "c379d8e4-c67d-42ec-a3ed-ca99d1ad0546"
-    network: "tcp"
-    servername: "www.microsoft.com"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Jh7CocBJSA55VZcLfXwXwoQ_Hi5pV-L1vv1SY-IrSh4"
-      short-id: "7642ce57308852e7"
-  - name: "🇪🇸 [BL] Сервер 5"
-    type: vless
     server: 34.175.107.233
     port: 443
     uuid: "c55c9880-2f9c-4ad6-bfc2-5054516bf613"
@@ -66,13 +54,40 @@ proxies:
     reality-opts:
       public-key: "lM9EQ1rZH9inQjrZesuqgldsXYN_yfT5-tqhPfbyen4"
       short-id: "1c9e101e99bf86bb"
+  - name: "🇪🇸 [BL] Сервер 5"
+    type: vless
+    server: cdn.bulkavpn.top
+    port: 443
+    uuid: "91d734be-a3d0-4d50-83ab-74cf7b6966fa"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cdn.bulkavpn.top"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "bQZcMViJWXus9rMSTOa-ZAaUJC0mIlPx7XmzrLp8GQU"
+      short-id: "94f32cfc"
   - name: "🇪🇸 [BL] Сервер 6"
+    type: vless
+    server: 196.245.52.146
+    port: 25535
+    uuid: "c379d8e4-c67d-42ec-a3ed-ca99d1ad0546"
+    network: "tcp"
+    servername: "www.microsoft.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Jh7CocBJSA55VZcLfXwXwoQ_Hi5pV-L1vv1SY-IrSh4"
+      short-id: "7642ce57308852e7"
+  - name: "🇪🇸 [BL] Сервер 7"
     type: ss
     server: 140.174.184.5
     port: 8388
     password: "qItG8SueYQcP"
     cipher: "chacha20-ietf-poly1305"
-  - name: "🇪🇸 [BL] Сервер 7"
+  - name: "🇪🇸 [BL] Сервер 8"
     type: ss
     server: 108.181.121.226
     port: 8388
