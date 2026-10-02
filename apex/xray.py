@@ -1403,7 +1403,7 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
     Возвращает (is_ok, cc, reason) — как check_via_xray_detailed.
     """
     if not hy2_core_ready() and not download_hy2_core():
-        return False, None, "Ядро Hysteria2 недоступно"
+        return False, None, "Ядро Hysteria2 недоступно", None
 
     port = get_free_port()
     conf_text = _hy2_client_config_text(link, port)
@@ -1423,7 +1423,7 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
 
             # ядро стартует дольше Xray (QUIC handshake)
             if not wait_for_port(port, timeout=5.0):
-                return False, None, "Локальное ядро Hysteria2 не запустилось"
+                return False, None, "Локальное ядро Hysteria2 не запустилось", None
 
             opener = urllib.request.build_opener(
                 urllib.request.ProxyHandler({
@@ -1448,10 +1448,10 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
                     pass
 
             if success < min_success_count:
-                return False, None, f"Hysteria2: тест провален ({success}/3)"
+                return False, None, f"Hysteria2: тест провален ({success}/3)", None
 
-            cc = get_exit_country_via_proxy(opener, timeout)
-            return True, cc, f"Hysteria2 OK ({success}/3)"
+            cc, exit_ip = get_exit_country_via_proxy(opener, timeout)
+            return True, cc, f"Hysteria2 OK ({success}/3)", exit_ip
 
         finally:
             if proc:
@@ -1526,7 +1526,9 @@ def get_exit_country_via_proxy(
     opener,
     timeout,
 ):
+    """Возвращает (country_code, exit_ip): ip-api отдаёт наш внешний IP в 'query'."""
     results = []
+    exit_ip = None
 
     try:
 
@@ -1562,6 +1564,9 @@ def get_exit_country_via_proxy(
                         ].upper(),
                     )
                 )
+                # внешний IP соединения — для лимитов по выходу
+                if data.get("query"):
+                    exit_ip = str(data["query"])
 
     except Exception:
         pass
@@ -1640,7 +1645,7 @@ def get_exit_country_via_proxy(
         pass
 
     if not results:
-        return None
+        return None, None
 
     counts = {}
 
@@ -1659,14 +1664,14 @@ def get_exit_country_via_proxy(
     ):
 
         if count >= 2:
-            return cc
+            return cc, exit_ip
 
     for name, cc in results:
 
         if name == "ip-api":
-            return cc
+            return cc, exit_ip
 
-    return results[0][1]
+    return results[0][1], exit_ip
 
 
 def check_via_xray_detailed(
@@ -1731,6 +1736,7 @@ def check_via_xray_detailed(
                 False,
                 None,
                 "Локальный Xray не запустился",
+                None,
             )
 
         proxy_handler = (
@@ -1790,7 +1796,7 @@ def check_via_xray_detailed(
             >= min_success_count
         ):
 
-            cc = (
+            cc, exit_ip = (
                 get_exit_country_via_proxy(
                     opener,
                     timeout,
@@ -1801,6 +1807,7 @@ def check_via_xray_detailed(
                 True,
                 cc,
                 f"OK ({success_count}/3)",
+                exit_ip,
             )
 
         return (
@@ -1808,6 +1815,7 @@ def check_via_xray_detailed(
             None,
             f"Тест провален "
             f"({success_count}/3)",
+            None,
         )
 
     except Exception as e:
@@ -1817,6 +1825,7 @@ def check_via_xray_detailed(
             None,
             f"Ошибка: "
             f"{type(e).__name__}: {e}",
+            None,
         )
 
     finally:
@@ -1886,6 +1895,7 @@ def check_proxy_alive_detailed(
             "Некорректный формат "
             "хоста/порта",
             None,
+            None,
         )
 
     if REMOVE_PRIVATE_INVALID and not is_valid_public_host(
@@ -1897,6 +1907,7 @@ def check_proxy_alive_detailed(
             "Некорректный формат "
             "хоста/порта",
             None,
+            None,
         )
 
     if REMOVE_CF_WARP and is_cloudflare_or_warp(
@@ -1907,6 +1918,7 @@ def check_proxy_alive_detailed(
             None,
             "Отфильтрован "
             "(Cloudflare/WARP)",
+            None,
             None,
         )
 
@@ -1926,6 +1938,7 @@ def check_proxy_alive_detailed(
                 None,
                 "TCP: порт закрыт/недоступен",
                 None,
+                None,
             )
 
     outbound = (
@@ -1941,18 +1954,19 @@ def check_proxy_alive_detailed(
             "Ошибка генерации "
             "JSON для Xray",
             None,
+            None,
         )
 
     # Hysteria2: если включено официальное ядро — тестируем им,
     # Xray остаётся fallback'ом (часть hy2-серверов Xray не берёт).
     if is_hysteria2 and cfg.HYSTERIA2_CORE:
-        hy_ok, hy_cc, hy_reason = check_via_hysteria2(
+        hy_ok, hy_cc, hy_reason, hy_ip = check_via_hysteria2(
             link,
             timeout=XRAY_TEST_TIMEOUT + 2,
             min_success_count=min_success_count,
         )
         if not hy_ok:
-            hy_ok, hy_cc, hy_reason = check_via_xray_detailed(
+            hy_ok, hy_cc, hy_reason, hy_ip = check_via_xray_detailed(
                 outbound,
                 timeout=XRAY_TEST_TIMEOUT,
                 min_success_count=min_success_count,
@@ -1963,10 +1977,10 @@ def check_proxy_alive_detailed(
                 if hy_cc
                 else extract_clean_flag(orig_name)
             )
-            return (True, (link, final_flag), hy_reason, hy_cc)
-        return (False, None, hy_reason, None)
+            return (True, (link, final_flag), hy_reason, hy_cc, hy_ip)
+        return (False, None, hy_reason, None, None)
 
-    is_ok, cc, reason = (
+    is_ok, cc, reason, exit_ip = (
         check_via_xray_detailed(
             outbound,
             timeout=XRAY_TEST_TIMEOUT,
@@ -1992,12 +2006,14 @@ def check_proxy_alive_detailed(
             ),
             reason,
             cc,
+            exit_ip,
         )
 
     return (
         False,
         None,
         reason,
+        None,
         None,
     )
 
