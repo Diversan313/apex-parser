@@ -1403,7 +1403,7 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
     Возвращает (is_ok, cc, reason) — как check_via_xray_detailed.
     """
     if not hy2_core_ready() and not download_hy2_core():
-        return False, None, "Ядро Hysteria2 недоступно", None
+        return False, None, "Ядро Hysteria2 недоступно", None, None
 
     port = get_free_port()
     conf_text = _hy2_client_config_text(link, port)
@@ -1423,7 +1423,7 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
 
             # ядро стартует дольше Xray (QUIC handshake)
             if not wait_for_port(port, timeout=5.0):
-                return False, None, "Локальное ядро Hysteria2 не запустилось", None
+                return False, None, "Локальное ядро Hysteria2 не запустилось", None, None
 
             opener = urllib.request.build_opener(
                 urllib.request.ProxyHandler({
@@ -1438,20 +1438,25 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
                 "https://www.microsoft.com/connecttest.txt",
             ]
             success = 0
+            best_ping_ms = None
             for url_t in test_urls:
                 try:
                     req = urllib.request.Request(url_t, headers=HEADERS)
+                    t0 = time.monotonic()
                     with opener.open(req, timeout=timeout) as resp:
+                        elapsed_ms = int((time.monotonic() - t0) * 1000)
                         if resp.status in (200, 204):
                             success += 1
+                            if best_ping_ms is None or elapsed_ms < best_ping_ms:
+                                best_ping_ms = elapsed_ms
                 except Exception:
                     pass
 
             if success < min_success_count:
-                return False, None, f"Hysteria2: тест провален ({success}/3)", None
+                return False, None, f"Hysteria2: тест провален ({success}/3)", None, None
 
             cc, exit_ip = get_exit_country_via_proxy(opener, timeout)
-            return True, cc, f"Hysteria2 OK ({success}/3)", exit_ip
+            return True, cc, f"Hysteria2 OK ({success}/3)", exit_ip, best_ping_ms
 
         finally:
             if proc:
@@ -1737,6 +1742,7 @@ def check_via_xray_detailed(
                 None,
                 "Локальный Xray не запустился",
                 None,
+                None,
             )
 
         proxy_handler = (
@@ -1767,6 +1773,7 @@ def check_via_xray_detailed(
         ]
 
         success_count = 0
+        best_ping_ms = None
 
         for url in test_urls:
 
@@ -1777,16 +1784,23 @@ def check_via_xray_detailed(
                     headers=HEADERS,
                 )
 
+                t0 = time.monotonic()
+
                 with opener.open(
                     req,
                     timeout=timeout,
                 ) as resp:
+
+                    elapsed_ms = int((time.monotonic() - t0) * 1000)
 
                     if resp.status in (
                         200,
                         204,
                     ):
                         success_count += 1
+                        # пинг конфига = лучший (мин) успешный ответ
+                        if best_ping_ms is None or elapsed_ms < best_ping_ms:
+                            best_ping_ms = elapsed_ms
 
             except Exception:
                 pass
@@ -1808,6 +1822,7 @@ def check_via_xray_detailed(
                 cc,
                 f"OK ({success_count}/3)",
                 exit_ip,
+                best_ping_ms,
             )
 
         return (
@@ -1815,6 +1830,7 @@ def check_via_xray_detailed(
             None,
             f"Тест провален "
             f"({success_count}/3)",
+            None,
             None,
         )
 
@@ -1825,6 +1841,7 @@ def check_via_xray_detailed(
             None,
             f"Ошибка: "
             f"{type(e).__name__}: {e}",
+            None,
             None,
         )
 
@@ -1896,6 +1913,7 @@ def check_proxy_alive_detailed(
             "хоста/порта",
             None,
             None,
+            None,
         )
 
     if REMOVE_PRIVATE_INVALID and not is_valid_public_host(
@@ -1908,6 +1926,7 @@ def check_proxy_alive_detailed(
             "хоста/порта",
             None,
             None,
+            None,
         )
 
     if REMOVE_CF_WARP and is_cloudflare_or_warp(
@@ -1918,6 +1937,7 @@ def check_proxy_alive_detailed(
             None,
             "Отфильтрован "
             "(Cloudflare/WARP)",
+            None,
             None,
             None,
         )
@@ -1939,6 +1959,7 @@ def check_proxy_alive_detailed(
                 "TCP: порт закрыт/недоступен",
                 None,
                 None,
+                None,
             )
 
     outbound = (
@@ -1955,18 +1976,19 @@ def check_proxy_alive_detailed(
             "JSON для Xray",
             None,
             None,
+            None,
         )
 
     # Hysteria2: если включено официальное ядро — тестируем им,
     # Xray остаётся fallback'ом (часть hy2-серверов Xray не берёт).
     if is_hysteria2 and cfg.HYSTERIA2_CORE:
-        hy_ok, hy_cc, hy_reason, hy_ip = check_via_hysteria2(
+        hy_ok, hy_cc, hy_reason, hy_ip, hy_ping = check_via_hysteria2(
             link,
             timeout=XRAY_TEST_TIMEOUT + 2,
             min_success_count=min_success_count,
         )
         if not hy_ok:
-            hy_ok, hy_cc, hy_reason, hy_ip = check_via_xray_detailed(
+            hy_ok, hy_cc, hy_reason, hy_ip, hy_ping = check_via_xray_detailed(
                 outbound,
                 timeout=XRAY_TEST_TIMEOUT,
                 min_success_count=min_success_count,
@@ -1977,10 +1999,10 @@ def check_proxy_alive_detailed(
                 if hy_cc
                 else extract_clean_flag(orig_name)
             )
-            return (True, (link, final_flag), hy_reason, hy_cc, hy_ip)
-        return (False, None, hy_reason, None, None)
+            return (True, (link, final_flag), hy_reason, hy_cc, hy_ip, hy_ping)
+        return (False, None, hy_reason, None, None, None)
 
-    is_ok, cc, reason, exit_ip = (
+    is_ok, cc, reason, exit_ip, ping_ms = (
         check_via_xray_detailed(
             outbound,
             timeout=XRAY_TEST_TIMEOUT,
@@ -2007,12 +2029,14 @@ def check_proxy_alive_detailed(
             reason,
             cc,
             exit_ip,
+            ping_ms,
         )
 
     return (
         False,
         None,
         reason,
+        None,
         None,
         None,
     )
