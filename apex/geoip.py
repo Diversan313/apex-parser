@@ -283,6 +283,17 @@ def fetch_country_from_ip(
     return None
 
 
+def is_cf_ip(ip_str: str) -> bool:
+    """IP принадлежит подсетям Cloudflare/WARP? (без DNS, только по CIDR)"""
+    try:
+        ip_obj = ipaddress.ip_address(str(ip_str).strip())
+    except ValueError:
+        return False
+    if ip_obj.version == 4:
+        return any(ip_obj in n for n in config.CF_NETWORKS)
+    return any(ip_obj in n for n in config.CF_IPV6_NETWORKS)
+
+
 # ============================================================
 # CLOUDFLARE
 # ============================================================
