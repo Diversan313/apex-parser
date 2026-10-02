@@ -21,7 +21,7 @@ proxies:
     port: 8443
     password: "ymk9eBP4Ams3-ncYCV4kDAezUzBfkR8x"
     sni: "sw-one.quickgo.cc"
-    client-fingerprint: "android"
+    client-fingerprint: "firefox"
     udp: true
   - name: "🇸🇪 [WL] Сервер 4"
     type: trojan
@@ -29,7 +29,7 @@ proxies:
     port: 8443
     password: "ymk9eBP4Ams3-ncYCV4kDAezUzBfkR8x"
     sni: "sw-one.quickgo.cc"
-    client-fingerprint: "firefox"
+    client-fingerprint: "android"
     udp: true
   - name: "🇸🇪 [WL] Сервер 5"
     type: trojan
@@ -58,10 +58,10 @@ proxies:
     server: 193.163.203.170
     port: 443
     uuid: "11aabba0-5fd1-4f15-8068-74c1a466cefc"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "yandex.ru"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -72,10 +72,10 @@ proxies:
     server: 193.163.203.170
     port: 443
     uuid: "11aabba0-5fd1-4f15-8068-74c1a466cefc"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "yandex.ru"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -83,47 +83,18 @@ proxies:
       short-id: "b28db60d77c50b4f"
   - name: "🇸🇪 [WL] Сервер 9"
     type: vless
-    server: 45.9.15.43
+    server: 193.163.203.170
     port: 443
-    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    uuid: "11aabba0-5fd1-4f15-8068-74c1a466cefc"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "start.ru"
-    client-fingerprint: "qq"
+    servername: "yandex.ru"
     udp: true
     tls: true
     reality-opts:
-      public-key: "Knbd-I0CeD5opMCcALWu4VcDfOkMRlwT_BPsYKojXD8"
-      short-id: "3c73b4eb47eb"
+      public-key: "GCCZ1ZZjB_nj7yxqFi22bIIWWr_G6rnWUzDcssN_40o"
+      short-id: "b28db60d77c50b4f"
   - name: "🇸🇪 [WL] Сервер 10"
-    type: vless
-    server: 45.9.15.194
-    port: 443
-    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "start.ru"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "W0hppY4nyFpyAoBQy249SW_m8yv9yV7LMqd3ZD5cyyc"
-      short-id: "434343"
-  - name: "🇸🇪 [WL] Сервер 11"
-    type: vless
-    server: 45.9.12.245
-    port: 443
-    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "start.ru"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "9FKu0HrSTwu4DaqgcKuwh3i_L-ebN4S4vTo4ydBEFW8"
-      short-id: "85252fa57b75"
-  - name: "🇸🇪 [WL] Сервер 12"
     type: vless
     server: 45.9.12.249
     port: 443
@@ -137,7 +108,49 @@ proxies:
     reality-opts:
       public-key: "orFx9rPjN9yZKolylp_UHaom1XNJqPhN4rr0Pt-fOQ0"
       short-id: "313f501bfcd1"
-  - name: "🇸🇪 [BL] Сервер 13"
+  - name: "🇸🇪 [WL] Сервер 11"
+    type: vless
+    server: 45.9.15.194
+    port: 443
+    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "start.ru"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "W0hppY4nyFpyAoBQy249SW_m8yv9yV7LMqd3ZD5cyyc"
+      short-id: "434343"
+  - name: "🇸🇪 [WL] Сервер 12"
+    type: vless
+    server: 45.9.15.194
+    port: 443
+    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "start.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "W0hppY4nyFpyAoBQy249SW_m8yv9yV7LMqd3ZD5cyyc"
+      short-id: "434343"
+  - name: "🇸🇪 [WL] Сервер 13"
+    type: vless
+    server: 45.9.12.245
+    port: 443
+    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "start.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9FKu0HrSTwu4DaqgcKuwh3i_L-ebN4S4vTo4ydBEFW8"
+      short-id: "85252fa57b75"
+  - name: "🇸🇪 [BL] Сервер 14"
     type: vless
     server: 34.51.240.236
     port: 443
@@ -150,7 +163,7 @@ proxies:
     reality-opts:
       public-key: "SOvacyM6CABhBHYdOHvhXbkNLHJBHuAkoJj2Z13xKlE"
       short-id: "b4a6faed784ff461"
-  - name: "🇸🇪 [BL] Сервер 14"
+  - name: "🇸🇪 [BL] Сервер 15"
     type: vless
     server: 143.246.196.207
     port: 443
@@ -163,30 +176,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "wSjV1yR_rhDUdoNbM9zIXNGLASLp9RorComnyoayo2c"
-  - name: "🇸🇪 [BL] Сервер 15"
-    type: vless
-    server: nodee11sweeden.mekovpnhere.abrdns.com
-    port: 443
-    uuid: "4319f612-110f-4943-9555-7e3a29fa5289"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nodee11sweeden.mekovpnhere.abrdns.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "vHVEsKbVahlLvf9oJDIztzRikPL6utaxEwcnRkytWm0"
-      short-id: "2bb8c86b393ddae8"
   - name: "🇸🇪 [BL] Сервер 16"
-    type: vless
-    server: sw5.xt-game.top
-    port: 443
-    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
     server: sw4.xt-game.top
     port: 443
@@ -195,16 +185,16 @@ proxies:
     flow: "xtls-rprx-vision"
     udp: true
     tls: true
-  - name: "🇸🇪 [BL] Сервер 18"
+  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
-    server: sw3.xt-game.top
+    server: sw5.xt-game.top
     port: 443
     uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
     network: "tcp"
     flow: "xtls-rprx-vision"
     udp: true
     tls: true
-  - name: "🇸🇪 [BL] Сервер 19"
+  - name: "🇸🇪 [BL] Сервер 18"
     type: vless
     server: node5.boomvpn.ru
     port: 443
@@ -218,6 +208,15 @@ proxies:
     reality-opts:
       public-key: "GRxGFwibgoUjG9OL5Dl1OLyK56yw8WaG5BdFP8ifVgQ"
       short-id: "26f7082dd0e36ca1"
+  - name: "🇸🇪 [BL] Сервер 19"
+    type: vless
+    server: sw3.xt-game.top
+    port: 443
+    uuid: "49c8e76e-7e52-426a-8669-51d93c7a6d12"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    udp: true
+    tls: true
   - name: "🇸🇪 [BL] Сервер 20"
     type: vless
     server: 31.76.3.34
@@ -260,3 +259,45 @@ proxies:
     reality-opts:
       public-key: "x6p656szvu_3CKLsJ4NtkooRvdTVGx7IoPca_p58_jA"
       short-id: "fb442438e2223836"
+  - name: "🇸🇪 [BL] Сервер 23"
+    type: vless
+    server: 150.241.74.79
+    port: 443
+    uuid: "f0a52dd3-4377-4402-a450-210bc81bcf25"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sh-ee-01.mintrocket.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TJ3ltW_Xa1x5bn7bY3jx2mpirm0GHOskSSG88Ft68CA"
+      short-id: "46641eff6d03ffb1"
+  - name: "🇸🇪 [BL] Сервер 24"
+    type: vless
+    server: 31.77.158.241
+    port: 443
+    uuid: "1b7ee703-fa08-4305-8469-ae3e30e61e44"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "swself2.yandex-api.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "HXFe_cPryw01zqXchAFjZciDAS4UJg1-xScx6vjgjjY"
+      short-id: "7f2e9c4b1a8d6e25"
+  - name: "🇸🇪 [BL] Сервер 25"
+    type: vless
+    server: 144.31.235.152
+    port: 443
+    uuid: "1b7ee703-fa08-4305-8469-ae3e30e61e44"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "swself.yandex-api.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "HXFe_cPryw01zqXchAFjZciDAS4UJg1-xScx6vjgjjY"
+      short-id: "7f2e9c4b1a8d6e25"
