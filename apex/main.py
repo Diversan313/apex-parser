@@ -104,6 +104,22 @@ def _write_subscription_files(base_dir: str, prefix: str, links: list) -> None:
             print(f"⚠️ Не удалось записать YAML {path}: {e}")
 
 
+def _sort_by_ping(items):
+    """
+    Сортировка по пингу: низкий — выше (SORT_BY_PING).
+    Пинг берётся из замера теста (лучший успешный ответ, мс).
+    Без пинга (None) — в конец, порядок не меняется (stable).
+    """
+    if not cfg.SORT_BY_PING:
+        return items
+
+    def key(item):
+        ping = item[5] if len(item) > 5 and isinstance(item[5], (int, float)) else None
+        return (1, 0) if ping is None else (0, ping)
+
+    return sorted(items, key=key)
+
+
 def _make_full_tag_fn(ai_links, torrent_links, wl_keys):
     """
     Тег для FULL и сборных списков: AI > TR > WL > BL.
@@ -452,7 +468,7 @@ def main():
 
             try:
 
-                is_ok, res, reason, cc, exit_ip = (
+                is_ok, res, reason, cc, exit_ip, ping_ms = (
                     future.result()
                 )
 
@@ -463,7 +479,7 @@ def main():
 
             if is_ok:
 
-                # (link, flag, src, cc, exit_ip)
+                # (link, flag, src, cc, exit_ip, ping_ms)
                 alive_wl_data.append(
                     (
                         res[0],
@@ -471,6 +487,7 @@ def main():
                         src,
                         cc,
                         exit_ip,
+                        ping_ms,
                     )
                 )
 
@@ -521,7 +538,7 @@ def main():
 
             try:
 
-                is_ok, res, reason, cc, exit_ip = (
+                is_ok, res, reason, cc, exit_ip, ping_ms = (
                     future.result()
                 )
 
@@ -544,6 +561,7 @@ def main():
                         "RU_EXIT:" + str(src),
                         cc,
                         exit_ip,
+                        ping_ms,
                     )
                 )
                 bl_ru_to_wl += 1
@@ -555,6 +573,7 @@ def main():
                         src,
                         cc,
                         exit_ip,
+                        ping_ms,
                     )
                 )
 
@@ -684,7 +703,7 @@ def main():
         full_bl
     )
 
-    alive_full_clean = (
+    alive_full_clean = _sort_by_ping(
         full_wl
         + full_bl
     )
@@ -710,6 +729,9 @@ def main():
                 )
             )
         return out
+
+    alive_wl_clean = _sort_by_ping(alive_wl_clean)
+    alive_bl_clean = _sort_by_ping(alive_bl_clean)
 
     final_wl = _build_renamed(
         alive_wl_clean,
