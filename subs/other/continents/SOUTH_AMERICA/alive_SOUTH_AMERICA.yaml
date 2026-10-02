@@ -1,17 +1,19 @@
 proxies:
-  - name: "🇨🇴 [BL] Сервер 1"
-    type: ss
-    server: 149.104.107.41
-    port: 8090
-    password: "PCnnH6SQSnfoS27"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇱 [BL] Сервер 2"
-    type: ss
-    server: 64.176.2.21
-    port: 8388
-    password: "xBStBEVqvGwHPocc"
-    cipher: "aes-256-gcm"
-  - name: "🇧🇷 [BL] Сервер 3"
+  - name: "🇧🇷 [WL] Сервер 1"
+    type: vless
+    server: 89.169.21.180
+    port: 8443
+    uuid: "b6b222ad-5702-4416-90e7-6b1aa71d65bf"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "player.videocactus.xyz"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EOvenH2u8MStnNoZrKQ6oDq9Tqv9ohmQfMSTAuUXLXs"
+      short-id: "b5ba979adc4cdc73"
+  - name: "🇧🇷 [BL] Сервер 2"
     type: vless
     server: 147.45.116.19
     port: 443
@@ -23,30 +25,28 @@ proxies:
     tls: true
     reality-opts:
       public-key: "aUdvs6o4PHN6jmdkIKBA2rHsN_7l8W2SaDfNgzn-BwU"
-  - name: "🇨🇱 [BL] Сервер 4"
+  - name: "🇨🇱 [BL] Сервер 3"
     type: vless
     server: 34.176.137.90
     port: 443
     uuid: "ad5325f8-f0b3-41c4-a561-113529b60e70"
     network: "tcp"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "safari"
     udp: true
     tls: true
     reality-opts:
       public-key: "HnHVuSObMrldWGzq1-Eb93fwgu6QQRp6H0_8LX3ikDc"
       short-id: "2c2d919f5183d0b7"
-  - name: "🇧🇷 [WL] Сервер 5"
-    type: vless
-    server: 89.169.21.180
-    port: 8443
-    uuid: "b6b222ad-5702-4416-90e7-6b1aa71d65bf"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "player.videocactus.xyz"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "EOvenH2u8MStnNoZrKQ6oDq9Tqv9ohmQfMSTAuUXLXs"
-      short-id: "b5ba979adc4cdc73"
+  - name: "🇨🇴 [BL] Сервер 4"
+    type: ss
+    server: 149.104.107.41
+    port: 8090
+    password: "PCnnH6SQSnfoS27"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇱 [BL] Сервер 5"
+    type: ss
+    server: 64.176.2.21
+    port: 8388
+    password: "xBStBEVqvGwHPocc"
+    cipher: "aes-256-gcm"
