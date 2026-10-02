@@ -11,6 +11,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from .config import (
     MAX_CONFIGS_PER_IP_BL,
     MAX_CONFIGS_PER_SUBNET_BL,
+    MAX_CONFIGS_PER_EXIT_IP_BL,
+    MAX_CONFIGS_PER_EXIT_SUBNET_BL,
     MAX_CONFIGS_PER_IP_WL,
     SUPPORTED_PROTOCOLS,
 )
@@ -806,3 +808,81 @@ def limit_bl_configs_per_ip(
 
     return result
 
+
+
+# ============================================================
+# BL LIMIT: ВЫХОДНОЙ IP (после теста)
+# ============================================================
+
+def limit_bl_configs_per_exit_ip(
+    items_list: list,
+) -> list:
+    """
+    Лимиты по ВЫХОДНОМУ IP для BL (применяются только после теста —
+    exit IP становится известен при проверке).
+
+    Формат item: (link, flag, src, cc, exit_ip).
+
+    Правила:
+    - exit IP неизвестен -> конфиг не ограничиваем (нет данных — нет лимита);
+    - exit IP в подсетях Cloudflare/WARP -> ИСКЛЮЧЕНИЕ: egress общий
+      и плавающий, per-IP лимиты к нему неприменимы;
+    - иначе: MAX_CONFIGS_PER_EXIT_IP_BL на IP,
+      MAX_CONFIGS_PER_EXIT_SUBNET_BL на /24 (IPv6 — /64).
+    """
+    from .geoip import is_cf_ip
+
+    ip_counter = defaultdict(int)
+    subnet_counter = defaultdict(int)
+    grouped = defaultdict(list)
+
+    for item in items_list:
+        exit_ip = ""
+        if len(item) > 4 and item[4]:
+            exit_ip = str(item[4]).strip()
+        grouped[exit_ip].append(item)
+
+    result = []
+    cf_skipped = 0
+
+    for exit_ip, items in grouped.items():
+        if not exit_ip:
+            # выход не определён — не наказываем
+            result.extend(items)
+            continue
+
+        if is_cf_ip(exit_ip):
+            # CF/WARP-выход — исключение из лимитов
+            cf_skipped += len(items)
+            result.extend(items)
+            continue
+
+        for item in items:
+            if ip_counter[exit_ip] >= MAX_CONFIGS_PER_EXIT_IP_BL:
+                continue
+
+            try:
+                ip_obj = ipaddress.ip_address(exit_ip)
+                prefix = 24 if ip_obj.version == 4 else 64
+                subnet_key = str(
+                    ipaddress.ip_network(f"{exit_ip}/{prefix}", strict=False)
+                )
+            except Exception:
+                subnet_key = exit_ip
+
+            if subnet_counter[subnet_key] >= MAX_CONFIGS_PER_EXIT_SUBNET_BL:
+                continue
+
+            ip_counter[exit_ip] += 1
+            subnet_counter[subnet_key] += 1
+            result.append(item)
+
+    print(
+        f"✂️ BL лимиты по выходному IP: "
+        f"было {len(items_list)}, осталось {len(result)} | "
+        f"exit-IP={MAX_CONFIGS_PER_EXIT_IP_BL}, "
+        f"/24={MAX_CONFIGS_PER_EXIT_SUBNET_BL} | "
+        f"CF-исключение: {cf_skipped} конфигов"
+    )
+
+    return result
