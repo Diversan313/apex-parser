@@ -68,7 +68,7 @@ HEAL_CONFIG = True                  # вычищать рекламный мус
 KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
 # Вывод файлов
-SORT_BY_PING = True                 # сортировать конфиги по пингу (ниже — выше)
+SORT_BY_PING = False                 # сортировать конфиги по пингу (ниже — выше)
 WRITE_LATEST_JSON = True            # stats/latest.json
 WRITE_BASE64 = True                 # alive_*.txt (base64)
 WRITE_PLAIN = True                  # alive_plain_*.txt
