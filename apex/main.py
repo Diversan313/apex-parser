@@ -64,6 +64,7 @@ from .dedup import (
     clean_and_dedup,
     dedup_advanced,
     limit_bl_configs_per_ip,
+    limit_bl_configs_per_exit_ip,
 )
 from .diversify import (
     get_wl_item_info,
@@ -451,7 +452,7 @@ def main():
 
             try:
 
-                is_ok, res, reason, cc = (
+                is_ok, res, reason, cc, exit_ip = (
                     future.result()
                 )
 
@@ -462,13 +463,14 @@ def main():
 
             if is_ok:
 
-                # (link, flag, src, cc)
+                # (link, flag, src, cc, exit_ip)
                 alive_wl_data.append(
                     (
                         res[0],
                         res[1],
                         src,
                         cc,
+                        exit_ip,
                     )
                 )
 
@@ -519,7 +521,7 @@ def main():
 
             try:
 
-                is_ok, res, reason, cc = (
+                is_ok, res, reason, cc, exit_ip = (
                     future.result()
                 )
 
@@ -541,6 +543,7 @@ def main():
                         res[1],
                         "RU_EXIT:" + str(src),
                         cc,
+                        exit_ip,
                     )
                 )
                 bl_ru_to_wl += 1
@@ -551,6 +554,7 @@ def main():
                         res[1],
                         src,
                         cc,
+                        exit_ip,
                     )
                 )
 
@@ -593,6 +597,13 @@ def main():
         dedup_advanced(
             alive_bl_data,
             "BL после Xray",
+        )
+    )
+
+    # Выходные лимиты (exit IP): CF-подсети — исключение
+    alive_bl_data = (
+        limit_bl_configs_per_exit_ip(
+            alive_bl_data
         )
     )
 
