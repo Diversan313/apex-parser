@@ -26,6 +26,16 @@ from .parse import (
 from .geoip import resolve_host_cached, is_valid_public_host
 from .xray import parse_xhttp_extra
 
+def _norm_net(net: str) -> str:
+    """
+    Нормализация транспорта для ключей дедупа:
+    tcp и raw — один и тот же транспорт Xray (tcp переименован в raw).
+    Без нормализации близнецы с разными именами не схлопываются.
+    """
+    net = (net or "").lower()
+    return "raw" if net in ("tcp", "raw") else net
+
+
 def get_config_dedup_key(
     link: str,
 ):
@@ -116,12 +126,14 @@ def get_config_dedup_key(
                 )
             )
 
-            net = str(
-                data.get(
-                    "net",
-                    "raw",
+            net = _norm_net(
+                str(
+                    data.get(
+                        "net",
+                        "raw",
+                    )
                 )
-            ).lower()
+            )
 
             path = str(
                 data.get(
@@ -157,14 +169,14 @@ def get_config_dedup_key(
                 )
             )
 
-            net = (
+            net = _norm_net(
                 query_params.get(
                     "type",
                     query_params.get(
                         "net",
                         ["raw"],
                     ),
-                )[0].lower()
+                )[0]
             )
 
             path = query_params.get(
@@ -361,12 +373,14 @@ def get_final_dedup_key(
                 )
             )
 
-            net = str(
-                data.get(
-                    "net",
-                    "raw",
+            net = _norm_net(
+                str(
+                    data.get(
+                        "net",
+                        "raw",
+                    )
                 )
-            ).lower()
+            )
 
             path = (
                 str(
@@ -381,13 +395,6 @@ def get_final_dedup_key(
             security = str(
                 data.get(
                     "tls",
-                    "",
-                )
-            ).lower()
-
-            fp = str(
-                data.get(
-                    "fp",
                     "",
                 )
             ).lower()
@@ -412,14 +419,14 @@ def get_final_dedup_key(
                 )
             )
 
-            net = (
+            net = _norm_net(
                 query_params.get(
                     "type",
                     query_params.get(
                         "net",
                         ["raw"],
                     ),
-                )[0].lower()
+                )[0]
             )
 
             path = (
@@ -433,13 +440,6 @@ def get_final_dedup_key(
             security = (
                 query_params.get(
                     "security",
-                    [""],
-                )[0].lower()
-            )
-
-            fp = (
-                query_params.get(
-                    "fp",
                     [""],
                 )[0].lower()
             )
@@ -493,7 +493,6 @@ def get_final_dedup_key(
         net,
         path,
         security,
-        fp,
         uuid,
         mode,
         service_name,
@@ -514,7 +513,6 @@ def clean_and_dedup(
     seen_strings = set()
     seen_keys = set()
     result = []
-
     for link, source in tagged_items:
 
         link = link.strip()
@@ -587,6 +585,10 @@ def dedup_advanced(
     - не фильтрует протоколы.
 
     То есть эта функция решает только проблему дублей.
+
+    Из fp-вариантов одного туннеля выживает приоритетный:
+    fp=chrome (самый стабильный), а если живого chrome нет —
+    любой другой выживший вариант.
     """
 
     if not items_list:
@@ -596,8 +598,30 @@ def dedup_advanced(
         )
         return []
 
+    def _fp_rank(link: str) -> int:
+        """0 = fp=chrome (приоритет), 1 = любой другой fp."""
+        try:
+            if link.startswith("vmess://"):
+                import json as _json
+                data = _json.loads(
+                    safe_b64decode(
+                        link.replace("vmess://", "", 1).strip()
+                    )
+                )
+                fp = str(data.get("fp", "")).lower()
+            else:
+                main = link.split("#", 1)[0]
+                qp = urllib.parse.parse_qs(
+                    main.split("?", 1)[1],
+                    keep_blank_values=True,
+                ) if "?" in main else {}
+                fp = str(qp.get("fp", [""])[0]).lower()
+            return 0 if fp == "chrome" else 1
+        except Exception:
+            return 1
+
     seen_strings = set()
-    seen_keys = set()
+    best_by_key = {}   # key -> (rank, index в result)
     result = []
 
     for item in items_list:
@@ -636,16 +660,21 @@ def dedup_advanced(
         if not key:
             continue
 
-        if key in seen_keys:
+        rank = _fp_rank(link)
+
+        if key not in best_by_key:
+            # первый встретившийся — кладём в результат
+            best_by_key[key] = (rank, len(result))
+            result.append(item)
             continue
 
-        seen_keys.add(
-            key
-        )
+        prev_rank, idx = best_by_key[key]
 
-        result.append(
-            item
-        )
+        # Дубль с приоритетным fp заменяет уже взятого
+        # (chrome вытесняет firefox при том же туннеле).
+        if rank < prev_rank:
+            result[idx] = item
+            best_by_key[key] = (rank, idx)
 
     print(
         f"🧹 Дедуп {label}: "
