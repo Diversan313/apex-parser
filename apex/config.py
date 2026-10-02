@@ -42,6 +42,8 @@ MAX_WORKERS = 15                    # потоки RD теста Xray
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
 MAX_CONFIGS_PER_IP_BL = 1           # макс. конфигов на один IP в BL
 MAX_CONFIGS_PER_SUBNET_BL = 5       # макс. конфигов на /24 в BL
+MAX_CONFIGS_PER_EXIT_IP_BL = 3      # макс. конфигов на один ВЫХОДНОЙ IP в BL (CF-подсети — исключение)
+MAX_CONFIGS_PER_EXIT_SUBNET_BL = 10 # макс. конфигов на /24 ВЫХОДНОЙ подсети в BL (CF-подсети — исключение)
 EXOTIC_MAX_NODES = 5                # страна «экзотическая», если в ней нод <= N
 
 # WL / SNI
