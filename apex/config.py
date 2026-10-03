@@ -60,6 +60,13 @@ XRAY_START_TIMEOUT = 1.2            # сек, старт xray
 XRAY_TEST_TIMEOUT = 6.0             # сек, проверка через xray
 TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
 
+# Kameleon
+KAMELEON_ENABLED = True             # использовать Kameleon
+KAMELEON_PARALLEL = True            # True = все варианты одновременно (быстрее); False = по очереди
+KAMELEON_MAX_WORKERS = 8            # потоков одновременных попыток (при KAMELEON_PARALLEL=True)
+KAMELEON_APPS = "happ, v2raytun, incy, streisand, v2box, hiddify"  # клиенты через запятую (пусто = весь набор)
+KAMELEON_OSES = "android, ios, win, macos, linux"  # ОС через запятую (пусто = весь набор)
+
 # Фильтры
 REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
 REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopback
@@ -68,7 +75,7 @@ HEAL_CONFIG = True                  # вычищать рекламный мус
 KEEP_PREV_ALIVES = True             # подмешивать прошлые alive в кандидаты
 
 # Вывод файлов
-SORT_BY_PING = False                 # сортировать конфиги по пингу (ниже — выше)
+SORT_BY_PING = False                # сортировать конфиги по пингу (ниже — выше)
 WRITE_LATEST_JSON = True            # stats/latest.json
 WRITE_BASE64 = True                 # alive_*.txt (base64)
 WRITE_PLAIN = True                  # alive_plain_*.txt
@@ -83,6 +90,7 @@ WRITE_OTHER_CONTINENTS = True       # списки по континентам s
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 
 # Rename (имя в клиенте)
+UTF8_CONFIG_NAMES = True            # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
 RENAME_PREFIX_WL = "[WL]"
 RENAME_PREFIX_BL = "[BL]"
 RENAME_PREFIX_AI = "[AI]"
@@ -90,9 +98,9 @@ RENAME_PREFIX_TORRENT = "[TR]"
 # Плейсхолдеры: {flag} {tag} {index}
 # Пример: 🇳🇱 [WL] Сервер 12
 RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"
-UTF8_CONFIG_NAMES = True            # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
 
 # SSL / HTTP
+SSL_VERIFY_SOURCES = True           # проверять сертификаты источников; при битом серте — fallback без проверки
 SSL_CONTEXT = ssl.create_default_context()
 SSL_CONTEXT.check_hostname = False
 SSL_CONTEXT.verify_mode = ssl.CERT_NONE
