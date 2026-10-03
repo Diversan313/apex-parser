@@ -274,8 +274,6 @@ def select_wl_diverse(
 
 # ============================================================
 # BL PROTOCOL FILTER
-#
-# НЕ МЕНЯЮ.
 # ============================================================
 
 def filter_protocols_bl(
@@ -322,6 +320,8 @@ def filter_protocols_bl(
                 item
             )
 
+    # minority_ratio задан как доля ОТ ИТОГА, поэтому пересчитываем
+    # в долю от priority: ratio / (1 - ratio)
     max_minority = max(
         10,
         int(
@@ -390,6 +390,30 @@ def _is_repeated_junk(val: str) -> bool:
     """v2rayNplus--v2rayNplus--v2rayNplus / Cfox_Server---Cfox_Server---…"""
     tokens = [t for t in re.split(r"-{2,}|,+|@+", val) if t]
     return len(tokens) >= 3 and len(set(tokens)) == 1
+
+
+# Белый список параметров ссылок (нижний регистр): всё, что не входит,
+# считается мусором источников (source_name, provider_id, реклама и т.п.)
+# и выкидывается при HEAL_CONFIG=True.
+_VALID_PARAMS = frozenset({
+    # общие vless/vmess/trojan/ss (URI-стандарт + Xray)
+    "encryption", "flow", "pbk", "security", "sid", "sni", "type", "net",
+    "network", "fp", "host", "path", "serviceName", "mode", "headerType",
+    "alpn", "spx", "authority", "allowInsecure", "insecure",
+    "packetEncoding", "extra", "levelname", "level",
+    # websocket early data (ed в path или отдельным параметром)
+    "ed", "eh",
+    # mKCP (seed обфускации)
+    "seed",
+    # ss (SIP002: плагины obfs-local / v2ray-plugin)
+    "plugin", "plugin-opts", "pluginOpts",
+    # синонимы, встречающиеся в ссылках
+    "servername", "peer", "mport",
+    # hysteria2
+    "obfs", "obfs-password", "obfsPassword", "obfs-packet-size", "packetSize",
+    "up", "down", "upmbps", "downmbps", "pinSHA256", "ech", "auth", "password",
+})
+_VALID_PARAMS_LC = frozenset(v.lower() for v in _VALID_PARAMS)
 
 
 def _has_ad_marker(val: str) -> bool:
@@ -494,10 +518,12 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
             raw_val = values[0]
             key_l = key.lower()
 
-            # HEAL: рекламный мусор (Telegram=..., повторяющийся хлам
-            # в alpn/host) — параметр выбрасывается целиком
+            # HEAL: рекламный мусор и параметры вне белого списка
+            # (source_name, provider_id и пр.) — выбрасываем целиком
             if HEAL_CONFIG:
                 keep, _ = _heal_param(key_l, raw_val)
+                if key_l not in _VALID_PARAMS_LC:
+                    keep = False
                 if not keep:
                     continue
 
@@ -595,7 +621,7 @@ def rename_config(
 
     link = link.strip()
 
-    # ---- vmess: имя только внутри ps ----
+    # vmess: имя только внутри ps
     if link.startswith("vmess://"):
         try:
             b64_data = link.replace("vmess://", "", 1).strip()
@@ -623,7 +649,7 @@ def rename_config(
             main = link.split("#", 1)[0]
             return main + "#" + frag_name
 
-    # ---- все остальные протоколы (vless/trojan/ss/hy2/...) ----
+    # остальные протоколы (vless/trojan/ss/hy2/...)
     if "://" in link:
         main_part = link.split("#", 1)[0]
         return main_part + "#" + frag_name
@@ -639,7 +665,7 @@ def rename_config(
 def _add_transport_opts(proxy: Dict[str, Any], network: str, pget) -> None:
     """
     Дописывает в Clash-proxy transport-опции (ws / grpc / xhttp) для
-    vless и trojan — раньше они терялись и конфиг в Clash был нерабочим.
+    vless и trojan. Без них конфиг в Clash нерабочий.
     """
     network = (network or "tcp").lower()
 
@@ -656,7 +682,7 @@ def _add_transport_opts(proxy: Dict[str, Any], network: str, pget) -> None:
             proxy["grpc-opts"]["grpc-mode"] = pget("mode", "").lower()
 
     elif network in ("xhttp", "splithttp"):
-        # mihomo: xhttp эмулируется через network: http + mode
+        # mihomo поддерживает xhttp нативно
         proxy["network"] = "xhttp"
         opts = {"path": pget("path", "/") or "/"}
         if pget("host"):
@@ -712,7 +738,7 @@ def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
 
         # parse generic URI
         if "@" not in rest:
-            # ss pure base64 method:pass@host:port
+            # ss без userinfo: base64(method:pass@host:port)
             if proto == "ss":
                 try:
                     decoded = safe_b64decode(rest)
@@ -797,7 +823,7 @@ def _clash_proxy_from_link(link: str, name: str) -> Optional[Dict[str, Any]]:
             return proxy
 
         if proto == "ss":
-            # userinfo is method:password (sometimes base64)
+            # userinfo = method:password; иногда вся пара целиком в base64
             method, password = userinfo, ""
             if ":" in userinfo:
                 method, password = userinfo.split(":", 1)
