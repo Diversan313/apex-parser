@@ -1,17 +1,15 @@
-"""Chunker: тестирование конфигов чанками — один процесс Xray на чанк.
+"""Chunker: один Xray на чанк, несколько чанков параллельно.
 
-Обычный путь — отдельный процесс Xray на каждый конфиг: старт процесса
-и ожидание inbound'а стоят дороже самой проверки. Здесь на чанк
-поднимается один Xray с пачкой mixed-inbound'ов, каждый порт через
-routing завёрнут в свой outbound, порты тестируются пулом потоков.
-
-Размер чанка адаптивный: стартовое значение считается по CPU/RAM машины,
-дальше тюнер сжимает чанк при проблемах и растит при стабильной работе.
+Обычный путь — процесс Xray на каждый конфиг. Здесь на чанк поднимается
+один Xray с пачкой mixed-inbound'ов; чанки сами идут параллельно
+(несколько процессов Xray одновременно). Порты выделяются из
+фиксированных диапазонов ниже ephemeral, чтобы избежать EADDRINUSE
+и исчерпания портов.
 
 Публичный API:
-    test_links_chunked(items, min_success_count) — прогнать [(link, src)],
-        вернуть {link: 6-tuple результата}; для ссылок, не получивших
-        вердикт в чанке, включается одиночный fallback.
+    test_links_chunked(items, min_success_count) — [(link, src)] →
+        {link: 6-tuple}; ссылки без вердикта в чанке добираются
+        одиночным fallback'ом.
 """
 from __future__ import annotations
 
@@ -20,9 +18,10 @@ import os
 import random
 import socket
 import subprocess
+import threading
 import time
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, wait, FIRST_COMPLETED
 from typing import Optional
 
 from . import config as cfg
@@ -43,6 +42,11 @@ _TEST_URLS = (
     "https://www.microsoft.com/connecttest.txt",
 )
 
+# Диапазоны портов ниже ephemeral (Linux ~32768, Windows ~49152).
+_PORT_BASE = 20000
+_PORT_RANGE = 2000
+_PORT_HARD_MAX = 32000 if os.name != "nt" else 49000
+
 _CHUNK_HARD_CAP = 64
 
 
@@ -51,11 +55,10 @@ def _cfg(name: str, default):
 
 
 # ============================================================
-# ТЮНЕР РАЗМЕРА ЧАНКА
+# ТЮНЕР
 # ============================================================
 
 def _available_ram_kb() -> Optional[int]:
-    """MemAvailable из /proc/meminfo (Linux); на Windows — None."""
     try:
         with open("/proc/meminfo", "r") as f:
             for line in f:
@@ -67,7 +70,6 @@ def _available_ram_kb() -> Optional[int]:
 
 
 def _auto_chunk_size() -> int:
-    """Стартовый размер чанка по ресурсам машины."""
     cpu = os.cpu_count() or 2
     size = max(8, min(48, cpu * 4))
     ram_kb = _available_ram_kb()
@@ -76,9 +78,19 @@ def _auto_chunk_size() -> int:
     return size
 
 
-class ChunkTuner:
-    """Держит текущий размер чанка и подстраивает его по результатам."""
+def _auto_parallel_chunks() -> int:
+    """Сколько shared-Xray процессов крутить одновременно."""
+    cpu = os.cpu_count() or 2
+    ram_kb = _available_ram_kb()
+    # ~50–80 МБ на процесс; при малой RAM не раздуваем.
+    by_cpu = max(1, min(6, cpu // 2))
+    if ram_kb is not None:
+        by_ram = max(1, int(ram_kb / 150_000))
+        return max(1, min(by_cpu, by_ram, 6))
+    return by_cpu
 
+
+class ChunkTuner:
     def __init__(self):
         fixed = int(_cfg("XRAY_CHUNKER_SIZE", 0) or 0)
         self.size = min(max(fixed, 8), _CHUNK_HARD_CAP) if fixed else _auto_chunk_size()
@@ -93,20 +105,30 @@ class ChunkTuner:
 
 
 # ============================================================
-# КОНФИГ ЧАНКА
+# ПОРТЫ
 # ============================================================
 
-def _free_port_sequence(count: int) -> list:
-    """
-    Порты для инбаундов чанка. Каждую позицию проверяем bind()'ом:
-    connect-проба не видит TIME_WAIT, а Xray без SO_REUSEADDR
-    на таком порту упадёт с EADDRINUSE.
-    """
+_port_lock = threading.Lock()
+_port_slot = 0
+
+
+def _next_port_base() -> int:
+    """Циклический base для чанка, чтобы параллельные процессы не пересекались."""
+    global _port_slot
+    with _port_lock:
+        slots = max(1, (_PORT_HARD_MAX - _PORT_BASE) // _PORT_RANGE)
+        base = _PORT_BASE + (_port_slot % slots) * _PORT_RANGE
+        _port_slot += 1
+        return base
+
+
+def _free_ports(count: int, base: int) -> list:
+    """Bind-проверка: connect не видит TIME_WAIT, Xray без SO_REUSEADDR падает."""
     ports = []
-    base = random.randint(20000, 45000)
-    candidate = base
-    while len(ports) < count:
-        if candidate in ports or candidate >= 65000:
+    candidate = base + random.randint(0, 50)
+    limit = min(base + _PORT_RANGE, _PORT_HARD_MAX)
+    while len(ports) < count and candidate < limit:
+        if candidate in ports:
             candidate += 1
             continue
         try:
@@ -155,7 +177,6 @@ def _build_chunk_config(outbounds: list, ports: list) -> dict:
 # ============================================================
 
 def _test_port(port: int, timeout: float, min_success_count: int):
-    """HTTP-тест одного инбаунда. Возвращает (ok, reason, ping_ms)."""
     opener = urllib.request.build_opener(
         urllib.request.ProxyHandler({
             "http": f"http://127.0.0.1:{port}",
@@ -184,10 +205,9 @@ def _test_port(port: int, timeout: float, min_success_count: int):
 
 
 def _wait_ports_parallel(ports: list, timeout: float) -> list:
-    """Параллельное ожидание открытия портов с общим дедлайном."""
+    """Параллельное ожидание с общим дедлайном — не суммируем таймауты."""
     if not ports:
         return []
-
     deadline = time.monotonic() + timeout
     opened = []
 
@@ -195,8 +215,12 @@ def _wait_ports_parallel(ports: list, timeout: float) -> list:
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             return None
-        if wait_for_port(port, timeout=remaining):
+        if wait_for_port(port, timeout=min(remaining, 0.5)):
             return port
+        # короткий ретрай до дедлайна
+        while time.monotonic() < deadline:
+            if wait_for_port(port, timeout=0.1):
+                return port
         return None
 
     workers = min(len(ports), max(4, (os.cpu_count() or 2) * 2))
@@ -209,15 +233,10 @@ def _wait_ports_parallel(ports: list, timeout: float) -> list:
 
 def _test_chunk(links: list, min_success_count: int, timeout: float):
     """
-    Поднимает один Xray на чанк и тестирует каждый порт.
-
-    Возвращает (results, started_all):
-      results — {link: 6-tuple}; ссылка без вердикта (порт не открылся,
-      процесс умер) в results не попадает — её заберёт fallback;
-      started_all — все ли инбаунды поднялись (сигнал тюнеру).
+    Один shared-Xray на чанк. Возвращает (results, started_all).
+    Ссылки без вердикта не попадают в results — их заберёт fallback.
     """
     results = {}
-
     outbounds = []
     port_links = []
     for link in links:
@@ -233,7 +252,16 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
     if not outbounds:
         return results, True
 
-    ports = _free_port_sequence(len(outbounds))
+    base = _next_port_base()
+    ports = _free_ports(len(outbounds), base)
+    if len(ports) < len(outbounds):
+        # не хватило портов в диапазоне — урезаем, остальное уйдёт в fallback
+        outbounds = outbounds[:len(ports)]
+        port_links = port_links[:len(ports)]
+
+    if not ports:
+        return results, False
+
     config = _build_chunk_config(outbounds, ports)
     port_to_link = dict(zip(ports, port_links))
 
@@ -250,8 +278,8 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
         proc.stdin.flush()
         proc.stdin.close()
 
-        base_timeout = float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 3.0))
-        start_timeout = base_timeout + len(ports) * 0.03
+        base_to = float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 2.5))
+        start_timeout = base_to + len(ports) * 0.02
         opened = _wait_ports_parallel(ports, start_timeout)
         started_all = len(opened) == len(ports)
 
@@ -281,12 +309,15 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
             flag = cc_to_flag(cc) if cc else extract_clean_flag(orig_name)
             return link, (True, (link, flag), reason, cc, exit_ip, ping_ms)
 
-        max_workers = max(1, int(_cfg("XRAY_CHUNKER_MAX_WORKERS", 8)))
+        max_workers = max(1, int(_cfg("XRAY_CHUNKER_MAX_WORKERS", 12)))
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
             futs = [pool.submit(run_one, p) for p in opened]
             for fut in as_completed(futs):
-                link, verdict = fut.result()
-                results[link] = verdict
+                try:
+                    link, verdict = fut.result()
+                    results[link] = verdict
+                except Exception:
+                    pass
 
     except Exception:
         started_all = False
@@ -309,11 +340,11 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
 # ============================================================
 
 def _prefilter_tcp(items: list, results: dict) -> list:
-    """Отсекает конфиги с мёртвым сервером до сборки чанка (hy2 мимо — UDP)."""
+    """TCP pre-check до сборки чанка; hy2 пропускаем (UDP)."""
     to_test = []
 
     def probe(item):
-        link, src = item
+        link, _src = item
         host, port, _ = parse_host_port_and_name(link)
         is_hy2 = link.startswith(("hysteria2://", "hy2://"))
         if not host or not port:
@@ -336,13 +367,10 @@ def _prefilter_tcp(items: list, results: dict) -> list:
 
 def test_links_chunked(items: list, min_success_count: int):
     """
-    Тестирует [(link, src)] и возвращает {link: 6-tuple}.
+    Тестирует [(link, src)] → {link: 6-tuple}.
 
-    Формат результата совпадает с check_proxy_alive_detailed, поэтому
-    счётчики и списки в main.py работают без изменений.
-
-    Ссылки, не получившие вердикт в чанке (падение процесса, невалидный
-    outbound), добираются одиночным fallback'ом.
+    Формат совпадает с check_proxy_alive_detailed.
+    Чанки идут параллельно (несколько shared-Xray одновременно).
     """
     from .xray import check_proxy_alive_detailed
 
@@ -363,31 +391,53 @@ def test_links_chunked(items: list, min_success_count: int):
         return results
 
     to_test = _prefilter_tcp(items, results)
+    if not to_test:
+        return results
 
     tuner = ChunkTuner()
+    parallel = max(1, int(_cfg("XRAY_CHUNKER_PARALLEL", 0) or 0) or _auto_parallel_chunks())
+    timeout = float(_cfg("XRAY_TEST_TIMEOUT", 6.0))
+
+    # нарезаем все чанки заранее
+    chunks = []
     pos = 0
     while pos < len(to_test):
-        chunk = to_test[pos:pos + tuner.size]
+        size = tuner.size
+        chunk = to_test[pos:pos + size]
         pos += len(chunk)
+        chunks.append(chunk)
 
-        timeout = float(_cfg("XRAY_TEST_TIMEOUT", 6.0))
+    results_lock = threading.Lock()
+
+    def run_chunk(chunk: list):
         chunk_results, started_all = _test_chunk(chunk, min_success_count, timeout)
-        results.update(chunk_results)
-
         missing = [l for l in chunk if l not in chunk_results]
         if missing:
-            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                futures = {
-                    executor.submit(check_proxy_alive_detailed, link, min_success_count): link
+            with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, len(missing))) as ex:
+                futs = {
+                    ex.submit(check_proxy_alive_detailed, link, min_success_count): link
                     for link in missing
                 }
-                for future in as_completed(futures):
-                    link = futures[future]
+                for fut in as_completed(futs):
+                    link = futs[fut]
                     try:
-                        results[link] = future.result()
+                        chunk_results[link] = fut.result()
                     except Exception:
                         pass
+        with results_lock:
+            results.update(chunk_results)
+            tuner.adjust(len(chunk), started_all, len(missing))
+        return len(chunk)
 
-        tuner.adjust(len(chunk), started_all, len(missing))
+    # параллельный прогон чанков
+    with ThreadPoolExecutor(max_workers=parallel) as pool:
+        futs = [pool.submit(run_chunk, c) for c in chunks]
+        # таймаут на чанк: старт + тест + запас
+        chunk_deadline = timeout * 3 + float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 2.5)) + 15.0
+        for fut in as_completed(futs):
+            try:
+                fut.result(timeout=chunk_deadline)
+            except Exception:
+                pass
 
     return results
