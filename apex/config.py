@@ -13,7 +13,7 @@ MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
 SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
 
-# Hysteria2: отдельное официальное ядро для теста(только hy2)
+# Hysteria2 (ядро для теста только hy2)
 HYSTERIA2_CORE = True
 HY2_CORE_FILE = "hysteria2.exe" if os.name == "nt" else "hysteria2"
 HY2_CORE_URL_WINDOWS = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-windows-amd64.exe"
@@ -23,6 +23,12 @@ HY2_CORE_URL_LINUX = "https://github.com/apernet/hysteria/releases/latest/downlo
 AUTO_DOWNLOAD_XRAY = True           # качать ядро Xray, если его нет в корне (win/linux)
 XRAY_CORE_URL_WINDOWS = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip"
 XRAY_CORE_URL_LINUX = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
+
+# Chunker (apex/chunker.py)
+XRAY_CHUNKER_ENABLED = True         # False = процесс Xray на каждый конфиг
+XRAY_CHUNKER_SIZE = 0               # 0 = авто (по CPU/RAM); или фиксированный чанк 8-64
+XRAY_CHUNKER_MAX_WORKERS = 8        # потоков тестирования портов внутри чанка
+XRAY_CHUNKER_START_TIMEOUT = 3.0    # сек, ожидание старта чанка (много инбаундов - дольше одиночного)
 
 # Зеркало GitVerse (деплой из workflow; токен — в секретах GITVERSE_TOKEN)
 GITVERSE_ENABLED = True             # False = GitVerse пропускается
