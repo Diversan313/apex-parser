@@ -1,4 +1,4 @@
-"""Chunker: тестирование конфигов чанками - один процесс Xray на чанк.
+"""Chunker: тестирование конфигов чанками — один процесс Xray на чанк.
 
 Обычный путь — отдельный процесс Xray на каждый конфиг: старт процесса
 и ожидание inbound'а стоят дороже самой проверки. Здесь на чанк
@@ -23,12 +23,10 @@ import subprocess
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Optional
 
 from . import config as cfg
-from .config import (
-    MAX_WORKERS,
-    XRAY_CHUNKER_START_TIMEOUT,
-)
+from .config import MAX_WORKERS
 from .parse import parse_host_port_and_name
 from .utils import extract_clean_flag, cc_to_flag
 from .xray import (
@@ -45,9 +43,11 @@ _TEST_URLS = (
     "https://www.microsoft.com/connecttest.txt",
 )
 
-# Выше этого чанк не растёт: слишком большой конфиг дольше стартует,
-# а падение одного невалидного outbound'а роняет весь процесс.
 _CHUNK_HARD_CAP = 64
+
+
+def _cfg(name: str, default):
+    return getattr(cfg, name, default)
 
 
 # ============================================================
@@ -55,7 +55,7 @@ _CHUNK_HARD_CAP = 64
 # ============================================================
 
 def _available_ram_kb() -> Optional[int]:
-    """MemAvailable из /proc/meminfo (Linux); на Windows неизвестно — None."""
+    """MemAvailable из /proc/meminfo (Linux); на Windows — None."""
     try:
         with open("/proc/meminfo", "r") as f:
             for line in f:
@@ -71,8 +71,6 @@ def _auto_chunk_size() -> int:
     cpu = os.cpu_count() or 2
     size = max(8, min(48, cpu * 4))
     ram_kb = _available_ram_kb()
-    # Каждому inbound'у в общем процессе соответствует свой outbound-пул;
-    # при малой памяти не раздуваем конфиг.
     if ram_kb is not None and ram_kb < 2_000_000:
         size = max(8, size // 2)
     return size
@@ -82,15 +80,13 @@ class ChunkTuner:
     """Держит текущий размер чанка и подстраивает его по результатам."""
 
     def __init__(self):
-        fixed = int(cfg.XRAY_CHUNKER_SIZE or 0)
+        fixed = int(_cfg("XRAY_CHUNKER_SIZE", 0) or 0)
         self.size = min(max(fixed, 8), _CHUNK_HARD_CAP) if fixed else _auto_chunk_size()
 
     def adjust(self, chunk_len: int, started_all: bool, missing: int) -> None:
         if not started_all:
-            # порты не поднялись — процесс перегружен, сжимаем
             self.size = max(8, self.size // 2)
         elif missing > chunk_len // 4:
-            # много fallback'ов — чанк слишком агрессивный
             self.size = max(8, int(self.size * 0.75))
         else:
             self.size = min(_CHUNK_HARD_CAP, int(self.size * 1.25) + 1)
@@ -103,7 +99,7 @@ class ChunkTuner:
 def _free_port_sequence(count: int) -> list:
     """
     Порты для инбаундов чанка. Каждую позицию проверяем bind()'ом:
-    connect-проба не видит TIME_WAIT порты, а Xray без SO_REUSEADDR
+    connect-проба не видит TIME_WAIT, а Xray без SO_REUSEADDR
     на таком порту упадёт с EADDRINUSE.
     """
     ports = []
@@ -115,7 +111,7 @@ def _free_port_sequence(count: int) -> list:
             continue
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(0.1)
+            s.settimeout(0.05)
             s.bind(("127.0.0.1", candidate))
             s.close()
             ports.append(candidate)
@@ -170,7 +166,9 @@ def _test_port(port: int, timeout: float, min_success_count: int):
     best_ping_ms = None
     for url in _TEST_URLS:
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "*/*"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "Mozilla/5.0", "Accept": "*/*"}
+            )
             t0 = time.monotonic()
             with opener.open(req, timeout=timeout) as resp:
                 elapsed_ms = int((time.monotonic() - t0) * 1000)
@@ -183,6 +181,30 @@ def _test_port(port: int, timeout: float, min_success_count: int):
     if success < min_success_count:
         return False, f"Тест провален ({success}/3)", None
     return True, f"OK ({success}/3)", best_ping_ms
+
+
+def _wait_ports_parallel(ports: list, timeout: float) -> list:
+    """Параллельное ожидание открытия портов с общим дедлайном."""
+    if not ports:
+        return []
+
+    deadline = time.monotonic() + timeout
+    opened = []
+
+    def probe(port: int) -> Optional[int]:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return None
+        if wait_for_port(port, timeout=remaining):
+            return port
+        return None
+
+    workers = min(len(ports), max(4, (os.cpu_count() or 2) * 2))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for res in pool.map(probe, ports):
+            if res is not None:
+                opened.append(res)
+    return opened
 
 
 def _test_chunk(links: list, min_success_count: int, timeout: float):
@@ -201,7 +223,9 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
     for link in links:
         outbound = link_to_xray_outbound(link)
         if not outbound:
-            results[link] = (False, None, "Ошибка генерации JSON для Xray", None, None, None)
+            results[link] = (
+                False, None, "Ошибка генерации JSON для Xray", None, None, None
+            )
             continue
         outbounds.append(outbound)
         port_links.append(link)
@@ -226,13 +250,12 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
         proc.stdin.flush()
         proc.stdin.close()
 
-        # Чанк стартует дольше одиночного конфига: инбаундов много.
-        start_timeout = cfg.XRAY_CHUNKER_START_TIMEOUT + len(ports) * 0.05
-        opened = [p for p in ports if wait_for_port(p, timeout=start_timeout)]
+        base_timeout = float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 3.0))
+        start_timeout = base_timeout + len(ports) * 0.03
+        opened = _wait_ports_parallel(ports, start_timeout)
         started_all = len(opened) == len(ports)
 
         if proc.poll() is not None:
-            # процесс умер целиком — весь чанк уходит в fallback
             return results, False
 
         for closed in set(ports) - set(opened):
@@ -258,8 +281,10 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
             flag = cc_to_flag(cc) if cc else extract_clean_flag(orig_name)
             return link, (True, (link, flag), reason, cc, exit_ip, ping_ms)
 
-        with ThreadPoolExecutor(max_workers=max(1, cfg.XRAY_CHUNKER_MAX_WORKERS)) as pool:
-            for fut in as_completed([pool.submit(run_one, p) for p in opened]):
+        max_workers = max(1, int(_cfg("XRAY_CHUNKER_MAX_WORKERS", 8)))
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futs = [pool.submit(run_one, p) for p in opened]
+            for fut in as_completed(futs):
                 link, verdict = fut.result()
                 results[link] = verdict
 
@@ -284,7 +309,7 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
 # ============================================================
 
 def _prefilter_tcp(items: list, results: dict) -> list:
-    """Отсекает конфиги с мёртвым сервером до сборки чанка (hy2 мимо — он на UDP)."""
+    """Отсекает конфиги с мёртвым сервером до сборки чанка (hy2 мимо — UDP)."""
     to_test = []
 
     def probe(item):
@@ -317,15 +342,13 @@ def test_links_chunked(items: list, min_success_count: int):
     счётчики и списки в main.py работают без изменений.
 
     Ссылки, не получившие вердикт в чанке (падение процесса, невалидный
-    outbound), добираются одиночным fallback'ом — часть чанка не должна
-    теряться из-за одного конфига.
+    outbound), добираются одиночным fallback'ом.
     """
     from .xray import check_proxy_alive_detailed
 
     results = {}
 
-    if not cfg.XRAY_CHUNKER_ENABLED:
-        # Старый путь: процесс Xray на каждый конфиг.
+    if not _cfg("XRAY_CHUNKER_ENABLED", True):
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = {
                 executor.submit(check_proxy_alive_detailed, link, min_success_count): link
@@ -347,7 +370,7 @@ def test_links_chunked(items: list, min_success_count: int):
         chunk = to_test[pos:pos + tuner.size]
         pos += len(chunk)
 
-        timeout = float(cfg.XRAY_TEST_TIMEOUT)
+        timeout = float(_cfg("XRAY_TEST_TIMEOUT", 6.0))
         chunk_results, started_all = _test_chunk(chunk, min_success_count, timeout)
         results.update(chunk_results)
 
