@@ -1,6 +1,20 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
+    server: 2.26.104.40
+    port: 443
+    uuid: "f4d71fd6-1c25-4748-836b-1dbda9268039"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "s5.mangateka.top"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GLb7RkOVWgSiZ7oZ6MfeByW284NpBy2FrOtgEPXbuic"
+      short-id: "d343252c9207a130"
+  - name: "🇫🇷 [WL] Сервер 2"
+    type: vless
     server: 194.113.235.66
     port: 443
     uuid: "1c5ed2e1-56da-41ab-9a78-159d9892ec17"
@@ -13,20 +27,6 @@ proxies:
     reality-opts:
       public-key: "lHCkAu_DOVFtE-iL2JGrPt44QeTCFijXuRfuGaSni3Q"
       short-id: "9e4eced6e98ed4d4"
-  - name: "🇫🇷 [WL] Сервер 2"
-    type: vless
-    server: 2.26.104.40
-    port: 443
-    uuid: "f4d71fd6-1c25-4748-836b-1dbda9268039"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "s5.mangateka.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GLb7RkOVWgSiZ7oZ6MfeByW284NpBy2FrOtgEPXbuic"
-      short-id: "d343252c9207a130"
   - name: "🇫🇷 [BL] Сервер 3"
     type: vless
     server: 194.76.154.31
@@ -60,13 +60,14 @@ proxies:
     port: 52006
     uuid: "bc659d88-a1e0-4c65-a49a-7b51b26a7a7f"
     network: "tcp"
-    flow: "xtls-rprx-vision"
+    flow: "xtls-rprx-vision-udp443"
     servername: "fr.setlisting.ru"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
   - name: "🇫🇷 [BL] Сервер 6"
     type: vless
-    server: 62.210.91.10
+    server: 62.210.91.2
     port: 23576
     uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
     network: "tcp"
@@ -79,7 +80,7 @@ proxies:
       short-id: "01"
   - name: "🇫🇷 [BL] Сервер 7"
     type: vless
-    server: 62.210.91.2
+    server: 62.210.91.10
     port: 23576
     uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
     network: "tcp"
