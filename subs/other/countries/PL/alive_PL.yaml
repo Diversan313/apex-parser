@@ -1,10 +1,10 @@
 proxies:
   - name: "🇵🇱 [WL] Сервер 1"
     type: vless
-    server: 109.120.181.153
+    server: 90.156.218.163
     port: 443
     uuid: "adc11f30-e4cb-4985-bf5e-f9ded69c019f"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "eh.vk.ru"
     client-fingerprint: "chrome"
@@ -15,7 +15,7 @@ proxies:
       short-id: "db04ce8bdb8900f1"
   - name: "🇵🇱 [WL] Сервер 2"
     type: vless
-    server: 90.156.218.163
+    server: 109.120.181.153
     port: 443
     uuid: "adc11f30-e4cb-4985-bf5e-f9ded69c019f"
     network: "tcp"
@@ -53,30 +53,16 @@ proxies:
     tls: true
   - name: "🇵🇱 [BL] Сервер 5"
     type: vless
-    server: poland-good.failspace.top
+    server: 50.7.249.98
     port: 443
     uuid: "cd3bb7d9-7df3-4644-ac05-c260990ac277"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "poland-good.failspace.top"
-    client-fingerprint: "chrome"
+    servername: "pol-pol-poland.failspace.top"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
   - name: "🇵🇱 [BL] Сервер 6"
-    type: vless
-    server: 31.59.204.227
-    port: 443
-    uuid: "87fd990d-ca93-440a-bbd4-e8281c4a0910"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pl3.cloud-static.org"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "cIgH-cz8JCjHnPQXA4qZNpYWwgYdVKCX3jDhuDbVK24"
-      short-id: "96ef4f5dd00f1ba0"
-  - name: "🇵🇱 [BL] Сервер 7"
     type: vless
     server: 31.59.206.218
     port: 443
@@ -90,18 +76,7 @@ proxies:
     reality-opts:
       public-key: "cIgH-cz8JCjHnPQXA4qZNpYWwgYdVKCX3jDhuDbVK24"
       short-id: "96ef4f5dd00f1ba0"
-  - name: "🇵🇱 [BL] Сервер 8"
-    type: vless
-    server: pol-pol-poland.failspace.top
-    port: 443
-    uuid: "cd3bb7d9-7df3-4644-ac05-c260990ac277"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pol-pol-poland.failspace.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇵🇱 [BL] Сервер 9"
+  - name: "🇵🇱 [BL] Сервер 7"
     type: vless
     server: 31.59.204.104
     port: 443
@@ -115,9 +90,30 @@ proxies:
     reality-opts:
       public-key: "cIgH-cz8JCjHnPQXA4qZNpYWwgYdVKCX3jDhuDbVK24"
       short-id: "96ef4f5dd00f1ba0"
+  - name: "🇵🇱 [BL] Сервер 8"
+    type: vless
+    server: poland-good.failspace.top
+    port: 443
+    uuid: "cd3bb7d9-7df3-4644-ac05-c260990ac277"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "poland-good.failspace.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇵🇱 [BL] Сервер 9"
+    type: vless
+    server: pl.flen-vpn.xyz
+    port: 8443
+    uuid: "51a1fd52-fd88-4905-a976-35e44be28e4b"
+    network: "tcp"
+    servername: "pl.flen-vpn.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
   - name: "🇵🇱 [BL] Сервер 10"
     type: vless
-    server: 31.59.205.36
+    server: 31.59.204.227
     port: 443
     uuid: "87fd990d-ca93-440a-bbd4-e8281c4a0910"
     network: "tcp"
@@ -131,7 +127,7 @@ proxies:
       short-id: "96ef4f5dd00f1ba0"
   - name: "🇵🇱 [BL] Сервер 11"
     type: vless
-    server: 31.59.204.209
+    server: 31.59.205.36
     port: 443
     uuid: "87fd990d-ca93-440a-bbd4-e8281c4a0910"
     network: "tcp"
@@ -145,7 +141,7 @@ proxies:
       short-id: "96ef4f5dd00f1ba0"
   - name: "🇵🇱 [BL] Сервер 12"
     type: vless
-    server: 31.59.206.28
+    server: 31.59.204.209
     port: 443
     uuid: "87fd990d-ca93-440a-bbd4-e8281c4a0910"
     network: "tcp"
@@ -159,14 +155,18 @@ proxies:
       short-id: "96ef4f5dd00f1ba0"
   - name: "🇵🇱 [BL] Сервер 13"
     type: vless
-    server: pl.flen-vpn.xyz
-    port: 8443
-    uuid: "51a1fd52-fd88-4905-a976-35e44be28e4b"
+    server: 31.59.206.28
+    port: 443
+    uuid: "87fd990d-ca93-440a-bbd4-e8281c4a0910"
     network: "tcp"
-    servername: "pl.flen-vpn.xyz"
-    client-fingerprint: "ios"
+    flow: "xtls-rprx-vision"
+    servername: "pl3.cloud-static.org"
+    client-fingerprint: "random"
     udp: true
     tls: true
+    reality-opts:
+      public-key: "cIgH-cz8JCjHnPQXA4qZNpYWwgYdVKCX3jDhuDbVK24"
+      short-id: "96ef4f5dd00f1ba0"
   - name: "🇵🇱 [BL] Сервер 14"
     type: vless
     server: 179.254.71.20
@@ -193,19 +193,6 @@ proxies:
       short-id: "ff514e2c910845"
   - name: "🇵🇱 [BL] Сервер 16"
     type: vless
-    server: 83.168.95.145
-    port: 443
-    uuid: "82f37352-85e5-49bb-9edc-a80997065659"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "google.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "AcuvO982QLzf76fVydfSuJIiF5520rmj7AxpaxyRwUg"
-      short-id: "d345ad4657adeef9"
-  - name: "🇵🇱 [BL] Сервер 17"
-    type: vless
     server: 191.44.113.237
     port: 443
     uuid: "cc4d63e2-3a86-49b3-9598-328bbe93e56c"
@@ -217,7 +204,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "yI6maXxTQ8zRHg39X8YMQtKW-IVfNIn0_OCUIQKmcXw"
-  - name: "🇵🇱 [BL] Сервер 18"
+  - name: "🇵🇱 [BL] Сервер 17"
     type: vless
     server: 144.31.131.38
     port: 443
@@ -231,7 +218,7 @@ proxies:
     reality-opts:
       public-key: "fNfokzklCF4l_c8k8PciOCjm5ecNoF_sNLjEtaO-xzI"
       short-id: "db04ce8bdb8900f1"
-  - name: "🇵🇱 [BL] Сервер 19"
+  - name: "🇵🇱 [BL] Сервер 18"
     type: vless
     server: 2.59.253.251
     port: 443
