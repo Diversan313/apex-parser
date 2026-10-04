@@ -40,6 +40,7 @@ from .classify import (
     is_ai_by_keywords,
     is_torrent_by_keywords,
 )
+from .chunker import test_links_chunked
 from .xray import (
     check_proxy_alive_detailed,
     ensure_xray_core,
@@ -438,144 +439,95 @@ def main():
     bl_fail = 0
     bl_ru_to_wl = 0
 
-    with ThreadPoolExecutor(
-        max_workers=MAX_WORKERS
-    ) as executor:
+    # WL: батчевый прогон (один Xray на чанк) или одиночный путь
+    wl_results = test_links_chunked(ping_wl, WL_MIN_SUCCESS_COUNT)
 
-        # ----------------------------------------------------
-        # WL 1/3 (включая white_ip)
-        # ----------------------------------------------------
+    for link, src in ping_wl:
 
-        wl_futures = {
-            executor.submit(
-                check_proxy_alive_detailed,
-                link,
-                WL_MIN_SUCCESS_COUNT,
-            ): (
-                link,
-                src,
+        result = wl_results.get(link)
+        if result is None:
+            continue  # исключение в тесте - конфиг не считаем ни живым, ни мёртвым
+
+        is_ok, res, reason, cc, exit_ip, ping_ms = result
+        is_white = str(src).startswith("WHITE_IP")
+
+        if is_ok:
+
+            # (link, flag, src, cc, exit_ip, ping_ms)
+            alive_wl_data.append(
+                (
+                    res[0],
+                    res[1],
+                    src,
+                    cc,
+                    exit_ip,
+                    ping_ms,
+                )
             )
-            for link, src in ping_wl
-        }
 
-        for future in as_completed(
-            wl_futures
-        ):
+            wl_ok += 1
+            if is_white:
+                white_ip_ok += 1
 
-            link, src = wl_futures[
-                future
-            ]
+        else:
 
-            try:
+            wl_fail += 1
+            if is_white:
+                white_ip_fail += 1
 
-                is_ok, res, reason, cc, exit_ip, ping_ms = (
-                    future.result()
+    print(
+        f"\n🟢 WL тест завершён: "
+        f"OK={wl_ok}, "
+        f"FAIL={wl_fail}"
+    )
+    print(
+        f"   └ white_ip: "
+        f"OK={white_ip_ok}, "
+        f"FAIL={white_ip_fail}"
+    )
+
+    # BL: батчевый прогон
+    bl_results = test_links_chunked(ping_bl, BL_MIN_SUCCESS_COUNT)
+
+    for link, src in ping_bl:
+
+        result = bl_results.get(link)
+        if result is None:
+            continue
+
+        is_ok, res, reason, cc, exit_ip, ping_ms = result
+
+        if not is_ok:
+
+            bl_fail += 1
+            continue
+
+        bl_ok += 1
+
+        # Всё русское -> WL (если включено в конфиге): живой BL с RU exit.
+        if cc and cc.upper() == "RU" and cfg.BL_RU_TO_WL:
+            alive_wl_data.append(
+                (
+                    res[0],
+                    res[1],
+                    "RU_EXIT:" + str(src),
+                    cc,
+                    exit_ip,
+                    ping_ms,
                 )
-
-            except Exception:
-                continue
-
-            is_white = str(src).startswith("WHITE_IP")
-
-            if is_ok:
-
-                # (link, flag, src, cc, exit_ip, ping_ms)
-                alive_wl_data.append(
-                    (
-                        res[0],
-                        res[1],
-                        src,
-                        cc,
-                        exit_ip,
-                        ping_ms,
-                    )
-                )
-
-                wl_ok += 1
-                if is_white:
-                    white_ip_ok += 1
-
-            else:
-
-                wl_fail += 1
-                if is_white:
-                    white_ip_fail += 1
-
-        print(
-            f"\n🟢 WL тест завершён: "
-            f"OK={wl_ok}, "
-            f"FAIL={wl_fail}"
-        )
-        print(
-            f"   └ white_ip: "
-            f"OK={white_ip_ok}, "
-            f"FAIL={white_ip_fail}"
-        )
-
-        # ----------------------------------------------------
-        # BL 2/3
-        # ----------------------------------------------------
-
-        bl_futures = {
-            executor.submit(
-                check_proxy_alive_detailed,
-                link,
-                BL_MIN_SUCCESS_COUNT,
-            ): (
-                link,
-                src,
             )
-            for link, src in ping_bl
-        }
-
-        for future in as_completed(
-            bl_futures
-        ):
-
-            link, src = bl_futures[
-                future
-            ]
-
-            try:
-
-                is_ok, res, reason, cc, exit_ip, ping_ms = (
-                    future.result()
+            bl_ru_to_wl += 1
+        else:
+            alive_bl_data.append(
+                (
+                    res[0],
+                    res[1],
+                    src,
+                    cc,
+                    exit_ip,
+                    ping_ms,
                 )
-
-            except Exception:
-                continue
-
-            if not is_ok:
-
-                bl_fail += 1
-                continue
-
-            bl_ok += 1
-
-            # Всё русское → WL (если включено в конфиге): живой BL с RU exit.
-            if cc and cc.upper() == "RU" and cfg.BL_RU_TO_WL:
-                alive_wl_data.append(
-                    (
-                        res[0],
-                        res[1],
-                        "RU_EXIT:" + str(src),
-                        cc,
-                        exit_ip,
-                        ping_ms,
-                    )
-                )
-                bl_ru_to_wl += 1
-            else:
-                alive_bl_data.append(
-                    (
-                        res[0],
-                        res[1],
-                        src,
-                        cc,
-                        exit_ip,
-                        ping_ms,
-                    )
-                )
+            )
 
     print(
         f"\n🔴 BL тест завершён: "
