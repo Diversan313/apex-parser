@@ -25,7 +25,7 @@ XRAY_CORE_URL_WINDOWS = "https://github.com/XTLS/Xray-core/releases/latest/downl
 XRAY_CORE_URL_LINUX = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
 
 # Chunker (apex/chunker.py)
-XRAY_CHUNKER_ENABLED = True         # False = процесс Xray на каждый конфиг
+XRAY_CHUNKER_ENABLED = False         # False = процесс Xray на каждый конфиг
 XRAY_CHUNKER_SIZE = 0               # 0 = авто (по CPU/RAM); или фиксированный чанк 8-64
 XRAY_CHUNKER_MAX_WORKERS = 8        # потоков тестирования портов внутри чанка
 XRAY_CHUNKER_START_TIMEOUT = 3.0    # сек, ожидание старта чанка (много инбаундов - дольше одиночного)
