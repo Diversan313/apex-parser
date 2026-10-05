@@ -82,11 +82,12 @@ def _auto_parallel_chunks() -> int:
     """Сколько shared-Xray процессов крутить одновременно."""
     cpu = os.cpu_count() or 2
     ram_kb = _available_ram_kb()
-    # ~50–80 МБ на процесс; при малой RAM не раздуваем.
-    by_cpu = max(1, min(6, cpu // 2))
+    # Процесс на каждое ядро: TLS-handshake'и идут параллельно,
+    # один Xray на все чанки превращает runner в последовательный прокси.
+    by_cpu = max(1, min(8, cpu))
     if ram_kb is not None:
         by_ram = max(1, int(ram_kb / 150_000))
-        return max(1, min(by_cpu, by_ram, 6))
+        return max(1, min(by_cpu, by_ram, 8))
     return by_cpu
 
 
@@ -183,9 +184,8 @@ def _test_port(port: int, timeout: float, min_success_count: int):
             "https": f"http://127.0.0.1:{port}",
         })
     )
-    success = 0
-    best_ping_ms = None
-    for url in _TEST_URLS:
+
+    def probe(url: str):
         try:
             req = urllib.request.Request(
                 url, headers={"User-Agent": "Mozilla/5.0", "Accept": "*/*"}
@@ -194,11 +194,18 @@ def _test_port(port: int, timeout: float, min_success_count: int):
             with opener.open(req, timeout=timeout) as resp:
                 elapsed_ms = int((time.monotonic() - t0) * 1000)
                 if resp.status in (200, 204):
-                    success += 1
-                    if best_ping_ms is None or elapsed_ms < best_ping_ms:
-                        best_ping_ms = elapsed_ms
+                    return elapsed_ms
         except Exception:
             pass
+        return None
+
+    # URL'ы зондируем параллельно: последовательный прогон превращает
+    # мёртвый порт в 3 таймаута подряд (18с) и держит барьер чанка.
+    with ThreadPoolExecutor(max_workers=len(_TEST_URLS)) as pool:
+        pings = list(pool.map(probe, _TEST_URLS))
+
+    success = sum(1 for p in pings if p is not None)
+    best_ping_ms = min((p for p in pings if p is not None), default=None)
     if success < min_success_count:
         return False, f"Тест провален ({success}/3)", None
     return True, f"OK ({success}/3)", best_ping_ms
