@@ -146,12 +146,13 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countr
 
   * `main.py` — основная логика
   * `parser.py` — точка входа (wrapper)
-  * `parse.py`, `xray.py`, `fetch.py`, `dedup.py`, `classify.py`, `geoip.py`
-  * `diversify.py`, `incoming.py`, `sni_whitelist.py`, `utils.py`, `config.py`
+  * `parse.py`, `xray.py`, `chunker.py`, `fetch.py`, `dedup.py`, `classify.py`, `geoip.py`
+  * `diversify.py`, `incoming.py`, `sni_whitelist.py`, `config.py`
+  * `utils/` — вспомогательные хелперы
   * `modules/parser_tg.py` — модуль обновления источников через Telegram
 * `white_ip.txt` — список белых IP-адресов для белых списков
 * `subs/main/` — публикуемые готовые списки (`alive_*.txt`, `alive_plain_*.txt`, `alive_*.yaml`)
-* `subs/other/` — дополнительные списки (AI, Torrent, countries)
+* `subs/other/` — дополнительные списки (AI, Torrent, CF, countries, continents, protocols, exotic)
 * `arch/` — архив, вспомогательные данные
 * `stats/` — статистика
 * `.github/workflows/` — автоматизация обновлений
@@ -191,6 +192,7 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countr
 Благодарность проектам, инструментам и источникам, которые используются или вдохновили **apex-parser**:
 
 * [Xray-core (Project X)](https://github.com/XTLS/Xray-core) — ядро для проверки живости конфигураций
+* [apernet/hysteria](https://github.com/apernet/hysteria) — официальное ядро Hysteria2 для проверки hy2-конфигураций
 * [ip-api.com](https://ip-api.com/), [ip.sb](https://ip.sb/), [ip2location.io](https://www.ip2location.io/) — онлайн GeoIP-сервисы
 * [cron-job.org](https://cron-job.org/) — сервис для запуска Github Actions по расписанию
 * [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) / [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb) — оффлайн база GeoIP
