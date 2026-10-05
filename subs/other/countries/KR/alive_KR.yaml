@@ -2,9 +2,9 @@ proxies:
   - name: "🇰🇷 [BL] Сервер 1"
     type: vless
     server: 3.39.4.109
-    port: 18967
+    port: 13672
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -14,6 +14,20 @@ proxies:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
   - name: "🇰🇷 [BL] Сервер 2"
+    type: vless
+    server: 47.80.19.173
+    port: 2053
+    uuid: "319d5ffb-57e8-4bbd-ac0c-5d55d0c253de"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "DfFU5OG93GxB1x25Dl2BTkxKsBTFF4Su4PXYPbYvmms"
+      short-id: "3c4041d3"
+  - name: "🇰🇷 [BL] Сервер 3"
     type: vless
     server: 151.245.106.49
     port: 2053
