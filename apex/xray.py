@@ -1531,152 +1531,84 @@ def get_exit_country_via_proxy(
     opener,
     timeout,
 ):
-    """Возвращает (country_code, exit_ip): ip-api отдаёт наш внешний IP в 'query'."""
-    results = []
-    exit_ip = None
+    """Возвращает (country_code, exit_ip) — голосование трёх GeoIP-API.
 
-    try:
-
-        req = urllib.request.Request(
-            "http://ip-api.com/json?fields=status,countryCode",
-            headers=HEADERS,
-        )
-
-        with opener.open(
-            req,
-            timeout=timeout,
-        ) as resp:
-
-            data = json.loads(
-                resp.read().decode(
-                    "utf-8"
-                )
+    Запросы идут параллельно: заблокированный на выходе API не должен
+    стоить живому конфигу трёх таймаутов подряд.
+    """
+    def _ask_ipapi():
+        try:
+            req = urllib.request.Request(
+                "http://ip-api.com/json?fields=status,countryCode,query",
+                headers=HEADERS,
             )
-
-            if (
-                data.get("status")
-                == "success"
-                and data.get(
-                    "countryCode"
-                )
-            ):
-
-                results.append(
-                    (
+            with opener.open(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if data.get("status") == "success" and data.get("countryCode"):
+                    return (
                         "ip-api",
-                        data[
-                            "countryCode"
-                        ].upper(),
+                        data["countryCode"].upper(),
+                        str(data.get("query") or ""),
                     )
-                )
-                # внешний IP соединения — для лимитов по выходу
-                if data.get("query"):
-                    exit_ip = str(data["query"])
+        except Exception:
+            pass
+        return None
 
-    except Exception:
-        pass
-
-    try:
-
-        req = urllib.request.Request(
-            "https://api.ip2location.io/",
-            headers=HEADERS,
-        )
-
-        with opener.open(
-            req,
-            timeout=timeout,
-        ) as resp:
-
-            data = json.loads(
-                resp.read().decode(
-                    "utf-8"
-                )
+    def _ask_ip2location():
+        try:
+            req = urllib.request.Request(
+                "https://api.ip2location.io/",
+                headers=HEADERS,
             )
+            with opener.open(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if data.get("country_code"):
+                    return ("ip2location", data["country_code"].upper(), "")
+        except Exception:
+            pass
+        return None
 
-            if data.get(
-                "country_code"
-            ):
-
-                results.append(
-                    (
-                        "ip2location",
-                        data[
-                            "country_code"
-                        ].upper(),
-                    )
-                )
-
-    except Exception:
-        pass
-
-    try:
-
-        req = urllib.request.Request(
-            "https://api.ip.sb/geoip",
-            headers=HEADERS,
-        )
-
-        with opener.open(
-            req,
-            timeout=timeout,
-        ) as resp:
-
-            data = json.loads(
-                resp.read().decode(
-                    "utf-8"
-                )
+    def _ask_ipsb():
+        try:
+            req = urllib.request.Request(
+                "https://api.ip.sb/geoip",
+                headers=HEADERS,
             )
+            with opener.open(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                cc = data.get("country_code") or data.get("country")
+                if cc:
+                    return ("ip.sb", cc.upper(), "")
+        except Exception:
+            pass
+        return None
 
-            cc = (
-                data.get(
-                    "country_code"
-                )
-                or data.get(
-                    "country"
-                )
-            )
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        answers = [a for a in pool.map(
+            lambda fn: fn(),
+            (_ask_ipapi, _ask_ip2location, _ask_ipsb),
+        ) if a]
 
-            if cc:
-
-                results.append(
-                    (
-                        "ip.sb",
-                        cc.upper(),
-                    )
-                )
-
-    except Exception:
-        pass
-
-    if not results:
+    if not answers:
         return None, None
 
+    exit_ip = next((ip for _, _, ip in answers if ip), None)
+
+    # консенсус из двух одинаковых ответов весит больше приоритета ip-api
     counts = {}
-
-    for _, cc in results:
-
-        counts[cc] = (
-            counts.get(
-                cc,
-                0,
-            )
-            + 1
-        )
-
-    for cc, count in (
-        counts.items()
-    ):
-
+    for _, cc, _ in answers:
+        counts[cc] = counts.get(cc, 0) + 1
+    for cc, count in counts.items():
         if count >= 2:
             return cc, exit_ip
 
-    for name, cc in results:
-
+    for name, cc, _ in answers:
         if name == "ip-api":
             return cc, exit_ip
 
-    return results[0][1], exit_ip
+    return answers[0][1], exit_ip
+
 
 
 def check_via_xray_detailed(
