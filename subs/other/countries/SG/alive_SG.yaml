@@ -7,13 +7,26 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
       public-key: "UOLfRKeEoVxkp-APTF2OlvFkKSoiR2mWzUuhSWxcVmQ"
       short-id: "133a3f10a1581047"
   - name: "🇸🇬 [BL] Сервер 2"
+    type: vless
+    server: 173.234.14.105
+    port: 59615
+    uuid: "e2632874-614e-4261-af62-52aca3358e4e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "biosmod.partners.nvidia.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "7PB-58vYXFLNhK6kY8bJJO3-fPOXTPQJ0UqDlhSOH3M"
+      short-id: "6b"
+  - name: "🇸🇬 [BL] Сервер 3"
     type: vless
     server: 217.217.254.126
     port: 2053
@@ -26,21 +39,21 @@ proxies:
     reality-opts:
       public-key: "VzRjuHwcY-nLqkEIJS4S1CpButKc90Bh0gDbphyZ0Tw"
       short-id: "87829de0e2bb82cb"
-  - name: "🇸🇬 [BL] Сервер 3"
+  - name: "🇸🇬 [BL] Сервер 4"
     type: vless
-    server: 173.234.14.105
-    port: 59615
-    uuid: "e2632874-614e-4261-af62-52aca3358e4e"
-    network: "raw"
+    server: sin-a-01.auuas.com
+    port: 1891
+    uuid: "81c4547b-e5d8-4af8-baf0-91c5c0c05a9b"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "biosmod.partners.nvidia.com"
+    servername: "www.npmjs.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "7PB-58vYXFLNhK6kY8bJJO3-fPOXTPQJ0UqDlhSOH3M"
-      short-id: "6b"
-  - name: "🇸🇬 [BL] Сервер 4"
+      public-key: "z6wAS22cWD7Sx0w9Ib5ya7JBL4rDs4qraPMYELTG0Ss"
+      short-id: "8378f267"
+  - name: "🇸🇬 [BL] Сервер 5"
     type: vless
     server: 3.0.111.82
     port: 12972
@@ -54,10 +67,15 @@ proxies:
     reality-opts:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
-  - name: "🇸🇬 [BL] Сервер 5"
-    type: trojan
-    server: inviting-ferret.rooster465.autos
-    port: 443
-    password: "UX82473651"
-    sni: "inviting-ferret.rooster465.autos"
-    udp: true
+  - name: "🇸🇬 [BL] Сервер 6"
+    type: ss
+    server: 45.128.12.20
+    port: 14249
+    password: "9epp3o9ng8ej59uv"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇸🇬 [BL] Сервер 7"
+    type: ss
+    server: 139.180.220.175
+    port: 8388
+    password: "qpSevKaUXYQKvSjp"
+    cipher: "aes-256-gcm"
