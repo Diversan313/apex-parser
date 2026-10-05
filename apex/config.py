@@ -75,6 +75,7 @@ KAMELEON_OSES = "android, ios, win, macos, linux"  # ОС через запят�
 
 # Фильтры
 REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
+REMOVE_CF_EXIT = False              # отсекать конфиги с ВЫХОДОМ через WARP/Cloudflare (по exit IP)
 REMOVE_PRIVATE_INVALID = True       # отсекать private / invalid / loopback
 REMOVE_UNSAFE = True                # отсекать небезопасные: allowInsecure=1, plaintext без TLS
 HEAL_CONFIG = True                  # вычищать рекламный мусор из параметров ссылок
@@ -87,20 +88,23 @@ WRITE_BASE64 = True                 # alive_*.txt (base64)
 WRITE_PLAIN = True                  # alive_plain_*.txt
 WRITE_YAML = True                   # alive_*.yaml (Clash)
 WRITE_FULL = True                   # писать full-списки (иначе только WL/BL)
-WRITE_OTHER_AI = True               # отдельный список под AI
-WRITE_OTHER_TORRENT = True          # отдельный список под торрент
+WRITE_OTHER_AI = True               # отдельный список под AI subs/other/AI/
+WRITE_OTHER_CF = True               # конфиги с выходом через WARP/Cloudflare в subs/other/CF/
+WRITE_OTHER_TORRENT = True          # отдельный список под торрент subs/other/torrent/
 WRITE_OTHER_PROTOCOLS = True        # разбивка по протоколам в subs/other/protocols/
 WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод) в subs/other/exotic/
-WRITE_OTHER_COUNTRIES = True        # списки по странам
+WRITE_OTHER_COUNTRIES = True        # списки по странам в subs/other/countries/
 WRITE_OTHER_CONTINENTS = True       # списки по континентам subs/other/continents/
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
 
 # Rename (имя в клиенте)
 UTF8_CONFIG_NAMES = True            # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
-RENAME_PREFIX_WL = "[WL]"
-RENAME_PREFIX_BL = "[BL]"
-RENAME_PREFIX_AI = "[AI]"
-RENAME_PREFIX_TORRENT = "[TR]"
+RENAME_PREFIX_WL = "[WL]"           # тег конфигов белого списка
+RENAME_PREFIX_BL = "[BL]"           # тег конфигов чёрного списка
+RENAME_PREFIX_AI = "[AI]"           # тег всех конфигов в subs/other/AI/
+RENAME_PREFIX_CF = "[CF]"           # тег всех конфигов в subs/other/CF/
+RENAME_PREFIX_TORRENT = "[TR]"      # тег всех конфигов в subs/other/torrent/
+RENAME_CF_SUFFIX = "CF"             # суффикс "/CF" в теге для выходов через WARP (пусто = не показывать)
 # Плейсхолдеры: {flag} {tag} {index}
 # Пример: 🇳🇱 [WL] Сервер 12
 RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"
