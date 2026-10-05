@@ -19,7 +19,7 @@ from .config import (
     RU_SNI_RATIO,
 )
 from . import config as cfg
-from .geoip import init_geoip
+from .geoip import init_geoip, is_cf_ip
 from .sni_whitelist import init_sni_whitelist
 from .utils import safe_b64encode, safe_b64decode
 import ipaddress
@@ -121,22 +121,60 @@ def _sort_by_ping(items):
     return sorted(items, key=key)
 
 
-def _make_full_tag_fn(ai_links, torrent_links, wl_keys):
+def _item_exit_ip(item):
+    """exit IP из элемента alive-данных; None, если не определён."""
+    return item[4] if len(item) > 4 and item[4] else None
+
+
+def _drop_cf_exit(items):
+    """REMOVE_CF_EXIT: убирает конфиги с выходом через WARP/Cloudflare.
+
+    exit IP неизвестен - конфиг не трогаем: отсутствие данных не повод выкидывать.
     """
-    Тег для FULL и сборных списков: AI > TR > WL > BL.
-    FULL же все-таки — показываем все вариации тегов.
+    kept, dropped = [], 0
+    for item in items:
+        exit_ip = _item_exit_ip(item)
+        if exit_ip and is_cf_ip(exit_ip):
+            dropped += 1
+            continue
+        kept.append(item)
+    return kept, dropped
+
+
+def _collect_cf_items(items):
+    """Только конфиги с выходом через WARP/Cloudflare (для subs/other/CF)."""
+    return [item for item in items if (ip := _item_exit_ip(item)) and is_cf_ip(ip)]
+
+
+def _is_cf_exit(item):
+    """Выход конфига через WARP/Cloudflare? (exit IP неизвестен - не CF)."""
+    ip = _item_exit_ip(item)
+    return bool(ip and is_cf_ip(ip))
+
+
+def _cf_suffix(item):
+    """'/CF' или ''. Суффикс ставится только там, где CF не гарантирован списком."""
+    if cfg.RENAME_CF_SUFFIX and _is_cf_exit(item):
+        return f"/{cfg.RENAME_CF_SUFFIX}"
+    return ""
+
+
+def _wl_bl_tag_fn(wl_keys, with_cf=True):
+    """
+    Тег по структурной принадлежности: [WL] / [BL], плюс '/CF'-суффикс,
+    если включён и выход - WARP/CF. with_cf=False даёт чистый [WL]/[BL]
+    для списков, которые сами гарантируют CF (subs/other/CF).
     """
     def tag(item):
-        link = item[0]
-        if link in ai_links:
-            return cfg.RENAME_PREFIX_AI
-        if link in torrent_links:
-            return cfg.RENAME_PREFIX_TORRENT
-        return (
+        base = (
             cfg.RENAME_PREFIX_WL
-            if get_final_dedup_key(link) in wl_keys
+            if get_final_dedup_key(item[0]) in wl_keys
             else cfg.RENAME_PREFIX_BL
         )
+        if not with_cf:
+            return base
+        suffix = _cf_suffix(item)
+        return f"{base[:-1]}{suffix}]" if suffix else base
     return tag
 
 
@@ -475,6 +513,11 @@ def main():
             if is_white:
                 white_ip_fail += 1
 
+    if cfg.REMOVE_CF_EXIT:
+        alive_wl_data, cf_dropped_wl = _drop_cf_exit(alive_wl_data)
+        if cf_dropped_wl:
+            print(f"   └ REMOVE_CF_EXIT: убрано из WL {cf_dropped_wl} (выход через WARP/CF)")
+
     print(
         f"\n🟢 WL тест завершён: "
         f"OK={wl_ok}, "
@@ -528,6 +571,11 @@ def main():
                     ping_ms,
                 )
             )
+
+    if cfg.REMOVE_CF_EXIT:
+        alive_bl_data, cf_dropped_bl = _drop_cf_exit(alive_bl_data)
+        if cf_dropped_bl:
+            print(f"   └ REMOVE_CF_EXIT: убрано из BL {cf_dropped_bl} (выход через WARP/CF)")
 
     print(
         f"\n🔴 BL тест завершён: "
@@ -687,15 +735,15 @@ def main():
 
     final_wl = _build_renamed(
         alive_wl_clean,
-        lambda _item: cfg.RENAME_PREFIX_WL,
+        _wl_bl_tag_fn(wl_keys),
     )
 
     final_bl = _build_renamed(
         alive_bl_clean,
-        lambda _item: cfg.RENAME_PREFIX_BL,
+        _wl_bl_tag_fn(wl_keys),
     )
 
-    full_tag = _make_full_tag_fn(ai_links, torrent_links, wl_keys)
+    full_tag = _wl_bl_tag_fn(wl_keys)
 
     final_full = _build_renamed(
         alive_full_clean,
@@ -808,9 +856,11 @@ def main():
 
     # --- AI ---
     if cfg.WRITE_OTHER_AI:
+        # CF-выход не даёт конфигу быть AI: через WARP AI-сервисы
+        # часто считают трафик ботовым. Такие конфиги остаются в WL/BL.
         ai_items = [
             item for item in alive_full_clean
-            if item[0] in ai_links
+            if item[0] in ai_links and not _is_cf_exit(item)
         ]
         if ai_items:
             final_ai = _build_renamed(
@@ -828,9 +878,11 @@ def main():
 
     # --- TORRENT ---
     if cfg.WRITE_OTHER_TORRENT:
+        # CF-выход не даёт конфигу быть TR: Cloudflare режет не-вебовый
+        # трафик. Такие конфиги остаются в WL/BL.
         torrent_items = [
             item for item in alive_full_clean
-            if item[0] in torrent_links
+            if item[0] in torrent_links and not _is_cf_exit(item)
         ]
         if torrent_items:
             final_torrent = _build_renamed(
@@ -871,11 +923,7 @@ def main():
         for cc, items in sorted(by_cc.items()):
             final_cc = _build_renamed(
                 items,
-                lambda _item: (
-                    cfg.RENAME_PREFIX_WL
-                    if get_final_dedup_key(_item[0]) in wl_keys
-                    else cfg.RENAME_PREFIX_BL
-                ),
+                _wl_bl_tag_fn(wl_keys),
             )
             if not final_cc:
                 continue
@@ -960,6 +1008,25 @@ def main():
             + (f", {unknown_cc} нод без континента" if unknown_cc else "")
             + " → subs/other/continents/"
         )
+
+    # --- CLOUDFLARE EXIT ---
+    # Только конфиги с выходом через WARP/Cloudflare: безопаснее и быстрее
+    # для пользователей за строгими NAT'ами.
+    if cfg.WRITE_OTHER_CF:
+        cf_items = _collect_cf_items(alive_full_clean)
+        if cf_items:
+            # список сам гарантирует CF - у всех конфигов единый тег [CF]
+            final_cf = _build_renamed(cf_items, lambda _item: cfg.RENAME_PREFIX_CF)
+            if final_cf:
+                _write_subscription_files("subs/other/CF", "CF", final_cf)
+                print(
+                    f"💾 CF exit: {len(final_cf)} конфигов с выходом через WARP/CF "
+                    f"-> subs/other/CF/"
+                )
+            else:
+                print("💾 CF exit: конфиги есть, но ни один не прошёл переименование")
+        else:
+            print("💾 CF exit: 0 конфигов - файлы не перезаписываем")
 
     # --- EXOTIC ---
     # Редкие страны: если в стране нод <= EXOTIC_MAX_NODES —
