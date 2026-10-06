@@ -1170,7 +1170,7 @@ def ensure_xray_core() -> bool:
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(req, timeout=300, context=SSL_CONTEXT) as resp:
+            with urllib.request.urlopen(req, timeout=90, context=SSL_CONTEXT) as resp:
                 data = resp.read()
             break
         except Exception as e:
@@ -1298,7 +1298,7 @@ def download_hy2_core() -> bool:
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(req, timeout=300, context=SSL_CONTEXT) as resp:
+            with urllib.request.urlopen(req, timeout=90, context=SSL_CONTEXT) as resp:
                 data = resp.read()
             with open(exe, "wb") as f:
                 f.write(data)
