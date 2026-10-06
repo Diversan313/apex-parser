@@ -30,6 +30,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Checkbones sanity
+        run: |
+          CB=$(python -c "from apex.config import CHECKBONES_ENABLED; print(int(CHECKBONES_ENABLED))" 2>/dev/null || echo 0)
+          if [ "$CB" = "1" ]; then
+            python -m apex.checkbones --quick
+          else
+            echo "CHECKBONES_ENABLED=0 - skip"
+          fi
+
       # Ядро Xray больше не качается здесь: парсер сам скачивает его
       # по платформе при AUTO_DOWNLOAD_XRAY=True (apex/config.py)
 
