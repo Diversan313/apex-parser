@@ -40,7 +40,7 @@ CHECKBONES_QUICK = True              # True = быстрый режим (без 
 
 # Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
-SPLIT_SOURCES = False                # True = sources_wl/bl, False = один sources.txt
+SPLIT_SOURCES = False               # True = sources_wl/bl, False = один sources.txt
 ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 DECRYPT_HAPP = True                 # расшифровывать happ://crypt* ссылки в источниках
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
@@ -100,6 +100,14 @@ WRITE_OTHER_EXOTIC = True           # редкие страны (мало нод
 WRITE_OTHER_COUNTRIES = True        # списки по странам в subs/other/countries/
 WRITE_OTHER_CONTINENTS = True       # списки по континентам subs/other/continents/
 DELETE_MISSING_COUNTRIES = True     # удалять старые country-папки
+
+# Заголовки подписок
+SUBSCRIPTION_HEADERS = True         # писать заголовки в base64/plain подписки
+SUBSCRIPTION_TITLE = "Apex"         # имя подписки в клиенте
+SUBSCRIPTION_UPDATE_INTERVAL = 1    # часы между автообновлениями (0 = строка не пишется)
+SUBSCRIPTION_ANNOUNCE = ""          # описание подписки (пусто = строка не пишется)
+SUBSCRIPTION_SUPPORT_URL = ""       # ссылка поддержки (пусто = строка не пишется)
+SUBSCRIPTION_WEB_PAGE_URL = ""      # ссылка на страницу проекта (пусто = не пишется)
 
 # Rename (имя в клиенте)
 UTF8_CONFIG_NAMES = True            # False = обычная кодировка (совместимость), True = raw UTF-8 (оптимизация и читабельность)
