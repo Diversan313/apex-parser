@@ -47,8 +47,8 @@ SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса �
 
 # Параллелизм
 MAX_WORKERS = 15                    # потоки RD теста Xray
-SOURCE_FETCH_WORKERS = 60           # потоков скачивания источников (I/O-bound, можно много)
-SOURCE_FETCH_TIMEOUT = 8            # сек, таймаут одного источника
+SOURCE_FETCH_WORKERS = 100          # потоков скачивания источников (I/O-bound, можно много)
+SOURCE_FETCH_TIMEOUT = 4            # сек, таймаут одного источника
 SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
 
 # Лимиты уникальности
@@ -76,9 +76,9 @@ TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
 # Kameleon
 KAMELEON_ENABLED = True             # использовать Kameleon
 KAMELEON_PARALLEL = True            # True = все варианты одновременно (быстрее); False = по очереди
-KAMELEON_MAX_WORKERS = 8            # потоков одновременных попыток (при KAMELEON_PARALLEL=True)
-KAMELEON_APPS = "happ, v2raytun, incy, streisand, v2box, hiddify"  # клиенты через запятую (пусто = весь набор)
-KAMELEON_OSES = "android, ios, win, macos, linux"  # ОС через запятую (пусто = весь набор)
+KAMELEON_MAX_WORKERS = 4            # потоков одновременных попыток (при KAMELEON_PARALLEL=True)
+KAMELEON_APPS = "happ, incy"        # клиенты через запятую (пусто = весь набор)
+KAMELEON_OSES = "android, ios"      # ОС через запятую (пусто = весь набор)
 
 # Фильтры
 REMOVE_CF_WARP = True               # отсекать Cloudflare / WARP
