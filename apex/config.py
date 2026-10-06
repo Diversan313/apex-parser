@@ -47,6 +47,9 @@ SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса �
 
 # Параллелизм
 MAX_WORKERS = 15                    # потоки RD теста Xray
+SOURCE_FETCH_WORKERS = 60           # потоков скачивания источников (I/O-bound, можно много)
+SOURCE_FETCH_TIMEOUT = 8            # сек, таймаут одного источника
+SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
 
 # Лимиты уникальности
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL

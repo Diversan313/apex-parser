@@ -19,6 +19,9 @@ from .config import (
     SSL_CONTEXT,
     SSL_VERIFY_SOURCES,
     KAMELEON_ENABLED,
+    SOURCE_FETCH_WORKERS,
+    SOURCE_FETCH_TIMEOUT,
+    SOURCE_FETCH_RETRIES,
     MAX_WORKERS,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
@@ -323,7 +326,7 @@ def _extract_subscription_configs(content: str, info: dict, _depth: int = 0) -> 
 
 def fetch_single_url_with_details(
     url: str,
-    retries: int = 2,
+    retries: int = 1,
     _depth: int = 0,
     _content_override: str = None,
 ) -> dict:
@@ -362,7 +365,7 @@ def fetch_single_url_with_details(
                 # SSL_VERIFY_SOURCES: сначала с проверкой сертификата;
                 # при битом серте — одноразовый fallback на контекст без проверки
                 with urllib.request.urlopen(
-                    req, timeout=12,
+                    req, timeout=SOURCE_FETCH_TIMEOUT,
                     context=_VERIFIED_SSL if use_verified else SSL_CONTEXT,
                 ) as response:
                     info["http_status"] = response.status
@@ -399,7 +402,7 @@ def fetch_single_url_with_details(
                 transient = _is_transient_error(e)
                 info["network_error"] = transient
                 if transient and attempt <= retries:
-                    time.sleep(1.0 + (attempt - 1))
+                    time.sleep(0.5 * attempt)
                     continue
                 content = None
                 break
@@ -497,9 +500,10 @@ def fetch_links_parallel_with_source(
 
         successful_sources = 0
         results_by_idx = {}
+        done_count = 0
 
         with ThreadPoolExecutor(
-            max_workers=MAX_WORKERS
+            max_workers=SOURCE_FETCH_WORKERS
         ) as executor:
 
             futures = {
@@ -520,6 +524,15 @@ def fetch_links_parallel_with_source(
                     results_by_idx[idx] = ("ok", res)
                 except Exception as e:
                     results_by_idx[idx] = ("err", str(e))
+                done_count += 1
+                # прогресс адаптивный: маленький список - каждая строка,
+                # огромный - каждые ~5%, чтобы не топить лог
+                if done_count == 1 or done_count == len(urls) or done_count % max(1, len(urls) // 20) == 0:
+                    got = sum(
+                        1 for kind, payload in results_by_idx.values()
+                        if kind == "ok" and payload.get("configs")
+                    )
+                    print(f"   📡 скачано {done_count}/{len(urls)} источников, с конфигами: {got}")
 
         # Повтор только для сетевых сбоев (не для пустых/битых подписок)
         retry_idxs = []
@@ -558,23 +571,22 @@ def fetch_links_parallel_with_source(
                         results_by_idx[idx] = ("err", str(e))
 
         # Печать строго по номеру источника (без URL)
+        special_lines = []   # ошибки и источники с пометками - в конец отчёта
+
         for idx in range(1, len(urls) + 1):
             kind, payload = results_by_idx.get(
                 idx, ("err", "нет ответа")
             )
 
-            if kind == "err":
-                print(
-                    f"  ├─ ❌ Источник #{idx:<3} | "
-                    f"ОШИБКА | {payload}"
-                )
-                continue
+            res = payload if kind == "ok" else None
+            configs = (res or {}).get("configs") or []
 
-            res = payload
-            configs = res.get("configs") or []
+            if res.get("http_status") in (200, 204) or configs:
+                successful_sources += 1
 
+            # строка источника
             status_str = (
-                f"HTTP {res['http_status']}"
+                f"HTTP {res.get('http_status')}"
                 if res.get("http_status")
                 else "ОШИБКА"
             )
@@ -591,26 +603,34 @@ def fetch_links_parallel_with_source(
                 fmt_parts.append("Expired")
             fmt_str = f" [{'/'.join(fmt_parts)}]" if fmt_parts else ""
             err_str = (
-                f" (Ошибка: {res['error']})"
+                f" (Ошибка: {res.get('error')})"
                 if res.get("error") and not configs
                 else ""
             )
-
-            if res.get("http_status") in (200, 204) or configs:
-                successful_sources += 1
-
-            print(
-                f"  ├─ 🔗 Источник #{idx:<3} | "
+            line = (
+                f"  ├─ {'❌' if kind == 'err' or not configs else '🔗'} Источник #{idx:<3} | "
                 f"Статус: {status_str:<10} | "
-                f"Размер: {fmt_bytes(res.get('size_bytes', 0))} | "
+                f"Размер: {fmt_bytes(res.get('size_bytes', 0)) if res else '0B'} | "
                 f"Конфигов: {len(configs)}"
                 f"{fmt_str}{err_str}"
+                if kind == "ok"
+                else f"  ├─ ❌ Источник #{idx:<3} | ОШИБКА | {payload}"
             )
 
-            for cfg in configs:
-                links_with_source.append(
-                    (cfg, f"src#{idx}")
-                )
+            # проблемные/особые - буферизуем, обычные печатаем сразу
+            if kind == "err" or not configs or fmt_parts:
+                special_lines.append(line)
+            else:
+                print(line)
+
+            if res:
+                for cfg_ in configs:
+                    links_with_source.append(
+                        (cfg_, f"src#{idx}")
+                    )
+
+        for line in special_lines:
+            print(line)
 
         print(
             f"✅ Получено "
