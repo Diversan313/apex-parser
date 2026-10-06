@@ -1,6 +1,12 @@
 """Проверки sanitize/rename/YAML: HEAL, белый список параметров, теги."""
 import urllib.parse
-import yaml
+
+try:
+    import yaml
+except ImportError:
+    # pyyaml не входит в requirements (парсер пишет YAML вручную) -
+    # без него проверка генерации просто пропускается
+    yaml = None
 
 from apex.diversify import (
     filter_protocols_bl,
@@ -67,6 +73,9 @@ def check_rename_tags():
 
 
 def check_yaml_valid():
+    if yaml is None:
+        print("   (pyyaml не установлен - генерация YAML не проверялась)")
+        return
     links = [
         "vless://u@1.2.3.4:443?type=ws&security=tls&sni=x.com&path=%2Fws#A",
         "vless://u@2.2.2.2:443?type=tcp&security=reality&pbk=K&sid=s&sni=y.com#B",

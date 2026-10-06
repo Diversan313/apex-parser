@@ -34,6 +34,7 @@ jobs:
         run: |
           CB=$(python -c "from apex.config import CHECKBONES_ENABLED; print(int(CHECKBONES_ENABLED))" 2>/dev/null || echo 0)
           if [ "$CB" = "1" ]; then
+            pip install -q pyyaml
             python -m apex.checkbones --quick
           else
             echo "CHECKBONES_ENABLED=0 - skip"
