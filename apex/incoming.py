@@ -44,6 +44,10 @@ def resolve_source_files() -> Tuple[str, str]:
             os.path.join(base, "source_bl.txt") if base else "source_bl.txt"
         ):
             bl = os.path.join(base, "source_bl.txt") if base else "source_bl.txt"
+        # парных файлов нет, но лежит общий sources.txt - работаем по нему
+        single = os.path.join(base, "sources.txt") if base else "sources.txt"
+        if not os.path.exists(wl) and not os.path.exists(bl) and os.path.exists(single):
+            return single, single
         return wl, bl
 
     single = os.path.join(base, "sources.txt") if base else "sources.txt"
