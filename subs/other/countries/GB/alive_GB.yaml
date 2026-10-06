@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇬🇧 [WL] Сервер 1"
-    type: vless
-    server: 5.129.242.110
-    port: 443
-    uuid: "3d3cc1bc-3d6f-03f5-a531-19a1797952bc"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "rutube.ru"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Bz5EbrFHttwOTc1VWhPBAOeoIMDMMZcM02PTZs5AgD4"
-      short-id: "1aa948f94316b975"
-  - name: "🇬🇧 [BL] Сервер 2"
+  - name: "🇬🇧 [BL] Сервер 1"
     type: vless
     server: 46.250.250.149
     port: 2053
@@ -26,7 +12,7 @@ proxies:
     reality-opts:
       public-key: "hieuCHb3HYdDYHmTDyWw2SGqyfo36AVuA-wSiZMdU1M"
       short-id: "9922313fffed1c63"
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 83.229.61.218
     port: 443
@@ -40,30 +26,7 @@ proxies:
     reality-opts:
       public-key: "IG6lxrx_xkGOoBuo3DC8sgQoIFmqVgznIr0qOuNO0w4"
       short-id: "cd2d53510b4df2a8"
-  - name: "🇬🇧 [BL] Сервер 4"
-    type: vless
-    server: 46.250.240.80
-    port: 2053
-    uuid: "948df76f-505d-4608-9c76-a933ee3ccc76"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "CYFeysLf--_IVhxQOCd3ZxLrAVWFFOkJzvIGHOVXN3E"
-      short-id: "4cc9dc65f7770115"
-  - name: "🇬🇧 [BL] Сервер 5"
-    type: vless
-    server: 51.38.71.147
-    port: 8443
-    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
-    network: "tcp"
-    servername: "node-uk.connectsuite.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 185.236.8.83
     port: 443
@@ -77,6 +40,35 @@ proxies:
     reality-opts:
       public-key: "-AjgF9WonCRiiJ5BPt5BedZjaIYs48tnGZFLnkupg2U"
       short-id: "91b7c3a4e6d2f058"
+  - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: 51.38.71.147
+    port: 8443
+    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
+    network: "tcp"
+    servername: "node-uk.connectsuite.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: 46.250.240.80
+    port: 2053
+    uuid: "948df76f-505d-4608-9c76-a933ee3ccc76"
+    network: "raw"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "CYFeysLf--_IVhxQOCd3ZxLrAVWFFOkJzvIGHOVXN3E"
+      short-id: "4cc9dc65f7770115"
+  - name: "🇬🇧 [BL] Сервер 6"
+    type: ss
+    server: 158.173.24.73
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
   - name: "🇬🇧 [BL] Сервер 7"
     type: ss
     server: 149.102.132.184
