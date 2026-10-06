@@ -34,8 +34,9 @@ XRAY_CHUNKER_START_TIMEOUT = 3.0    # сек, ожидание старта ча
 GITVERSE_ENABLED = True             # False = GitVerse пропускается
 GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
 
-# Checkbones: самопроверка "костяшек" конвейера (apex/checkbones)
+# Checkbones (apex/checkbones)
 CHECKBONES_ENABLED = True            # False = CI пропускает самопроверку
+CHECKBONES_QUICK = True              # True = быстрый режим (без серверных заглушек); False = полный
 
 # Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
