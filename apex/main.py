@@ -77,22 +77,45 @@ from .diversify import (
 )
 
 
+def _subscription_header(prefix: str, count: int) -> str:
+    """
+    Заголовок подписки для base64/plain файлов: клиенты читают строки
+    #profile-* и показывают имя и свежесть. YAML заголовков не получает.
+    """
+    if not cfg.SUBSCRIPTION_HEADERS:
+        return ""
+    lines = [
+        f"#profile-title: {cfg.SUBSCRIPTION_TITLE} {prefix}".rstrip(),
+    ]
+    if int(cfg.SUBSCRIPTION_UPDATE_INTERVAL) > 0:
+        lines.append(f"#profile-update-interval: {int(cfg.SUBSCRIPTION_UPDATE_INTERVAL)}")
+    if cfg.SUBSCRIPTION_SUPPORT_URL:
+        lines.append(f"#support-url: {cfg.SUBSCRIPTION_SUPPORT_URL}")
+    if cfg.SUBSCRIPTION_WEB_PAGE_URL:
+        lines.append(f"#profile-web-page-url: {cfg.SUBSCRIPTION_WEB_PAGE_URL}")
+    if cfg.SUBSCRIPTION_ANNOUNCE:
+        lines.append(f"#announce: {cfg.SUBSCRIPTION_ANNOUNCE}")
+    return "\n".join(lines) + "\n"
+
+
 def _write_subscription_files(base_dir: str, prefix: str, links: list) -> None:
     """
     Пишет base64 / plain / yaml для списка links
     с учётом WRITE_BASE64 / WRITE_PLAIN / WRITE_YAML.
     """
     os.makedirs(base_dir, exist_ok=True)
+    # заголовок входит в base64-тело целиком: клиент декодирует и читает #profile-*
+    header = _subscription_header(prefix, len(links))
 
     if cfg.WRITE_BASE64:
         path = os.path.join(base_dir, f"alive_{prefix}.txt")
         with open(path, "w", encoding="utf-8") as f:
-            f.write(safe_b64encode("\n".join(links)))
+            f.write(safe_b64encode(header + "\n".join(links)))
 
     if cfg.WRITE_PLAIN:
         path = os.path.join(base_dir, f"alive_plain_{prefix}.txt")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(links))
+            f.write(header + "\n".join(links))
             if links:
                 f.write("\n")
 
@@ -756,99 +779,13 @@ def main():
 
     os.makedirs("subs/main", exist_ok=True)
 
-    if cfg.WRITE_BASE64:
-        with open(
-            "subs/main/alive_bs.txt",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(
-                safe_b64encode(
-                    "\n".join(final_wl)
-                )
-            )
+    # три основных списка через общий writer: заголовки и форматы единые
+    _write_subscription_files("subs/main", "bs", final_wl)
+    _write_subscription_files("subs/main", "bl", final_bl)
+    if cfg.WRITE_FULL:
+        _write_subscription_files("subs/main", "full", final_full)
 
-        with open(
-            "subs/main/alive_bl.txt",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(
-                safe_b64encode(
-                    "\n".join(final_bl)
-                )
-            )
-
-        if cfg.WRITE_FULL:
-            with open(
-                "subs/main/alive_full.txt",
-                "w",
-                encoding="utf-8",
-            ) as f:
-                f.write(
-                    safe_b64encode(
-                        "\n".join(final_full)
-                    )
-                )
-
-    if cfg.WRITE_PLAIN:
-        with open(
-            "subs/main/alive_plain_bs.txt",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write("\n".join(final_wl))
-            if final_wl:
-                f.write("\n")
-
-        with open(
-            "subs/main/alive_plain_bl.txt",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write("\n".join(final_bl))
-            if final_bl:
-                f.write("\n")
-
-        if cfg.WRITE_FULL:
-            with open(
-                "subs/main/alive_plain_full.txt",
-                "w",
-                encoding="utf-8",
-            ) as f:
-                f.write("\n".join(final_full))
-                if final_full:
-                    f.write("\n")
-
-    if cfg.WRITE_YAML:
-        try:
-            with open(
-                "subs/main/alive_bs.yaml",
-                "w",
-                encoding="utf-8",
-            ) as f:
-                f.write(links_to_clash_yaml(final_wl))
-
-            with open(
-                "subs/main/alive_bl.yaml",
-                "w",
-                encoding="utf-8",
-            ) as f:
-                f.write(links_to_clash_yaml(final_bl))
-
-            if cfg.WRITE_FULL:
-                with open(
-                    "subs/main/alive_full.yaml",
-                    "w",
-                    encoding="utf-8",
-                ) as f:
-                    f.write(links_to_clash_yaml(final_full))
-            print("💾 YAML (Clash): alive_*.yaml записаны")
-        except Exception as e:
-            print(f"⚠️ Не удалось записать YAML: {e}")
-
-    if cfg.WRITE_PLAIN:
-        print("💾 Plain text: alive_plain_*.txt записаны")
+    print("💾 Основные списки: alive_bs / alive_bl / alive_full (base64 + plain + yaml)")
 
     # ========================================================
     # 19. OTHER: AI / TORRENT / COUNTRIES
