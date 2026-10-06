@@ -87,10 +87,17 @@ jobs:
           }
 
           if [ -n "$GH_PAT" ]; then
-            fetch_raw sources_wl.txt \
-              "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" || true
-            fetch_raw sources_bl.txt \
-              "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" || true
+            # какие файлы качать - решает SPLIT_SOURCES из конфига
+            SPLIT=$(python -c "from apex.config import SPLIT_SOURCES; print(int(SPLIT_SOURCES))" 2>/dev/null || echo 1)
+            if [ "$SPLIT" = "1" ]; then
+              fetch_raw sources_wl.txt \
+                "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_wl.txt" || true
+              fetch_raw sources_bl.txt \
+                "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_bl.txt" || true
+            else
+              fetch_raw sources.txt \
+                "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources.txt" || true
+            fi
             fetch_raw sources_tg.txt \
               "https://raw.githubusercontent.com/Diversan313/apex-sources/main/sources_tg.txt" || true
           else
@@ -294,6 +301,7 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
 
 
