@@ -2,9 +2,9 @@ proxies:
   - name: "🇰🇷 [BL] Сервер 1"
     type: vless
     server: 3.39.4.109
-    port: 13672
+    port: 18967
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -14,6 +14,20 @@ proxies:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
   - name: "🇰🇷 [BL] Сервер 2"
+    type: vless
+    server: icn-a-02.auuas.com
+    port: 1891
+    uuid: "81c4547b-e5d8-4af8-baf0-91c5c0c05a9b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.npmjs.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2olNWILpuviXx_Nr30JZc5tpt3MgtWda7jLGwAOxPxY"
+      short-id: "8378f267"
+  - name: "🇰🇷 [BL] Сервер 3"
     type: vless
     server: 151.245.106.49
     port: 2053
@@ -26,29 +40,9 @@ proxies:
     reality-opts:
       public-key: "F6C33iIbfmt1mUsuLTarIC8ygdHKMqsaGvrSQltyxUo"
       short-id: "429499c03d4cc8a0"
-  - name: "🇰🇷 [BL] Сервер 3"
-    type: vless
-    server: icn-a-02.auuas.com
-    port: 1891
-    uuid: "81c4547b-e5d8-4af8-baf0-91c5c0c05a9b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.npmjs.com"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2olNWILpuviXx_Nr30JZc5tpt3MgtWda7jLGwAOxPxY"
-      short-id: "8378f267"
   - name: "🇰🇷 [BL] Сервер 4"
     type: ss
     server: ce1fc2d8.krkt.hkssip.com
     port: 49642
     password: "ac9c0a7b"
-    cipher: "aes-256-gcm"
-  - name: "🇰🇷 [BL] Сервер 5"
-    type: ss
-    server: 141.164.45.187
-    port: 2376
-    password: "faBAoD54k87UJG7"
     cipher: "aes-256-gcm"
