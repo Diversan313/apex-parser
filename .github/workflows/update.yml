@@ -16,6 +16,9 @@ jobs:
   update:
     runs-on: ubuntu-latest
 
+    env:
+      PYTHONUNBUFFERED: 1   # print'ы видны сразу, а не после заполнения буфера
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -301,6 +304,7 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
 
 
