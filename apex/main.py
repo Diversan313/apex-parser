@@ -77,6 +77,9 @@ from .diversify import (
 )
 
 
+_PROTO_NAMES = frozenset({"vless", "vmess", "trojan", "ss", "hysteria2"})
+
+
 def _subscription_header(prefix: str, count: int) -> str:
     """
     Заголовок подписки для base64/plain файлов: клиенты читают строки
@@ -84,8 +87,15 @@ def _subscription_header(prefix: str, count: int) -> str:
     """
     if not cfg.SUBSCRIPTION_HEADERS:
         return ""
+    # суффикс титула: спец-имена для главных/континентов/протоколов/exotic
+    title_suffix = {
+        "bs": "WL", "bl": "BL", "full": "FULL",
+        "EUROPE": "EU", "NORTH_AMERICA": "NA", "SOUTH_AMERICA": "SA",
+        "AFRICA": "AF", "OCEANIA": "OC",
+        "exotic": "Exotic",
+    }.get(prefix, prefix.upper() if prefix in _PROTO_NAMES else prefix)
     lines = [
-        f"#profile-title: {cfg.SUBSCRIPTION_TITLE} {prefix}".rstrip(),
+        f"#profile-title: {cfg.SUBSCRIPTION_TITLE} {title_suffix}".rstrip(),
     ]
     if int(cfg.SUBSCRIPTION_UPDATE_INTERVAL) > 0:
         lines.append(f"#profile-update-interval: {int(cfg.SUBSCRIPTION_UPDATE_INTERVAL)}")
