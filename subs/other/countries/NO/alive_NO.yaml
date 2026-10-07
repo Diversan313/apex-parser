@@ -1,21 +1,29 @@
 proxies:
-  - name: "🇳🇴 [BL] Сервер 1"
+  - name: "🇳🇴 [WL] Сервер 1"
     type: vless
-    server: c5fl8w.api-gate.org
+    server: 193.203.10.200
+    port: 443
+    uuid: "3d3cc1bc-3d6f-754b-a531-19a1797952bc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "platform-api.max.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "j_15whaBzNQ3APeq8fD60TEWlkFk2jZUvlcH8Z5NYnQ"
+      short-id: "37c78d5f95502e92"
+  - name: "🇳🇴 [BL] Сервер 2"
+    type: vless
+    server: 185.90.61.55
     port: 443
     uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ca9.eu-cdn294.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
       public-key: "B1g2P-3yW3cQW0WZweSPKUP3lZSQ5pgr8doCYvA0cRg"
       short-id: "df3dc12b0b9b0c93"
-  - name: "🇳🇴 [BL] Сервер 2"
-    type: ss
-    server: 185.213.23.63
-    port: 990
-    password: "ARgvGZywA+gacgGV26Bvmu05+wZmRW/j+AdU+Z8Bt44="
-    cipher: "chacha20-ietf-poly1305"
