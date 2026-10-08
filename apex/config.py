@@ -35,8 +35,8 @@ GITVERSE_ENABLED = True             # False = GitVerse пропускается
 GITVERSE_REPO = "https://gitverse.ru/bikinitw22/apelsintel.git"
 
 # Checkbones (apex/checkbones)
-CHECKBONES_ENABLED = True            # False = CI пропускает самопроверку
-CHECKBONES_QUICK = True              # True = быстрый режим (без серверных заглушек); False = полный
+CHECKBONES_ENABLED = True           # False = CI пропускает самопроверку
+CHECKBONES_QUICK = True             # True = быстрый режим (без серверных заглушек); False = полный
 
 # Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
@@ -47,6 +47,7 @@ SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса �
 
 # Параллелизм
 MAX_WORKERS = 15                    # потоки RD теста Xray
+TCP_PREFILTER_WORKERS = 80          # потоков TCP-префильтра в чанкере
 SOURCE_FETCH_WORKERS = 100          # потоков скачивания источников (I/O-bound, можно много)
 SOURCE_FETCH_TIMEOUT = 4            # сек, таймаут одного источника
 SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
@@ -72,6 +73,7 @@ BL_MIN_SUCCESS_COUNT = 2            # успешных тестов для BL
 XRAY_START_TIMEOUT = 1.2            # сек, старт xray
 XRAY_TEST_TIMEOUT = 6.0             # сек, проверка через xray
 TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
+SOCKET_DEFAULT_TIMEOUT = 7          # сек, глобальный потолок DNS и всех неявных сокетов
 
 # Kameleon
 KAMELEON_ENABLED = True             # использовать Kameleon
