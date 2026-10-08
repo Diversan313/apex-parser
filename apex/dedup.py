@@ -25,7 +25,7 @@ from .parse import (
     parse_ip_or_resolve,
     find_matched_ip_for_link,
 )
-from .geoip import resolve_host_cached, is_valid_public_host
+from .geoip import is_valid_public_host
 from .xray import parse_xhttp_extra
 
 def _norm_net(net: str) -> str:
@@ -63,12 +63,7 @@ def get_config_dedup_key(
         '[] \t\r\n\'"'
     ).lower()
 
-    clean_ip = (
-        resolve_host_cached(
-            clean_host
-        )
-        or clean_host
-    )
+    clean_ip = clean_host
 
     protocol = (
         link.split(
@@ -312,12 +307,7 @@ def get_final_dedup_key(
         '[] \t\r\n\'"'
     ).lower()
 
-    clean_ip = (
-        resolve_host_cached(
-            clean_host
-        )
-        or clean_host
-    )
+    clean_ip = clean_host
 
     protocol = (
         link.split(
@@ -726,12 +716,7 @@ def limit_bl_configs_per_ip(
             ).lower()
         )
 
-        ip_str = (
-            resolve_host_cached(
-                clean_host
-            )
-            or clean_host
-        )
+        ip_str = clean_host
 
         grouped[
             ip_str
