@@ -29,7 +29,6 @@ from .parse import (
     parse_host_port_and_name,
     extract_sni_from_link,
     parse_ip_or_resolve,
-    find_matched_ip_for_link,
 )
 from .geoip import is_valid_public_host
 from .classify import (
@@ -455,10 +454,17 @@ def main():
 
         seen_wl.add(link)
 
-        matched_ip = find_matched_ip_for_link(
-            link,
-            white_ips,
-        )
+        matched_ip = None
+        from .parse import extract_sni_from_link
+        _host, _, _ = parse_host_port_and_name(link)
+        if _host:
+            _clean = _host.strip('[] \t\r\n\'"').lower()
+            if _clean in white_ips:
+                matched_ip = _clean
+        if not matched_ip:
+            _sni = extract_sni_from_link(link)
+            if _sni and _sni.lower() in white_ips:
+                matched_ip = _sni
 
         if matched_ip:
             ping_wl.append(

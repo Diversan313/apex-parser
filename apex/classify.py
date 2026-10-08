@@ -18,11 +18,8 @@ from .sni_whitelist import link_has_whitelisted_sni, is_sni_in_mobile_whitelist
 from .parse import (
     extract_sni_from_link,
     parse_host_port_and_name,
-    find_matched_ip_for_link,
 )
 from .geoip import (
-    resolve_host_cached,
-    fetch_country_from_ip,
     is_valid_public_host,
 )
 
@@ -92,6 +89,28 @@ def is_ru_sni(link: str) -> bool:
     return False
 
 
+def _host_in_white_ips(link: str, white_ips: set) -> bool:
+    """
+    Быстрая проверка: хост или SNI из ссылки прямо в white_ips.
+    Без DNS — на 100k кандидатов это секунды, а не часы.
+    """
+    if not white_ips:
+        return False
+
+    from .parse import parse_host_port_and_name, extract_sni_from_link
+    host, _, _ = parse_host_port_and_name(link)
+    if host:
+        clean = host.strip('[] \t\r\n\'"').lower()
+        if clean in white_ips:
+            return True
+
+    sni = extract_sni_from_link(link)
+    if sni and sni.lower() in white_ips:
+        return True
+
+    return False
+
+
 def classify_config(
     link: str,
     white_ips: set,
@@ -99,7 +118,7 @@ def classify_config(
 ) -> str:
 
     # 1. IP из white_ip.txt
-    if find_matched_ip_for_link(link, white_ips):
+    if _host_in_white_ips(link, white_ips):
         return "WL"
 
     host, _, orig_name = parse_host_port_and_name(link)
@@ -120,15 +139,10 @@ def classify_config(
     if link_has_whitelisted_sni(link):
         return "WL"
 
-    # 4. Страна endpoint = RU
-    clean_ip = resolve_host_cached(
-        host.strip('[] \t\r\n\'"').lower()
-    )
-
-    if clean_ip:
-        cc = fetch_country_from_ip(clean_ip)
-        if cc and cc.upper() == "RU":
-            return "WL"
+    # (DNS и GeoIP убраны из классификации: на 50k+ хостов это
+    #  часы последовательных DNS-запросов. RU-эндпоинты ловятся
+    #  позже — chunker определяет exit-country параллельно,
+    #  и BL_RU_TO_WL перекидывает их в WL.)
 
     # 5. Прочие .ru/.su SNI → только доля RU_SNI_RATIO
     if is_ru_sni(link):
