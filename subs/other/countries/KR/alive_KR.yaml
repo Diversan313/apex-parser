@@ -2,9 +2,9 @@ proxies:
   - name: "🇰🇷 [BL] Сервер 1"
     type: vless
     server: 3.39.4.109
-    port: 13672
+    port: 18967
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -43,19 +43,6 @@ proxies:
       short-id: "8378f267"
   - name: "🇰🇷 [BL] Сервер 4"
     type: vless
-    server: 43.108.48.169
-    port: 40701
-    uuid: "cdb7d825-9892-4d6f-80b8-7add83159dac"
-    network: "tcp"
-    servername: "amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TWuVILeiSXfCSMZPsqNHtRquNALPRaW5Z51I63zdLEA"
-      short-id: "7ef3a8ab2886"
-  - name: "🇰🇷 [BL] Сервер 5"
-    type: vless
     server: 151.245.106.49
     port: 2053
     uuid: "a2de9567-9646-45a9-a410-7303a43bdb6c"
@@ -67,9 +54,27 @@ proxies:
     reality-opts:
       public-key: "F6C33iIbfmt1mUsuLTarIC8ygdHKMqsaGvrSQltyxUo"
       short-id: "429499c03d4cc8a0"
+  - name: "🇰🇷 [BL] Сервер 5"
+    type: vless
+    server: 43.108.48.169
+    port: 40701
+    uuid: "cdb7d825-9892-4d6f-80b8-7add83159dac"
+    network: "tcp"
+    servername: "amazon.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TWuVILeiSXfCSMZPsqNHtRquNALPRaW5Z51I63zdLEA"
+      short-id: "7ef3a8ab2886"
   - name: "🇰🇷 [BL] Сервер 6"
     type: ss
     server: 211.174.113.172
     port: 49642
     password: "ac9c0a7b"
+    cipher: "aes-256-gcm"
+  - name: "🇰🇷 [BL] Сервер 7"
+    type: ss
+    server: 141.164.45.187
+    port: 6679
+    password: "TEzjfAYq2IjtuoS"
     cipher: "aes-256-gcm"
