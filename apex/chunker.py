@@ -386,7 +386,7 @@ def _prefilter_tcp(items: list, results: dict) -> list:
             return link, (False, None, "TCP: порт закрыт/недоступен", None, None, None)
         return None
 
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+    with ThreadPoolExecutor(max_workers=_cfg("TCP_PREFILTER_WORKERS", 60)) as pool:
         for res in pool.map(probe, items):
             if res is None:
                 continue
