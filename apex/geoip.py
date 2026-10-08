@@ -162,10 +162,6 @@ def resolve_host_cached(clean_host: str):
         pass
 
     try:
-        socket.setdefaulttimeout(
-            2.0
-        )
-
         ip = socket.gethostbyname(
             clean_host
         )
