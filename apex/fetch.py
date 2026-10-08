@@ -21,6 +21,7 @@ from .config import (
     KAMELEON_ENABLED,
     SOURCE_FETCH_WORKERS,
     SOURCE_FETCH_TIMEOUT,
+    SOCKET_DEFAULT_TIMEOUT,
     SOURCE_FETCH_RETRIES,
     MAX_WORKERS,
     EXPIRED_MARKERS_REGEX,
@@ -37,6 +38,10 @@ from .parse import parse_host_port
 from .xray import xray_outbound_to_link
 from .utils import happ
 from .utils.kameleon import fetch_kameleon
+
+# getaddrinfo() не подчиняется urlopen(timeout=N) — это системный вызов.
+# глобальный дефолт ограничивает DNS-резолвы и все неявные сокеты.
+socket.setdefaulttimeout(SOCKET_DEFAULT_TIMEOUT)
 from . import config as _cfg
 
 def extract_configs_from_json_text(content: str) -> list:
