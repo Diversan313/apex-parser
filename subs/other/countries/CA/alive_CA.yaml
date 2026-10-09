@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇨🇦 [WL] Сервер 1"
+  - name: "🇨🇦 [BL] Сервер 1"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -7,26 +7,13 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "random"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 185.218.17.127
-    port: 443
-    uuid: "bc8446e7-ba8e-4dfd-92df-8681793fe31e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "corporate.amazon.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "QKaBb_u0KoNkMYbh9ljrxC9BDtnHyFoaMd4-s4xfKxQ"
-      short-id: "33c0b6e213"
-  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 66.70.179.198
     port: 2053
@@ -39,12 +26,34 @@ proxies:
     reality-opts:
       public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
       short-id: "83f8317a948bb769"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: 185.218.17.127
+    port: 443
+    uuid: "bc8446e7-ba8e-4dfd-92df-8681793fe31e"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "corporate.amazon.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "QKaBb_u0KoNkMYbh9ljrxC9BDtnHyFoaMd4-s4xfKxQ"
+      short-id: "33c0b6e213"
   - name: "🇨🇦 [BL] Сервер 4"
-    type: ss
-    server: 64.74.163.69
-    port: 18766
-    password: "4efe1af272e7292139b889f6a63ee071"
-    cipher: "aes-128-gcm"
+    type: vless
+    server: 198.100.154.175
+    port: 8080
+    uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
+      short-id: "4b"
   - name: "🇨🇦 [BL] Сервер 5"
     type: ss
     server: 64.74.161.147
@@ -53,25 +62,7 @@ proxies:
     cipher: "aes-128-gcm"
   - name: "🇨🇦 [BL] Сервер 6"
     type: ss
-    server: 51.222.141.125
-    port: 445
-    password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 7"
-    type: ss
-    server: 51.79.85.185
-    port: 8118
-    password: "cdBIDV42DCwnfIN"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 8"
-    type: ss
-    server: 51.222.200.165
-    port: 5000
-    password: "Y6R9pAtvxxzmGC"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 9"
-    type: ss
-    server: 51.222.12.127
-    port: 445
-    password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
+    server: 51.222.107.43
+    port: 2083
+    password: "cOiC+3JhAXMwdGV5exnrMSorJU0Rl5qlLCbCAuDlWY4=:HWFFJN19JkvbTKo/79AfnbRBK9uHUUaFNZJyLjEoJGs="
+    cipher: "2022-blake3-aes-256-gcm"
