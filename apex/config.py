@@ -40,7 +40,7 @@ CHECKBONES_QUICK = True             # True = быстрый режим (без �
 
 # Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
-SPLIT_SOURCES = False               # True = sources_wl/bl, False = один sources.txt
+SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
 ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 DECRYPT_HAPP = True                 # расшифровывать happ://crypt* ссылки в источниках
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
