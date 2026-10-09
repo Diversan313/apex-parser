@@ -49,8 +49,13 @@ SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса �
 MAX_WORKERS = 15                    # потоки RD теста Xray
 TCP_PREFILTER_WORKERS = 80          # потоков TCP-префильтра в чанкере
 SOURCE_FETCH_WORKERS = 100          # потоков скачивания источников (I/O-bound, можно много)
-SOURCE_FETCH_TIMEOUT = 4            # сек, таймаут одного источника
+
+# Скачивание источников
+SOURCE_FETCH_TIMEOUT = 4            # сек, таймаут одной сокетной операции (connect/recv)
 SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
+SOURCE_FETCH_DEADLINE = 30          # сек, стенка на один источник (все попытки, redirect, Kameleon, happ)
+SOURCE_MAX_BYTES = 4 * 1024 * 1024  # потолок тела одной подписки
+DNS_RESOLVE_TIMEOUT = 5             # сек, потолок одного getaddrinfo
 
 # Лимиты уникальности
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
