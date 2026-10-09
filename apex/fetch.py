@@ -8,6 +8,7 @@ import json
 import time
 import base64
 import socket
+import threading
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -23,6 +24,7 @@ from .config import (
     SOURCE_FETCH_TIMEOUT,
     SOCKET_DEFAULT_TIMEOUT,
     SOURCE_FETCH_RETRIES,
+    SOURCE_FETCH_DEADLINE,
     MAX_WORKERS,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
@@ -38,10 +40,13 @@ from .parse import parse_host_port
 from .xray import xray_outbound_to_link
 from .utils import happ
 from .utils.kameleon import fetch_kameleon
+from .utils.netlimit import install_network_limits, read_bounded
 
-# getaddrinfo() не подчиняется urlopen(timeout=N) — это системный вызов.
-# глобальный дефолт ограничивает DNS-резолвы и все неявные сокеты.
+# Дефолт для сокетов, которым не задан явный таймаут.
+# DNS это НЕ ограничивает: getaddrinfo — системный вызов, его потолок
+# ставит install_network_limits() патчем из netlimit.
 socket.setdefaulttimeout(SOCKET_DEFAULT_TIMEOUT)
+install_network_limits()
 from . import config as _cfg
 
 def extract_configs_from_json_text(content: str) -> list:
@@ -313,13 +318,17 @@ def _extract_subscription_configs(content: str, info: dict, _depth: int = 0) -> 
 
     # 4) happ://crypt* — зашифрованные ссылки на подписки:
     #    расшифровываем → URL подписки → качаем её как вложенный источник.
+    #    Дедлайн общий с родителем: десяток happ-ссылок не должен
+    #    умножать бюджет источника.
     if DECRYPT_HAPP and "happ://" in content and _depth == 0:
         for h_link in happ.extract_happ_links(content):
             sub_url = happ.happ_link_to_subscription_url(h_link)
             if not sub_url:
                 continue
+            if time.monotonic() >= _deadline:
+                break
             nested = fetch_single_url_with_details(
-                sub_url, retries=1, _depth=_depth + 1
+                sub_url, retries=1, _depth=_depth + 1, _deadline=_deadline
             )
             info["happ_decrypted"] += 1
             for c in nested.get("configs") or []:
@@ -334,9 +343,16 @@ def fetch_single_url_with_details(
     retries: int = 1,
     _depth: int = 0,
     _content_override: str = None,
+    _deadline: float = None,
 ) -> dict:
 
     url_clean = url.strip().replace(" ", "%20")
+
+    # Стенка на весь источник: попытки, redirect'ы, Kameleon и happ-вложенности
+    # суммарно. Без неё timeout urlopen не ограничивает запрос целиком —
+    # он действует на каждую сокетную операцию отдельно.
+    if _deadline is None:
+        _deadline = time.monotonic() + SOURCE_FETCH_DEADLINE
 
     info = {
         "url": url,
@@ -362,6 +378,12 @@ def fetch_single_url_with_details(
         use_verified = SSL_VERIFY_SOURCES
         attempt = 0
         while attempt <= retries:
+            remaining = _deadline - time.monotonic()
+            if remaining <= 0:
+                info["error"] = f"превышен бюджет источника {SOURCE_FETCH_DEADLINE}с"
+                info["network_error"] = True
+                content = None
+                break
             attempt += 1
             try:
                 req = urllib.request.Request(
@@ -370,11 +392,12 @@ def fetch_single_url_with_details(
                 # SSL_VERIFY_SOURCES: сначала с проверкой сертификата;
                 # при битом серте — одноразовый fallback на контекст без проверки
                 with urllib.request.urlopen(
-                    req, timeout=SOURCE_FETCH_TIMEOUT,
+                    req,
+                    timeout=min(SOURCE_FETCH_TIMEOUT, remaining),
                     context=_VERIFIED_SSL if use_verified else SSL_CONTEXT,
                 ) as response:
                     info["http_status"] = response.status
-                    raw_data = response.read()
+                    raw_data = read_bounded(response, _deadline)
                     info["size_bytes"] = len(raw_data)
                     content = raw_data.decode("utf-8", errors="ignore")
                     info["network_error"] = False
@@ -407,7 +430,7 @@ def fetch_single_url_with_details(
                 transient = _is_transient_error(e)
                 info["network_error"] = transient
                 if transient and attempt <= retries:
-                    time.sleep(0.5 * attempt)
+                    time.sleep(min(0.5 * attempt, max(0.0, _deadline - time.monotonic())))
                     continue
                 content = None
                 break
@@ -422,7 +445,10 @@ def fetch_single_url_with_details(
             and _depth == 0
             and info.get("http_status") in (401, 403)
         ):
-            kcontent = fetch_kameleon(url_clean)
+            kameleon_budget = max(2, int(_deadline - time.monotonic()))
+            kcontent = fetch_kameleon(
+                url_clean, timeout=min(12, kameleon_budget), deadline=_deadline
+            )
             if kcontent:
                 content = kcontent
                 info["kameleon"] = True
@@ -441,7 +467,10 @@ def fetch_single_url_with_details(
         # Kameleon: источник скачался, но конфигов не отдал (пустышка/мусор)
         # - маскируемся под клиентов, пока какая-то личность не вытащит подписку.
         if _cfg.KAMELEON_ENABLED and not valid_configs and _depth == 0:
-            kcontent = fetch_kameleon(url_clean)
+            kameleon_budget = max(2, int(_deadline - time.monotonic()))
+            kcontent = fetch_kameleon(
+                url_clean, timeout=min(12, kameleon_budget), deadline=_deadline
+            )
             if kcontent:
                 # сбрасываем флаги формата - парсим свежий контент с нуля
                 info["is_base64"] = False
@@ -459,6 +488,44 @@ def fetch_single_url_with_details(
         info["error"] = f"{type(e).__name__}: {e}"
 
     return info
+
+
+def _fetch_source_bounded(url: str, retries: int = 1) -> dict:
+    """Жёсткая гарантия завершения одного источника.
+
+    Внутренний дедлайн ограничивает все явные операции, но urlopen может
+    застрять на уровне C: TLS handshake и чтение заголовков идут теми же
+    recv с per-op таймаутом, и «капающий» сервер растягивает их неограниченно.
+    Поэтому вызов выполняем в daemon-потоке: после исчерпания бюджета поток
+    бросаем и возвращаем помеченный timeout'ом результат. Брошенный поток
+    завершится сам по своему дедлайну и не держит выход процесса
+    (в отличие от потоков ThreadPoolExecutor, которые джойнятся при exit).
+    """
+    box = {}
+
+    def _run():
+        box["res"] = fetch_single_url_with_details(url, retries=retries)
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    # бюджет + запас на одну финальную сокетную операцию
+    t.join(SOURCE_FETCH_DEADLINE + SOURCE_FETCH_TIMEOUT + 5)
+    if "res" in box:
+        return box["res"]
+    return {
+        "url": url,
+        "http_status": None,
+        "size_bytes": 0,
+        "is_base64": False,
+        "is_json": False,
+        "is_expired": False,
+        "happ_decrypted": 0,
+        "kameleon": False,
+        "total_lines": 0,
+        "configs": [],
+        "error": f"источник не уложился в {SOURCE_FETCH_DEADLINE}с (hard deadline)",
+        "network_error": True,
+    }
 
 
 def fetch_links_parallel_with_source(
@@ -513,7 +580,7 @@ def fetch_links_parallel_with_source(
 
             futures = {
                 executor.submit(
-                    fetch_single_url_with_details,
+                    _fetch_source_bounded,
                     url,
                 ): idx
                 for idx, url in enumerate(
@@ -561,7 +628,7 @@ def fetch_links_parallel_with_source(
             ) as executor:
                 futures2 = {
                     executor.submit(
-                        fetch_single_url_with_details,
+                        _fetch_source_bounded,
                         urls[idx - 1],
                         2,
                     ): idx
