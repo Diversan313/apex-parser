@@ -22,6 +22,7 @@ from __future__ import annotations
 import random
 import ssl
 import string
+import time
 import urllib.parse
 import urllib.error
 import urllib.request
@@ -30,6 +31,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Optional
 
 from .base import safe_b64decode
+from .netlimit import read_bounded
 from .. import config as cfg
 from ..config import HEADERS, SSL_CONTEXT, SSL_VERIFY_SOURCES
 
@@ -162,7 +164,8 @@ def _looks_like_subscription(content: str) -> bool:
 
 
 def _try_variant(url: str, app: str, os_name: str, timeout: int,
-                 check: Callable[[str], bool]) -> Optional[str]:
+                 check: Callable[[str], bool],
+                 deadline: Optional[float] = None) -> Optional[str]:
     """Одна попытка: личность app+os -> запрос -> контент, если прошёл checker.
 
     SSL: при SSL_VERIFY_SOURCES сначала строгая проверка; битый серт ->
@@ -173,10 +176,20 @@ def _try_variant(url: str, app: str, os_name: str, timeout: int,
     identity.os = os_name
     headers = identity_headers(identity)
 
+    if deadline is None:
+        deadline = time.monotonic() + timeout
+
     def _do(use_ctx):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("kameleon variant deadline")
         req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=timeout, context=use_ctx) as resp:
-            return resp.read().decode("utf-8", errors="ignore")
+        with urllib.request.urlopen(
+            req, timeout=min(timeout, remaining), context=use_ctx
+        ) as resp:
+            # read_bounded: обычный read() не ограничен по времени,
+            # «капающий» ответ держал бы вариант бесконечно
+            return read_bounded(resp, deadline).decode("utf-8", errors="ignore")
 
     content = None
     if SSL_VERIFY_SOURCES:
@@ -204,6 +217,7 @@ def fetch_kameleon(
     checker: Optional[Callable[[str], bool]] = None,
     parallel: Optional[bool] = None,
     max_workers: Optional[int] = None,
+    deadline: Optional[float] = None,
 ) -> Optional[str]:
     """
     Скачать URL, перебирая ВСЕ варианты клиент x ОС из конфига
@@ -213,6 +227,10 @@ def fetch_kameleon(
                      успешный; худший случай по времени = один таймаут.
     parallel=False — последовательный перебор (меньше запросов к
                      источнику, но дольше в худшем случае).
+
+    deadline — стенка на весь вызов в absolute time.monotonic();
+    без неё — now + timeout. Дедлайн источника из fetch.py
+    распространяется и на Kameleon.
 
     checker(content) — необязательная проверка «это то, что нужно»;
     по умолчанию содержимое должно быть похоже на подписку.
@@ -228,6 +246,9 @@ def fetch_kameleon(
     if max_workers is None:
         max_workers = int(cfg.KAMELEON_MAX_WORKERS)
 
+    if deadline is None:
+        deadline = time.monotonic() + timeout
+
     variants = [
         (app, os_name)
         for app in available_apps()
@@ -240,9 +261,14 @@ def fetch_kameleon(
 
     if parallel:
         workers = min(max(1, max_workers), len(variants))
-        with ThreadPoolExecutor(max_workers=workers) as ex:
+        # НЕ with-блок: __exit__ ждёт все варианты даже после найденного
+        # успеха — при зависшем варианте это держало весь вызов.
+        executor = ThreadPoolExecutor(max_workers=workers)
+        try:
             futures = {
-                ex.submit(_try_variant, url, app, os_name, timeout, check): (app, os_name)
+                executor.submit(
+                    _try_variant, url, app, os_name, timeout, check, deadline
+                ): (app, os_name)
                 for app, os_name in variants
             }
             for fut in as_completed(futures):
@@ -250,9 +276,13 @@ def fetch_kameleon(
                 if content:
                     return content
             return None
+        finally:
+            executor.shutdown(wait=False, cancel_futures=True)
 
     for app, os_name in variants:
-        content = _try_variant(url, app, os_name, timeout, check)
+        if time.monotonic() >= deadline:
+            return None
+        content = _try_variant(url, app, os_name, timeout, check, deadline)
         if content:
             return content
     return None
