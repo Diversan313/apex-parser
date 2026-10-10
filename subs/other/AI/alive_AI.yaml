@@ -1,7 +1,7 @@
 proxies:
   - name: "🇨🇭 [AI] Сервер 1"
     type: vless
-    server: dobro.ali-bard.online
+    server: 179.255.191.86
     port: 443
     uuid: "12e95f93-443c-45f0-9a2a-5b318b9124cf"
     network: "tcp"
@@ -14,7 +14,7 @@ proxies:
       public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
   - name: "🇨🇭 [AI] Сервер 2"
     type: vless
-    server: 179.255.191.86
+    server: dobro.ali-bard.online
     port: 443
     uuid: "12e95f93-443c-45f0-9a2a-5b318b9124cf"
     network: "tcp"
@@ -25,20 +25,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
-  - name: "🇫🇮 [AI] Сервер 3"
-    type: vless
-    server: 151.241.137.132
-    port: 443
-    uuid: "5786d86f-7731-4174-b1a3-84297e54b015"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "finland.ali-bard.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
-  - name: "🇮🇹 [AI] Сервер 4"
+  - name: "🇮🇹 [AI] Сервер 3"
     type: vless
     server: itak.ali-bard.online
     port: 443
@@ -51,12 +38,12 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
-  - name: "🇳🇱 [AI] Сервер 5"
+  - name: "🇳🇱 [AI] Сервер 4"
     type: vless
     server: fd-nl.ali-bard.online
     port: 443
     uuid: "12e95f93-443c-45f0-9a2a-5b318b9124cf"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "fd-nl.ali-bard.online"
     client-fingerprint: "edge"
@@ -64,7 +51,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
-  - name: "🇳🇱 [AI] Сервер 6"
+  - name: "🇳🇱 [AI] Сервер 5"
     type: vless
     server: 50.7.178.74
     port: 443
@@ -77,45 +64,63 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SB1uC0OEveYjSiS_Nuw9Ld-uVVXWqi794OGnldthY3I"
+  - name: "🇨🇦 [AI] Сервер 6"
+    type: ss
+    server: 51.222.155.113
+    port: 5601
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
   - name: "🇨🇦 [AI] Сервер 7"
     type: ss
-    server: 51.79.49.116
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
+    server: 51.79.64.198
+    port: 8119
+    password: "cdBIDV42DCwnfIN"
     cipher: "aes-256-gcm"
-  - name: "🇺🇸 [AI] Сервер 8"
+  - name: "🇨🇦 [AI] Сервер 8"
     type: ss
-    server: 37.19.198.244
-    port: 443
-    password: "shadowsocks"
+    server: 51.222.107.43
+    port: 2083
+    password: "cOiC+3JhAXMwdGV5exnrMSorJU0Rl5qlLCbCAuDlWY4=:HWFFJN19JkvbTKo/79AfnbRBK9uHUUaFNZJyLjEoJGs="
+    cipher: "2022-blake3-aes-256-gcm"
+  - name: "🇨🇦 [AI] Сервер 9"
+    type: ss
+    server: 64.74.163.67
+    port: 18764
+    password: "4efe1af272e7292139b889f6a63ee071"
     cipher: "aes-128-gcm"
-  - name: "🇺🇸 [AI] Сервер 9"
+  - name: "🇺🇸 [AI] Сервер 10"
+    type: ss
+    server: 15.204.246.107
+    port: 8888
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [AI] Сервер 11"
+    type: ss
+    server: 51.222.12.127
+    port: 445
+    password: "zDNVedRFPQexG9v"
+    cipher: "aes-256-gcm"
+  - name: "🇺🇸 [AI] Сервер 12"
+    type: ss
+    server: 15.204.247.124
+    port: 2375
+    password: "faBAoD54k87UJG7"
+    cipher: "aes-256-gcm"
+  - name: "🇺🇸 [AI] Сервер 13"
     type: ss
     server: 205.209.126.205
     port: 19049
     password: "e72a793d634d99748cf908d21fd935c3"
     cipher: "aes-128-gcm"
-  - name: "🇺🇸 [AI] Сервер 10"
+  - name: "🇺🇸 [AI] Сервер 14"
     type: ss
     server: 45.76.9.57
     port: 8389
     password: "6054f059036c3ff1e907aeb51377b2ac54e61ceb666226fd"
     cipher: "chacha20-ietf-poly1305"
-  - name: "🇯🇵 [AI] Сервер 11"
+  - name: "🇺🇸 [AI] Сервер 15"
     type: ss
-    server: 149.22.87.240
+    server: 37.19.198.244
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
-  - name: "🇯🇵 [AI] Сервер 12"
-    type: ss
-    server: 84.247.155.196
-    port: 443
-    password: "3eOFeNssde7PYYMv"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [AI] Сервер 13"
-    type: ss
-    server: 51.222.136.236
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
-    cipher: "aes-256-gcm"
