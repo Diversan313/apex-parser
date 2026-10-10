@@ -47,11 +47,11 @@ SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса �
 
 # Параллелизм
 MAX_WORKERS = 15                    # потоки RD теста Xray
-TCP_PREFILTER_WORKERS = 80          # потоков TCP-префильтра в чанкере
+TCP_PREFILTER_WORKERS = 250         # потоков TCP-префильтра в чанкере
 SOURCE_FETCH_WORKERS = 100          # потоков скачивания источников (I/O-bound, можно много)
 
 # Скачивание источников
-SOURCE_FETCH_TIMEOUT = 4            # сек, таймаут одной сокетной операции (connect/recv)
+SOURCE_FETCH_TIMEOUT = 5            # сек, таймаут одной сокетной операции (connect/recv)
 SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
 SOURCE_FETCH_DEADLINE = 30          # сек, стенка на один источник (все попытки, redirect, Kameleon, happ)
 SOURCE_MAX_BYTES = 4 * 1024 * 1024  # потолок тела одной подписки
@@ -77,7 +77,7 @@ WL_MIN_SUCCESS_COUNT = 1            # успешных тестов для WL
 BL_MIN_SUCCESS_COUNT = 2            # успешных тестов для BL
 XRAY_START_TIMEOUT = 1.2            # сек, старт xray
 XRAY_TEST_TIMEOUT = 6.0             # сек, проверка через xray
-TCP_CHECK_TIMEOUT = 2.5             # сек, TCP pre-check
+TCP_CHECK_TIMEOUT = 1.7             # сек, TCP pre-check
 SOCKET_DEFAULT_TIMEOUT = 7          # сек, глобальный потолок DNS и всех неявных сокетов
 
 # Kameleon
