@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇨🇦 [WL] Сервер 1"
+  - name: "🇨🇦 [BL] Сервер 1"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -7,7 +7,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "random"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -55,17 +55,19 @@ proxies:
       public-key: "0du0bcP9VqKadj6p_W9P-3APJ9fJdNT1ZdHqg0JWkg8"
       short-id: "18de7b601c10639f"
   - name: "🇨🇦 [BL] Сервер 5"
-    type: ss
-    server: 64.74.161.147
-    port: 17200
-    password: "1cbb3e347ee86e1980a7c731e9dd00a0"
-    cipher: "aes-128-gcm"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
   - name: "🇨🇦 [BL] Сервер 6"
     type: ss
-    server: 51.222.107.43
-    port: 2083
-    password: "cOiC+3JhAXMwdGV5exnrMSorJU0Rl5qlLCbCAuDlWY4=:HWFFJN19JkvbTKo/79AfnbRBK9uHUUaFNZJyLjEoJGs="
-    cipher: "2022-blake3-aes-256-gcm"
+    server: 51.79.49.116
+    port: 8882
+    password: "kDWvXYZoTBcGkC4"
+    cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 7"
     type: ss
     server: 51.222.155.113

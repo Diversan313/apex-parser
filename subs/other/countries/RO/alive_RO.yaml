@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇷🇴 [WL] Сервер 1"
+  - name: "🇷🇴 [BL] Сервер 1"
     type: vless
     server: 46.28.67.55
     port: 443
@@ -7,7 +7,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "random"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -29,6 +29,20 @@ proxies:
       short-id: "a2aa"
   - name: "🇷🇴 [BL] Сервер 3"
     type: vless
+    server: ger6.fytpn.com
+    port: 56789
+    uuid: "a889fba5-5472-4022-a6b4-9710157fda2f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ger6.fytpn.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "PDHRi_RRFsPhxLoH2C1l9A9HdL2y7g1uOzXmY0XnmzQ"
+      short-id: "a2aa"
+  - name: "🇷🇴 [BL] Сервер 4"
+    type: vless
     server: 146.70.124.85
     port: 443
     uuid: "40abbe13-f02e-4da2-9b19-966c2c3eb4ee"
@@ -41,9 +55,3 @@ proxies:
     reality-opts:
       public-key: "byzvlw97wjAAAfHs5AZRV0P0H6_JKBEZ4yfLS0HNewE"
       short-id: "fe24f8a0a560056e"
-  - name: "🇷🇴 [BL] Сервер 4"
-    type: trojan
-    server: ger6.fytpn.com
-    port: 2097
-    password: "gHncxmRjWEJ7apX5XuXsHw4kGexMH_gU"
-    udp: true
