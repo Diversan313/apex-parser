@@ -690,18 +690,6 @@ def main():
     # 16. FULL
     # ========================================================
 
-    alive_full_raw = (
-        alive_wl_clean
-        + alive_bl_clean
-    )
-
-    alive_full_clean = (
-        dedup_advanced(
-            alive_full_raw,
-            "FULL",
-        )
-    )
-
     # --------------------------------------------------------
     # Для FULL не применяем BL-ограничение к WL.
     # --------------------------------------------------------
@@ -718,6 +706,48 @@ def main():
             wl_keys.add(
                 key
             )
+
+    # fp-варианты одного туннеля классифицируются независимо и могут
+    # пройти тест в обеих очередях; дедупи внутри WL и BL этого не видят.
+    # WL приоритетнее: туннель, уже живущий в WL-подписке, из BL убираем.
+    bl_kept = []
+    bl_wl_dupes = 0
+
+    for item in alive_bl_clean:
+
+        key = (
+            get_final_dedup_key(
+                item[0]
+            )
+        )
+
+        if key and key in wl_keys:
+            bl_wl_dupes += 1
+            continue
+
+        bl_kept.append(item)
+
+    if bl_wl_dupes:
+        print(
+            f"🧹 Дедуп BL∩WL: "
+            f"было {len(alive_bl_clean)}, "
+            f"осталось {len(bl_kept)} "
+            f"(дубли туннелей из WL-подписки)"
+        )
+
+    alive_bl_clean = bl_kept
+
+    alive_full_raw = (
+        alive_wl_clean
+        + alive_bl_clean
+    )
+
+    alive_full_clean = (
+        dedup_advanced(
+            alive_full_raw,
+            "FULL",
+        )
+    )
 
     full_wl = []
     full_bl = []
