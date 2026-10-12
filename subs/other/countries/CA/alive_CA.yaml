@@ -1,33 +1,6 @@
 proxies:
   - name: "🇨🇦 [BL] Сервер 1"
     type: vless
-    server: 185.218.17.127
-    port: 443
-    uuid: "bc8446e7-ba8e-4dfd-92df-8681793fe31e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "corporate.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "QKaBb_u0KoNkMYbh9ljrxC9BDtnHyFoaMd4-s4xfKxQ"
-      short-id: "33c0b6e213"
-  - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 66.70.179.198
-    port: 2053
-    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
-      short-id: "83f8317a948bb769"
-  - name: "🇨🇦 [BL] Сервер 3"
-    type: vless
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
@@ -40,55 +13,64 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL] Сервер 4"
+  - name: "🇨🇦 [BL] Сервер 2"
     type: vless
-    server: 92.246.138.161
-    port: 443
-    uuid: "c9c219dc-50da-4135-8e5b-67020291f0ec"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "vpv5d3rgk1.imgshelf.sbs"
-    client-fingerprint: "random"
+    server: 66.70.179.198
+    port: 2053
+    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
+    network: "raw"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "jFqwGpIrZSPqlvF4XglDWhsuHxljBLeiaMtESLsZsVk"
-      short-id: "6ba85179e30d4fc2"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
+      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
+      short-id: "83f8317a948bb769"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: 185.218.17.127
+    port: 443
+    uuid: "bc8446e7-ba8e-4dfd-92df-8681793fe31e"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "corporate.amazon.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "QKaBb_u0KoNkMYbh9ljrxC9BDtnHyFoaMd4-s4xfKxQ"
+      short-id: "33c0b6e213"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: vless
+    server: 198.100.154.175
+    port: 8080
+    uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 6"
-    type: ss
-    server: 51.79.49.116
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 7"
+    flow: "xtls-rprx-vision"
+    servername: "icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
+      short-id: "4b"
+  - name: "🇨🇦 [BL] Сервер 5"
     type: ss
     server: 51.222.155.113
     port: 5601
     password: "Y6R9pAtvxxzmGC"
     cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 8"
+  - name: "🇨🇦 [BL] Сервер 6"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+  - name: "🇨🇦 [BL] Сервер 7"
     type: ss
-    server: 51.79.64.198
-    port: 8119
-    password: "cdBIDV42DCwnfIN"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 9"
-    type: ss
-    server: ca225.vpnbook.com
-    port: 443
-    password: "e5c65ph"
-    cipher: "chacha20-ietf-poly1305"
-  - name: "🇨🇦 [BL] Сервер 10"
-    type: ss
-    server: 51.222.136.236
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
-    cipher: "aes-256-gcm"
+    server: 51.222.107.43
+    port: 2083
+    password: "cOiC+3JhAXMwdGV5exnrMSorJU0Rl5qlLCbCAuDlWY4=:HWFFJN19JkvbTKo/79AfnbRBK9uHUUaFNZJyLjEoJGs="
+    cipher: "2022-blake3-aes-256-gcm"
