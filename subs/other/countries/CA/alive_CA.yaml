@@ -7,7 +7,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -56,20 +56,6 @@ proxies:
       short-id: "cf4e6f8338"
   - name: "🇨🇦 [BL] Сервер 5"
     type: vless
-    server: 70.38.95.51
-    port: 443
-    uuid: "ffd57de6-db06-475c-9a4b-11d27432ff25"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pkg.go.dev"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0du0bcP9VqKadj6p_W9P-3APJ9fJdNT1ZdHqg0JWkg8"
-      short-id: "18de7b601c10639f"
-  - name: "🇨🇦 [BL] Сервер 6"
-    type: vless
     server: 198.100.154.175
     port: 8080
     uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
@@ -82,7 +68,7 @@ proxies:
     reality-opts:
       public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
       short-id: "4b"
-  - name: "🇨🇦 [BL] Сервер 7"
+  - name: "🇨🇦 [BL] Сервер 6"
     type: vless
     server: 54.39.96.233
     port: 8080
@@ -96,7 +82,28 @@ proxies:
     reality-opts:
       public-key: "sQ_YHzotqhVJoUDAZl5kTzUqVN6ksh-MTikz_ixsZWc"
       short-id: "2b30"
+  - name: "🇨🇦 [BL] Сервер 7"
+    type: vless
+    server: can1.ragnarok-it.xyz
+    port: 8449
+    uuid: "b7df9363-087b-48f7-a4ca-6e988ebf7f35"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "amd.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "l_qSSfZDQDjpodjZ80CiFCyXY6xssS0IHWxu6n_HN3c"
+      short-id: "dee4ffbdbe515f0d"
   - name: "🇨🇦 [BL] Сервер 8"
+    type: trojan
+    server: ca.tronsg.com
+    port: 443
+    password: "Trojan@82164024"
+    sni: "ca.tronsg.com"
+    udp: true
+  - name: "🇨🇦 [BL] Сервер 9"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -104,7 +111,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 9"
+  - name: "🇨🇦 [BL] Сервер 10"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -112,9 +119,3 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
-  - name: "🇨🇦 [BL] Сервер 10"
-    type: ss
-    server: 51.79.49.116
-    port: 8882
-    password: "kDWvXYZoTBcGkC4"
-    cipher: "aes-256-gcm"
