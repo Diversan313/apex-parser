@@ -4,30 +4,16 @@ proxies:
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 185.218.17.127
-    port: 443
-    uuid: "bc8446e7-ba8e-4dfd-92df-8681793fe31e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "corporate.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "QKaBb_u0KoNkMYbh9ljrxC9BDtnHyFoaMd4-s4xfKxQ"
-      short-id: "33c0b6e213"
-  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 51.79.31.36
     port: 31146
@@ -41,6 +27,20 @@ proxies:
     reality-opts:
       public-key: "QAoJHZT6_DZsBu-jH74uYZUTpGgxmvN2tXpRKj4CygE"
       short-id: "cf4e6f8338"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: can1.ragnarok-it.xyz
+    port: 8449
+    uuid: "b7df9363-087b-48f7-a4ca-6e988ebf7f35"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "amd.com"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "l_qSSfZDQDjpodjZ80CiFCyXY6xssS0IHWxu6n_HN3c"
+      short-id: "dee4ffbdbe515f0d"
   - name: "🇨🇦 [BL] Сервер 4"
     type: vless
     server: 66.70.179.198
@@ -69,29 +69,30 @@ proxies:
       public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
       short-id: "4b"
   - name: "🇨🇦 [BL] Сервер 6"
+    type: trojan
+    server: ca.tronsg.com
+    port: 443
+    password: "Trojan@82164024"
+    sni: "ca.tronsg.com"
+    udp: true
+  - name: "🇨🇦 [BL] Сервер 7"
     type: ss
     server: 149.22.95.183
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 7"
+  - name: "🇨🇦 [BL] Сервер 8"
     type: ss
     server: 64.74.163.69
     port: 18766
     password: "4efe1af272e7292139b889f6a63ee071"
     cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 8"
+  - name: "🇨🇦 [BL] Сервер 9"
     type: ss
     server: 64.74.163.67
     port: 18764
     password: "4efe1af272e7292139b889f6a63ee071"
     cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 9"
-    type: ss
-    server: 51.79.85.185
-    port: 8118
-    password: "cdBIDV42DCwnfIN"
-    cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 10"
     type: ss
     server: 51.222.155.113
