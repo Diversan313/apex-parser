@@ -29,18 +29,33 @@ proxies:
       short-id: "33c0b6e213"
   - name: "🇨🇦 [BL] Сервер 3"
     type: vless
-    server: 66.70.179.198
-    port: 2053
-    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
-    network: "raw"
-    servername: "www.cloudflare.com"
+    server: 51.79.31.36
+    port: 31146
+    uuid: "f0466557-2fd5-442e-94cb-12c6b764155e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "play-fe.googleapis.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "QAoJHZT6_DZsBu-jH74uYZUTpGgxmvN2tXpRKj4CygE"
+      short-id: "cf4e6f8338"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: vless
+    server: time.salphetka.ru
+    port: 443
+    uuid: "92295a0d-b610-4075-85e9-bfab09ec6f3a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.unb.ca"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
-      short-id: "83f8317a948bb769"
-  - name: "🇨🇦 [BL] Сервер 4"
+      public-key: "5qe0MF8LdxPLFyPkyPkUdQs58rK9J7B0Q5TUj7tSnn4"
+      short-id: "654119f9d6f01dba"
+  - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: can1.ragnarok-it.xyz
     port: 8449
@@ -54,21 +69,20 @@ proxies:
     reality-opts:
       public-key: "l_qSSfZDQDjpodjZ80CiFCyXY6xssS0IHWxu6n_HN3c"
       short-id: "dee4ffbdbe515f0d"
-  - name: "🇨🇦 [BL] Сервер 5"
+  - name: "🇨🇦 [BL] Сервер 6"
     type: vless
-    server: 51.79.31.36
-    port: 31146
-    uuid: "f0466557-2fd5-442e-94cb-12c6b764155e"
+    server: 66.70.179.198
+    port: 2053
+    uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "play-fe.googleapis.com"
-    client-fingerprint: "chrome"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "QAoJHZT6_DZsBu-jH74uYZUTpGgxmvN2tXpRKj4CygE"
-      short-id: "cf4e6f8338"
-  - name: "🇨🇦 [BL] Сервер 6"
+      public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
+      short-id: "83f8317a948bb769"
+  - name: "🇨🇦 [BL] Сервер 7"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -76,16 +90,24 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 7"
+  - name: "🇨🇦 [BL] Сервер 8"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
+  - name: "🇨🇦 [BL] Сервер 9"
     type: trojan
     server: ca.tronsg.com
     port: 443
     password: "Trojan@82164024"
     sni: "ca.tronsg.com"
     udp: true
-  - name: "🇨🇦 [BL] Сервер 8"
+  - name: "🇨🇦 [BL] Сервер 10"
     type: ss
-    server: 51.222.155.113
-    port: 5601
-    password: "Y6R9pAtvxxzmGC"
-    cipher: "aes-256-gcm"
+    server: 149.22.95.183
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
