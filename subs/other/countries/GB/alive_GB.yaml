@@ -1,9 +1,9 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 193.188.21.253
+    server: 213.176.92.168
     port: 10444
-    uuid: "57f7772d-f5d6-4d8f-992d-5fa5e0d6da55"
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "video.yandex.ru"
@@ -14,19 +14,6 @@ proxies:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [WL] Сервер 2"
-    type: vless
-    server: 51.89.194.151
-    port: 2053
-    uuid: "8e790f25-1d71-4601-9fb0-d503931dcfca"
-    network: "tcp"
-    servername: "www.apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xPEBx4wUmwAAv4ikUALNBf5wH6TRhyeQ0Q2pcNELsV0"
-      short-id: "d051f678212f9d54"
-  - name: "🇬🇧 [WL] Сервер 3"
     type: vless
     server: 195.72.166.251
     port: 443
@@ -40,21 +27,32 @@ proxies:
     reality-opts:
       public-key: "RKDT6fVgcZS8Qfzhv5rbeHRIflA3UTKD_HNLJyOoUwk"
       short-id: "25349b36802f"
-  - name: "🇬🇧 [WL] Сервер 4"
-    type: vless
-    server: node-uk.connectsuite.org
-    port: 8443
-    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
-    network: "tcp"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-  - name: "🇬🇧 [WL] Сервер 5"
+  - name: "🇬🇧 [WL] Сервер 3"
     type: ss
     server: 141.98.101.181
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: node-uk.connectsuite.org
+    port: 8443
+    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
+    network: "tcp"
+    servername: "node-uk.connectsuite.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: 51.38.71.147
+    port: 8443
+    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
+    network: "raw"
+    servername: "node-uk.connectsuite.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 138.124.125.193
@@ -71,32 +69,19 @@ proxies:
       short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 7"
     type: vless
-    server: 144.48.11.97
-    port: 43000
-    uuid: "4799abf0-d0d9-4a46-9c31-b1f76ae00e1e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "144.48.11.97"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lmT0SFJL1A8_ariRWL65dhShaqFbpitjGanv7EFnoR0"
-      short-id: "725e6ea0"
-  - name: "🇬🇧 [BL] Сервер 8"
-    type: vless
     server: api.mediasvyaz.cc
     port: 443
     uuid: "082f5694-9019-4110-b67b-8125dbb9bab8"
     network: "raw"
     flow: "xtls-rprx-vision"
     servername: "api.mediasvyaz.cc"
-    client-fingerprint: "safari"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
       public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
       short-id: "a8"
-  - name: "🇬🇧 [BL] Сервер 9"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 50.7.154.75
     port: 443
@@ -110,7 +95,7 @@ proxies:
     reality-opts:
       public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
       short-id: "a8"
-  - name: "🇬🇧 [BL] Сервер 10"
+  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: 193.142.59.97
     port: 10829
@@ -121,7 +106,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 11"
+  - name: "🇬🇧 [BL] Сервер 10"
     type: vless
     server: s1243.sspcccdn.xyz
     port: 10829
@@ -132,7 +117,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 12"
+  - name: "🇬🇧 [BL] Сервер 11"
     type: vless
     server: s1244.csgfw.top
     port: 10829
@@ -143,6 +128,19 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
+  - name: "🇬🇧 [BL] Сервер 12"
+    type: vless
+    server: 144.48.11.97
+    port: 43000
+    uuid: "4799abf0-d0d9-4a46-9c31-b1f76ae00e1e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "144.48.11.97"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lmT0SFJL1A8_ariRWL65dhShaqFbpitjGanv7EFnoR0"
+      short-id: "725e6ea0"
   - name: "🇬🇧 [BL] Сервер 13"
     type: vless
     server: 205.237.110.254
@@ -159,6 +157,19 @@ proxies:
       short-id: "cd2d53510b4df2a8"
   - name: "🇬🇧 [BL] Сервер 14"
     type: vless
+    server: f36.tivexabot.ir
+    port: 8443
+    uuid: "cf89fddb-e76b-430e-8952-61e33d4da4a6"
+    network: "tcp"
+    servername: "stg-ru-images.shop.samsung.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "QJ0hQw2eD-EVhhGSr28CN10dVFDNGKgaIZ8spSZFO3M"
+      short-id: "19fad7d75677e2"
+  - name: "🇬🇧 [BL] Сервер 15"
+    type: vless
     server: 46.250.240.80
     port: 2053
     uuid: "948df76f-505d-4608-9c76-a933ee3ccc76"
@@ -170,34 +181,7 @@ proxies:
     reality-opts:
       public-key: "CYFeysLf--_IVhxQOCd3ZxLrAVWFFOkJzvIGHOVXN3E"
       short-id: "4cc9dc65f7770115"
-  - name: "🇬🇧 [BL] Сервер 15"
-    type: vless
-    server: 104.238.2.82
-    port: 443
-    uuid: "d806a58b-33aa-42e0-b170-395e49c16b37"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.microsoft.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Y0noOXC8qHmbM0GmDpj-9BBwKSOtHs-uMbNfKU050GQ"
-      short-id: "b558b9305a0b"
   - name: "🇬🇧 [BL] Сервер 16"
-    type: vless
-    server: sql.popmintxo.cc
-    port: 443
-    uuid: "d806a58b-33aa-42e0-b170-395e49c16b37"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.microsoft.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Y0noOXC8qHmbM0GmDpj-9BBwKSOtHs-uMbNfKU050GQ"
-      short-id: "b558b9305a0b"
-  - name: "🇬🇧 [BL] Сервер 17"
     type: vless
     server: node.remnagecsp.ru
     port: 7443
@@ -211,7 +195,7 @@ proxies:
     reality-opts:
       public-key: "0BVxZKOt6wO0jIB1xRkAAtaFUkmyFAbVWfkkKSJBfEI"
       short-id: "570ffeb12f6e4635"
-  - name: "🇬🇧 [BL] Сервер 18"
+  - name: "🇬🇧 [BL] Сервер 17"
     type: vless
     server: 45.141.118.232
     port: 7443
@@ -225,42 +209,27 @@ proxies:
     reality-opts:
       public-key: "0BVxZKOt6wO0jIB1xRkAAtaFUkmyFAbVWfkkKSJBfEI"
       short-id: "570ffeb12f6e4635"
-  - name: "🇬🇧 [BL] Сервер 19"
+  - name: "🇬🇧 [BL] Сервер 18"
     type: vless
-    server: 51.38.71.147
-    port: 8443
-    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
-    network: "raw"
-    servername: "node-uk.connectsuite.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇬🇧 [BL] Сервер 20"
-    type: vless
-    server: 23.81.36.148
-    port: 1222
-    uuid: "36c3dcc2-17b6-4478-b8a7-3978e6d5afe9"
+    server: sql.popmintxo.cc
+    port: 443
+    uuid: "d806a58b-33aa-42e0-b170-395e49c16b37"
     network: "tcp"
-    servername: "play.google.com"
+    flow: "xtls-rprx-vision"
+    servername: "www.microsoft.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "zpLKK8HuwXJDH9D0O3t5Z_tO3ajkj7VRtXdr6UGy1zE"
-      short-id: "a25d0f"
-  - name: "🇬🇧 [BL] Сервер 21"
-    type: ss
-    server: 158.173.24.73
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇬🇧 [BL] Сервер 22"
+      public-key: "Y0noOXC8qHmbM0GmDpj-9BBwKSOtHs-uMbNfKU050GQ"
+      short-id: "b558b9305a0b"
+  - name: "🇬🇧 [BL] Сервер 19"
     type: ss
     server: 149.102.132.184
     port: 80
     password: "g5h5jleTRSyO3Rk4"
     cipher: "aes-256-gcm"
-  - name: "🇬🇧 [BL] Сервер 23"
+  - name: "🇬🇧 [BL] Сервер 20"
     type: ss
     server: 94.156.250.148
     port: 7001
