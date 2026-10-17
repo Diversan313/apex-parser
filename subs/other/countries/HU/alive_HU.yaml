@@ -1,5 +1,18 @@
 proxies:
-  - name: "🇭🇺 [BL] Сервер 1"
+  - name: "🇭🇺 [WL] Сервер 1"
+    type: vless
+    server: 85.155.242.37
+    port: 443
+    uuid: "6338c01a-310e-42c3-bf4f-2a20e161054b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "hu1.aiage.work"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "mPzNFHO4pZMzFviRkIhRd7xDUz4dMHyI-flZLOrgDVg"
+      short-id: "f8379ce795f2e5ed"
+  - name: "🇭🇺 [BL] Сервер 2"
     type: vless
     server: hu1.aiage.work
     port: 443
@@ -8,20 +21,6 @@ proxies:
     flow: "xtls-rprx-vision"
     servername: "hu1.aiage.work"
     client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mPzNFHO4pZMzFviRkIhRd7xDUz4dMHyI-flZLOrgDVg"
-      short-id: "f8379ce795f2e5ed"
-  - name: "🇭🇺 [BL] Сервер 2"
-    type: vless
-    server: 85.155.242.37
-    port: 443
-    uuid: "6338c01a-310e-42c3-bf4f-2a20e161054b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "hu1.aiage.work"
-    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -43,12 +42,13 @@ proxies:
       short-id: "f8379ce795f2e5ed"
   - name: "🇭🇺 [BL] Сервер 4"
     type: vless
-    server: 85.155.242.38
+    server: 85.155.242.39
     port: 443
     uuid: "6338c01a-310e-42c3-bf4f-2a20e161054b"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "hu1.aiage.work"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -56,7 +56,7 @@ proxies:
       short-id: "f8379ce795f2e5ed"
   - name: "🇭🇺 [BL] Сервер 5"
     type: vless
-    server: 85.155.242.39
+    server: 85.155.242.38
     port: 443
     uuid: "6338c01a-310e-42c3-bf4f-2a20e161054b"
     network: "tcp"
