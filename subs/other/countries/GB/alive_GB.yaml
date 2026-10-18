@@ -1,19 +1,33 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
+    server: 213.176.92.168
+    port: 10444
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [WL] Сервер 2"
+    type: vless
     server: 193.188.21.253
     port: 10444
     uuid: "57f7772d-f5d6-4d8f-992d-5fa5e0d6da55"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "video.yandex.ru"
-    client-fingerprint: "safari"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 2"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: node-uk.connectsuite.org
     port: 8443
@@ -23,17 +37,21 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
-    server: 51.38.71.147
-    port: 8443
-    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
+    server: 50.7.154.75
+    port: 443
+    uuid: "082f5694-9019-4110-b67b-8125dbb9bab8"
     network: "tcp"
-    servername: "node-uk.connectsuite.org"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediasvyaz.cc"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 4"
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -47,19 +65,6 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 5"
-    type: vless
-    server: 144.48.11.97
-    port: 43000
-    uuid: "4799abf0-d0d9-4a46-9c31-b1f76ae00e1e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "144.48.11.97"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lmT0SFJL1A8_ariRWL65dhShaqFbpitjGanv7EFnoR0"
-      short-id: "725e6ea0"
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: api.mediasvyaz.cc
@@ -76,18 +81,17 @@ proxies:
       short-id: "a8"
   - name: "🇬🇧 [BL] Сервер 7"
     type: vless
-    server: 50.7.154.75
-    port: 443
-    uuid: "082f5694-9019-4110-b67b-8125dbb9bab8"
+    server: 144.48.11.97
+    port: 43000
+    uuid: "4799abf0-d0d9-4a46-9c31-b1f76ae00e1e"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "api.mediasvyaz.cc"
-    client-fingerprint: "firefox"
+    servername: "144.48.11.97"
     udp: true
     tls: true
     reality-opts:
-      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
-      short-id: "a8"
+      public-key: "lmT0SFJL1A8_ariRWL65dhShaqFbpitjGanv7EFnoR0"
+      short-id: "725e6ea0"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 94.183.179.110
