@@ -1,6 +1,20 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
+    server: 193.188.21.253
+    port: 10444
+    uuid: "57f7772d-f5d6-4d8f-992d-5fa5e0d6da55"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [WL] Сервер 2"
+    type: vless
     server: 213.176.92.168
     port: 10444
     uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
@@ -13,7 +27,16 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 2"
+  - name: "🇬🇧 [BL] Сервер 3"
+    type: vless
+    server: node-uk.connectsuite.org
+    port: 8443
+    uuid: "c08f0056-7a6d-4931-813b-aaa3cdd00aed"
+    network: "tcp"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -27,42 +50,15 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 3"
-    type: vless
-    server: 50.7.193.147
-    port: 443
-    uuid: "21eb369d-fb91-4e25-ae1f-4b7c8054aa5e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "apiv12nd.goonars.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "OINuDFEDTdmtFR8QRxAZfQIMPA-wJxfGN1LjB3TFUHo"
-      short-id: "535a3304"
-  - name: "🇬🇧 [BL] Сервер 4"
-    type: vless
-    server: match.betust.net
-    port: 443
-    uuid: "21eb369d-fb91-4e25-ae1f-4b7c8054aa5e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "apiv12nd.goonars.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "OINuDFEDTdmtFR8QRxAZfQIMPA-wJxfGN1LjB3TFUHo"
-      short-id: "535a3304"
   - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 144.48.11.97
     port: 43000
     uuid: "4799abf0-d0d9-4a46-9c31-b1f76ae00e1e"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "144.48.11.97"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -70,18 +66,33 @@ proxies:
       short-id: "725e6ea0"
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
-    server: tun2.w-ert.org
-    port: 44512
-    uuid: "2a1acb4b-fe6e-487c-ac63-c83b84c657ac"
+    server: 50.7.193.147
+    port: 443
+    uuid: "21eb369d-fb91-4e25-ae1f-4b7c8054aa5e"
     network: "raw"
-    servername: "www.aparat.com"
-    client-fingerprint: "chrome"
+    flow: "xtls-rprx-vision"
+    servername: "apiv12nd.goonars.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "woId47r1U8pEuDwHoC026bJHVWha2RHjufq1Kw3QoRU"
-      short-id: "ca4134a0ed2592b6"
+      public-key: "OINuDFEDTdmtFR8QRxAZfQIMPA-wJxfGN1LjB3TFUHo"
+      short-id: "535a3304"
   - name: "🇬🇧 [BL] Сервер 7"
+    type: vless
+    server: match.betust.net
+    port: 443
+    uuid: "21eb369d-fb91-4e25-ae1f-4b7c8054aa5e"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "apiv12nd.goonars.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "OINuDFEDTdmtFR8QRxAZfQIMPA-wJxfGN1LjB3TFUHo"
+      short-id: "535a3304"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 193.142.59.97
     port: 10829
@@ -92,7 +103,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 8"
+  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: s1243.sspcccdn.xyz
     port: 10829
@@ -103,7 +114,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 9"
+  - name: "🇬🇧 [BL] Сервер 10"
     type: vless
     server: s1244.csgfw.top
     port: 10829
@@ -114,35 +125,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇬🇧 [BL] Сервер 10"
-    type: vless
-    server: 205.237.110.254
-    port: 443
-    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "zsit.eu-cdn294.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IG6lxrx_xkGOoBuo3DC8sgQoIFmqVgznIr0qOuNO0w4"
-      short-id: "cd2d53510b4df2a8"
   - name: "🇬🇧 [BL] Сервер 11"
-    type: vless
-    server: qqa7um.orbita.dpdns.org
-    port: 443
-    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "zsit.eu-cdn294.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IG6lxrx_xkGOoBuo3DC8sgQoIFmqVgznIr0qOuNO0w4"
-      short-id: "cd2d53510b4df2a8"
-  - name: "🇬🇧 [BL] Сервер 12"
     type: vless
     server: node.remnagecsp.ru
     port: 7443
@@ -156,7 +139,7 @@ proxies:
     reality-opts:
       public-key: "0BVxZKOt6wO0jIB1xRkAAtaFUkmyFAbVWfkkKSJBfEI"
       short-id: "570ffeb12f6e4635"
-  - name: "🇬🇧 [BL] Сервер 13"
+  - name: "🇬🇧 [BL] Сервер 12"
     type: vless
     server: 45.141.118.232
     port: 7443
@@ -170,7 +153,7 @@ proxies:
     reality-opts:
       public-key: "0BVxZKOt6wO0jIB1xRkAAtaFUkmyFAbVWfkkKSJBfEI"
       short-id: "570ffeb12f6e4635"
-  - name: "🇬🇧 [BL] Сервер 14"
+  - name: "🇬🇧 [BL] Сервер 13"
     type: vless
     server: 104.238.2.82
     port: 443
@@ -184,7 +167,7 @@ proxies:
     reality-opts:
       public-key: "Y0noOXC8qHmbM0GmDpj-9BBwKSOtHs-uMbNfKU050GQ"
       short-id: "b558b9305a0b"
-  - name: "🇬🇧 [BL] Сервер 15"
+  - name: "🇬🇧 [BL] Сервер 14"
     type: vless
     server: sql.popmintxo.cc
     port: 443
@@ -198,7 +181,7 @@ proxies:
     reality-opts:
       public-key: "Y0noOXC8qHmbM0GmDpj-9BBwKSOtHs-uMbNfKU050GQ"
       short-id: "b558b9305a0b"
-  - name: "🇬🇧 [BL] Сервер 16"
+  - name: "🇬🇧 [BL] Сервер 15"
     type: vless
     server: 94.183.179.104
     port: 443
@@ -211,3 +194,17 @@ proxies:
     tls: true
     reality-opts:
       public-key: "HHX5iyvO_3jcj3lKvrpguT4wQSuPiRSmRo-5YeYuIjw"
+  - name: "🇬🇧 [BL] Сервер 16"
+    type: vless
+    server: qqa7um.orbita.dpdns.org
+    port: 443
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "zsit.eu-cdn294.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "IG6lxrx_xkGOoBuo3DC8sgQoIFmqVgznIr0qOuNO0w4"
+      short-id: "cd2d53510b4df2a8"
