@@ -1,6 +1,20 @@
 proxies:
   - name: "🇨🇦 [BL] Сервер 1"
     type: vless
+    server: 212.134.252.249
+    port: 15407
+    uuid: "b2332eff-b231-4c10-8552-5dfad84f5521"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qO5TgVOZ6xTBvxe9_1mByF5yx4ViCuGPsDaJRvAUTBE"
+      short-id: "48ebac29ede6e8f3"
+  - name: "🇨🇦 [BL] Сервер 2"
+    type: vless
     server: 209.200.246.148
     port: 443
     uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
@@ -12,17 +26,23 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 198.100.154.175
-    port: 8080
-    uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: ss
+    server: 51.222.141.125
+    port: 445
+    password: "zDNVedRFPQexG9v"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: ss
+    server: 51.222.200.165
+    port: 5000
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 5"
+    type: vmess
+    server: 134.195.196.211
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
-      short-id: "4b"
