@@ -142,6 +142,16 @@ jobs:
       - name: Run Parser Script
         run: python -m apex.parser
 
+      # Полный per-source отчёт не пишем в лог (топит его), а выкладываем
+      # артефактом — доступен на странице прогона.
+      - name: Upload sources report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sources-report
+          path: logs/sources_report.txt
+          if-no-files-found: ignore
+
       - name: Sync apex-sources
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -154,7 +164,13 @@ jobs:
             exit 0
           fi
 
-          git clone https://$GH_PAT@github.com/Diversan313/apex-sources.git temp_src
+          # Токен в заголовке, а не в URL: при 301-редиректе git выбрасывает
+          # userinfo из URL, и клон приватного репо уходит анонимно (exit 128).
+          # extraheader переживает редиректы; clone -c кладёт его в конфиг
+          # клона — fetch/pull/push внутри temp_src наследуют авторизацию.
+          git clone \
+            -c "http.https://github.com/.extraheader=Authorization: Basic $(printf 'x-access-token:%s' "$GH_PAT" | base64 | tr -d '\n')" \
+            https://github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
 
           git fetch origin main
@@ -310,6 +326,7 @@ jobs:
           if [ "$success" = false ]; then
             echo "⚠️ Warning: Failed to push to GitVerse after $max_retries attempts. Continuing workflow..."
           fi
+
 
 
 
