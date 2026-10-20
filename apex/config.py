@@ -7,7 +7,7 @@ import ipaddress
 
 # Пути и файлы
 WHITE_IP_FILE = "white_ip.txt"
-WHITE_IP_URL = "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"  # пусто = локал white_ip.txt
+WHITE_IP_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/refs/heads/main/cidrwhitelist.txt"  # пусто = локал white_ip.txt
 MMDB_PATH = "GeoLite2-Country.mmdb"
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
