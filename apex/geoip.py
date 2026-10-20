@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 import socket
 import json
+import time
 import ipaddress
 import urllib.request
 from typing import Optional
@@ -161,23 +162,25 @@ def resolve_host_cached(clean_host: str):
     except ValueError:
         pass
 
+    # getaddrinfo, а не gethostbyname: bounded-патч из netlimit
+    # ограничивает только getaddrinfo — gethostbyname висел дольше
+    # DNS_RESOLVE_TIMEOUT и тянул стадии без нашего контроля
     try:
-        ip = socket.gethostbyname(
-            clean_host
-        )
-
-        ip_obj = ipaddress.ip_address(
-            ip
-        )
-
-        resolved_ip = (
-            ip
-            if ip_obj.is_global
-            else None
-        )
-
+        infos = socket.getaddrinfo(clean_host, None)
     except Exception:
         resolved_ip = None
+    else:
+        resolved_ip = None
+        # IPv4 в приоритете: белые базы и CF-подсети в основном IPv4
+        infos.sort(key=lambda t: 0 if t[0] == socket.AF_INET else 1)
+        for info in infos:
+            try:
+                ip_obj = ipaddress.ip_address(info[4][0])
+            except ValueError:
+                continue
+            if ip_obj.is_global:
+                resolved_ip = info[4][0]
+                break
 
     with DNS_LOCK:
         DNS_CACHE[
@@ -185,6 +188,74 @@ def resolve_host_cached(clean_host: str):
         ] = resolved_ip
 
     return resolved_ip
+
+
+def resolve_hosts_bulk(
+    hosts,
+    workers: int = None,
+    deadline_s: float = None,
+) -> int:
+    """
+    Параллельный прогрев DNS-кэша для списка хостов.
+
+    Резолв собран в одну волну с жёстким потолком: классификация и
+    CF-фильтр дальше берут адреса только из кэша и не ходят в сеть из
+    последовательных циклов по всем кандидатам. Мёртвые домены не должны
+    растягивать прогон — после deadline_s неотправленные хосты
+    пропускаются (у них просто не будет DNS-уровня матчинга).
+    Возвращает число успешно резолвнутых хостов.
+    """
+    from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+
+    uniq = [h for h in dict.fromkeys(hosts) if h]
+    if not uniq:
+        return 0
+
+    workers = workers or config.DNS_BULK_WORKERS
+    budget = deadline_s if deadline_s is not None else config.DNS_BULK_DEADLINE
+    deadline = time.monotonic() + budget
+
+    resolved = 0
+    submitted = 0
+    done_reported = 0
+    print(f"🌐 DNS-прогрев: {len(uniq)} уникальных хостов (потоков: {workers})...")
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        pending = set()
+        it = iter(uniq)
+
+        # скользящее окно: очередь в pool держим короткой, чтобы дедлайн
+        # обрезал только неотправленный хвост
+        for _ in range(workers * 2):
+            h = next(it, None)
+            if h is None:
+                break
+            pending.add(pool.submit(resolve_host_cached, h))
+            submitted += 1
+
+        while pending and time.monotonic() < deadline:
+            done_futs, pending = wait(pending, timeout=1.0, return_when=FIRST_COMPLETED)
+            for fut in done_futs:
+                try:
+                    if fut.result():
+                        resolved += 1
+                except Exception:
+                    pass
+                done_reported += 1
+                if done_reported % 2000 == 0:
+                    print(f"   🌐 DNS: готово {done_reported}/{len(uniq)}")
+                h = next(it, None)
+                if h is not None:
+                    pending.add(pool.submit(resolve_host_cached, h))
+                    submitted += 1
+
+    # хвост pending короткий: каждый резолв ограничен DNS_RESOLVE_TIMEOUT,
+    # exit из пула ждёт его сам
+    skipped = len(uniq) - submitted
+    if skipped > 0:
+        print(f"   ⚠️ DNS-прогрев: {skipped} хостов пропущены по дедлайну {int(budget)}с")
+    print(f"✅ DNS-прогрев завершён: резолвнуто {resolved}/{len(uniq)}")
+    return resolved
 
 
 # ============================================================

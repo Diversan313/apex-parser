@@ -1,6 +1,8 @@
 """Классификация конфигов: WL / BL по keywords, SNI, RU. AI / Torrent."""
 from __future__ import annotations
 
+import bisect
+import ipaddress
 import re
 import random
 import urllib.parse
@@ -13,6 +15,8 @@ from .config import (
     TORRENT_KEYWORDS_REGEX,
     TORRENT_NEGATIVE_REGEX,
     RU_SNI_RATIO,
+    DNS_CACHE,
+    DNS_LOCK,
 )
 from .sni_whitelist import link_has_whitelisted_sni, is_sni_in_mobile_whitelist
 from .parse import (
@@ -89,24 +93,98 @@ def is_ru_sni(link: str) -> bool:
     return False
 
 
-def _host_in_white_ips(link: str, white_ips: set) -> bool:
+def build_white_network_index(networks: list) -> tuple:
     """
-    Быстрая проверка: хост или SNI из ссылки прямо в white_ips.
-    Без DNS — на 100k кандидатов это секунды, а не часы.
+    CIDR-строки white_ip.txt → индекс для быстрой проверки вхождения.
+
+    Сортированные и слитые интервалы (start, end) по версиям IP: bisect
+    требует непересекающихся интервалов, иначе перекрытие подсетей даёт
+    ложные промахи. Большой список подсетей не должен превращаться в
+    линейный скан на каждом конфиге.
     """
-    if not white_ips:
+    def _build(version: int):
+        ranges = []
+        for net in networks or []:
+            try:
+                n = ipaddress.ip_network(str(net).strip(), strict=False)
+            except ValueError:
+                continue
+            if n.version != version:
+                continue
+            ranges.append((int(n.network_address), int(n.broadcast_address)))
+        merged = []
+        for start, end in sorted(ranges):
+            if merged and start <= merged[-1][1] + 1:
+                merged[-1][1] = max(merged[-1][1], end)
+            else:
+                merged.append([start, end])
+        starts = [m[0] for m in merged]
+        ends = [m[1] for m in merged]
+        return (starts, ends)
+
+    return (_build(4), _build(6))
+
+
+def ip_in_white_networks(ip_str: str, white_net_index: tuple) -> bool:
+    """IP внутри какой-либо подсети белой базы? (bisect по интервалам)"""
+    if not white_net_index:
+        return False
+    try:
+        ip_obj = ipaddress.ip_address(str(ip_str).strip())
+    except ValueError:
+        return False
+    starts, ends = white_net_index[0] if ip_obj.version == 4 else white_net_index[1]
+    i = bisect.bisect_right(starts, int(ip_obj)) - 1
+    return i >= 0 and ends[i] >= int(ip_obj)
+
+
+def host_in_white_ips(link: str, white_ips: set, white_net_index: tuple = None) -> bool:
+    """
+    Хост или SNI из ссылки в белой базе.
+
+    Уровни:
+    - строковое совпадение с white_ips (литеральные IP и резолвнутые
+      домены из файла);
+    - литеральный IP-хост в CIDR-подсетях базы;
+    - домен: адрес берём только из DNS-кэша. Сама классификация в сеть
+      не ходит — резолв выполняется заранее пачкой (geoip.resolve_hosts_bulk),
+      иначе последовательные DNS-запросы на десятках тысяч кандидатов
+      растягивали бы прогон на часы.
+    """
+    if not white_ips and not white_net_index:
         return False
 
-    from .parse import parse_host_port_and_name, extract_sni_from_link
     host, _, _ = parse_host_port_and_name(link)
+    candidates = []
     if host:
-        clean = host.strip('[] \t\r\n\'"').lower()
-        if clean in white_ips:
-            return True
-
+        candidates.append(host.strip('[] \t\r\n\'"').lower())
     sni = extract_sni_from_link(link)
-    if sni and sni.lower() in white_ips:
-        return True
+    if sni:
+        candidates.append(sni.lower())
+
+    for cand in candidates:
+        if not cand:
+            continue
+        if cand in white_ips:
+            return True
+        # литеральный IP проверяем в подсетях сразу, без DNS
+        try:
+            ipaddress.ip_address(cand)
+        except ValueError:
+            pass
+        else:
+            if ip_in_white_networks(cand, white_net_index):
+                return True
+            continue
+        # домен: берём адрес из кэша, если он был прогрет; без кэша
+        # сетевого резолва здесь нет — прогон не должен висеть на DNS
+        with DNS_LOCK:
+            resolved = DNS_CACHE.get(cand)
+        if resolved and (
+            resolved in white_ips
+            or ip_in_white_networks(resolved, white_net_index)
+        ):
+            return True
 
     return False
 
@@ -115,10 +193,12 @@ def classify_config(
     link: str,
     white_ips: set,
     ru_sni_ratio: float = RU_SNI_RATIO,
+    white_net_index: tuple = None,
 ) -> str:
 
-    # 1. IP из white_ip.txt
-    if _host_in_white_ips(link, white_ips):
+    # 1. IP/подсеть из white_ip.txt: строка хоста/SNI, резолв домена
+    #    из DNS-кэша или вхождение в CIDR-подсеть базы
+    if host_in_white_ips(link, white_ips, white_net_index):
         return "WL"
 
     host, _, orig_name = parse_host_port_and_name(link)
@@ -182,8 +262,9 @@ def _query_insecure(params: dict) -> bool:
         val = str(params.get(key, [""])[0] or "").strip().lower()
         if val in _TRUE_VALUES:
             return True
-    # verify=0 встречается в ссылках с серверной валидацией сертификата
-    return str(params.get("verify", [""])[0] or "").strip() == "0"
+    # verify=0/false/no/off отключает серверную валидацию сертификата
+    verify_val = str(params.get("verify", [""])[0] or "").strip().lower()
+    return verify_val in ("0", "false", "no", "off")
 
 
 def _ss_method_and_password(link: str):

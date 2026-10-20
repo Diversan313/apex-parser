@@ -25,7 +25,6 @@ from .config import (
     SOCKET_DEFAULT_TIMEOUT,
     SOURCE_FETCH_RETRIES,
     SOURCE_FETCH_DEADLINE,
-    MAX_WORKERS,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
     DECRYPT_HAPP,
@@ -41,6 +40,7 @@ from .xray import xray_outbound_to_link
 from .utils import happ
 from .utils.kameleon import fetch_kameleon
 from .utils.netlimit import install_network_limits, read_bounded
+from .utils.converters import foreign_yaml_to_links, singbox_outbound_to_link
 
 # Дефолт для сокетов, которым не задан явный таймаут.
 # DNS это НЕ ограничивает: getaddrinfo — системный вызов, его потолок
@@ -91,10 +91,12 @@ def extract_configs_from_json_text(content: str) -> list:
 
         remarks = obj.get("remarks") or root_remarks
 
-        # Полный Xray config: берём только outbounds, внутрь settings не лезем повторно
+        # Полный Xray config: берём только outbounds, внутрь settings не лезем повторно.
+        # Подмешиваем и sing-box outbounds (type+server) — Xray-конвертер их
+        # не узнаёт, а реальные подписки в sing-box JSON приходят часто.
         if isinstance(obj.get("outbounds"), list):
             for ob in obj["outbounds"]:
-                link = xray_outbound_to_link(ob)
+                link = xray_outbound_to_link(ob) or singbox_outbound_to_link(ob)
                 if not link:
                     continue
                 if remarks and "#" in link:
@@ -259,11 +261,17 @@ def _is_transient_error(e: Exception) -> bool:
     return False
 
 
-def _extract_subscription_configs(content: str, info: dict, _depth: int = 0) -> list:
+def _extract_subscription_configs(
+    content: str, info: dict, _depth: int = 0, _deadline: float = None
+) -> list:
     """
     Вытаскивает конфиги из текста подписки всеми способами:
     plain / base64 / JSON / base64-JSON / happ://crypt*.
     Заполняет флаги формата в info, возвращает список конфигов.
+
+    _deadline — общий с родительским источником бюджет на happ-вложенности.
+    Без параметра ветка ниже обращалась к несуществующему имени и
+    молча теряла все конфиги источника, в котором есть happ-ссылки.
     """
     stripped = content.strip()
     valid_configs = []
@@ -316,11 +324,23 @@ def _extract_subscription_configs(content: str, info: dict, _depth: int = 0) -> 
                 if c not in valid_configs:
                     valid_configs.append(c)
 
+    # 3b) Clash/Mihomo YAML (proxies:) и sing-box в YAML-обёртке (outbounds:)
+    # — конвертация в share-ссылки. Дешёлая проверка маркера не даёт
+    # гонять YAML-парсер по обычным plain/base64 подпискам.
+    if not valid_configs and ("proxies:" in content or "outbounds:" in content):
+        yaml_configs = foreign_yaml_to_links(content)
+        if yaml_configs:
+            valid_configs = yaml_configs
+            info["is_yaml"] = True
+
     # 4) happ://crypt* — зашифрованные ссылки на подписки:
     #    расшифровываем → URL подписки → качаем её как вложенный источник.
     #    Дедлайн общий с родителем: десяток happ-ссылок не должен
     #    умножать бюджет источника.
     if DECRYPT_HAPP and "happ://" in content and _depth == 0:
+        # самостоятельные вызовы (тесты) идут со стандартным бюджетом источника
+        if _deadline is None:
+            _deadline = time.monotonic() + SOURCE_FETCH_DEADLINE
         for h_link in happ.extract_happ_links(content):
             sub_url = happ.happ_link_to_subscription_url(h_link)
             if not sub_url:
@@ -360,6 +380,7 @@ def fetch_single_url_with_details(
         "size_bytes": 0,
         "is_base64": False,
         "is_json": False,
+        "is_yaml": False,
         "is_expired": False,
         "happ_decrypted": 0,
         "kameleon": False,
@@ -462,7 +483,7 @@ def fetch_single_url_with_details(
         return info
 
     try:
-        valid_configs = _extract_subscription_configs(content, info, _depth)
+        valid_configs = _extract_subscription_configs(content, info, _depth, _deadline)
 
         # Kameleon: источник скачался, но конфигов не отдал (пустышка/мусор)
         # - маскируемся под клиентов, пока какая-то личность не вытащит подписку.
@@ -476,7 +497,7 @@ def fetch_single_url_with_details(
                 info["is_base64"] = False
                 info["is_json"] = False
                 info["total_lines"] = 0
-                kconfigs = _extract_subscription_configs(kcontent, info, _depth + 1)
+                kconfigs = _extract_subscription_configs(kcontent, info, _depth + 1, _deadline)
                 if kconfigs:
                     valid_configs = kconfigs
                     info["kameleon"] = True
@@ -623,8 +644,10 @@ def fetch_links_parallel_with_source(
                 f"  ↺ Повтор сети для "
                 f"{len(retry_idxs)} источник(ов)..."
             )
+            # повтор идёт с полной шириной первого прохода: медленный retry
+            # растягивал хвост прогона на десятки минут
             with ThreadPoolExecutor(
-                max_workers=MAX_WORKERS
+                max_workers=SOURCE_FETCH_WORKERS
             ) as executor:
                 futures2 = {
                     executor.submit(
@@ -650,8 +673,16 @@ def fetch_links_parallel_with_source(
                 idx, ("err", "нет ответа")
             )
 
-            res = payload if kind == "ok" else None
-            configs = (res or {}).get("configs") or []
+            # упавший поток задачи не должен обрывать отчёт:
+            # у такого результата нет полей, конфиги остальных источников терять нельзя
+            if kind != "ok" or not isinstance(payload, dict):
+                special_lines.append(
+                    f"  ├─ ❌ Источник #{idx:<3} | ОШИБКА | {payload}"
+                )
+                continue
+
+            res = payload
+            configs = res.get("configs") or []
 
             if res.get("http_status") in (200, 204) or configs:
                 successful_sources += 1
@@ -667,6 +698,8 @@ def fetch_links_parallel_with_source(
                 fmt_parts.append("Base64")
             if res.get("is_json"):
                 fmt_parts.append("JSON")
+            if res.get("is_yaml"):
+                fmt_parts.append("YAML")
             if res.get("happ_decrypted"):
                 fmt_parts.append(f"Happ:{res['happ_decrypted']}")
             if res.get("kameleon"):
@@ -680,26 +713,23 @@ def fetch_links_parallel_with_source(
                 else ""
             )
             line = (
-                f"  ├─ {'❌' if kind == 'err' or not configs else '🔗'} Источник #{idx:<3} | "
+                f"  ├─ {'❌' if not configs else '🔗'} Источник #{idx:<3} | "
                 f"Статус: {status_str:<10} | "
-                f"Размер: {fmt_bytes(res.get('size_bytes', 0)) if res else '0B'} | "
+                f"Размер: {fmt_bytes(res.get('size_bytes', 0))} | "
                 f"Конфигов: {len(configs)}"
                 f"{fmt_str}{err_str}"
-                if kind == "ok"
-                else f"  ├─ ❌ Источник #{idx:<3} | ОШИБКА | {payload}"
             )
 
             # проблемные/особые - буферизуем, обычные печатаем сразу
-            if kind == "err" or not configs or fmt_parts:
+            if not configs or fmt_parts:
                 special_lines.append(line)
             else:
                 print(line)
 
-            if res:
-                for cfg_ in configs:
-                    links_with_source.append(
-                        (cfg_, f"src#{idx}")
-                    )
+            for cfg_ in configs:
+                links_with_source.append(
+                    (cfg_, f"src#{idx}")
+                )
 
         for line in special_lines:
             print(line)

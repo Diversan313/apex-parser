@@ -53,11 +53,17 @@ jobs:
 
       - name: Fetch White IP
         run: |
-          # Public apex-white-ip — без токена
-          curl --retry 5 --retry-delay 3 --retry-all-errors -L \
-               -o white_ip.txt \
-               "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt" \
-            || touch white_ip.txt
+          # Public apex-white-ip — без токена. Качаем во временный файл:
+          # при сбое curl не затираем white_ip.txt из checkout, иначе
+          # пустая база уезжает в коммит и WL-классификация остаётся без базы.
+          if curl --retry 5 --retry-delay 3 --retry-all-errors -L \
+               -o white_ip.txt.tmp \
+               "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"; then
+            mv white_ip.txt.tmp white_ip.txt
+          else
+            rm -f white_ip.txt.tmp
+            echo "White IP fetch failed — используем white_ip.txt из checkout"
+          fi
           echo "White IP lines: $(grep -cve '^\s*$' white_ip.txt 2>/dev/null || echo 0)"
 
       - name: Fetch Sources (private)

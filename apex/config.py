@@ -40,7 +40,7 @@ CHECKBONES_QUICK = True             # True = быстрый режим (без �
 
 # Sources
 SECURE_SOURCES_GITHUB = True        # скрыть сурса в приватном репо
-SPLIT_SOURCES = True                # True = sources_wl/bl, False = один sources.txt
+SPLIT_SOURCES = False               # True = sources_wl/bl, False = один sources.txt
 ENABLE_TG_SOURCES = True            # parser_tg.py и sources_tg.txt (нужны TG_API_ID / HASH / SESSION)
 DECRYPT_HAPP = True                 # расшифровывать happ://crypt* ссылки в источниках
 SOURCES_DIR = os.path.join("apex", "sources")  # локальные сурса при SECURE=False
@@ -56,6 +56,8 @@ SOURCE_FETCH_RETRIES = 1            # повторов транзиентных 
 SOURCE_FETCH_DEADLINE = 30          # сек, стенка на один источник (все попытки, redirect, Kameleon, happ)
 SOURCE_MAX_BYTES = 4 * 1024 * 1024  # потолок тела одной подписки
 DNS_RESOLVE_TIMEOUT = 5             # сек, потолок одного getaddrinfo
+DNS_BULK_WORKERS = 250              # потоков параллельного DNS-прогрева кэша
+DNS_BULK_DEADLINE = 600             # сек, жёсткий потолок стадии DNS-прогрева
 
 # Лимиты уникальности
 MAX_CONFIGS_PER_IP_WL = 5           # макс. конфигов на один IP в WL
@@ -126,7 +128,8 @@ RENAME_PREFIX_BL = "[BL]"           # тег конфигов чёрного с�
 RENAME_PREFIX_AI = "[AI]"           # тег всех конфигов в subs/other/AI/
 RENAME_PREFIX_CF = "[CF]"           # тег всех конфигов в subs/other/CF/
 RENAME_PREFIX_TORRENT = "[TR]"      # тег всех конфигов в subs/other/torrent/
-RENAME_CF_SUFFIX = "CF"             # суффикс "/CF" в теге для выходов через WARP (пусто = не показывать)
+RENAME_CF_SUFFIX = "CF"             # лейбл CF-статуса в теге: [WL/CF]; пусто = CF-статус не пишется
+RENAME_EXTRA_TAGS = True            # дописывать статусы AI/TR в теги всех списков: [WL/AI/TR]; CF-выход статус AI/TR не даёт
 # Плейсхолдеры: {flag} {tag} {index}
 # Пример: 🇳🇱 [WL] Сервер 12
 RENAME_TEMPLATE = "{flag} {tag} Сервер {index}"

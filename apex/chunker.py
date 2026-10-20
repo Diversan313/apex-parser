@@ -21,11 +21,12 @@ import subprocess
 import threading
 import time
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed, wait, FIRST_COMPLETED
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 
 from . import config as cfg
 from .config import MAX_WORKERS
+from .geoip import is_cloudflare_or_warp
 from .parse import parse_host_port_and_name
 from .utils import extract_clean_flag, cc_to_flag
 from .xray import (
@@ -200,6 +201,47 @@ def _build_chunk_config(outbounds: list, ports: list) -> dict:
 
 
 # ============================================================
+# WATCHDOG
+# ============================================================
+
+_CHUNK_LOCK = threading.Lock()
+_CHUNK_PROCS = {}  # chunk_id -> (start_time, Popen)
+
+
+def _register_chunk_proc(chunk_id, proc):
+    with _CHUNK_LOCK:
+        _CHUNK_PROCS[chunk_id] = (time.monotonic(), proc)
+
+
+def _unregister_chunk_proc(chunk_id):
+    with _CHUNK_LOCK:
+        _CHUNK_PROCS.pop(chunk_id, None)
+
+
+def kill_overdue_chunks(chunk_deadline: float) -> int:
+    """
+    Снимает Xray-процессы чанков, которые бегут дольше chunk_deadline.
+
+    Все операции проверки ограничены таймаутами, кроме связи worker'а
+    с самим ядром — её и рвём. После kill worker завершается по своим
+    дедлайнам, недостающие ссылки чанк отдаёт одиночному fallback'у.
+    Возвращает число снятых процессов.
+    """
+    killed = 0
+    with _CHUNK_LOCK:
+        for chunk_id, (started, proc) in list(_CHUNK_PROCS.items()):
+            if time.monotonic() - started <= chunk_deadline:
+                continue
+            try:
+                proc.kill()
+                killed += 1
+                print(f"   ⏱ Watchdog: чанк #{chunk_id} превысил {chunk_deadline:.0f}с — процесс Xray снят")
+            except Exception:
+                pass
+    return killed
+
+
+# ============================================================
 # ПРОГОН ОДНОГО ЧАНКА
 # ============================================================
 
@@ -264,7 +306,7 @@ def _wait_ports_parallel(ports: list, timeout: float) -> list:
     return opened
 
 
-def _test_chunk(links: list, min_success_count: int, timeout: float):
+def _test_chunk(links: list, min_success_count: int, timeout: float, chunk_id=None):
     """
     Один shared-Xray на чанк. Возвращает (results, started_all).
     Ссылки без вердикта не попадают в results — их заберёт fallback.
@@ -307,6 +349,9 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
+        # процесс в реестре до конца прогона чанка: watchdog должен
+        # иметь возможность снять зависший чанк
+        _register_chunk_proc(chunk_id, proc)
         proc.stdin.write(json.dumps(config, ensure_ascii=False).encode("utf-8"))
         proc.stdin.flush()
         proc.stdin.close()
@@ -355,6 +400,7 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
     except Exception:
         started_all = False
     finally:
+        _unregister_chunk_proc(chunk_id)
         if proc:
             try:
                 proc.terminate()
@@ -373,17 +419,23 @@ def _test_chunk(links: list, min_success_count: int, timeout: float):
 # ============================================================
 
 def _prefilter_tcp(items: list, results: dict) -> list:
-    """TCP pre-check до сборки чанка; hy2 пропускаем (UDP)."""
+    """
+    TCP pre-check до сборки чанка. hy2 сюда не попадают — их вынесло
+    на официальное ядро выше (QUIC, TCP-проверка бессмысленна).
+    """
     to_test = []
 
     def probe(item):
         link, _src = item
         host, port, _ = parse_host_port_and_name(link)
-        is_hy2 = link.startswith(("hysteria2://", "hy2://"))
         if not host or not port:
             return link, (False, None, "Некорректный формат хоста/порта", None, None, None)
-        if not is_hy2 and not tcp_port_open(host, port):
+        if not tcp_port_open(host, port):
             return link, (False, None, "TCP: порт закрыт/недоступен", None, None, None)
+        # тот же фильтр, что и в одиночном пути: чанкер не должен
+        # тестировать и публиковать то, что check_proxy_alive_detailed отсекает
+        if _cfg("REMOVE_CF_WARP", True) and is_cloudflare_or_warp(host):
+            return link, (False, None, "Отфильтрован (Cloudflare/WARP)", None, None, None)
         return None
 
     with ThreadPoolExecutor(max_workers=_cfg("TCP_PREFILTER_WORKERS", 60)) as pool:
@@ -423,7 +475,26 @@ def test_links_chunked(items: list, min_success_count: int):
                     pass
         return results
 
-    to_test = _prefilter_tcp(items, results)
+    # hy2 не идут в общий чанк: официальное ядро честнее тестирует их
+    # по UDP/QUIC (часть серверов Xray-клиентом не берётся) — тот же
+    # путь, что и в одиночном режиме, включая фильтр CF/WARP внутри
+    hy2_items = [it for it in items if it[0].startswith(("hysteria2://", "hy2://"))]
+    rest_items = [it for it in items if not it[0].startswith(("hysteria2://", "hy2://"))]
+
+    if hy2_items:
+        with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, len(hy2_items))) as ex:
+            futs = {
+                ex.submit(check_proxy_alive_detailed, link, min_success_count): link
+                for link, _src in hy2_items
+            }
+            for fut in as_completed(futs):
+                link = futs[fut]
+                try:
+                    results[link] = fut.result()
+                except Exception:
+                    pass
+
+    to_test = _prefilter_tcp(rest_items, results)
     if not to_test:
         return results
 
@@ -442,8 +513,8 @@ def test_links_chunked(items: list, min_success_count: int):
 
     results_lock = threading.Lock()
 
-    def run_chunk(chunk: list):
-        chunk_results, started_all = _test_chunk(chunk, min_success_count, timeout)
+    def run_chunk(chunk: list, chunk_id: int):
+        chunk_results, started_all = _test_chunk(chunk, min_success_count, timeout, chunk_id)
         missing = [l for l in chunk if l not in chunk_results]
         if missing:
             with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, len(missing))) as ex:
@@ -462,15 +533,28 @@ def test_links_chunked(items: list, min_success_count: int):
             tuner.adjust(len(chunk), started_all, len(missing))
         return len(chunk)
 
-    # параллельный прогон чанков
-    with ThreadPoolExecutor(max_workers=parallel) as pool:
-        futs = [pool.submit(run_chunk, c) for c in chunks]
-        # таймаут на чанк: старт + тест + запас
-        chunk_deadline = timeout * 3 + float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 2.5)) + 15.0
-        for fut in as_completed(futs):
-            try:
-                fut.result(timeout=chunk_deadline)
-            except Exception:
-                pass
+    # таймаут на чанк: старт + три попытки теста + запас. Enforcement —
+    # watchdog ниже: as_completed отдаёт только завершённые future,
+    # result(timeout) на них не срабатывает никогда
+    chunk_deadline = timeout * 3 + float(_cfg("XRAY_CHUNKER_START_TIMEOUT", 2.5)) + 15.0
+    stop_watch = threading.Event()
+
+    def _watchdog():
+        while not stop_watch.wait(5.0):
+            kill_overdue_chunks(chunk_deadline)
+
+    watchdog_thread = threading.Thread(target=_watchdog, daemon=True)
+    watchdog_thread.start()
+    try:
+        with ThreadPoolExecutor(max_workers=parallel) as pool:
+            futs = [pool.submit(run_chunk, chunk, idx) for idx, chunk in enumerate(chunks)]
+            for fut in as_completed(futs):
+                try:
+                    fut.result()
+                except Exception:
+                    pass
+    finally:
+        stop_watch.set()
+        watchdog_thread.join(timeout=2.0)
 
     return results

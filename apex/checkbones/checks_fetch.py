@@ -169,3 +169,62 @@ def check_happ_decrypt_roundtrip():
 
     url = happ.happ_link_to_subscription_url(enc_link)
     assert url == final.strip(), url
+
+
+def check_happ_deadline_no_crash():
+    # регрессия: happ-ветка ссылалась на _deadline вне сигнатуры —
+    # источник с happ-ссылками терял все свои конфиги
+    import time as _time
+    from apex.fetch import _extract_subscription_configs as _extract
+
+    info = {"is_base64": False, "is_json": False, "happ_decrypted": 0, "total_lines": 0}
+    link = "vless://u@1.2.3.4:443?type=tcp&security=tls#t1"
+    body = link + "\nhapp://crypt5/garbage-not-a-real-link\n"
+    got = _extract(body, info, 0)
+    assert len(got) == 1 and got[0].startswith("vless://"), got
+
+    # просроченный бюджет: вложенная подписка не качается, конфиги не теряются
+    info2 = {"is_base64": False, "is_json": False, "happ_decrypted": 0, "total_lines": 0}
+    got2 = _extract(body, info2, 0, _deadline=_time.monotonic() - 1)
+    assert len(got2) == 1 and got2[0].startswith("vless://"), got2
+
+
+def check_report_survives_failed_future():
+    # регрессия: упавший поток задачи (payload не dict) ронял отчётный
+    # цикл — конфиги всех источников после точки падения терялись
+    import os as _os
+    import tempfile as _tf
+    import apex.fetch as _fetch_mod
+
+    config_a = "vless://a@1.2.3.4:443?type=tcp&security=tls#a"
+    config_c = "vless://c@1.2.3.6:443?type=tcp&security=tls#c"
+    urls = ["http://one.invalid/a", "http://two.invalid/b", "http://three.invalid/c"]
+
+    def _stub(url, retries=1):
+        if url == urls[1]:
+            raise RuntimeError("worker crash")
+        cfg = config_a if url == urls[0] else config_c
+        return {
+            "url": url, "http_status": 200, "size_bytes": 10,
+            "is_base64": False, "is_json": False, "is_yaml": False,
+            "is_expired": False, "happ_decrypted": 0, "kameleon": False,
+            "total_lines": 1, "configs": [cfg], "error": None,
+            "network_error": False,
+        }
+
+    fd, path = _tf.mkstemp(suffix=".txt")
+    with _os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write("\n".join(urls) + "\n")
+
+    orig = _fetch_mod._fetch_source_bounded
+    _fetch_mod._fetch_source_bounded = _stub
+    try:
+        got = _fetch_mod.fetch_links_parallel_with_source(path)
+    finally:
+        _fetch_mod._fetch_source_bounded = orig
+        _os.remove(path)
+
+    sources = {src for _link, src in got}
+    assert "src#1" in sources and "src#3" in sources, got
+    assert "src#2" not in sources, got
+    assert len(got) == 2, got

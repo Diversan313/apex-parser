@@ -81,12 +81,21 @@ def update_source_file(target_file, tag_line, new_url):
 
 async def main():
     try:
-        from apex.config import ENABLE_TG_SOURCES
+        from apex.config import (
+            ENABLE_TG_SOURCES,
+            SPLIT_SOURCES,
+            SECURE_SOURCES_GITHUB,
+            SOURCES_DIR,
+        )
         if not ENABLE_TG_SOURCES:
             print("⚠️ ENABLE_TG_SOURCES=False — обновление TG-источников отключено.")
             return
     except ImportError:
-        pass  # модуль запущен вне пакета apex — ориентируемся только на env
+        # модуль запущен вне пакета apex — ориентируемся только на env:
+        # прежнее поведение с раздельными sources_wl/bl
+        SPLIT_SOURCES = True
+        SECURE_SOURCES_GITHUB = True
+        SOURCES_DIR = ""
 
     if not SESSION_STRING:
         print("⚠️ Переменная окружения не задана. Обновление отменено.")
@@ -95,6 +104,9 @@ async def main():
     if not os.path.exists(CONFIG_FILE):
         print(f"⚠️ Файл конфигурации не найден. Нечего обновлять.")
         return
+
+    # база путей — та же, по которой основной прогон ищет файлы источников
+    base = "" if SECURE_SOURCES_GITHUB else SOURCES_DIR
 
     print("🕵️ Подключаемся к Telegram...")
     async with TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH) as client:
@@ -106,14 +118,19 @@ async def main():
             if len(parts) < 4:
                 print("❌ Неверный формат в конфиге (нужно 4 параметра). Пропускаем.")
                 continue
-            
+
             topic_link = parts[0]
             target_list = parts[1].upper()
             tag = parts[2]
             keyword = parts[3]
-            
+
             tag_line = f"# TG:{tag}"
-            target_file = f"sources_{target_list.lower()}.txt"
+            if SPLIT_SOURCES:
+                target_file = os.path.join(base, f"sources_{target_list.lower()}.txt")
+            else:
+                # общий пул прогонов: метка и ссылка должны лежать в нём,
+                # иначе свежие TG-ссылки в прогон не попадают
+                target_file = os.path.join(base, "sources.txt")
 
             match = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', topic_link)
             if not match:

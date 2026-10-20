@@ -61,3 +61,45 @@ def check_autosize_sane():
     parallel = _auto_parallel_chunks()
     assert 1 <= parallel <= 8
     assert size <= _CHUNK_CAP if (_CHUNK_CAP := 64) else True
+
+
+def check_watchdog_kills_overdue_chunks():
+    # регрессия: таймаут на чанк через result(timeout) у as_completed
+    # не срабатывал никогда — watchdog обязан реально снимать процессы
+    from apex.chunker import (
+        _register_chunk_proc,
+        _unregister_chunk_proc,
+        kill_overdue_chunks,
+        _CHUNK_PROCS,
+    )
+
+    class _FakeProc:
+        def __init__(self):
+            self.killed = False
+
+        def kill(self):
+            self.killed = True
+
+    overdue = _FakeProc()
+    fresh = _FakeProc()
+    try:
+        _register_chunk_proc(901, overdue)
+        _register_chunk_proc(902, fresh)
+
+        # свежие чанки не трогаем
+        assert kill_overdue_chunks(3600.0) == 0
+        assert not overdue.killed and not fresh.killed
+
+        # просроченные — снимаем; реестр чистит сам чанк в finally,
+        # kill здесь не удаляет записи
+        assert kill_overdue_chunks(0.0) == 2
+        assert overdue.killed and fresh.killed
+        assert 901 in _CHUNK_PROCS and 902 in _CHUNK_PROCS
+
+        _unregister_chunk_proc(901)
+        _unregister_chunk_proc(902)
+        assert 901 not in _CHUNK_PROCS and 902 not in _CHUNK_PROCS
+        assert kill_overdue_chunks(0.0) == 0
+    finally:
+        _unregister_chunk_proc(901)
+        _unregister_chunk_proc(902)

@@ -19,7 +19,7 @@ from .config import (
     RU_SNI_RATIO,
 )
 from . import config as cfg
-from .geoip import init_geoip, is_cf_ip
+from .geoip import init_geoip, is_cf_ip, resolve_hosts_bulk
 from .sni_whitelist import init_sni_whitelist
 from .utils import safe_b64encode, safe_b64decode
 import ipaddress
@@ -33,6 +33,8 @@ from .parse import (
 from .geoip import is_valid_public_host
 from .classify import (
     classify_config,
+    build_white_network_index,
+    host_in_white_ips,
     is_unsafe_config,
     is_wl_by_keywords,
     is_bl_by_keywords,
@@ -191,11 +193,15 @@ def _cf_suffix(item):
     return ""
 
 
-def _wl_bl_tag_fn(wl_keys, with_cf=True):
+def _wl_bl_tag_fn(wl_keys, with_cf=True, ai_links=None, torrent_links=None):
     """
-    Тег по структурной принадлежности: [WL] / [BL], плюс '/CF'-суффикс,
-    если включён и выход - WARP/CF. with_cf=False даёт чистый [WL]/[BL]
-    для списков, которые сами гарантируют CF (subs/other/CF).
+    Тег по структурной принадлежности: [WL] / [BL], плюс доп-статусы
+    через "/" — AI/TR (RENAME_EXTRA_TAGS) и CF-выход (RENAME_CF_SUFFIX).
+    Все списки с структурными тегами собирают их одной функцией — правила
+    одни и те же везде. CF-выход статус AI/TR не даёт: через WARP
+    AI-сервисы и трекеры работают плохо — то же правило, что в самих
+    AI/TR списках. with_cf=False даёт тег без CF-статуса для списков,
+    которые сами гарантируют CF (subs/other/CF).
     """
     def tag(item):
         base = (
@@ -203,10 +209,20 @@ def _wl_bl_tag_fn(wl_keys, with_cf=True):
             if get_final_dedup_key(item[0]) in wl_keys
             else cfg.RENAME_PREFIX_BL
         )
-        if not with_cf:
-            return base
-        suffix = _cf_suffix(item)
-        return f"{base[:-1]}{suffix}]" if suffix else base
+        parts = [base.strip("[]")]
+
+        if cfg.RENAME_EXTRA_TAGS and not _is_cf_exit(item):
+            if ai_links is not None and item[0] in ai_links:
+                parts.append(cfg.RENAME_PREFIX_AI.strip("[]"))
+            if torrent_links is not None and item[0] in torrent_links:
+                parts.append(cfg.RENAME_PREFIX_TORRENT.strip("[]"))
+
+        if with_cf:
+            suffix = _cf_suffix(item)
+            if suffix:
+                parts.append(suffix.lstrip("/"))
+
+        return "[" + "/".join(parts) + "]"
     return tag
 
 
@@ -261,9 +277,9 @@ def main():
     # ========================================================
 
     download_white_ip()
-    white_ips = load_white_ips()
-    save_white_ips(white_ips)
-    print(f"💾 White IP база: {len(white_ips)} IP")
+    white_ips, white_networks = load_white_ips()
+    save_white_ips(white_ips, white_networks)
+    print(f"💾 White IP база: {len(white_ips)} IP, {len(white_networks)} подсетей")
 
     # ========================================================
     # 2. SOURCES
@@ -352,6 +368,21 @@ def main():
     )
 
     # ========================================================
+    # 5b. DNS-ПРОГРЕВ БЕЛОЙ БАЗЫ
+    # ========================================================
+    # Классификация и CF-фильтр дальше берут адреса только из кэша:
+    # одна параллельная волна с жёстким потолком вместо DNS-резолва
+    # в последовательных циклах по всем кандидатам.
+    white_net_index = build_white_network_index(white_networks)
+    if white_ips or white_networks:
+        warm_hosts = set()
+        for link, _src in clean_items:
+            h, _, _ = parse_host_port_and_name(link)
+            if h:
+                warm_hosts.add(h.strip('[] \t\r\n\'"').lower())
+        resolve_hosts_bulk(warm_hosts)
+
+    # ========================================================
     # 6. CLASSIFY FIRST + AI / TORRENT tags
     # ========================================================
 
@@ -394,6 +425,7 @@ def main():
             link,
             white_ips,
             RU_SNI_RATIO,
+            white_net_index,
         )
 
         if category == "WL":
@@ -454,19 +486,8 @@ def main():
 
         seen_wl.add(link)
 
-        matched_ip = None
-        from .parse import extract_sni_from_link
-        _host, _, _ = parse_host_port_and_name(link)
-        if _host:
-            _clean = _host.strip('[] \t\r\n\'"').lower()
-            if _clean in white_ips:
-                matched_ip = _clean
-        if not matched_ip:
-            _sni = extract_sni_from_link(link)
-            if _sni and _sni.lower() in white_ips:
-                matched_ip = _sni
-
-        if matched_ip:
+        # общий матчер белой базы: строка хоста/SNI, резолв из кэша, CIDR
+        if host_in_white_ips(link, white_ips, white_net_index):
             ping_wl.append(
                 (
                     link,
@@ -804,15 +825,28 @@ def main():
 
     final_wl = _build_renamed(
         alive_wl_clean,
-        _wl_bl_tag_fn(wl_keys),
+        _wl_bl_tag_fn(
+            wl_keys,
+            ai_links=ai_links,
+            torrent_links=torrent_links,
+        ),
     )
 
     final_bl = _build_renamed(
         alive_bl_clean,
-        _wl_bl_tag_fn(wl_keys),
+        _wl_bl_tag_fn(
+            wl_keys,
+            ai_links=ai_links,
+            torrent_links=torrent_links,
+        ),
     )
 
-    full_tag = _wl_bl_tag_fn(wl_keys)
+    # один и тот же тег для FULL, протоколов и континентов
+    full_tag = _wl_bl_tag_fn(
+        wl_keys,
+        ai_links=ai_links,
+        torrent_links=torrent_links,
+    )
 
     final_full = _build_renamed(
         alive_full_clean,
@@ -906,7 +940,11 @@ def main():
         for cc, items in sorted(by_cc.items()):
             final_cc = _build_renamed(
                 items,
-                _wl_bl_tag_fn(wl_keys),
+                _wl_bl_tag_fn(
+                    wl_keys,
+                    ai_links=ai_links,
+                    torrent_links=torrent_links,
+                ),
             )
             if not final_cc:
                 continue
