@@ -26,25 +26,23 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL/AI] Сервер 3"
-    type: ss
-    server: 51.222.141.125
-    port: 445
-    password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 4"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: 103.214.69.177
+    port: 443
+    uuid: "92295a0d-b610-4075-85e9-bfab09ec6f3a"
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: vmess
-    server: 23.162.200.198
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.unb.ca"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "5qe0MF8LdxPLFyPkyPkUdQs58rK9J7B0Q5TUj7tSnn4"
+      short-id: "654119f9d6f01dba"
+  - name: "🇨🇦 [BL] Сервер 4"
+    type: ss
+    server: 149.22.95.183
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
