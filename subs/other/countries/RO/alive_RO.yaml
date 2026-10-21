@@ -7,7 +7,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
@@ -35,7 +35,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "d1-ro.cloud-cdn.xyz"
-    client-fingerprint: "firefox"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
@@ -55,3 +55,39 @@ proxies:
     reality-opts:
       public-key: "byzvlw97wjAAAfHs5AZRV0P0H6_JKBEZ4yfLS0HNewE"
       short-id: "fe24f8a0a560056e"
+  - name: "🇷🇴 [BL] Сервер 5"
+    type: vless
+    server: 152.237.230.30
+    port: 443
+    uuid: "e3026ffb-cde6-4cfe-b4b7-f76d5264e969"
+    network: "tcp"
+    servername: "play.google.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9Wh7M-tz9D_1WBaQhz2wIJian960Ffcx66NH8HAidDI"
+      short-id: "61a0eb582ed4f2b5"
+  - name: "🇷🇴 [BL] Сервер 6"
+    type: trojan
+    server: de7.dedushka.top
+    port: 443
+    password: "4_VfP9fKaM-3LpSVvoZuc_WUzLoCdHaA"
+    sni: "de7.dedushka.top"
+    client-fingerprint: "firefox"
+    udp: true
+  - name: "🇷🇴 [BL] Сервер 7"
+    type: trojan
+    server: 188.241.241.49
+    port: 443
+    password: "4_VfP9fKaM-3LpSVvoZuc_WUzLoCdHaA"
+    sni: "de6.dedushka.top"
+    client-fingerprint: "firefox"
+    udp: true
+  - name: "🇷🇴 [BL] Сервер 8"
+    type: trojan
+    server: 188.241.241.200
+    port: 443
+    password: "4_VfP9fKaM-3LpSVvoZuc_WUzLoCdHaA"
+    sni: "de7.dedushka.top"
+    udp: true
