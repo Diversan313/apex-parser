@@ -1,26 +1,26 @@
 proxies:
   - name: "🇯🇵 [BL] Сервер 1"
     type: vless
-    server: pyygg0769.sys-metric-report.com
-    port: 52804
-    uuid: "2c8c4c3b-4616-400c-a2d4-f3669ea18fe9"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "japp.cfastcdn.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "cCwvNI8D-LX-kLH1IDuBZwnKkkyMPJm_0sJXsxz-_mA"
-      short-id: "68c4f6b0"
-  - name: "🇯🇵 [BL] Сервер 2"
-    type: vless
     server: 3.114.220.22
     port: 10583
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
+      short-id: "48050fab"
+  - name: "🇯🇵 [BL] Сервер 2"
+    type: vless
+    server: 103.75.118.228
+    port: 11452
+    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -55,20 +55,34 @@ proxies:
       public-key: "9ZCYjybxMQ7JpE39B8u_Bo-alI1LIbt5ER0E-4yMjiM"
       short-id: "ea36c03d86f91287"
   - name: "🇯🇵 [BL] Сервер 5"
-    type: ss
-    server: 149.22.87.204
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
+    type: vless
+    server: 155.254.103.179
+    port: 52804
+    uuid: "2c8c4c3b-4616-400c-a2d4-f3669ea18fe9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "japp.cfastcdn.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "cCwvNI8D-LX-kLH1IDuBZwnKkkyMPJm_0sJXsxz-_mA"
+      short-id: "68c4f6b0"
   - name: "🇯🇵 [BL] Сервер 6"
     type: ss
-    server: 149.22.87.241
+    server: 149.22.87.240
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇯🇵 [BL] Сервер 7"
     type: ss
-    server: 149.22.87.240
+    server: 149.22.87.241
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇯🇵 [BL] Сервер 8"
+    type: ss
+    server: 149.22.87.204
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
