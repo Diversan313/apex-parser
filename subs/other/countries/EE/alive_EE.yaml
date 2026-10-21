@@ -1,6 +1,19 @@
 proxies:
   - name: "🇪🇪 [WL] Сервер 1"
     type: vless
+    server: 87.242.95.164
+    port: 8445
+    uuid: "92e135b9-4c04-4e7e-8b28-d8074a202cf8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "passport.yandex.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "l06r0clkHjHk7HRGpkDBJwZ1JJscSqfwHUQOrV3v3hQ"
+  - name: "🇪🇪 [WL] Сервер 2"
+    type: vless
     server: 46.243.235.6
     port: 8445
     uuid: "92e135b9-4c04-4e7e-8b28-d8074a202cf8"
@@ -12,21 +25,21 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SPok5V2FC3pM6iTP7j2gpPQRqreGx73qvlWG1F2Efy0"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 93.89.220.37
     port: 443
     uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "ibm.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
       short-id: "e88cb983f3c97528"
-  - name: "🇪🇪 [BL] Сервер 3"
+  - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 132.243.66.17
     port: 443
@@ -40,17 +53,3 @@ proxies:
     reality-opts:
       public-key: "nH6ZEj8w9tsiRI7_0dco42KKil48EksTnuCs1OcN2B0"
       short-id: "2036c1b147c5d31e"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: vless
-    server: 138.124.4.224
-    port: 443
-    uuid: "9c794bb7-54fe-4acd-844a-a26209af36c3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "login.sakhweb.fyi"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "13nLTYkdBEFR-A4CfK2beOx-5LKEsXh1QHPq8Kt52BQ"
-      short-id: "7271129440ade8fa"
