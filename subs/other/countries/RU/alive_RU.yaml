@@ -26,6 +26,20 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
   - name: "🇷🇺 [WL] Сервер 3"
+    type: vless
+    server: cdn.oldertown.ru
+    port: 443
+    uuid: "29777784-b5ad-4e2a-be7b-335f033ab97c"
+    network: "xhttp"
+    servername: "cdn.oldertown.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v4/media/session/poll"
+      host: "cdn.oldertown.ru"
+      mode: "packet-up"
+  - name: "🇷🇺 [WL] Сервер 4"
     type: vmess
     server: 158.160.180.165
     port: 24212
@@ -34,13 +48,36 @@ proxies:
     alterId: 0
     network: "tcp"
     tls: true
-  - name: "🇷🇺 [WL] Сервер 4"
+  - name: "🇷🇺 [WL] Сервер 5"
+    type: vmess
+    server: 158.160.180.165
+    port: 24212
+    uuid: "c58c1205-b308-416f-8503-c04557abf93d"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 6"
     type: ss
     server: 195.133.5.194
     port: 18443
     password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
     cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 5"
+  - name: "🇷🇺 [WL] Сервер 8"
+    type: vless
+    server: 78.159.246.179
+    port: 2053
+    uuid: "6a2aff19-ff1f-4a13-96c8-a4d8986a9699"
+    network: "xhttp"
+    servername: "randomquaint.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "randomquaint.net"
+      mode: "auto"
+  - name: "🇷🇺 [WL] Сервер 9"
     type: vless
     server: 78.159.246.85
     port: 2053
@@ -54,7 +91,7 @@ proxies:
       path: "/api/v1/upload"
       host: "fitindoor.net"
       mode: "auto"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: fitindoor.net
     port: 2053
@@ -68,35 +105,7 @@ proxies:
       path: "/api/v1/upload"
       host: "fitindoor.net"
       mode: "auto"
-  - name: "🇷🇺 [WL] Сервер 7"
-    type: vless
-    server: 213.226.127.71
-    port: 2066
-    uuid: "5ad13ef8-ced8-43b5-9d8c-f046a3ce9ddc"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tiktok.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
-      short-id: "d18f4e"
-  - name: "🇷🇺 [WL] Сервер 8"
-    type: vless
-    server: 81.26.182.128
-    port: 8443
-    uuid: "5d7e07ba-f460-4638-af79-bbcde67fcb6b"
-    network: "xhttp"
-    servername: "www.asus.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xlXuN8KDdbqGEsaj1m2D8NUnR5d2oeo5TT71RSMmfxY"
-    xhttp-opts:
-      path: "/xh"
-  - name: "🇷🇺 [WL] Сервер 9"
+  - name: "🇷🇺 [WL] Сервер 11"
     type: vless
     server: 95.182.120.128
     port: 443
@@ -110,7 +119,64 @@ proxies:
     reality-opts:
       public-key: "7MRwvMvlDcjZqfdbBmePpZI5WDEYgya1y_pOp7B9CDc"
       short-id: "d0dc65ab94f5e69b"
-  - name: "🇷🇺 [WL] Сервер 10"
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: vless
+    server: 213.226.127.71
+    port: 2066
+    uuid: "5ad13ef8-ced8-43b5-9d8c-f046a3ce9ddc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tiktok.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
+      short-id: "d18f4e"
+  - name: "🇷🇺 [WL] Сервер 13"
+    type: vless
+    server: 46.8.29.199
+    port: 443
+    uuid: "9c794bb7-54fe-4acd-844a-a26209af36c3"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.stride.surf"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "7MRwvMvlDcjZqfdbBmePpZI5WDEYgya1y_pOp7B9CDc"
+      short-id: "d0dc65ab94f5e69b"
+  - name: "🇷🇺 [WL] Сервер 14"
+    type: vless
+    server: 45.91.52.28
+    port: 443
+    uuid: "3acb386b-fdd7-4bc9-911f-159fdcd834ce"
+    network: "grpc"
+    servername: "0f5857g.msk1.h1clayd.click"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_UKyZZvF2cvo6qev4VY-QoOyzqE8cGT3hciD0g--sD8"
+      short-id: "07e197719352d606"
+    grpc-opts:
+      grpc-service-name: "fb78f1bc0355"
+  - name: "🇷🇺 [WL] Сервер 15"
+    type: vless
+    server: 81.26.182.128
+    port: 8443
+    uuid: "5d7e07ba-f460-4638-af79-bbcde67fcb6b"
+    network: "xhttp"
+    servername: "www.asus.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xlXuN8KDdbqGEsaj1m2D8NUnR5d2oeo5TT71RSMmfxY"
+    xhttp-opts:
+      path: "/xh"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
     server: 113.30.154.239
     port: 8443
@@ -123,48 +189,9 @@ proxies:
     tls: true
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-  - name: "🇷🇺 [WL] Сервер 11"
-    type: vless
-    server: 185.147.27.164
-    port: 8443
-    uuid: "3a90bf69-1ffe-4ebb-b9a7-ad9ba8e9f66f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "user-6a8d949a.noooo.win"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇷🇺 [WL] Сервер 12"
-    type: vless
-    server: 46.8.29.199
-    port: 443
-    uuid: "9c794bb7-54fe-4acd-844a-a26209af36c3"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "api.stride.surf"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "7MRwvMvlDcjZqfdbBmePpZI5WDEYgya1y_pOp7B9CDc"
-      short-id: "d0dc65ab94f5e69b"
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 17"
     type: ss
     server: 195.58.49.34
     port: 18443
     password: "Lpq5UPVHtQYiuB9jEUNc2WkeIYCUH9DE"
     cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 14"
-    type: vless
-    server: 188.225.77.143
-    port: 8468
-    uuid: "40c12ce6-b1c6-424e-862e-010a4585ff52"
-    network: "xhttp"
-    servername: "ads.x5.ru"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mLNQ8cirYSUCtYa5485RnCPzrmp2OfkI0ENmweDxJQc"
-      short-id: "6ba85179e30d4fc2"
-    xhttp-opts:
-      path: "/xh"
