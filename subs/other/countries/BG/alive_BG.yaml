@@ -29,20 +29,6 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇧🇬 [BL] Сервер 3"
     type: vless
-    server: 78.159.246.179
-    port: 8443
-    uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
-    network: "xhttp"
-    servername: "randomquaint.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/upload"
-      host: "randomquaint.net"
-      mode: "auto"
-  - name: "🇧🇬 [BL] Сервер 4"
-    type: vless
     server: 45.9.156.24
     port: 443
     uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
@@ -57,7 +43,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 5"
+  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 45.9.156.42
     port: 443
@@ -72,6 +58,22 @@ proxies:
       short-id: "1a3102bb8e51399e"
     grpc-opts:
       grpc-service-name: "gw.v2.RelayService"
+      grpc-mode: "gun"
+  - name: "🇧🇬 [BL] Сервер 5"
+    type: vless
+    server: 45.9.156.27
+    port: 443
+    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
+    network: "grpc"
+    servername: "bg3.univesalsrv.com"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "XBfCioniAKXgKYBUVnvBXu80AIaIa4SpAB3w8qeF7Gk"
+      short-id: "1be1bd931c98c84a"
+    grpc-opts:
+      grpc-service-name: "home.v1.ApiService"
       grpc-mode: "gun"
   - name: "🇧🇬 [BL] Сервер 6"
     type: vless
