@@ -1,6 +1,20 @@
 proxies:
   - name: "🇮🇳 [BL] Сервер 1"
     type: vless
+    server: 13.233.229.128
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇮🇳 [BL] Сервер 2"
+    type: vless
     server: 122.176.216.52
     port: 443
     uuid: "16ae3ea5-cf3e-6973-7bf3-2b4b28d0ea88"
@@ -13,19 +27,6 @@ proxies:
       path: "/ws/16ae3ea5-cf3e-6973-7bf3-2b4b28d0ea88"
       headers:
         Host: "app-6ada5023.deploy.meerasolution.com"
-  - name: "🇮🇳 [BL] Сервер 2"
-    type: vless
-    server: 165.99.222.161
-    port: 443
-    uuid: "30572b57-f5ab-4eb8-82d4-a24d399b99f6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "in1.vkusnews.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SC6AnZ_BlvDruiGFpDRno9b1V3wMmq9gjB-KEHHUlE4"
   - name: "🇮🇳 [BL] Сервер 3"
     type: vless
     server: 5.253.28.224
@@ -45,10 +46,10 @@ proxies:
     server: 5.253.42.164
     port: 40443
     uuid: "e99ba96d-dec8-42eb-be53-19e71eef7cab"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "deepl.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -70,17 +71,19 @@ proxies:
   - name: "🇮🇳 [BL] Сервер 6"
     type: vless
     server: 5.253.28.240
-    port: 40443
-    uuid: "405b964e-a2d2-454f-aaaa-711cc218897c"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
+    port: 2443
+    uuid: "5e679ccd-1586-4d5f-b87b-48251046cad8"
+    network: "grpc"
     servername: "deepl.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "cwmcqsfS7klQlkcoUNuATEk0NiPY-NnRb9z8rCJDQw0"
-      short-id: "88b6"
+      public-key: "h85e28MxBgNyT9d9cNeOLVtWfHq6cT_1_oxZOTajtTg"
+      short-id: "92c32de179e5d908"
+    grpc-opts:
+      grpc-service-name: "rex-eb0bf76b710ce763"
+      grpc-mode: "gun"
   - name: "🇮🇳 [BL] Сервер 7"
     type: vless
     server: 5.253.30.99
@@ -95,3 +98,31 @@ proxies:
     reality-opts:
       public-key: "cwmcqsfS7klQlkcoUNuATEk0NiPY-NnRb9z8rCJDQw0"
       short-id: "88b6"
+  - name: "🇮🇳 [BL] Сервер 8"
+    type: vless
+    server: hydra.yokkastars.com
+    port: 2443
+    uuid: "5e679ccd-1586-4d5f-b87b-48251046cad8"
+    network: "grpc"
+    servername: "deepl.com"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "h85e28MxBgNyT9d9cNeOLVtWfHq6cT_1_oxZOTajtTg"
+      short-id: "92c32de179e5d908"
+    grpc-opts:
+      grpc-service-name: "rex-eb0bf76b710ce763"
+  - name: "🇮🇳 [BL] Сервер 9"
+    type: vless
+    server: 165.99.222.161
+    port: 443
+    uuid: "30572b57-f5ab-4eb8-82d4-a24d399b99f6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "in1.vkusnews.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SC6AnZ_BlvDruiGFpDRno9b1V3wMmq9gjB-KEHHUlE4"

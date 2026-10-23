@@ -1,7 +1,7 @@
 proxies:
   - name: "🇨🇦 [BL] Сервер 1"
     type: vless
-    server: 213.152.165.203
+    server: 50.7.245.205
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -15,7 +15,7 @@ proxies:
       short-id: "8a9725533854a7e8"
   - name: "🇨🇦 [BL] Сервер 2"
     type: vless
-    server: 38.145.220.58
+    server: 67.159.46.132
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -29,7 +29,7 @@ proxies:
       short-id: "8a9725533854a7e8"
   - name: "🇨🇦 [BL] Сервер 3"
     type: vless
-    server: 67.159.46.132
+    server: 67.159.49.37
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -63,7 +63,7 @@ proxies:
     uuid: "dc620cd6-a9d8-4a0f-8f18-006b895db77e"
     network: "tcp"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -84,14 +84,47 @@ proxies:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 7"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
+    type: vless
+    server: 104.248.107.186
+    port: 2053
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
   - name: "🇨🇦 [BL] Сервер 8"
+    type: vless
+    server: 198.100.154.175
+    port: 8080
+    uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "icloud.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
+      short-id: "4b"
+  - name: "🇨🇦 [BL] Сервер 9"
+    type: vless
+    server: 54.39.96.233
+    port: 8080
+    uuid: "20b98028-53c9-4f76-9bc9-b6b16b8a9152"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "sQ_YHzotqhVJoUDAZl5kTzUqVN6ksh-MTikz_ixsZWc"
+      short-id: "2b30"
+  - name: "🇨🇦 [BL] Сервер 10"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -99,7 +132,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
-  - name: "🇨🇦 [BL] Сервер 9"
+  - name: "🇨🇦 [BL] Сервер 11"
     type: ss
     server: 149.22.95.183
     port: 443

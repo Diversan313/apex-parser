@@ -17,15 +17,30 @@ proxies:
     alterId: 0
     network: "tcp"
     tls: true
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇺🇸 [BL] Сервер 3"
     type: vmess
-    server: 134.195.196.211
+    server: 67.220.95.3
     port: 18000
     uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
+    cipher: "aes-128-gcm"
     alterId: 0
     network: "tcp"
-  - name: "🇺🇸 [BL] Сервер 4"
+    ws-opts:
+      path: "/"
+  - name: "🇯🇵 [BL] Сервер 4"
+    type: vmess
+    server: 168.138.43.75
+    port: 80
+    uuid: "11c3627f-31e8-4695-dfbd-34076e2f1f5d"
+    cipher: "auto"
+    alterId: 0
+    network: "ws"
+    servername: "None"
+    ws-opts:
+      path: "/cctv13.m3u8"
+      headers:
+        Host: "None"
+  - name: "🇺🇸 [BL] Сервер 5"
     type: vmess
     server: 38.110.1.246
     port: 18000
@@ -35,7 +50,7 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇨🇦 [BL] Сервер 5"
+  - name: "🇨🇦 [BL] Сервер 6"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -43,3 +58,12 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
+  - name: "🇩🇪 [BL] Сервер 7"
+    type: vmess
+    server: 149.88.23.202
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    servername: "149.88.23.202"
