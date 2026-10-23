@@ -15,16 +15,18 @@ proxies:
       short-id: "94acb54627612d43"
   - name: "🇬🇷 [BL] Сервер 2"
     type: vless
-    server: 85.90.197.114
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
+    server: gw1.securecdn-app.xyz
+    port: 24096
+    uuid: "f36c82e2-e33e-4054-960a-34619d9fdd5b"
+    network: "xhttp"
+    servername: "ck5.securecdn-app.xyz"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
+    xhttp-opts:
+      path: "/assets/v1"
+      host: "ck5.securecdn-app.xyz"
+      mode: "packet-up"
   - name: "🇬🇷 [BL] Сервер 3"
     type: vless
     server: 188.246.226.129
@@ -38,3 +40,15 @@ proxies:
     xhttp-opts:
       path: "/assets/v1"
       host: "ck5.securecdn-app.xyz"
+  - name: "🇬🇷 [BL] Сервер 4"
+    type: vless
+    server: 85.90.197.114
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"

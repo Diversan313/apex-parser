@@ -3,17 +3,31 @@ proxies:
     type: vless
     server: 178.92.205.63
     port: 11167
-    uuid: "0101f81e-48bf-4fcb-b7fe-80930c80bbe4"
+    uuid: "16218ab5-a600-45a3-9ab9-abacd911ac65"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.tesla.com"
-    client-fingerprint: "ios"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "zrwJjaWEAfAZ3QCgnLnLoPE-edB_3wvKCqIz9maP02g"
       short-id: "ac"
   - name: "🇧🇷 [BL] Сервер 2"
+    type: vless
+    server: 152.67.41.217
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇧🇷 [BL] Сервер 3"
     type: vless
     server: 109.104.155.121
     port: 443
