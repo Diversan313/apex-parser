@@ -1,24 +1,22 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
-    type: vless
-    server: 161.97.160.224
+    type: trojan
+    server: 185.18.250.252
     port: 443
-    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "chrome"
+    password: "humanity"
+    sni: "www.calmlunch.com"
     udp: true
-    tls: true
-    reality-opts:
-      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
-      short-id: "e6"
+    ws-opts:
+      path: "/assignment"
+      headers:
+        Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 2"
     type: trojan
     server: 91.245.225.79
     port: 2053
     password: "humanity"
     sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
     udp: true
     ws-opts:
       path: "/assignment"
@@ -119,32 +117,20 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 12"
     type: vless
-    server: 194.33.34.108
-    port: 443
-    uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "stats.vk-portal.net"
+    server: 140.225.199.118
+    port: 8443
+    uuid: "6c713691-3ca2-002b-ad25-113d1bed6b03"
+    network: "grpc"
+    servername: "strm.yandex.net"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
-      short-id: "3c6fc84d"
+      public-key: "86EUYgrS7mazQ-GsiMnStyHSx9AlG8B_-KgXluNdWXI"
+      short-id: "d3ab13e9c496c399"
+    grpc-opts:
+      grpc-service-name: "google.storage.v2.Storage"
   - name: "🇫🇷 [WL] Сервер 13"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [WL] Сервер 14"
     type: vless
     server: 140.225.199.118
     port: 8443
@@ -160,20 +146,32 @@ proxies:
     grpc-opts:
       grpc-service-name: "google.storage.v2.Storage"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [WL] Сервер 14"
     type: vless
-    server: 91.99.52.229
+    server: 194.33.34.108
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stats.vk-portal.net"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
+      short-id: "3c6fc84d"
+  - name: "🇫🇷 [WL] Сервер 15"
+    type: vless
+    server: 62.210.91.10
+    port: 23576
+    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fuck.rkn"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
   - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 46.105.38.220
@@ -203,7 +201,7 @@ proxies:
     reality-opts:
       public-key: "g63cT3uI0Y5iUtj3m__RYz7nmR1eIK4AYikdnZCl63w"
       short-id: "bfe58beb41f1d09f"
-  - name: "🇫🇷 [BL] Сервер 18"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -218,7 +216,7 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 19"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 137.74.16.237
     port: 443
@@ -232,33 +230,7 @@ proxies:
     reality-opts:
       public-key: "7LSzvilTVKGMtBDuKGeMrLtlhY7tQf5YcG566dEgO0I"
       short-id: "b390e0a721d242b0"
-  - name: "🇫🇷 [BL/AI] Сервер 20"
-    type: vless
-    server: ai.smrtai.top
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
   - name: "🇫🇷 [BL] Сервер 21"
-    type: vless
-    server: 161.97.66.16
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 22"
     type: vless
     server: 62.210.91.2
     port: 23576
@@ -272,7 +244,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 23"
+  - name: "🇫🇷 [BL] Сервер 22"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -286,7 +258,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 24"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -302,7 +274,7 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 25"
+  - name: "🇫🇷 [BL] Сервер 24"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -318,22 +290,75 @@ proxies:
     xhttp-opts:
       path: "/OCrp5Ajs"
       mode: "auto"
+  - name: "🇫🇷 [BL] Сервер 25"
+    type: vless
+    server: 104.252.30.35
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
   - name: "🇫🇷 [BL] Сервер 26"
     type: vless
-    server: 46.226.167.213
-    port: 16388
-    uuid: "0e9233fa-1fa2-44d0-8cd6-d39c20672782"
-    network: "grpc"
-    servername: "it.nvidia.com"
+    server: 38.54.59.70
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇫🇷 [BL] Сервер 27"
+    type: vless
+    server: 161.97.66.16
+    port: 443
+    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
+    network: "tcp"
+    servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "h3RyzgsJRMW3ii5D1whWYzyhAKb1xp9ReadfRIz1XCg"
-      short-id: "d2d20c"
-  - name: "🇫🇷 [BL] Сервер 27"
+      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
+      short-id: "086bf957"
+  - name: "🇫🇷 [BL] Сервер 28"
+    type: vless
+    server: 94.228.166.68
+    port: 443
+    uuid: "b73f766e-d807-4cf0-9a26-94ca1b2e9c6a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "evnqc9nmuu.bitdepot.website"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
+      short-id: "6ba85179e30d4fc2"
+  - name: "🇫🇷 [BL] Сервер 29"
     type: trojan
     server: 5.44.46.142
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+      headers:
+        Host: "www.calmlunch.com"
+  - name: "🇫🇷 [BL] Сервер 30"
+    type: trojan
+    server: 185.18.250.245
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
