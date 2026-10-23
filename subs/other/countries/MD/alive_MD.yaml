@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇲🇩 [BL] Сервер 1"
+  - name: "🇲🇩 [WL] Сервер 1"
+    type: vless
+    server: 194.180.191.249
+    port: 443
+    uuid: "817b61c8-9bf0-4365-8a52-e43dfad274a6"
+    network: "ws"
+    servername: "shin-ra.ccwu.cc"
+    client-fingerprint: "unsafe"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "shin-ra.ccwu.cc"
+  - name: "🇲🇩 [BL] Сервер 2"
     type: vless
     server: 89.35.14.31
     port: 443
@@ -14,7 +28,7 @@ proxies:
       short-id: "d36a38659ce106cb"
     grpc-opts:
       grpc-service-name: "hub.v1.SyncService"
-  - name: "🇲🇩 [BL] Сервер 2"
+  - name: "🇲🇩 [BL] Сервер 3"
     type: vless
     server: 89.35.14.32
     port: 443
@@ -29,7 +43,7 @@ proxies:
       short-id: "9a72d40f1ff882b3"
     grpc-opts:
       grpc-service-name: "stats.v2.PushService"
-  - name: "🇲🇩 [BL] Сервер 3"
+  - name: "🇲🇩 [BL] Сервер 4"
     type: vless
     server: 89.35.14.30
     port: 443
@@ -45,7 +59,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "hub.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇲🇩 [BL] Сервер 4"
+  - name: "🇲🇩 [BL] Сервер 5"
     type: vless
     server: 89.35.14.33
     port: 443
@@ -61,7 +75,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "hub.v1.ApiService"
       grpc-mode: "gun"
-  - name: "🇲🇩 [BL] Сервер 5"
+  - name: "🇲🇩 [BL] Сервер 6"
     type: vless
     server: 89.35.14.34
     port: 443
