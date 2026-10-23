@@ -15,20 +15,6 @@ proxies:
       short-id: "3c6fc84d"
   - name: "🇨🇦 [BL] Сервер 2"
     type: vless
-    server: 40.233.99.248
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇨🇦 [BL] Сервер 3"
-    type: vless
     server: 67.159.46.132
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
@@ -41,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
       short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 4"
+  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 213.152.165.203
     port: 2093
@@ -55,12 +41,12 @@ proxies:
     reality-opts:
       public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
       short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 5"
+  - name: "🇨🇦 [BL] Сервер 4"
     type: vless
     server: 38.145.220.58
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -69,7 +55,7 @@ proxies:
     reality-opts:
       public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
       short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 6"
+  - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: 51.161.72.153
     port: 37765
@@ -84,7 +70,7 @@ proxies:
       short-id: "defda00d613c"
     grpc-opts:
       grpc-service-name: "grpc_common1"
-  - name: "🇨🇦 [BL] Сервер 7"
+  - name: "🇨🇦 [BL] Сервер 6"
     type: vless
     server: 66.70.179.198
     port: 2053
@@ -97,7 +83,7 @@ proxies:
     reality-opts:
       public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
       short-id: "83f8317a948bb769"
-  - name: "🇨🇦 [BL] Сервер 8"
+  - name: "🇨🇦 [BL] Сервер 7"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -111,7 +97,7 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL] Сервер 9"
+  - name: "🇨🇦 [BL] Сервер 8"
     type: vless
     server: 104.248.107.186
     port: 2053
@@ -119,6 +105,20 @@ proxies:
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
     client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇨🇦 [BL] Сервер 9"
+    type: vless
+    server: 40.233.99.248
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
@@ -139,20 +139,20 @@ proxies:
       public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
       short-id: "4b"
   - name: "🇨🇦 [BL] Сервер 11"
-    type: vless
-    server: 54.39.96.233
-    port: 8080
-    uuid: "20b98028-53c9-4f76-9bc9-b6b16b8a9152"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "sQ_YHzotqhVJoUDAZl5kTzUqVN6ksh-MTikz_ixsZWc"
-      short-id: "2b30"
+    type: ss
+    server: 51.222.155.113
+    port: 5601
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 12"
+    type: trojan
+    server: ca.tronsg.com
+    port: 443
+    password: "Trojan@82164024"
+    sni: "ca.tronsg.com"
+    client-fingerprint: "firefox"
+    udp: true
+  - name: "🇨🇦 [BL] Сервер 13"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -160,7 +160,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 13"
+  - name: "🇨🇦 [BL] Сервер 14"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -168,7 +168,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
-  - name: "🇨🇦 [BL] Сервер 14"
+  - name: "🇨🇦 [BL] Сервер 15"
     type: ss
     server: 149.22.95.183
     port: 443
