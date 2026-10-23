@@ -1,21 +1,21 @@
 proxies:
-  - name: "🇨🇦 [BL] Сервер 1"
+  - name: "🇨🇦 [WL] Сервер 1"
     type: vless
-    server: 104.248.107.186
-    port: 2053
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
+    server: 148.113.179.73
+    port: 443
+    uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stats.vk-portal.net"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
+      short-id: "3c6fc84d"
   - name: "🇨🇦 [BL] Сервер 2"
     type: vless
-    server: 103.218.173.218
+    server: 40.233.99.248
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -29,7 +29,7 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇨🇦 [BL] Сервер 3"
     type: vless
-    server: 50.7.245.205
+    server: 67.159.46.132
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -43,7 +43,7 @@ proxies:
       short-id: "8a9725533854a7e8"
   - name: "🇨🇦 [BL] Сервер 4"
     type: vless
-    server: 67.159.46.132
+    server: 213.152.165.203
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -57,7 +57,7 @@ proxies:
       short-id: "8a9725533854a7e8"
   - name: "🇨🇦 [BL] Сервер 5"
     type: vless
-    server: 67.159.49.37
+    server: 38.145.220.58
     port: 2093
     uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
     network: "tcp"
@@ -113,6 +113,20 @@ proxies:
       short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 9"
     type: vless
+    server: 104.248.107.186
+    port: 2053
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇨🇦 [BL] Сервер 10"
+    type: vless
     server: 198.100.154.175
     port: 8080
     uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
@@ -124,20 +138,6 @@ proxies:
     reality-opts:
       public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
       short-id: "4b"
-  - name: "🇨🇦 [BL] Сервер 10"
-    type: vless
-    server: 40.233.99.248
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
   - name: "🇨🇦 [BL] Сервер 11"
     type: vless
     server: 54.39.96.233
@@ -161,6 +161,14 @@ proxies:
     alterId: 0
     network: "tcp"
   - name: "🇨🇦 [BL] Сервер 13"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
+  - name: "🇨🇦 [BL] Сервер 14"
     type: ss
     server: 149.22.95.183
     port: 443

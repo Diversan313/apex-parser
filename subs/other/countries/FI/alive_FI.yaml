@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇫🇮 [BL] Сервер 1"
+  - name: "🇫🇮 [WL] Сервер 1"
+    type: vless
+    server: 185.103.100.211
+    port: 443
+    uuid: "5ad13ef8-ced8-43b5-9d8c-f046a3ce9ddc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "msk2e.g-magnum.icu"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "sRmbdpwZ5gtUVEu1BMXE71DRHDWhBLCoLh6QiFazm2U"
+      short-id: "1b2a3f"
+  - name: "🇫🇮 [BL] Сервер 2"
     type: vless
     server: 109.122.194.61
     port: 443
@@ -13,7 +27,7 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇫🇮 [BL] Сервер 2"
+  - name: "🇫🇮 [BL] Сервер 3"
     type: vless
     server: 212.87.222.10
     port: 8443
@@ -26,22 +40,21 @@ proxies:
     tls: true
     reality-opts:
       public-key: "f25sygANXTpzdc9YPCwkggwSmm3piA3BluSeHdfG-hg"
-  - name: "🇫🇮 [BL] Сервер 3"
+  - name: "🇫🇮 [BL] Сервер 4"
     type: vless
-    server: 89.223.124.20
-    port: 2055
-    uuid: "8dd3cb50-fdce-4aa6-aebb-c773df322055"
-    network: "grpc"
-    servername: "up.ya-yandex.link"
+    server: 144.31.34.146
+    port: 2096
+    uuid: "6e05822a-e9da-4135-a9db-71aa07a944af"
+    network: "ws"
+    servername: "fi1.merky.one"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "2C-oK3mN8pZ8jeTAVhgt6ubT-xqL7cklq9QmwtBY9mE"
-      short-id: "7b86a01d952e8df4"
-    grpc-opts:
-      grpc-service-name: "sonya-grpc"
-  - name: "🇫🇮 [BL] Сервер 4"
+    ws-opts:
+      path: "/mky-ws-4f19c8a7"
+      headers:
+        Host: "fi1.merky.one"
+  - name: "🇫🇮 [BL] Сервер 5"
     type: vless
     server: 31.76.46.221
     port: 10851
@@ -56,22 +69,36 @@ proxies:
       short-id: "aacd5d42a33b2a4e"
     grpc-opts:
       grpc-service-name: "grpc_common1"
-  - name: "🇫🇮 [BL] Сервер 5"
+  - name: "🇫🇮 [BL] Сервер 6"
     type: vless
-    server: b6a968g.fi7.h1clayd.click
-    port: 443
-    uuid: "fafc7c16-f890-45ee-a856-02df225172dd"
+    server: 89.223.124.20
+    port: 2055
+    uuid: "8dd3cb50-fdce-4aa6-aebb-c773df322055"
     network: "grpc"
-    servername: "b6a968g.fi7.h1clayd.click"
+    servername: "up.ya-yandex.link"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "p5CJCuZrNdf84dMWI-w-t6veMqQzaN6BLM41FxSHBlM"
-      short-id: "ca89bd67e77b050c"
+      public-key: "2C-oK3mN8pZ8jeTAVhgt6ubT-xqL7cklq9QmwtBY9mE"
+      short-id: "7b86a01d952e8df4"
     grpc-opts:
-      grpc-service-name: "617ed18fb1ea"
-  - name: "🇫🇮 [BL] Сервер 6"
+      grpc-service-name: "sonya-grpc"
+  - name: "🇫🇮 [BL] Сервер 7"
+    type: vless
+    server: 45.146.131.203
+    port: 443
+    uuid: "5ad13ef8-ced8-43b5-9d8c-f046a3ce9ddc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "msk4e.g-magnum.icu"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qayw5KhXx5qTbIAjtE_sKM_WHLT413vZEi_6rB4T4Dw"
+      short-id: "1b2a3f"
+  - name: "🇫🇮 [BL] Сервер 8"
     type: vless
     server: 2.26.106.232
     port: 8443
@@ -84,7 +111,7 @@ proxies:
     reality-opts:
       public-key: "fQ1M2sO50w5A3oM55Hfs8vmZ320I8VaKdzRqeXOMMnQ"
       short-id: "07f508fe5d2355d3"
-  - name: "🇫🇮 [BL] Сервер 7"
+  - name: "🇫🇮 [BL] Сервер 9"
     type: vless
     server: 87.239.249.137
     port: 443
@@ -98,21 +125,7 @@ proxies:
     reality-opts:
       public-key: "G7bpUPFSW28-oE6ff8qZac1_apU6PiJ-GHmi7tAPDSY"
       short-id: "91af08b1ce1f"
-  - name: "🇫🇮 [BL] Сервер 8"
-    type: vless
-    server: 107.181.151.128
-    port: 443
-    uuid: "88742d38-3f5c-4b9c-b256-7df5db8257ec"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.mozilla.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s"
-      short-id: "8f79726c5002"
-  - name: "🇫🇮 [BL] Сервер 9"
+  - name: "🇫🇮 [BL] Сервер 10"
     type: vless
     server: 31.77.199.147
     port: 4443
@@ -126,7 +139,7 @@ proxies:
     reality-opts:
       public-key: "GvkQwcZWiXQBLzEhTVfQkyPpdgo6Opc3RtLsED9sA0A"
       short-id: "7da2eae792187ab9"
-  - name: "🇫🇮 [BL] Сервер 10"
+  - name: "🇫🇮 [BL] Сервер 11"
     type: vless
     server: 95.216.27.15
     port: 2053
@@ -139,7 +152,7 @@ proxies:
     reality-opts:
       public-key: "4nfogj5mHqNowtSn_2sXS3xTX8vcH75rFEU2BWvyekM"
       short-id: "d368b94e275ab080"
-  - name: "🇫🇮 [BL] Сервер 11"
+  - name: "🇫🇮 [BL] Сервер 12"
     type: vless
     server: 83.219.97.18
     port: 443
@@ -153,7 +166,7 @@ proxies:
     reality-opts:
       public-key: "32XFmS-ifqooBFY89KNP3ZrqgSBOd3vel9GlNinL6yw"
       short-id: "03"
-  - name: "🇫🇮 [BL] Сервер 12"
+  - name: "🇫🇮 [BL] Сервер 13"
     type: vless
     server: 2.29.101.158
     port: 443
@@ -168,7 +181,7 @@ proxies:
       short-id: "b3c9d0c6bdd114a6"
     grpc-opts:
       grpc-service-name: "0adb9638509b"
-  - name: "🇫🇮 [BL] Сервер 13"
+  - name: "🇫🇮 [BL] Сервер 14"
     type: vless
     server: 13.143.173.15
     port: 443
@@ -181,7 +194,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
-  - name: "🇫🇮 [BL] Сервер 14"
+  - name: "🇫🇮 [BL] Сервер 15"
     type: vless
     server: 78.17.176.174
     port: 11515
@@ -195,20 +208,6 @@ proxies:
     reality-opts:
       public-key: "A826RSu-yeVM_t6v7kwHKasHSdfI9KOzUw3WaIa9SWc"
       short-id: "65149fc5ba"
-  - name: "🇫🇮 [BL] Сервер 15"
-    type: vless
-    server: 144.31.34.146
-    port: 2096
-    uuid: "6e05822a-e9da-4135-a9db-71aa07a944af"
-    network: "ws"
-    servername: "fi1.merky.one"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/mky-ws-4f19c8a7"
-      headers:
-        Host: "fi1.merky.one"
   - name: "🇫🇮 [BL] Сервер 16"
     type: vless
     server: 45.118.248.254
@@ -237,3 +236,16 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
+  - name: "🇫🇮 [BL] Сервер 18"
+    type: vless
+    server: 89.167.32.10
+    port: 2083
+    uuid: "6792bff2-12e7-42cb-83a1-f68b288d179b"
+    network: "tcp"
+    servername: "play.google.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pQpUbDqHqs65gSGxq-nBR6v2HkedTPsr9OMkCZ9-6Ec"
+      short-id: "efaf1831c543578f"
