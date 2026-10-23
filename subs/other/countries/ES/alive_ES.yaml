@@ -1,27 +1,27 @@
 proxies:
-  - name: "🇪🇸 [WL] Сервер 1"
+  - name: "🇪🇸 [BL] Сервер 1"
     type: vless
-    server: 130.49.150.138
-    port: 41014
-    uuid: "9c231ee8-541e-4c2d-aaed-2668244037bc"
-    network: "grpc"
-    servername: "api-maps.yandex.ru"
+    server: 46.28.71.247
+    port: 443
+    uuid: "12c53e32-e589-47d6-b857-e4132294f767"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "SqBKgczOVdJa9AKVJu_0uMSogfqvBfn9svHddFrflUk"
-      short-id: "812e57d7ba8bd8c8"
-    grpc-opts:
-      grpc-service-name: "grpc"
+      public-key: "v4MuZIvFrTPT5GHMSaPryUAbIZlLstmsUTzmC1E-JTE"
+      short-id: "0dfc23fe80778c00"
   - name: "🇪🇸 [BL] Сервер 2"
     type: vless
     server: 193.238.154.78
     port: 443
     uuid: "897d47f8-4dd5-42a1-bcd0-bef19caff55a"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -71,17 +71,17 @@ proxies:
       short-id: "6b4cf686eebb37b9"
   - name: "🇪🇸 [BL] Сервер 6"
     type: vless
-    server: api.ferrin.uk
+    server: 109.237.98.221
     port: 443
-    uuid: "7d1a74fd-8a38-4a29-863f-5da53a9e557e"
-    network: "xhttp"
-    servername: "7d1a74fd.ferrin.uk"
+    uuid: "b73f766e-d807-4cf0-9a26-94ca1b2e9c6a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "vy6leazit.originhub.site"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/es"
-      mode: "stream-one"
+    reality-opts:
+      public-key: "waUvU_PYX9kshdI5kYhf25185HH9pkQzc39sP-KMynE"
   - name: "🇪🇸 [BL] Сервер 7"
     type: vless
     server: 50.7.87.93
@@ -109,18 +109,17 @@ proxies:
       path: "/es/?"
   - name: "🇪🇸 [BL] Сервер 9"
     type: vless
-    server: 46.28.71.247
+    server: 89.41.181.164
     port: 443
-    uuid: "12c53e32-e589-47d6-b857-e4132294f767"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    uuid: "7d1a74fd-8a38-4a29-863f-5da53a9e557e"
+    network: "xhttp"
+    servername: "7d1a74fd.ferrin.uk"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "v4MuZIvFrTPT5GHMSaPryUAbIZlLstmsUTzmC1E-JTE"
-      short-id: "0dfc23fe80778c00"
+    xhttp-opts:
+      path: "/es"
+      mode: "auto"
   - name: "🇪🇸 [BL] Сервер 10"
     type: vless
     server: 212.227.235.66
@@ -148,17 +147,3 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇪🇸 [BL] Сервер 12"
-    type: vless
-    server: 109.237.98.221
-    port: 443
-    uuid: "b73f766e-d807-4cf0-9a26-94ca1b2e9c6a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tz8ppni91a.fontdepot.cfd"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "waUvU_PYX9kshdI5kYhf25185HH9pkQzc39sP-KMynE"
-      short-id: "6ba85179e30d4fc2"
