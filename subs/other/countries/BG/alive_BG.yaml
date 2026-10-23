@@ -15,33 +15,19 @@ proxies:
       short-id: "77bb0d07bddbc832"
   - name: "🇧🇬 [BL] Сервер 2"
     type: vless
-    server: 13.140.29.253
+    server: bg1.spacevpn.space
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
+    uuid: "2e34af79-e5dc-ae2a-3393-65479f695282"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "bg1.spacevpn.space"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "_u-Nv9dyWbkoAkklJAYQaixa60hmhbn6kZcUNhrdqW8"
+      short-id: "d498984fe96ad0ab"
   - name: "🇧🇬 [BL] Сервер 3"
-    type: vless
-    server: 13.140.29.45
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 45.9.156.24
     port: 443
@@ -57,7 +43,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 5"
+  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 45.9.156.28
     port: 443
@@ -73,7 +59,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "cloud.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 6"
+  - name: "🇧🇬 [BL] Сервер 5"
     type: vless
     server: 45.9.156.27
     port: 443
@@ -88,7 +74,7 @@ proxies:
       short-id: "1be1bd931c98c84a"
     grpc-opts:
       grpc-service-name: "home.v1.ApiService"
-  - name: "🇧🇬 [BL] Сервер 7"
+  - name: "🇧🇬 [BL] Сервер 6"
     type: vless
     server: 45.9.156.42
     port: 443
@@ -103,17 +89,17 @@ proxies:
       short-id: "1a3102bb8e51399e"
     grpc-opts:
       grpc-service-name: "gw.v2.RelayService"
-  - name: "🇧🇬 [BL] Сервер 8"
+  - name: "🇧🇬 [BL] Сервер 7"
     type: vless
-    server: 46.8.120.213
-    port: 443
-    uuid: "2e34af79-e5dc-ae2a-3393-65479f695282"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bg1.spacevpn.space"
-    client-fingerprint: "firefox"
+    server: windytrout.net
+    port: 8443
+    uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
+    network: "xhttp"
+    servername: "windytrout.net"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "_u-Nv9dyWbkoAkklJAYQaixa60hmhbn6kZcUNhrdqW8"
-      short-id: "d498984fe96ad0ab"
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "windytrout.net"
+      mode: "packet-up"
