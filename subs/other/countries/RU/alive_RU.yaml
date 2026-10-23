@@ -1,30 +1,26 @@
 proxies:
   - name: "🇷🇺 [WL] Сервер 1"
     type: vless
-    server: 213.165.54.59
-    port: 443
-    uuid: "0bf8538b-6299-46b0-9775-8b00939dccb5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.kinopoisk.ru"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TSKXgvS-et2fuP6yd5p_qBrUzFrlsQp2C4PeUCFHHRQ"
-      short-id: "43ab81c05d126069"
-  - name: "🇷🇺 [WL] Сервер 2"
-    type: vless
     server: 45.12.75.242
     port: 26424
     uuid: "633f424e-2b11-48da-a6b3-a849dd71456f"
     network: "raw"
     servername: "ya.ru"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "l8AubqcxQO-HRFJy4pZL1vbLOo-eXit69s-XulSELE0"
       short-id: "23103e1e"
+  - name: "🇷🇺 [WL] Сервер 2"
+    type: vmess
+    server: 158.160.180.165
+    port: 24212
+    uuid: "c58c1205-b308-416f-8503-c04557abf93d"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    tls: true
   - name: "🇷🇺 [WL] Сервер 3"
     type: vmess
     server: 158.160.180.165
@@ -35,29 +31,6 @@ proxies:
     network: "tcp"
     tls: true
   - name: "🇷🇺 [WL] Сервер 4"
-    type: vmess
-    server: 158.160.180.165
-    port: 24212
-    uuid: "c58c1205-b308-416f-8503-c04557abf93d"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-    tls: true
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
-    server: 46.243.142.104
-    port: 443
-    uuid: "9ba53795-4356-40ab-8067-76ec2ae2a3d8"
-    network: "ws"
-    servername: "santehdv.site"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/media/stream/qUWu2oaFgxAw"
-      headers:
-        Host: "santehdv.site"
-  - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 81.94.148.232
     port: 2053
@@ -71,7 +44,7 @@ proxies:
       path: "/api/v1/upload"
       host: "windytrout.net"
       mode: "auto"
-  - name: "🇷🇺 [WL] Сервер 7"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 81.26.182.128
     port: 8443
@@ -85,6 +58,18 @@ proxies:
       public-key: "xlXuN8KDdbqGEsaj1m2D8NUnR5d2oeo5TT71RSMmfxY"
     xhttp-opts:
       path: "/xh"
+  - name: "🇷🇺 [WL] Сервер 6"
+    type: ss
+    server: 195.58.49.34
+    port: 18443
+    password: "Lpq5UPVHtQYiuB9jEUNc2WkeIYCUH9DE"
+    cipher: "aes-256-gcm"
+  - name: "🇷🇺 [WL] Сервер 7"
+    type: ss
+    server: 195.133.5.194
+    port: 18443
+    password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
+    cipher: "aes-256-gcm"
   - name: "🇷🇺 [WL] Сервер 8"
     type: vless
     server: 213.226.127.71
@@ -93,21 +78,22 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "tiktok.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
       short-id: "d18f4e"
   - name: "🇷🇺 [WL] Сервер 9"
-    type: ss
-    server: 195.133.5.194
-    port: 18443
-    password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
-    cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: ss
-    server: 195.58.49.34
-    port: 18443
-    password: "Lpq5UPVHtQYiuB9jEUNc2WkeIYCUH9DE"
-    cipher: "aes-256-gcm"
+    type: vless
+    server: 193.160.141.2
+    port: 8443
+    uuid: "d24e0961-dd20-4528-8796-2a974e79348e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"

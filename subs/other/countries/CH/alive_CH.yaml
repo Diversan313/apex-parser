@@ -1,7 +1,7 @@
 proxies:
   - name: "🇨🇭 [WL] Сервер 1"
     type: vless
-    server: 185.241.7.178
+    server: 91.245.225.69
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -10,12 +10,25 @@ proxies:
     udp: true
     tls: true
     ws-opts:
-      path: "/fp=chrome"
+      path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇨🇭 [WL] Сервер 2"
+  - name: "🇨🇭 [BL] Сервер 2"
     type: vless
-    server: 185.241.7.178
+    server: 208.69.78.217
+    port: 2053
+    uuid: "c0dd6d59-1573-43af-8b70-1470b2632a6d"
+    network: "tcp"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "A49ue7zXSusJZdErPAewg3jqGdUFIO1a9xOunEKJfC0"
+      short-id: "ad86e2d52ff40ebd"
+  - name: "🇨🇭 [BL] Сервер 3"
+    type: vless
+    server: 2.59.219.220
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
