@@ -26,6 +26,20 @@ proxies:
         Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 3"
     type: vless
+    server: 82.202.179.110
+    port: 14443
+    uuid: "ccd6419d-6943-4e7c-bc8c-7a157dadff80"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "smartcaptcha.yandexcloud.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "JufPPJ3rmM2jvI9g98K87wgUHroz4C-30NHX21UoZns"
+      short-id: "d29cbe24661f"
+  - name: "🇫🇷 [WL] Сервер 4"
+    type: vless
     server: 82.202.182.41
     port: 2443
     uuid: "928a3079-7c20-40cc-9c92-e878ba959dcd"
@@ -38,29 +52,24 @@ proxies:
     reality-opts:
       public-key: "7VEbBMpg2DyUHU53a76muNrCES-g12FyRUvThr4lvy4"
       short-id: "b208"
-  - name: "🇫🇷 [WL] Сервер 4"
-    type: trojan
-    server: 185.220.100.168
-    port: 443
-    password: "humanity"
-    sni: "www.calmlunch.com"
-    client-fingerprint: "chrome"
-    udp: true
-    ws-opts:
-      path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 5"
-    type: trojan
-    server: 185.220.100.168
-    port: 443
-    password: "humanity"
-    sni: "www.calmlunch.com"
-    client-fingerprint: "chrome"
+    type: vless
+    server: 140.225.199.118
+    port: 8443
+    uuid: "6c713691-3ca2-002b-ad25-113d1bed6b03"
+    network: "grpc"
+    servername: "strm.yandex.net"
+    client-fingerprint: "firefox"
     udp: true
-    ws-opts:
-      path: "/assignment"
+    tls: true
+    reality-opts:
+      public-key: "86EUYgrS7mazQ-GsiMnStyHSx9AlG8B_-KgXluNdWXI"
+      short-id: "d3ab13e9c496c399"
+    grpc-opts:
+      grpc-service-name: "google.storage.v2.Storage"
   - name: "🇫🇷 [WL] Сервер 6"
     type: trojan
-    server: 185.225.68.232
+    server: 185.220.100.168
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -70,7 +79,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 7"
     type: trojan
-    server: 185.225.68.232
+    server: 185.220.100.168
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -80,7 +89,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 8"
     type: trojan
-    server: 185.255.179.166
+    server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -90,7 +99,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 9"
     type: trojan
-    server: 185.255.179.166
+    server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -100,8 +109,8 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 10"
     type: trojan
-    server: 91.245.225.79
-    port: 2053
+    server: 185.255.179.166
+    port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
     client-fingerprint: "chrome"
@@ -109,6 +118,16 @@ proxies:
     ws-opts:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 11"
+    type: trojan
+    server: 185.255.179.166
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+  - name: "🇫🇷 [WL] Сервер 12"
     type: trojan
     server: 91.245.225.79
     port: 2053
@@ -118,7 +137,30 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [WL] Сервер 12"
+  - name: "🇫🇷 [WL] Сервер 13"
+    type: trojan
+    server: 91.245.225.79
+    port: 2053
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+  - name: "🇫🇷 [WL] Сервер 14"
+    type: vless
+    server: 145.223.68.58
+    port: 443
+    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
+      short-id: "a44ff7d2e80213c2"
+  - name: "🇫🇷 [WL] Сервер 15"
     type: trojan
     server: 45.130.125.18
     port: 443
@@ -128,19 +170,35 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
-    server: 177.3.208.65
+    server: 140.225.199.119
     port: 443
-    uuid: "4f34bc04-479c-49ba-91a8-6bb9ed15031c"
-    network: "ws"
-    servername: "tgmansion.site"
+    uuid: "7dd6b9c8-8987-002b-b297-2675f9d32f52"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stream.indigo.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/vless-tr"
-  - name: "🇫🇷 [BL] Сервер 14"
+    reality-opts:
+      public-key: "leD_8p5EN-UVkej5rZjsbVlCiD9b0CM0pwd8qfzZh3o"
+      short-id: "5851bd02f698644b"
+  - name: "🇫🇷 [BL] Сервер 17"
+    type: vless
+    server: 143.246.211.163
+    port: 443
+    uuid: "b3d079ff-b775-4ffe-bac9-41228b08b15b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fr.gorobsub.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
+      short-id: "3242cfd7"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: vless
     server: 46.105.38.220
     port: 26451
@@ -156,7 +214,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc_common2"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: vless
     server: 51.77.217.70
     port: 2053
@@ -169,7 +227,7 @@ proxies:
     reality-opts:
       public-key: "g63cT3uI0Y5iUtj3m__RYz7nmR1eIK4AYikdnZCl63w"
       short-id: "bfe58beb41f1d09f"
-  - name: "🇫🇷 [BL] Сервер 16"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -184,7 +242,7 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 17"
+  - name: "🇫🇷 [BL] Сервер 21"
     type: vless
     server: 137.74.16.237
     port: 443
@@ -198,21 +256,7 @@ proxies:
     reality-opts:
       public-key: "7LSzvilTVKGMtBDuKGeMrLtlhY7tQf5YcG566dEgO0I"
       short-id: "b390e0a721d242b0"
-  - name: "🇫🇷 [BL] Сервер 18"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 19"
+  - name: "🇫🇷 [BL] Сервер 22"
     type: vless
     server: 62.210.91.2
     port: 23576
@@ -226,7 +270,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 20"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -240,7 +284,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 24"
     type: vless
     server: 103.114.201.154
     port: 443
@@ -254,7 +298,7 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 25"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -270,7 +314,21 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 23"
+  - name: "🇫🇷 [BL] Сервер 26"
+    type: vless
+    server: 51.77.144.182
+    port: 8080
+    uuid: "58ec8bba-fb99-4840-805c-1871cbec26f3"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "twCZ2ZSURqQA2oUep4h2aj_3yJEEagFSQByn26bWWkI"
+      short-id: "94d9456c33"
+  - name: "🇫🇷 [BL] Сервер 27"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -286,17 +344,69 @@ proxies:
     xhttp-opts:
       path: "/OCrp5Ajs"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 25"
+  - name: "🇫🇷 [BL] Сервер 28"
     type: vless
-    server: 143.246.211.163
+    server: 91.99.52.229
     port: 443
-    uuid: "b3d079ff-b775-4ffe-bac9-41228b08b15b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fr.gorobsub.com"
-    client-fingerprint: "firefox"
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
-      short-id: "3242cfd7"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇫🇷 [BL] Сервер 29"
+    type: vless
+    server: 38.54.59.70
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇫🇷 [BL] Сервер 31"
+    type: ss
+    server: 57.129.113.16
+    port: 8388
+    password: "NcAXc0UZI6yQJE1p8QmOv8"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇫🇷 [BL] Сервер 32"
+    type: trojan
+    server: 5.44.46.142
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+      headers:
+        Host: "www.calmlunch.com"
+  - name: "🇫🇷 [BL] Сервер 33"
+    type: trojan
+    server: 82.117.245.125
+    port: 2053
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+  - name: "🇫🇷 [BL] Сервер 34"
+    type: trojan
+    server: 185.18.250.245
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+      headers:
+        Host: "www.calmlunch.com"
