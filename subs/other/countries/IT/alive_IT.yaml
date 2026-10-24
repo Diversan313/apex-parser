@@ -21,13 +21,26 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
       public-key: "R5ycsjJ-v024902dMSqTsSdqxUwCFEXMebdBEWFt9VU"
       short-id: "cd6065902eea7a02"
   - name: "🇮🇹 [BL] Сервер 3"
+    type: vless
+    server: 57.131.38.163
+    port: 2053
+    uuid: "d4b08cd6-0903-411a-9dac-45dbdf5c9712"
+    network: "tcp"
+    servername: "www.apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Ej2H5ucT7qKegYcT8wODdlxa-cLHr7F4hDVUHzAhcnc"
+      short-id: "5b8a942318178e7b"
+  - name: "🇮🇹 [BL] Сервер 4"
     type: vless
     server: 204.216.216.23
     port: 1114
@@ -41,19 +54,6 @@ proxies:
     reality-opts:
       public-key: "WfkCF0eEuIoO0MyJsKOddU89QrTzCZ4y2dzCJbH99CQ"
       short-id: "79a1e14b"
-  - name: "🇮🇹 [BL] Сервер 4"
-    type: vless
-    server: 57.131.38.163
-    port: 2053
-    uuid: "d4b08cd6-0903-411a-9dac-45dbdf5c9712"
-    network: "tcp"
-    servername: "www.apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Ej2H5ucT7qKegYcT8wODdlxa-cLHr7F4hDVUHzAhcnc"
-      short-id: "5b8a942318178e7b"
   - name: "🇮🇹 [BL] Сервер 5"
     type: vless
     server: 82.118.16.189
@@ -76,13 +76,7 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇮🇹 [BL] Сервер 7"
     type: ss
-    server: 202.50.253.54
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇮🇹 [BL] Сервер 8"
-    type: ss
-    server: 202.50.253.72
+    server: 202.50.253.90
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"

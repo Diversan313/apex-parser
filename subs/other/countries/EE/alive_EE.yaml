@@ -1,18 +1,5 @@
 proxies:
-  - name: "🇪🇪 [WL] Сервер 1"
-    type: vless
-    server: 87.242.95.164
-    port: 8445
-    uuid: "3a4f6204-472c-4c69-b7be-cca84de97148"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "l06r0clkHjHk7HRGpkDBJwZ1JJscSqfwHUQOrV3v3hQ"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 1"
     type: vless
     server: 194.26.141.223
     port: 443
@@ -26,19 +13,36 @@ proxies:
     reality-opts:
       public-key: "Su5ULcRQKF-0DJIHZeTNEnXHBpyQtizmUrcNIYhZI0E"
       short-id: "afee962d"
+  - name: "🇪🇪 [BL] Сервер 2"
+    type: vless
+    server: 212.87.190.147
+    port: 443
+    uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
+    network: "xhttp"
+    servername: "esti.kramiliantha.sbs"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NrHeHBE4mzlczsTWFOpO_2Pi4Iw3ySuxu_Pr9TsPPUU"
+      short-id: "8fc2eb4017c18576"
+    xhttp-opts:
+      path: "/api/v1/sync/"
+      host: "esti.kramiliantha.sbs"
   - name: "🇪🇪 [BL] Сервер 3"
     type: vless
-    server: 79.98.37.106
+    server: 93.89.220.37
     port: 443
-    uuid: "846cedee-2a52-0001-a0b9-11850ead6a8b"
-    network: "tcp"
+    uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "ee-central.v8x2b.lol"
+    servername: "ibm.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "USSepsAbvP9LpByHLV2xD2H8dq8GAJ6G0fINEqD4PAw"
+      public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
+      short-id: "e88cb983f3c97528"
   - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 31.59.218.43
@@ -56,9 +60,10 @@ proxies:
   - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 13.143.239.119
-    port: 8443
+    port: 443
     uuid: "f36c82e2-e33e-4054-960a-34619d9fdd5b"
-    network: "xhttp"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
     servername: "www.transip.nl"
     client-fingerprint: "firefox"
     udp: true
@@ -66,53 +71,20 @@ proxies:
     reality-opts:
       public-key: "kYbLeoF13TKNPtlYwRsAqFQR3l7v6NMe6ydARMIfEC0"
       short-id: "7230e3b3f137543c"
-    xhttp-opts:
-      path: "/x"
-      mode: "packet-up"
   - name: "🇪🇪 [BL] Сервер 6"
     type: vless
-    server: 212.87.190.147
+    server: 79.98.37.106
     port: 443
-    uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
-    network: "xhttp"
-    servername: "esti.kramiliantha.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NrHeHBE4mzlczsTWFOpO_2Pi4Iw3ySuxu_Pr9TsPPUU"
-      short-id: "8fc2eb4017c18576"
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      host: "esti.kramiliantha.sbs"
-  - name: "🇪🇪 [BL] Сервер 7"
-    type: vless
-    server: 93.89.220.37
-    port: 443
-    uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
-    network: "raw"
+    uuid: "846cedee-2a52-0001-a0b9-11850ead6a8b"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "ibm.com"
+    servername: "ee-central.v8x2b.lol"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
-      short-id: "e88cb983f3c97528"
-  - name: "🇪🇪 [BL] Сервер 8"
-    type: vless
-    server: 103.88.243.28
-    port: 443
-    uuid: "42c83523-9f96-41b2-82d6-2edb71a4ac19"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fm8j6z2biyg8.cachecore.space"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
-  - name: "🇪🇪 [BL] Сервер 9"
+      public-key: "USSepsAbvP9LpByHLV2xD2H8dq8GAJ6G0fINEqD4PAw"
+  - name: "🇪🇪 [BL] Сервер 7"
     type: vless
     server: 95.85.242.11
     port: 443
