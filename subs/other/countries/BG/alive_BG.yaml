@@ -1,18 +1,18 @@
 proxies:
   - name: "🇧🇬 [BL] Сервер 1"
     type: vless
-    server: 13.140.29.45
+    server: 195.123.226.21
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
+    uuid: "6589c320-db68-43cd-a273-b46299bab355"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
+      short-id: "77bb0d07bddbc832"
   - name: "🇧🇬 [BL] Сервер 2"
     type: vless
     server: 13.140.29.253
@@ -29,6 +29,20 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇧🇬 [BL] Сервер 3"
     type: vless
+    server: 13.140.29.45
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇧🇬 [BL] Сервер 4"
+    type: vless
     server: 45.9.156.24
     port: 443
     uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
@@ -43,36 +57,22 @@ proxies:
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 4"
-    type: vless
-    server: bg3.univesalsrv.com
-    port: 443
-    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
-    network: "grpc"
-    servername: "bg3.univesalsrv.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "XBfCioniAKXgKYBUVnvBXu80AIaIa4SpAB3w8qeF7Gk"
-      short-id: "1be1bd931c98c84a"
-    grpc-opts:
-      grpc-service-name: "home.v1.ApiService"
   - name: "🇧🇬 [BL] Сервер 5"
     type: vless
-    server: 45.9.156.27
+    server: bg2.univesalsrv.com
     port: 443
     uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
     network: "grpc"
-    servername: "bg3.univesalsrv.com"
+    servername: "bg2.univesalsrv.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "XBfCioniAKXgKYBUVnvBXu80AIaIa4SpAB3w8qeF7Gk"
-      short-id: "1be1bd931c98c84a"
+      public-key: "0f0dh_FUju5cHgQcIwUjHvxQb9aIZ00p0kZRHeE7Ey4"
+      short-id: "501ab3325b77e1ca"
     grpc-opts:
-      grpc-service-name: "home.v1.ApiService"
+      grpc-service-name: "api.v2.PushService"
+      grpc-mode: "gun"
   - name: "🇧🇬 [BL] Сервер 6"
     type: vless
     server: 45.9.156.42
@@ -106,15 +106,16 @@ proxies:
       grpc-service-name: "cloud.v1.RelayService"
   - name: "🇧🇬 [BL] Сервер 8"
     type: vless
-    server: 195.123.226.21
+    server: 45.9.156.27
     port: 443
-    uuid: "6589c320-db68-43cd-a273-b46299bab355"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway.icloud.com"
-    client-fingerprint: "chrome"
+    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
+    network: "grpc"
+    servername: "bg3.univesalsrv.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
-      short-id: "77bb0d07bddbc832"
+      public-key: "XBfCioniAKXgKYBUVnvBXu80AIaIa4SpAB3w8qeF7Gk"
+      short-id: "1be1bd931c98c84a"
+    grpc-opts:
+      grpc-service-name: "home.v1.ApiService"
