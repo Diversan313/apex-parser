@@ -20,20 +20,20 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ozon.ru"
-    client-fingerprint: "firefox"
+    client-fingerprint: "safari"
     udp: true
     tls: true
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
   - name: "🇹🇷 [WL] Сервер 3"
     type: vless
-    server: 147.45.47.77
+    server: 193.160.141.20
     port: 443
     uuid: "680e92ac-1688-49e0-af96-7327fbc30ce8"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "abuse.ozon.ru"
-    client-fingerprint: "firefox"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
@@ -123,7 +123,7 @@ proxies:
     uuid: "a346c521-7a7f-452b-9356-a4893feb5982"
     network: "grpc"
     servername: "github.com"
-    client-fingerprint: "safari"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -132,18 +132,10 @@ proxies:
     grpc-opts:
       grpc-service-name: "GunService"
   - name: "🇹🇷 [BL] Сервер 11"
-    type: vless
-    server: 167.104.219.73
-    port: 443
-    uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
-    network: "xhttp"
-    servername: "tur.kramiliantha.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "6xc50OssKhzyWe42Dmy1fFhC0yhpqVU4pfh3Rroh3Ws"
-      short-id: "3e5f1eb64ede4328"
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      host: "tur.kramiliantha.sbs"
+    type: vmess
+    server: 206.1.99.36
+    port: 58202
+    uuid: "482e7f58-e8e8-418d-accd-0a94bdf090ae"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"

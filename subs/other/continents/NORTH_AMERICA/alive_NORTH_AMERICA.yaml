@@ -34,7 +34,7 @@ proxies:
     uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
     network: "xhttp"
     servername: "can.kramiliantha.sbs"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -45,18 +45,17 @@ proxies:
       host: "can.kramiliantha.sbs"
   - name: "🇺🇸 [WL] Сервер 4"
     type: vless
-    server: 88.216.69.253
-    port: 443
-    uuid: "d342d11e-d224-4463-b982-532309285094"
-    network: "ws"
-    servername: "ccc.010304.xyz"
-    client-fingerprint: "unsafe"
+    server: 185.243.99.100
+    port: 1222
+    uuid: "36c3dcc2-17b6-4478-b8a7-3978e6d5afe9"
+    network: "tcp"
+    servername: "play.google.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/fp"
-      headers:
-        Host: "ccc.010304.xyz"
+    reality-opts:
+      public-key: "zpLKK8HuwXJDH9D0O3t5Z_tO3ajkj7VRtXdr6UGy1zE"
+      short-id: "a25d0f"
   - name: "🇺🇸 [WL] Сервер 5"
     type: vless
     server: 88.216.69.253
@@ -73,17 +72,18 @@ proxies:
         Host: "a.cwvps.eu.org"
   - name: "🇺🇸 [WL] Сервер 6"
     type: vless
-    server: 185.243.99.100
-    port: 1222
-    uuid: "36c3dcc2-17b6-4478-b8a7-3978e6d5afe9"
-    network: "tcp"
-    servername: "play.google.com"
-    client-fingerprint: "chrome"
+    server: 88.216.69.253
+    port: 443
+    uuid: "d342d11e-d224-4463-b982-532309285094"
+    network: "ws"
+    servername: "ccc.010304.xyz"
+    client-fingerprint: "unsafe"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "zpLKK8HuwXJDH9D0O3t5Z_tO3ajkj7VRtXdr6UGy1zE"
-      short-id: "a25d0f"
+    ws-opts:
+      path: "/fp"
+      headers:
+        Host: "ccc.010304.xyz"
   - name: "🇺🇸 [WL] Сервер 7"
     type: vless
     server: 185.92.182.106
@@ -95,7 +95,7 @@ proxies:
     udp: true
     tls: true
     ws-opts:
-      path: "/fp=chrome"
+      path: "/fp=chromefp=chrome"
       headers:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [WL] Сервер 8"
@@ -127,12 +127,11 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇲🇽 [WL] Сервер 10"
     type: vless
-    server: 216.238.79.164
+    server: 216.238.78.167
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
@@ -146,10 +145,11 @@ proxies:
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/fdip=sstp://vpn:vpn"
       headers:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇲🇽 [WL] Сервер 12"
@@ -159,44 +159,42 @@ proxies:
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇲🇽 [WL] Сервер 13"
+    type: vless
+    server: 216.238.79.164
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
     udp: true
     tls: true
     ws-opts:
       path: "/fdip=sstp://vpn:vpn"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 13"
+  - name: "🇨🇦 [WL] Сервер 14"
     type: vless
-    server: 95.182.94.128
+    server: 148.113.179.73
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stats.vk-portal.net"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 14"
-    type: vless
-    server: 138.186.140.8
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
+      short-id: "3c6fc84d"
   - name: "🇺🇸 [BL] Сервер 15"
     type: vless
-    server: 203.88.117.190
+    server: 141.98.41.80
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -210,20 +208,21 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 16"
     type: vless
-    server: 47.251.25.74
+    server: 117.55.232.3
     port: 443
-    uuid: "18805ff3-b420-45de-af18-93be14024ae8"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.amazon.com"
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "H56cOJhw0xw76lDEpt7IuJJmVGemK6_CK34KtHwDMX8"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 17"
     type: vless
-    server: 192.241.206.189
+    server: 138.186.140.8
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -237,12 +236,12 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 18"
     type: vless
-    server: 179.253.225.172
-    port: 443
+    server: 23.158.233.2
+    port: 2096
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
@@ -251,7 +250,7 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 19"
     type: vless
-    server: 45.76.70.251
+    server: 179.253.246.191
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -270,7 +269,7 @@ proxies:
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
@@ -279,12 +278,12 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 21"
     type: vless
-    server: 45.59.131.40
+    server: 179.255.136.57
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
     servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
@@ -307,20 +306,6 @@ proxies:
         Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 23"
     type: vless
-    server: 45.138.100.248
-    port: 10444
-    uuid: "ae908ff5-f749-402c-af25-e6e9aef4d6bb"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ads.x5.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
-  - name: "🇺🇸 [BL] Сервер 24"
-    type: vless
     server: 47.253.226.114
     port: 443
     uuid: "055a1ce8-2a16-4a0d-a2c2-22826c9b2413"
@@ -332,7 +317,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Svl81isn16RPAFnjtmYw7A6TPnsEPLHuYYaJht65Rzc"
-  - name: "🇺🇸 [BL] Сервер 25"
+  - name: "🇺🇸 [BL] Сервер 24"
     type: vless
     server: 159.89.87.21
     port: 28190
@@ -345,34 +330,48 @@ proxies:
     tls: true
     reality-opts:
       public-key: "ZJRnFU-1s1JOnO8E9uZ7b00l1fPEh63fGRbdBANFRno"
+  - name: "🇺🇸 [BL] Сервер 25"
+    type: vless
+    server: 95.182.94.128
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
   - name: "🇺🇸 [BL] Сервер 26"
     type: vless
-    server: 141.98.41.80
+    server: 134.195.101.122
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    uuid: "6d06e6ee-50b8-4a86-a56a-0ae5754ffffa"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.mi.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "ptYLYuVba16lu-OtadiE8Wd-cGHHVZh0XkxVUqrhmDE"
+      short-id: "2546d239"
   - name: "🇺🇸 [BL] Сервер 27"
     type: vless
-    server: 117.55.232.3
+    server: 203.10.96.138
     port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
+    uuid: "6d06e6ee-50b8-4a86-a56a-0ae5754ffffa"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cdn-dynmedia-1.microsoft.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
+    reality-opts:
+      public-key: "VFG2L-3i30fQZg3wd0DF6dEGdaT27S-PKpuYu7Hp8xU"
+      short-id: "fd26d49a"
   - name: "🇺🇸 [BL] Сервер 28"
     type: vless
     server: 169.40.42.229
@@ -387,49 +386,7 @@ proxies:
     reality-opts:
       public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
       short-id: "c39cc7310a"
-  - name: "🇨🇦 [BL] Сервер 29"
-    type: vless
-    server: 67.159.47.236
-    port: 2093
-    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
-      short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 30"
-    type: vless
-    server: 213.152.165.203
-    port: 2093
-    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
-      short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 31"
-    type: vless
-    server: 38.145.220.58
-    port: 2093
-    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
-      short-id: "8a9725533854a7e8"
-  - name: "🇺🇸 [BL] Сервер 32"
+  - name: "🇺🇸 [BL] Сервер 29"
     type: vless
     server: 173.249.210.179
     port: 61000
@@ -442,7 +399,7 @@ proxies:
     reality-opts:
       public-key: "c7XtbOUOg19bgo2N-ufXbZHaGHuSB7jAdvmj1zchRn4"
       short-id: "ecf5"
-  - name: "🇺🇸 [BL] Сервер 33"
+  - name: "🇺🇸 [BL] Сервер 30"
     type: vless
     server: 143.198.99.229
     port: 443
@@ -456,7 +413,7 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 34"
+  - name: "🇺🇸 [BL] Сервер 31"
     type: vless
     server: 195.211.98.43
     port: 443
@@ -470,7 +427,7 @@ proxies:
     reality-opts:
       public-key: "xPnpkXu5qfwIArlHKvJsqKJnGdGbJK1tT2GzWMyLohA"
       short-id: "9c56fddf237e8eaf"
-  - name: "🇺🇸 [BL] Сервер 35"
+  - name: "🇺🇸 [BL] Сервер 32"
     type: vless
     server: 23.95.222.127
     port: 8443
@@ -484,6 +441,48 @@ proxies:
     reality-opts:
       public-key: "ribQDOlZ69PzvZ1EDF0EcmMvbq_T5RQrVRBSGUU2riU"
       short-id: "35cd899f8de04801"
+  - name: "🇨🇦 [BL] Сервер 33"
+    type: vless
+    server: 38.145.220.58
+    port: 2093
+    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
+      short-id: "8a9725533854a7e8"
+  - name: "🇨🇦 [BL] Сервер 34"
+    type: vless
+    server: 213.152.165.203
+    port: 2093
+    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
+      short-id: "8a9725533854a7e8"
+  - name: "🇨🇦 [BL] Сервер 35"
+    type: vless
+    server: 50.7.245.205
+    port: 2093
+    uuid: "0b418782-e023-447e-ba99-e66b84ff118d"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
+      short-id: "8a9725533854a7e8"
   - name: "🇺🇸 [BL] Сервер 36"
     type: vless
     server: 2.24.124.64
@@ -513,20 +512,6 @@ proxies:
       short-id: "83f8317a948bb769"
   - name: "🇺🇸 [BL] Сервер 38"
     type: vless
-    server: 47.251.108.158
-    port: 443
-    uuid: "975fc322-6e38-434b-a53c-d39fed49b9a9"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SmgYcFIvvFXW3xh4gvGhIJuQsaZvWkAylcjB6TEddEs"
-      short-id: "896f52ba2cfca903"
-  - name: "🇺🇸 [BL] Сервер 39"
-    type: vless
     server: 195.123.240.65
     port: 443
     uuid: "ce18d0eb-5c71-41f9-96e5-1632e22456e4"
@@ -539,7 +524,7 @@ proxies:
     reality-opts:
       public-key: "StPbcmBuzpuYUfa4oZ5SI3Bq1OSF_-oU1vp2AcyvQVE"
       short-id: "19296c9f1bf9c7b1"
-  - name: "🇺🇸 [BL] Сервер 40"
+  - name: "🇺🇸 [BL] Сервер 39"
     type: vless
     server: 51.81.203.63
     port: 443
@@ -553,6 +538,20 @@ proxies:
     reality-opts:
       public-key: "nqwCf6oW49tEtmQ0EzxigZ0uu1pg0E30CS54G40Iti0"
       short-id: "4477382ff6d3d41c"
+  - name: "🇺🇸 [BL] Сервер 40"
+    type: vless
+    server: 195.123.235.177
+    port: 443
+    uuid: "729dd5f2-f5ff-4070-8c10-863eceded0b1"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "5B83otQ5ZQwtBFhR7xzsGJRXflkFKRJpQguYbE5JWGI"
+      short-id: "c85d029f5e8eb393"
   - name: "🇺🇸 [BL] Сервер 41"
     type: vless
     server: 169.40.42.104
@@ -582,18 +581,45 @@ proxies:
       public-key: "0i_xAxYgSNx5NMpK2lOaWGS-CvAiD_LneYPO0MF0owo"
   - name: "🇺🇸 [BL] Сервер 43"
     type: vless
-    server: t15.qifei.app
+    server: xray2-direct-mci1-fs-ce.freesocks.work
     port: 443
-    uuid: "b98d4c6e-6770-4a31-8256-a4750cdea0e7"
+    uuid: "50ad3977-a2a8-4909-9fbf-06aa67ae96cf"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.amazon.com"
+    servername: "dl.google.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "7j3hmlHrEDk3Kjx-dFG3E3jf0c6PZF45trIPFsuKWmI"
+  - name: "🇺🇸 [BL] Сервер 44"
+    type: vless
+    server: 23.191.200.207
+    port: 443
+    uuid: "89f7b43c-454e-4b92-b27d-dd9836fad9c8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "dl.google.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "0i_xAxYgSNx5NMpK2lOaWGS-CvAiD_LneYPO0MF0owo"
-  - name: "🇺🇸 [BL] Сервер 44"
+      public-key: "7j3hmlHrEDk3Kjx-dFG3E3jf0c6PZF45trIPFsuKWmI"
+  - name: "🇺🇸 [BL] Сервер 45"
+    type: vless
+    server: 67.220.73.204
+    port: 16016
+    uuid: "814bd064-544d-4255-a070-5705c03f6da9"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
+      short-id: "48050fab"
+  - name: "🇺🇸 [BL] Сервер 46"
     type: vless
     server: 66.154.101.36
     port: 443
@@ -606,7 +632,7 @@ proxies:
     reality-opts:
       public-key: "t_aj99mkcVXDY_7xI9RhWyEY3khupiGiDsGKEJ7EajM"
       short-id: "5590a9bae52e0586"
-  - name: "🇺🇸 [BL] Сервер 45"
+  - name: "🇺🇸 [BL] Сервер 47"
     type: vless
     server: 15.204.97.198
     port: 23576
@@ -620,7 +646,21 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇺🇸 [BL] Сервер 46"
+  - name: "🇺🇸 [BL] Сервер 48"
+    type: vless
+    server: 154.40.55.185
+    port: 443
+    uuid: "52919204-4ed9-42c8-97a0-0f01d007f898"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.oracle.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "XY0OTrgnRWxHbqBC8u4qFWvZakjNZY83AAnL_lwHu1M"
+      short-id: "e726fb"
+  - name: "🇺🇸 [BL] Сервер 49"
     type: vless
     server: 15.204.97.219
     port: 23576
@@ -633,7 +673,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-  - name: "🇺🇸 [BL] Сервер 47"
+  - name: "🇺🇸 [BL] Сервер 50"
     type: vless
     server: 44.248.233.99
     port: 443
@@ -647,7 +687,7 @@ proxies:
     reality-opts:
       public-key: "p8VhFzvFOBAhWAEAeWmwDxT3xBSRsGYixqi0qnLFnBM"
       short-id: "21270a66"
-  - name: "🇺🇸 [BL] Сервер 48"
+  - name: "🇺🇸 [BL] Сервер 51"
     type: vless
     server: 147.182.212.232
     port: 56565
@@ -660,7 +700,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Td03Ae-cuYLq4xg7MSps58c_yRUcbbwtZLXm0ywabjY"
-  - name: "🇺🇸 [BL] Сервер 49"
+  - name: "🇺🇸 [BL] Сервер 52"
     type: vless
     server: 216.167.126.97
     port: 443
@@ -674,7 +714,7 @@ proxies:
     reality-opts:
       public-key: "yFvOpugh65xKQNAwKrhitv4d2pflD8QwNFMj-jDOmT8"
       short-id: "0123456789abcdef"
-  - name: "🇺🇸 [BL] Сервер 50"
+  - name: "🇺🇸 [BL] Сервер 53"
     type: vless
     server: 169.40.42.163
     port: 443
@@ -688,7 +728,7 @@ proxies:
     reality-opts:
       public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
       short-id: "c39cc7310a"
-  - name: "🇺🇸 [BL] Сервер 51"
+  - name: "🇺🇸 [BL] Сервер 54"
     type: vless
     server: 50.117.15.225
     port: 443
@@ -702,7 +742,7 @@ proxies:
     reality-opts:
       public-key: "G7bpUPFSW28-oE6ff8qZac1_apU6PiJ-GHmi7tAPDSY"
       short-id: "91af08b1ce1f"
-  - name: "🇺🇸 [BL] Сервер 52"
+  - name: "🇺🇸 [BL] Сервер 55"
     type: vless
     server: 176.122.158.11
     port: 443
@@ -716,35 +756,7 @@ proxies:
     reality-opts:
       public-key: "dV6-Xn1FCpiYvbJ1o79HjMr0IJg29xacSQcaD4jeKAM"
       short-id: "f8d85e1a92219c3c"
-  - name: "🇺🇸 [BL] Сервер 53"
-    type: vless
-    server: 5.175.161.227
-    port: 443
-    uuid: "3d87029f-b55b-487d-aea6-6049c8668ff1"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.bmw.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "53u64exYWpO2W3vlx4UUlDUFQpBFMUKQPeN6miQtpXE"
-      short-id: "1cb422f39c02f3ec"
-  - name: "🇺🇸 [BL] Сервер 54"
-    type: vless
-    server: 156.229.161.107
-    port: 10001
-    uuid: "9c79aceb-4649-44ea-9698-b5e9ecf6d6da"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.icloud.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "4jNz4Bw-FZlaX-WtfAdwK0hegY28W_k8AttGd-7hZn4"
-      short-id: "fb2c6678"
-  - name: "🇺🇸 [BL] Сервер 55"
+  - name: "🇺🇸 [BL] Сервер 56"
     type: vless
     server: 5.34.178.120
     port: 443
@@ -758,7 +770,7 @@ proxies:
     reality-opts:
       public-key: "EVhq2BxKuw2Cody1DmF_HPvUYKwzdXbHP47blUv-eRM"
       short-id: "55ab5559e3a6d10a"
-  - name: "🇺🇸 [BL] Сервер 56"
+  - name: "🇺🇸 [BL] Сервер 57"
     type: vless
     server: 167.17.69.171
     port: 443
@@ -772,34 +784,7 @@ proxies:
     reality-opts:
       public-key: "ALT8hIGeZEhi0sQFbXP_ntBg8Xo-v7i0YCLrqTnBxRk"
       short-id: "0990d22f"
-  - name: "🇺🇸 [BL] Сервер 57"
-    type: vless
-    server: 154.40.55.185
-    port: 443
-    uuid: "52919204-4ed9-42c8-97a0-0f01d007f898"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.oracle.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "XY0OTrgnRWxHbqBC8u4qFWvZakjNZY83AAnL_lwHu1M"
-      short-id: "e726fb"
   - name: "🇺🇸 [BL] Сервер 58"
-    type: vless
-    server: 195.123.235.177
-    port: 443
-    uuid: "729dd5f2-f5ff-4070-8c10-863eceded0b1"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway.icloud.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "5B83otQ5ZQwtBFhR7xzsGJRXflkFKRJpQguYbE5JWGI"
-  - name: "🇺🇸 [BL] Сервер 59"
     type: vless
     server: 195.123.235.183
     port: 443
@@ -813,7 +798,7 @@ proxies:
     reality-opts:
       public-key: "H3R3BUAl7thrIZsznTbb-eRREIjQOH2f3WO0oTN7OGY"
       short-id: "a0e2a6074c6456b0"
-  - name: "🇺🇸 [BL] Сервер 60"
+  - name: "🇺🇸 [BL] Сервер 59"
     type: vless
     server: 15.204.97.197
     port: 23576
@@ -826,7 +811,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-  - name: "🇺🇸 [BL] Сервер 61"
+  - name: "🇺🇸 [BL] Сервер 60"
     type: vless
     server: 169.40.42.225
     port: 443
@@ -840,7 +825,7 @@ proxies:
     reality-opts:
       public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
       short-id: "c39cc7310a"
-  - name: "🇺🇸 [BL] Сервер 62"
+  - name: "🇺🇸 [BL] Сервер 61"
     type: vless
     server: 15.204.97.195
     port: 23576
@@ -854,7 +839,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇺🇸 [BL] Сервер 63"
+  - name: "🇺🇸 [BL] Сервер 62"
     type: vless
     server: 162.35.8.62
     port: 443
@@ -867,7 +852,7 @@ proxies:
     reality-opts:
       public-key: "5-9YzvyXcZ4J5Z4OaVTUbxUU2InvnwT17m0XY-Jse1E"
       short-id: "257420d9d430152a"
-  - name: "🇺🇸 [BL] Сервер 64"
+  - name: "🇺🇸 [BL] Сервер 63"
     type: vless
     server: 169.40.42.89
     port: 443
@@ -881,7 +866,7 @@ proxies:
     reality-opts:
       public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
       short-id: "c39cc7310a"
-  - name: "🇨🇦 [BL] Сервер 65"
+  - name: "🇨🇦 [BL] Сервер 64"
     type: vless
     server: 51.161.72.153
     port: 37765
@@ -896,7 +881,7 @@ proxies:
       short-id: "defda00d613c"
     grpc-opts:
       grpc-service-name: "grpc_common1"
-  - name: "🇺🇸 [BL] Сервер 66"
+  - name: "🇺🇸 [BL] Сервер 65"
     type: vless
     server: 45.91.248.127
     port: 8443
@@ -911,21 +896,8 @@ proxies:
       short-id: "8c609726e0233f08"
     grpc-opts:
       grpc-service-name: "grpc-api-v2"
-  - name: "🇺🇸 [BL] Сервер 67"
-    type: vless
-    server: 223.254.131.145
-    port: 443
-    uuid: "9e6836f1-846e-4617-ab08-579141d612e6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cp.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2IIpJJfhPvtjCi3EJEOm_kkcmfzNExbM8Tl0QZWsGzo"
-      short-id: "a3b454e8"
-  - name: "🇺🇸 [BL] Сервер 68"
+      grpc-mode: "gun"
+  - name: "🇺🇸 [BL] Сервер 66"
     type: vless
     server: 15.204.97.206
     port: 23576
@@ -939,7 +911,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇺🇸 [BL] Сервер 69"
+  - name: "🇺🇸 [BL] Сервер 67"
     type: vless
     server: 23.134.76.212
     port: 443
@@ -953,7 +925,7 @@ proxies:
     reality-opts:
       public-key: "cYmfBXsDs1sqQ2ZBW3xsFroB7JHV_ufFT5m7ab7STnU"
       short-id: "9ab513f082d4c6e1"
-  - name: "🇨🇦 [BL] Сервер 70"
+  - name: "🇨🇦 [BL] Сервер 68"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -967,7 +939,7 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇺🇸 [BL] Сервер 71"
+  - name: "🇺🇸 [BL] Сервер 69"
     type: vless
     server: 167.104.223.215
     port: 443
@@ -981,89 +953,49 @@ proxies:
     reality-opts:
       public-key: "fyfX-egDrRvXNW1Gt2P_8rH4jdupAcmhFLOCZCzCowo"
       short-id: "fc36b4a584871aa5"
-  - name: "🇺🇸 [BL] Сервер 72"
-    type: vless
-    server: 23.158.233.2
-    port: 2096
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 73"
-    type: vless
-    server: 23.191.200.207
-    port: 443
-    uuid: "89f7b43c-454e-4b92-b27d-dd9836fad9c8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dl.google.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "7j3hmlHrEDk3Kjx-dFG3E3jf0c6PZF45trIPFsuKWmI"
-  - name: "🇨🇦 [BL] Сервер 74"
-    type: vless
-    server: 54.39.96.233
-    port: 8080
-    uuid: "20b98028-53c9-4f76-9bc9-b6b16b8a9152"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "icloud.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "sQ_YHzotqhVJoUDAZl5kTzUqVN6ksh-MTikz_ixsZWc"
-      short-id: "2b30"
-  - name: "🇺🇸 [BL] Сервер 75"
+  - name: "🇺🇸 [BL] Сервер 70"
     type: vless
     server: 208.84.100.209
     port: 2112
     uuid: "36c3dcc2-17b6-4478-b8a7-3978e6d5afe9"
-    network: "tcp"
+    network: "raw"
     servername: "play.google.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "p8pUe3hwND5rhAti-yRQ5qMaIkNdhxOV1K1jpbtJlEQ"
       short-id: "125ba3"
-  - name: "🇨🇦 [BL] Сервер 76"
+  - name: "🇺🇸 [BL] Сервер 71"
     type: vless
-    server: 198.100.154.175
-    port: 8080
-    uuid: "e17150a9-f949-467b-94ea-4d50e4c84186"
+    server: 47.77.196.79
+    port: 443
+    uuid: "b98d4c6e-6770-4a31-8256-a4750cdea0e7"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "icloud.com"
+    servername: "www.amazon.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "2PYoIhSKvVE-DgFzPYGo4cD2b7_8Ul2Vm8QKGWH1sAo"
-      short-id: "4b"
-  - name: "🇺🇸 [BL] Сервер 77"
+      public-key: "0i_xAxYgSNx5NMpK2lOaWGS-CvAiD_LneYPO0MF0owo"
+      short-id: "1a"
+  - name: "🇺🇸 [BL] Сервер 72"
     type: vless
-    server: 203.88.117.227
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
+    server: 154.17.5.16
+    port: 8443
+    uuid: "3d116251-c919-4cf7-bc61-3a90d91aa80b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "updates.cdn-apple.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 78"
+    reality-opts:
+      public-key: "ozguNbRK0BghbZv0n6a164gmotQ-EI-VR9iXgGlfuXg"
+  - name: "🇺🇸 [BL] Сервер 73"
     type: vless
-    server: 179.253.246.191
+    server: 192.241.206.189
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -1075,7 +1007,7 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 79"
+  - name: "🇺🇸 [BL] Сервер 74"
     type: vless
     server: 179.255.107.60
     port: 8443
@@ -1088,7 +1020,7 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 80"
+  - name: "🇺🇸 [BL] Сервер 75"
     type: vless
     server: 179.253.243.166
     port: 443
@@ -1102,7 +1034,63 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 81"
+  - name: "🇺🇸 [BL] Сервер 76"
+    type: vless
+    server: 179.255.127.209
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇺🇸 [BL] Сервер 77"
+    type: vless
+    server: 179.253.225.172
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇺🇸 [BL] Сервер 78"
+    type: vless
+    server: 108.62.160.192
+    port: 8443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇺🇸 [BL] Сервер 79"
+    type: vless
+    server: 45.76.70.251
+    port: 443
+    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
+    network: "ws"
+    servername: "snip.edgeoneai.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "snip.edgeoneai.cc.cd"
+  - name: "🇺🇸 [BL] Сервер 80"
     type: vless
     server: 144.225.246.243
     port: 8443
@@ -1115,9 +1103,9 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 82"
+  - name: "🇺🇸 [BL] Сервер 81"
     type: vless
-    server: 179.255.127.209
+    server: 45.59.131.40
     port: 443
     uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
     network: "ws"
@@ -1129,64 +1117,39 @@ proxies:
       path: "/"
       headers:
         Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 83"
-    type: vless
-    server: 108.62.160.192
-    port: 8443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 84"
-    type: vless
-    server: 179.255.136.57
-    port: 443
-    uuid: "495c7195-85b8-498a-bf20-2ea9ce9175b5"
-    network: "ws"
-    servername: "snip.edgeoneai.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "snip.edgeoneai.cc.cd"
-  - name: "🇺🇸 [BL] Сервер 85"
-    type: vless
-    server: 82.39.213.125
-    port: 443
-    uuid: "7ce594b9-918b-441d-922c-230341838abd"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "us1.xshoponline.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "LPxsw0pGD7kfIEF0RJlSVYA37S6KKxoy9G0rmtmJqUA"
-      short-id: "df0037688b5b6984"
-  - name: "🇺🇸 [BL] Сервер 86"
-    type: vless
-    server: 154.17.5.16
-    port: 8443
-    uuid: "3d116251-c919-4cf7-bc61-3a90d91aa80b"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "updates.cdn-apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ozguNbRK0BghbZv0n6a164gmotQ-EI-VR9iXgGlfuXg"
-  - name: "🇨🇦 [BL] Сервер 87"
+  - name: "🇨🇦 [BL] Сервер 82"
     type: ss
     server: 149.22.95.183
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇺🇸 [BL] Сервер 83"
+    type: ss
+    server: 15.204.247.206
+    port: 4444
+    password: "pKEW8JPByTVTLtM"
+    cipher: "aes-256-gcm"
+  - name: "🇺🇸 [BL] Сервер 84"
+    type: ss
+    server: 156.146.38.169
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇺🇸 [BL] Сервер 85"
+    type: ss
+    server: 198.98.53.130
+    port: 443
+    password: "eDfN7SODQceIOmIAbtJJtK"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇺🇸 [BL] Сервер 86"
+    type: ss
+    server: 173.244.56.9
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇺🇸 [BL] Сервер 87"
+    type: ss
+    server: 173.244.56.6
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
@@ -1198,59 +1161,41 @@ proxies:
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 89"
     type: ss
-    server: 37.19.198.243
+    server: 37.19.198.244
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 90"
     type: ss
-    server: 156.146.38.170
+    server: 37.19.198.243
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 91"
     type: ss
-    server: 156.146.38.169
+    server: 37.19.198.236
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 92"
     type: ss
-    server: 173.244.56.9
+    server: 37.19.198.160
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 93"
     type: ss
-    server: 15.204.247.206
-    port: 4444
-    password: "pKEW8JPByTVTLtM"
-    cipher: "aes-256-gcm"
+    server: 156.146.38.167
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 94"
     type: ss
-    server: 37.19.198.244
+    server: 156.146.38.170
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
   - name: "🇺🇸 [BL] Сервер 95"
-    type: ss
-    server: 173.244.56.6
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇺🇸 [BL] Сервер 96"
-    type: ss
-    server: 37.19.198.236
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇺🇸 [BL] Сервер 97"
-    type: ss
-    server: 37.19.198.160
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇺🇸 [BL] Сервер 98"
     type: vmess
     server: 67.220.95.3
     port: 18000
@@ -1260,7 +1205,7 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇨🇦 [BL] Сервер 99"
+  - name: "🇨🇦 [BL] Сервер 96"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -1268,7 +1213,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇺🇸 [BL] Сервер 100"
+  - name: "🇺🇸 [BL] Сервер 97"
     type: vmess
     server: 38.110.1.246
     port: 18000
@@ -1278,7 +1223,7 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇺🇸 [BL] Сервер 101"
+  - name: "🇺🇸 [BL] Сервер 98"
     type: vmess
     server: 67.220.85.46
     port: 18000
@@ -1288,7 +1233,7 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇺🇸 [BL] Сервер 102"
+  - name: "🇺🇸 [BL] Сервер 99"
     type: vmess
     server: 84.17.41.2
     port: 18000
@@ -1298,7 +1243,7 @@ proxies:
     network: "tcp"
     ws-opts:
       path: "/"
-  - name: "🇨🇦 [BL] Сервер 103"
+  - name: "🇨🇦 [BL] Сервер 100"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -1306,3 +1251,9 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
+  - name: "🇺🇸 [BL] Сервер 101"
+    type: ss
+    server: 95.215.201.18
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
