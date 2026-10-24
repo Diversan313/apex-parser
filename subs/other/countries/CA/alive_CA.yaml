@@ -6,7 +6,7 @@ proxies:
     uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
     network: "xhttp"
     servername: "can.kramiliantha.sbs"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -101,25 +101,19 @@ proxies:
       grpc-service-name: "grpc_common1"
   - name: "🇨🇦 [BL] Сервер 8"
     type: vless
-    server: 91.215.40.234
+    server: 209.200.246.148
     port: 443
-    uuid: "c99063b9-e86f-4320-bd45-f7e1acdc0f87"
-    network: "xhttp"
-    servername: "caw-guard-1.harknmav.fun"
+    uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v2/upload/8a3f1c5be24d2854"
-      host: "caw-guard-1.harknmav.fun"
-      mode: "stream-one"
+    reality-opts:
+      public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
+      short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 9"
-    type: ss
-    server: 149.22.95.183
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 10"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -127,7 +121,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 11"
+  - name: "🇨🇦 [BL] Сервер 10"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -135,3 +129,9 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "raw"
+  - name: "🇨🇦 [BL] Сервер 11"
+    type: ss
+    server: 149.22.95.183
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
