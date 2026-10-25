@@ -73,10 +73,6 @@ def update_sni_whitelist_file():
                 local_text = None
 
         if local_text is not None and local_text == remote_text:
-            print(
-                f"✅ SNI whitelist актуален: "
-                f"{SNI_WHITELIST_PATH}"
-            )
             return True
 
         with open(
@@ -92,24 +88,15 @@ def update_sni_whitelist_file():
             if ln.strip() and not ln.strip().startswith("#")
         ]
 
-        print(
-            f"📥 SNI whitelist обновлён: "
-            f"{SNI_WHITELIST_PATH} "
-            f"({len(lines)} доменов)"
-        )
+        print(f"sni whitelist: {len(lines)} доменов")
         return True
 
     except Exception as e:
         if os.path.exists(SNI_WHITELIST_PATH):
-            print(
-                f"⚠️ Не удалось обновить SNI whitelist: {e}. "
-                f"Используем локальный файл."
-            )
+            print(f"warn: sni whitelist не обновлён: {e}, используем локальный")
             return True
 
-        print(
-            f"⚠️ SNI whitelist недоступен: {e}"
-        )
+        print(f"warn: sni whitelist недоступен: {e}")
         return False
 
 
@@ -120,9 +107,7 @@ def load_sni_whitelist():
     SNI_WHITELIST_SET = set()
 
     if not os.path.exists(SNI_WHITELIST_PATH):
-        print(
-            f"⚠️ Файл {SNI_WHITELIST_PATH} не найден"
-        )
+        print(f"warn: sni whitelist файл не найден")
         return
 
     try:
@@ -153,15 +138,9 @@ def load_sni_whitelist():
                 if line:
                     SNI_WHITELIST_SET.add(line)
 
-        print(
-            f"📋 SNI whitelist загружен: "
-            f"{len(SNI_WHITELIST_SET)} доменов"
-        )
 
     except Exception as e:
-        print(
-            f"⚠️ Ошибка чтения SNI whitelist: {e}"
-        )
+        print(f"warn: sni whitelist чтение: {e}")
         SNI_WHITELIST_SET = set()
 
 

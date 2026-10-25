@@ -55,10 +55,6 @@ def _cfg(name: str, default):
     return getattr(cfg, name, default)
 
 
-# ============================================================
-# ТЮНЕР
-# ============================================================
-
 def _available_ram_kb() -> Optional[int]:
     """Свободная RAM в KB. Linux: /proc/meminfo; Windows: GlobalMemoryStatusEx."""
     try:
@@ -132,10 +128,6 @@ class ChunkTuner:
             self.size = min(_CHUNK_HARD_CAP, int(self.size * 1.25) + 1)
 
 
-# ============================================================
-# ПОРТЫ
-# ============================================================
-
 _port_lock = threading.Lock()
 _port_slot = 0
 
@@ -200,10 +192,6 @@ def _build_chunk_config(outbounds: list, ports: list) -> dict:
     return config
 
 
-# ============================================================
-# WATCHDOG
-# ============================================================
-
 _CHUNK_LOCK = threading.Lock()
 _CHUNK_PROCS = {}  # chunk_id -> (start_time, Popen)
 
@@ -235,15 +223,11 @@ def kill_overdue_chunks(chunk_deadline: float) -> int:
             try:
                 proc.kill()
                 killed += 1
-                print(f"   ⏱ Watchdog: чанк #{chunk_id} превысил {chunk_deadline:.0f}с — процесс Xray снят")
+                print(f"warn: чанк {chunk_id} снят по таймауту {chunk_deadline:.0f}с")
             except Exception:
                 pass
     return killed
 
-
-# ============================================================
-# ПРОГОН ОДНОГО ЧАНКА
-# ============================================================
 
 def _test_port(port: int, timeout: float, min_success_count: int):
     opener = urllib.request.build_opener(
@@ -413,10 +397,6 @@ def _test_chunk(links: list, min_success_count: int, timeout: float, chunk_id=No
 
     return results, started_all
 
-
-# ============================================================
-# ПУБЛИЧНЫЙ ВХОД
-# ============================================================
 
 def _prefilter_tcp(items: list, results: dict) -> list:
     """

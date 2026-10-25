@@ -54,6 +54,7 @@ SOURCE_FETCH_WORKERS = 100          # потоков скачивания ист
 SOURCE_FETCH_TIMEOUT = 5            # сек, таймаут одной сокетной операции (connect/recv)
 SOURCE_FETCH_RETRIES = 1            # повторов транзиентных ошибок на источник
 SOURCE_FETCH_DEADLINE = 30          # сек, стенка на один источник (все попытки, redirect, Kameleon, happ)
+FETCH_HEARTBEAT_SEC = 300           # сек между строками прогресса фазы скачивания
 SOURCE_MAX_BYTES = 4 * 1024 * 1024  # потолок тела одной подписки
 DNS_RESOLVE_TIMEOUT = 5             # сек, потолок одного getaddrinfo
 DNS_BULK_WORKERS = 250              # потоков параллельного DNS-прогрева кэша
@@ -100,6 +101,7 @@ KEEP_PREV_ALIVES = True             # подмешивать прошлые aliv
 # Вывод файлов
 SORT_BY_PING = False                # сортировать конфиги по пингу (ниже — выше)
 WRITE_LATEST_JSON = True            # stats/latest.json
+WRITE_SOURCES_REPORT = 1            # stats/sources_report*.txt за прогон
 WRITE_BASE64 = True                 # alive_*.txt (base64)
 WRITE_PLAIN = True                  # alive_plain_*.txt
 WRITE_YAML = True                   # alive_*.yaml (Clash)

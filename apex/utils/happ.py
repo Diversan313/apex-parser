@@ -86,7 +86,7 @@ def _load_v5_keys() -> dict:
             _KEY_CACHE["v5_loaded"] = True
             _KEY_CACHE.update(keys)
         except Exception as e:
-            print(f"⚠️ Не удалось загрузить happ-ключи v5: {e}")
+            print(f"warn: happ-ключи v5 не загружены: {e}")
             _KEY_CACHE["v5_loaded"] = True
     return _KEY_CACHE
 
@@ -113,7 +113,7 @@ def _load_legacy_key(name: str):
             _KEY_CACHE[cache_key] = key
             return key
     except Exception as e:
-        print(f"⚠️ Не удалось загрузить happ-ключ {name}: {e}")
+        print(f"warn: happ-ключ {name} не загружен: {e}")
     _KEY_CACHE[cache_key] = None
     return None
 

@@ -82,10 +82,6 @@ def _skip_cert_verify(p: dict) -> str:
     return "1" if p.get("skip-cert-verify") in (True, "true", "True") else ""
 
 
-# ============================================================
-# ОБЩИЕ ЧАСТИ: TLS и транспорт -> query-параметры нашего диалекта
-# ============================================================
-
 def _tls_params(security: str, sni: str, alpn: str, fp: str,
                 allow_insecure: str, pbk: str = "", sid: str = "") -> List[tuple]:
     # security: "tls" | "reality" | "" (без TLS)
@@ -170,10 +166,6 @@ def _singbox_transport_params(t: dict) -> Optional[List[tuple]]:
     # quic/httpupgrade нашим диалектом не выражаются
     return None
 
-
-# ============================================================
-# CLASH / MIHOMO
-# ============================================================
 
 def _clash_tls_parts(p: dict):
     """(security, sni, alpn, fp, allowInsecure, pbk, sid) из Clash-прокси."""
@@ -367,10 +359,6 @@ def clash_proxy_to_link(p: dict) -> Optional[str]:
     return None
 
 
-# ============================================================
-# SING-BOX
-# ============================================================
-
 def _singbox_tls_parts(tls: dict):
     tls = tls or {}
     sni = _s(tls.get("server_name"))
@@ -522,10 +510,6 @@ def singbox_outbound_to_link(ob: dict) -> Optional[str]:
 
     return None
 
-
-# ============================================================
-# ВХОДНЫЕ ТОЧКИ: текст подписки -> список share-ссылок
-# ============================================================
 
 def _dedup_links(links: List[str]) -> List[str]:
     out, seen = [], set()

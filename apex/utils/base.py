@@ -40,9 +40,15 @@ def fmt_bytes(n: int) -> str:
     return f"{n}B"
 
 
-# ============================================================
-# FLAGS
-# ============================================================
+def fmt_duration(sec: float) -> str:
+    """Секунды → компактная строка «1ч 05м» / «19м 32с» / «42с»."""
+    sec = int(sec)
+    if sec >= 3600:
+        return f"{sec // 3600}ч {(sec % 3600) // 60:02d}м"
+    if sec >= 60:
+        return f"{sec // 60}м {sec % 60:02d}с"
+    return f"{sec}с"
+
 
 def cc_to_flag(cc: str) -> str:
     if not cc or len(cc) != 2:
@@ -66,10 +72,6 @@ def extract_clean_flag(text: str) -> str:
         else "🌐"
     )
 
-
-# ============================================================
-# SANITIZE
-# ============================================================
 
 def sanitize_v2rayng_link(link: str) -> str:
     """

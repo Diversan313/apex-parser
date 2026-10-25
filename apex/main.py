@@ -3,25 +3,23 @@ from __future__ import annotations
 
 import os
 import json
+import time
 import shutil
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import defaultdict
 
 from .config import (
-    WHITE_IP_FILE,
     MAX_WORKERS,
-    MAX_CONFIGS_PER_IP_WL,
     MAX_CONFIGS_PER_IP_BL,
     MAX_CONFIGS_PER_SUBNET_BL,
     WL_MIN_SUCCESS_COUNT,
     BL_MIN_SUCCESS_COUNT,
-    RU_SNI_RATIO,
 )
 from . import config as cfg
 from .geoip import init_geoip, is_cf_ip, resolve_hosts_bulk
 from .sni_whitelist import init_sni_whitelist
-from .utils import safe_b64encode, safe_b64decode
+from .utils import safe_b64encode, safe_b64decode, fmt_duration
 import ipaddress
 
 from .parse import (
@@ -136,7 +134,7 @@ def _write_subscription_files(base_dir: str, prefix: str, links: list) -> None:
             with open(path, "w", encoding="utf-8") as f:
                 f.write(links_to_clash_yaml(links))
         except Exception as e:
-            print(f"⚠️ Не удалось записать YAML {path}: {e}")
+            print(f"warn: YAML {path} не записан: {e}")
 
 
 def _sort_by_ping(items):
@@ -228,65 +226,19 @@ def _wl_bl_tag_fn(wl_keys, with_cf=True, ai_links=None, torrent_links=None):
 
 def main():
 
-    print(
-        "🚀 Старт продвинутого Xray-парсера..."
-    )
-
-    print(
-        "⚙️ WL white_ip: TCP → Xray, потом дедуп"
-    )
-
-    print(
-        "⚙️ WL остальные: тест 1/3"
-    )
-
-    print(
-        "⚙️ BL: тест 2/3"
-    )
-
-    print(
-        f"⚙️ WL: max {MAX_CONFIGS_PER_IP_WL}/IP"
-    )
-
-    print(
-        "⚙️ SNI из arch/lists/whitelist.txt → WL"
-    )
-
-    print(
-        f"⚙️ прочие .ru SNI → WL с шансом "
-        f"{int(RU_SNI_RATIO * 100)}%"
-    )
-
-    print(
-        "⚙️ Старые alive-конфиги используются"
-    )
+    t_run = time.monotonic()
 
     if cfg.AUTO_DOWNLOAD_XRAY:
         ensure_xray_core()
 
     print_xray_version()
 
-    print(
-        f"⚙️ SECURE_SOURCES_GITHUB={cfg.SECURE_SOURCES_GITHUB} "
-        f"SPLIT_SOURCES={cfg.SPLIT_SOURCES} "
-        f"ENABLE_TG_SOURCES={cfg.ENABLE_TG_SOURCES}"
-    )
-
-    # ========================================================
-    # 1. WHITE IP (remote → local)
-    # ========================================================
-
     download_white_ip()
     white_ips, white_networks = load_white_ips()
     save_white_ips(white_ips, white_networks)
-    print(f"💾 White IP база: {len(white_ips)} IP, {len(white_networks)} подсетей")
-
-    # ========================================================
-    # 2. SOURCES
-    # ========================================================
+    print(f"white_ip: {len(white_ips)} IP, {len(white_networks)} подсетей")
 
     wl_file, bl_file = resolve_source_files()
-    print(f"📂 Sources: WL={wl_file}  BL={bl_file}")
 
     if wl_file == bl_file:
         # один sources.txt — общий пул, классификация только по keywords/IP/SNI
@@ -297,17 +249,9 @@ def main():
         wl_fetched = fetch_links_parallel_with_source(wl_file)
         bl_fetched = fetch_links_parallel_with_source(bl_file)
 
-    # ========================================================
-    # 3. OLD ALIVE
-    # ========================================================
-
     prev_wl_links, prev_bl_links = (
         load_previous_alives()
     )
-
-    # ========================================================
-    # 4. ALL CANDIDATES
-    # ========================================================
 
     tagged_items = []
 
@@ -351,25 +295,11 @@ def main():
             )
         )
 
-    print(
-        f"\n📦 Всего кандидатов "
-        f"до дедупликации: "
-        f"{len(tagged_items)}"
-    )
-
-    # ========================================================
-    # 5. EXACT/LOGICAL DEDUP
-    # ========================================================
-
     clean_items = (
         clean_and_dedup(
             tagged_items
         )
     )
-
-    # ========================================================
-    # 5b. DNS-ПРОГРЕВ БЕЛОЙ БАЗЫ
-    # ========================================================
     # Классификация и CF-фильтр дальше берут адреса только из кэша:
     # одна параллельная волна с жёстким потолком вместо DNS-резолва
     # в последовательных циклах по всем кандидатам.
@@ -381,10 +311,6 @@ def main():
             if h:
                 warm_hosts.add(h.strip('[] \t\r\n\'"').lower())
         resolve_hosts_bulk(warm_hosts)
-
-    # ========================================================
-    # 6. CLASSIFY FIRST + AI / TORRENT tags
-    # ========================================================
 
     pre_ping_wl = []
     pre_ping_bl = []
@@ -447,16 +373,13 @@ def main():
             )
 
     print(
-        f"\n🧠 Классификация ДО пинга:"
-        f"\n   WL: {len(pre_ping_wl)}"
-        f"\n   BL: {len(pre_ping_bl)}"
-        f"\n   AI-кандидаты: {len(ai_links)}"
-        f"\n   Torrent-кандидаты: {len(torrent_links)}"
+        f"классификация: WL {len(pre_ping_wl)}, "
+        f"BL {len(pre_ping_bl)}, "
+        f"AI {len(ai_links)}, "
+        f"TR {len(torrent_links)}"
     )
 
-    # ========================================================
-    # 7. ONLY BL LIMIT
-    # ========================================================
+    bl_before_limit = len(pre_ping_bl)
 
     pre_ping_bl = (
         limit_bl_configs_per_ip(
@@ -465,14 +388,8 @@ def main():
     )
 
     print(
-        f"\n📡 После BL-предлимита:"
-        f"\n   WL: {len(pre_ping_wl)}"
-        f"\n   BL: {len(pre_ping_bl)}"
+        f"предлимит BL: {bl_before_limit} -> {len(pre_ping_bl)}"
     )
-
-    # ========================================================
-    # 8. PING WL
-    # ========================================================
 
     alive_wl_data = []
     ping_wl = []
@@ -499,10 +416,6 @@ def main():
 
         ping_wl.append((link, src))
 
-    # ========================================================
-    # 9. PING BL
-    # ========================================================
-
     ping_bl = []
     seen_bl = set()
 
@@ -513,18 +426,6 @@ def main():
 
         seen_bl.add(link)
         ping_bl.append((link, src))
-
-    print(
-        f"\n📡 Xray очередь:"
-        f"\n   WL white_ip (с тестом):  {white_ip_queued}"
-        f"\n   WL heuristic на тест:    {len(ping_wl) - white_ip_queued}"
-        f"\n   WL всего на Xray:        {len(ping_wl)}"
-        f"\n   BL на Xray-тест:         {len(ping_bl)}"
-    )
-
-    # ========================================================
-    # 10. TEST WL + BL
-    # ========================================================
 
     alive_bl_data = []
 
@@ -538,6 +439,8 @@ def main():
     bl_ru_to_wl = 0
 
     # WL: батчевый прогон (один Xray на чанк) или одиночный путь
+    print(f"тест WL: {len(ping_wl)} конфигов")
+    t_wl_test = time.monotonic()
     wl_results = test_links_chunked(ping_wl, WL_MIN_SUCCESS_COUNT)
 
     for link, src in ping_wl:
@@ -576,20 +479,16 @@ def main():
     if cfg.REMOVE_CF_EXIT:
         alive_wl_data, cf_dropped_wl = _drop_cf_exit(alive_wl_data)
         if cf_dropped_wl:
-            print(f"   └ REMOVE_CF_EXIT: убрано из WL {cf_dropped_wl} (выход через WARP/CF)")
+            print(f"warn: cf-exit: убрано из WL {cf_dropped_wl}")
 
     print(
-        f"\n🟢 WL тест завершён: "
-        f"OK={wl_ok}, "
-        f"FAIL={wl_fail}"
-    )
-    print(
-        f"   └ white_ip: "
-        f"OK={white_ip_ok}, "
-        f"FAIL={white_ip_fail}"
+        f"тест WL: {wl_ok}/{len(ping_wl)} "
+        f"за {fmt_duration(time.monotonic() - t_wl_test)}"
     )
 
     # BL: батчевый прогон
+    print(f"тест BL: {len(ping_bl)} конфигов")
+    t_bl_test = time.monotonic()
     bl_results = test_links_chunked(ping_bl, BL_MIN_SUCCESS_COUNT)
 
     for link, src in ping_bl:
@@ -635,18 +534,13 @@ def main():
     if cfg.REMOVE_CF_EXIT:
         alive_bl_data, cf_dropped_bl = _drop_cf_exit(alive_bl_data)
         if cf_dropped_bl:
-            print(f"   └ REMOVE_CF_EXIT: убрано из BL {cf_dropped_bl} (выход через WARP/CF)")
+            print(f"warn: cf-exit: убрано из BL {cf_dropped_bl}")
 
     print(
-        f"\n🔴 BL тест завершён: "
-        f"OK={bl_ok}, "
-        f"FAIL={bl_fail}, "
-        f"RU→WL={bl_ru_to_wl}"
+        f"тест BL: {bl_ok}/{len(ping_bl)}, "
+        f"RU->WL {bl_ru_to_wl} "
+        f"за {fmt_duration(time.monotonic() - t_bl_test)}"
     )
-
-    # ========================================================
-    # 11. WL DEDUP AFTER TEST
-    # ========================================================
 
     alive_wl_data = (
         dedup_advanced(
@@ -654,10 +548,6 @@ def main():
             "WL после Xray",
         )
     )
-
-    # ========================================================
-    # 12. WL DIVERSITY
-    # ========================================================
 
     alive_wl_clean = select_wl_diverse(
         alive_wl_data
@@ -667,10 +557,6 @@ def main():
         alive_wl_clean,
         "WL после diversity",
     )
-
-    # ========================================================
-    # 13. BL DEDUP
-    # ========================================================
 
     alive_bl_data = (
         dedup_advanced(
@@ -686,19 +572,12 @@ def main():
         )
     )
 
-    # ========================================================
-    # 14. BL LIMIT AFTER TEST
-    # ========================================================
-
     alive_bl_limited = (
         limit_bl_configs_per_ip(
             alive_bl_data
         )
     )
-
-    # ========================================================
-    # 15. BL PROTOCOL FILTER
-    # ========================================================
+    print(f"лимиты BL после теста: {len(alive_bl_data)} -> {len(alive_bl_limited)}")
 
     alive_bl_clean = (
         filter_protocols_bl(
@@ -707,13 +586,7 @@ def main():
         )
     )
 
-    # ========================================================
-    # 16. FULL
-    # ========================================================
-
-    # --------------------------------------------------------
     # Для FULL не применяем BL-ограничение к WL.
-    # --------------------------------------------------------
 
     wl_keys = set()
 
@@ -750,10 +623,7 @@ def main():
 
     if bl_wl_dupes:
         print(
-            f"🧹 Дедуп BL∩WL: "
-            f"было {len(alive_bl_clean)}, "
-            f"осталось {len(bl_kept)} "
-            f"(дубли туннелей из WL-подписки)"
+            f"дедуп BL∩WL: {len(alive_bl_clean)} -> {len(bl_kept)}"
         )
 
     alive_bl_clean = bl_kept
@@ -788,19 +658,17 @@ def main():
                 item
             )
 
-    # BL ограничиваем ещё раз для FULL.
+    # BL ограничиваем ещё раз для FULL; без изменений этап молчит
+    full_bl_pre = len(full_bl)
     full_bl = limit_bl_configs_per_ip(
         full_bl
     )
-
+    if len(full_bl) != full_bl_pre:
+        print(f"лимиты BL (FULL): {full_bl_pre} -> {len(full_bl)}")
     alive_full_clean = _sort_by_ping(
         full_wl
         + full_bl
     )
-
-    # ========================================================
-    # 17. SANITIZE + RENAME
-    # ========================================================
 
     def _build_renamed(items, tag_fn):
         out = []
@@ -853,9 +721,8 @@ def main():
         full_tag,
     )
 
-    # ========================================================
-    # 18. SAVE MAIN
-    # ========================================================
+    # все записи собираются в одну итоговую строку ниже
+    written = []
 
     os.makedirs("subs/main", exist_ok=True)
 
@@ -864,14 +731,10 @@ def main():
     _write_subscription_files("subs/main", "bl", final_bl)
     if cfg.WRITE_FULL:
         _write_subscription_files("subs/main", "full", final_full)
+    written.append(
+        f"WL {len(final_wl)}, BL {len(final_bl)}, FULL {len(final_full)}"
+    )
 
-    print("💾 Основные списки: alive_bs / alive_bl / alive_full (base64 + plain + yaml)")
-
-    # ========================================================
-    # 19. OTHER: AI / TORRENT / COUNTRIES
-    # ========================================================
-
-    # --- AI ---
     if cfg.WRITE_OTHER_AI:
         # CF-выход не даёт конфигу быть AI: через WARP AI-сервисы
         # часто считают трафик ботовым. Такие конфиги остаются в WL/BL.
@@ -889,11 +752,8 @@ def main():
                 "AI",
                 final_ai,
             )
-            print(f"💾 AI: {len(final_ai)} конфигов → subs/other/AI/")
-        else:
-            print("💾 AI: 0 конфигов — файлы не перезаписываем")
+            written.append(f"AI {len(final_ai)}")
 
-    # --- TORRENT ---
     if cfg.WRITE_OTHER_TORRENT:
         # CF-выход не даёт конфигу быть TR: Cloudflare режет не-вебовый
         # трафик. Такие конфиги остаются в WL/BL.
@@ -911,16 +771,8 @@ def main():
                 "torrent",
                 final_torrent,
             )
-            print(
-                f"💾 Torrent: {len(final_torrent)} конфигов "
-                f"→ subs/other/torrent/"
-            )
-        else:
-            print(
-                "💾 Torrent: 0 конфигов — файлы не перезаписываем"
-            )
+            written.append(f"TR {len(final_torrent)}")
 
-    # --- COUNTRIES ---
     # Группировка по странам нужна и для country-списков, и для exotic.
     by_cc = defaultdict(list)
     for item in alive_full_clean:
@@ -951,11 +803,7 @@ def main():
             cc_dir = os.path.join(countries_dir, cc)
             _write_subscription_files(cc_dir, cc, final_cc)
 
-        print(
-            f"💾 Countries: {len(active_ccs)} стран "
-            f"→ subs/other/countries/"
-        )
-
+        removed_ccs = 0
         if cfg.DELETE_MISSING_COUNTRIES:
             try:
                 for name in os.listdir(countries_dir):
@@ -967,11 +815,15 @@ def main():
                         and name.upper() not in active_ccs
                     ):
                         shutil.rmtree(path, ignore_errors=True)
-                        print(f"   🗑 удалена папка страны {name}")
+                        removed_ccs += 1
             except Exception as e:
-                print(f"⚠️ Ошибка очистки стран: {e}")
+                print(f"warn: очистка стран: {e}")
 
-    # --- PROTOCOLS ---
+        written.append(
+            f"стран {len(active_ccs)}"
+            + (f" (удалено {removed_ccs})" if removed_ccs else "")
+        )
+
     if cfg.WRITE_OTHER_PROTOCOLS:
         protocols_dir = "subs/other/protocols"
         os.makedirs(protocols_dir, exist_ok=True)
@@ -990,12 +842,8 @@ def main():
             proto_dir = os.path.join(protocols_dir, proto)
             _write_subscription_files(proto_dir, proto, final_proto)
 
-        print(
-            f"💾 Protocols: {len(by_proto)} протоколов "
-            f"({', '.join(sorted(by_proto))}) → subs/other/protocols/"
-        )
+        written.append(f"протоколов {len(by_proto)}")
 
-    # --- CONTINENTS ---
     if cfg.WRITE_OTHER_CONTINENTS:
         from .utils.geo_data import continent_for_cc
 
@@ -1023,14 +871,11 @@ def main():
                 final_cont,
             )
 
-        print(
-            f"💾 Continents: {len(by_continent)} континентов "
-            f"({', '.join(sorted(by_continent))})"
-            + (f", {unknown_cc} нод без континента" if unknown_cc else "")
-            + " → subs/other/continents/"
+        written.append(
+            f"континентов {len(by_continent)}"
+            + (f" ({unknown_cc} нод без континента)" if unknown_cc else "")
         )
 
-    # --- CLOUDFLARE EXIT ---
     # Только конфиги с выходом через WARP/Cloudflare: безопаснее и быстрее
     # для пользователей за строгими NAT'ами.
     if cfg.WRITE_OTHER_CF:
@@ -1040,16 +885,10 @@ def main():
             final_cf = _build_renamed(cf_items, lambda _item: cfg.RENAME_PREFIX_CF)
             if final_cf:
                 _write_subscription_files("subs/other/CF", "CF", final_cf)
-                print(
-                    f"💾 CF exit: {len(final_cf)} конфигов с выходом через WARP/CF "
-                    f"-> subs/other/CF/"
-                )
+                written.append(f"CF {len(final_cf)}")
             else:
-                print("💾 CF exit: конфиги есть, но ни один не прошёл переименование")
-        else:
-            print("💾 CF exit: 0 конфигов - файлы не перезаписываем")
+                print("warn: CF-список: переименование не прошло ни для одного конфига")
 
-    # --- EXOTIC ---
     # Редкие страны: если в стране нод <= EXOTIC_MAX_NODES —
     # её конфиги идут и в общий экзотический список.
     if cfg.WRITE_OTHER_EXOTIC:
@@ -1070,17 +909,10 @@ def main():
                 cc for cc, items in by_cc.items()
                 if len(items) <= cfg.EXOTIC_MAX_NODES
             }
-            print(
-                f"💾 Exotic: {len(final_exotic)} конфигов из "
-                f"{len(exotic_ccs)} редких стран "
-                f"(лимит {cfg.EXOTIC_MAX_NODES} нод) → subs/other/exotic/"
+            written.append(
+                f"экзотика {len(final_exotic)} ({len(exotic_ccs)} стран)"
             )
-        else:
-            print("💾 Exotic: 0 конфигов — файлы не перезаписываем")
 
-    # ========================================================
-    # CLOSE GEO
-    # ========================================================
 
     if cfg.GEO_READER:
 
@@ -1089,60 +921,18 @@ def main():
         except Exception:
             pass
 
-    # ========================================================
-    # FINAL STATS
-    # ========================================================
 
-    print()
-    print("=" * 70)
-    print("📊 ФИНАЛЬНАЯ СТАТИСТИКА")
-    print("=" * 70)
-
+    if written:
+        print("записано: " + ", ".join(written))
     print(
-        f"WL white_ip в очереди:   {white_ip_queued}"
-    )
-
-    print(
-        f"WL white_ip живых:       {white_ip_ok}"
-    )
-
-    print(
-        f"WL на Xray всего:        {len(ping_wl)}"
-    )
-
-    print(
-        f"WL живых всего:          {wl_ok}"
-    )
-
-    print(
-        f"WL после diversity:      {len(final_wl)}"
-    )
-
-    print(
-        f"BL кандидатов:           {len(ping_bl)}"
-    )
-
-    print(
-        f"BL живых:                {bl_ok}"
-    )
-
-    print(
-        f"BL финал:                {len(final_bl)}"
-    )
-
-
-    print(
-        f"BL RU → WL:              {bl_ru_to_wl}"
+        f"итог: WL {wl_ok}/{len(ping_wl)} -> {len(final_wl)} "
+        f"(white_ip {white_ip_ok}/{white_ip_queued}), "
+        f"BL {bl_ok}/{len(ping_bl)} -> {len(final_bl)}, "
+        f"RU->WL {bl_ru_to_wl}"
     )
     print(
-        f"FULL:                 {len(final_full)}"
+        f"прогон: {fmt_duration(time.monotonic() - t_run)}"
     )
-
-    print(
-        f"White IP:             {len(white_ips)}"
-    )
-
-    print("=" * 70)
 
     # stats/latest.json — машинная сводка для бота / badge / CI
     if cfg.WRITE_LATEST_JSON:
@@ -1177,15 +967,8 @@ def main():
                     indent=2,
                 )
                 sf.write("\n")
-            print("stats/latest.json записан")
         except Exception as e:
-            print(f"⚠️ Не удалось записать stats/latest.json: {e}")
-
-    print(
-        "✨ Готово!"
-    )
-
-
+            print(f"warn: stats/latest.json не записан: {e}")
 
 
 def run():

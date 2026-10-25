@@ -494,10 +494,6 @@ def get_final_dedup_key(
     )
 
 
-# ============================================================
-# PRE-PING DEDUP
-# ============================================================
-
 def clean_and_dedup(
     tagged_items: list,
 ) -> list:
@@ -540,18 +536,10 @@ def clean_and_dedup(
             )
         )
 
-    print(
-        f"🧹 Дедуп ДО пинга: "
-        f"было {len(tagged_items)}, "
-        f"осталось {len(result)}."
-    )
+    print(f"дедуп: {len(tagged_items)} -> {len(result)}")
 
     return result
 
-
-# ============================================================
-# ADVANCED DEDUP
-# ============================================================
 
 def dedup_advanced(
     items_list: list,
@@ -584,10 +572,7 @@ def dedup_advanced(
     """
 
     if not items_list:
-        print(
-            f"🧹 Дедуп {label}: "
-            f"было 0, осталось 0."
-        )
+        print(f"дедуп {label}: 0 -> 0")
         return []
 
     def _fp_rank(link: str) -> int:
@@ -668,18 +653,10 @@ def dedup_advanced(
             result[idx] = item
             best_by_key[key] = (rank, idx)
 
-    print(
-        f"🧹 Дедуп {label}: "
-        f"было {len(items_list)}, "
-        f"осталось {len(result)}."
-    )
+    print(f"дедуп {label}: {len(items_list)} -> {len(result)}")
 
     return result
 
-
-# ============================================================
-# BL LIMIT
-# ============================================================
 
 def limit_bl_configs_per_ip(
     items_list: list,
@@ -783,21 +760,8 @@ def limit_bl_configs_per_ip(
                 item
             )
 
-    print(
-        f"✂️ BL лимиты ДО пинга: "
-        f"было {len(items_list)}, "
-        f"осталось {len(result)} | "
-        f"IP={MAX_CONFIGS_PER_IP_BL}, "
-        f"/24={MAX_CONFIGS_PER_SUBNET_BL}"
-    )
-
     return result
 
-
-
-# ============================================================
-# BL LIMIT: ВЫХОДНОЙ IP (после теста)
-# ============================================================
 
 def limit_bl_configs_per_exit_ip(
     items_list: list,
@@ -861,13 +825,5 @@ def limit_bl_configs_per_exit_ip(
             ip_counter[exit_ip] += 1
             subnet_counter[subnet_key] += 1
             result.append(item)
-
-    print(
-        f"✂️ BL лимиты по выходному IP: "
-        f"было {len(items_list)}, осталось {len(result)} | "
-        f"exit-IP={MAX_CONFIGS_PER_EXIT_IP_BL}, "
-        f"/24={MAX_CONFIGS_PER_EXIT_SUBNET_BL} | "
-        f"CF-исключение: {cf_skipped} конфигов"
-    )
 
     return result

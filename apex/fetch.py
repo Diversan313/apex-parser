@@ -24,7 +24,9 @@ from .config import (
     SOURCE_FETCH_TIMEOUT,
     SOCKET_DEFAULT_TIMEOUT,
     SOURCE_FETCH_RETRIES,
+    FETCH_HEARTBEAT_SEC,
     SOURCE_FETCH_DEADLINE,
+    WRITE_SOURCES_REPORT,
     EXPIRED_MARKERS_REGEX,
     SUPPORTED_PROTOCOLS,
     DECRYPT_HAPP,
@@ -34,6 +36,7 @@ from .utils import (
     safe_b64encode,
     sanitize_v2rayng_link,
     fmt_bytes,
+    fmt_duration,
 )
 from .parse import parse_host_port
 from .xray import xray_outbound_to_link
@@ -560,8 +563,7 @@ def fetch_links_parallel_with_source(
     ):
 
         print(
-            f"⚠️ Файл источников "
-            f"{url_file} не найден!"
+            f"error: файл источников не найден: {url_file}"
         )
 
         return links_with_source
@@ -585,15 +587,13 @@ def fetch_links_parallel_with_source(
                 )
             ]
 
-        print(
-            f"\n📡 [{url_file}] "
-            f"Скачивание источников "
-            f"({len(urls)} шт.)..."
-        )
+        t0 = time.monotonic()
 
-        successful_sources = 0
+        print(f"fetch: {url_file}, {len(urls)} источников")
+
         results_by_idx = {}
         done_count = 0
+        next_heartbeat = t0 + FETCH_HEARTBEAT_SEC
 
         with ThreadPoolExecutor(
             max_workers=SOURCE_FETCH_WORKERS
@@ -618,14 +618,10 @@ def fetch_links_parallel_with_source(
                 except Exception as e:
                     results_by_idx[idx] = ("err", str(e))
                 done_count += 1
-                # прогресс адаптивный: маленький список - каждая строка,
-                # огромный - каждые ~5%, чтобы не топить лог
-                if done_count == 1 or done_count == len(urls) or done_count % max(1, len(urls) // 20) == 0:
-                    got = sum(
-                        1 for kind, payload in results_by_idx.values()
-                        if kind == "ok" and payload.get("configs")
-                    )
-                    print(f"   📡 скачано {done_count}/{len(urls)} источников, с конфигами: {got}")
+                # heartbeat по времени: объём вывода не зависит от числа источников
+                if time.monotonic() >= next_heartbeat:
+                    print(f"fetch: {done_count}/{len(urls)}")
+                    next_heartbeat = time.monotonic() + FETCH_HEARTBEAT_SEC
 
         # Повтор только для сетевых сбоев (не для пустых/битых подписок)
         retry_idxs = []
@@ -640,10 +636,7 @@ def fetch_links_parallel_with_source(
                 retry_idxs.append(idx)
 
         if retry_idxs:
-            print(
-                f"  ↺ Повтор сети для "
-                f"{len(retry_idxs)} источник(ов)..."
-            )
+            print(f"fetch: повтор для {len(retry_idxs)} источников с сетевыми ошибками")
             # повтор идёт с полной шириной первого прохода: медленный retry
             # растягивал хвост прогона на десятки минут
             with ThreadPoolExecutor(
@@ -665,8 +658,21 @@ def fetch_links_parallel_with_source(
                     except Exception as e:
                         results_by_idx[idx] = ("err", str(e))
 
-        # Печать строго по номеру источника (без URL)
+        # Полный отчёт — в файл: построчный дамп всех источников топит
+        # лог Actions. Консоль получает только сводку по фазе.
         special_lines = []   # ошибки и источники с пометками - в конец отчёта
+        report_lines = []
+        stats = {
+            "with_configs": 0,
+            "empty_200": 0,
+            "expired": 0,
+            "deadline": 0,
+            "http_err": 0,
+            "net_err": 0,
+            "yaml": 0,
+            "kameleon": 0,
+        }
+        err_types = {}
 
         for idx in range(1, len(urls) + 1):
             kind, payload = results_by_idx.get(
@@ -679,13 +685,35 @@ def fetch_links_parallel_with_source(
                 special_lines.append(
                     f"  ├─ ❌ Источник #{idx:<3} | ОШИБКА | {payload}"
                 )
+                etype = str(payload).split(":", 1)[0][:24]
+                err_types[etype] = err_types.get(etype, 0) + 1
                 continue
 
             res = payload
             configs = res.get("configs") or []
+            err_text = res.get("error") or ""
 
-            if res.get("http_status") in (200, 204) or configs:
-                successful_sources += 1
+            # Порядок проверок важен: у expired и дедлайнных источников
+            # HTTP-статус бывает 200, в общие категории они не попадают.
+            if configs:
+                stats["with_configs"] += 1
+            elif res.get("is_expired"):
+                stats["expired"] += 1
+            elif "hard deadline" in err_text or "превышен бюджет" in err_text:
+                stats["deadline"] += 1
+            elif res.get("http_status") in (200, 204):
+                stats["empty_200"] += 1
+            elif res.get("http_status") is None:
+                stats["net_err"] += 1
+            else:
+                stats["http_err"] += 1
+            if res.get("is_yaml"):
+                stats["yaml"] += 1
+            if res.get("kameleon"):
+                stats["kameleon"] += 1
+            if err_text and not configs:
+                etype = err_text.split(":", 1)[0][:24]
+                err_types[etype] = err_types.get(etype, 0) + 1
 
             # строка источника
             status_str = (
@@ -708,8 +736,8 @@ def fetch_links_parallel_with_source(
                 fmt_parts.append("Expired")
             fmt_str = f" [{'/'.join(fmt_parts)}]" if fmt_parts else ""
             err_str = (
-                f" (Ошибка: {res.get('error')})"
-                if res.get("error") and not configs
+                f" (Ошибка: {err_text})"
+                if err_text and not configs
                 else ""
             )
             line = (
@@ -720,33 +748,77 @@ def fetch_links_parallel_with_source(
                 f"{fmt_str}{err_str}"
             )
 
-            # проблемные/особые - буферизуем, обычные печатаем сразу
+            # проблемные/особые - в конец отчёта, обычные - по порядку
             if not configs or fmt_parts:
                 special_lines.append(line)
             else:
-                print(line)
+                report_lines.append(line)
 
             for cfg_ in configs:
                 links_with_source.append(
                     (cfg_, f"src#{idx}")
                 )
 
-        for line in special_lines:
-            print(line)
+        top_errs = sorted(
+            err_types.items(),
+            key=lambda kv: -kv[1],
+        )[:5]
 
+        # разрез по категориям — в шапку отчёта, консоль получает короткую строку
+        breakdown = (
+            f"конфигов {len(links_with_source)} у {stats['with_configs']}, "
+            f"пустые {stats['empty_200']}, expired {stats['expired']}, "
+            f"yaml {stats['yaml']}, kameleon {stats['kameleon']}, "
+            f"HTTP-ошибки {stats['http_err']}, сетевые {stats['net_err']}, "
+            f"дедлайны {stats['deadline']}"
+        )
+        if top_errs:
+            breakdown += "\n# топ ошибок: " + ", ".join(
+                f"{k} {v}" for k, v in top_errs
+            )
+
+        report_hint = ""
+        if WRITE_SOURCES_REPORT:
+            # имя по файлу источников: sources.txt -> sources_report.txt,
+            # sources_wl.txt -> sources_wl_report.txt (раздельный режим)
+            base = os.path.splitext(
+                os.path.basename(url_file)
+            )[0]
+            name = (
+                "sources_report.txt"
+                if base == "sources"
+                else f"{base}_report.txt"
+            )
+            report_path = os.path.join("stats", name)
+            try:
+                os.makedirs("stats", exist_ok=True)
+                with open(
+                    report_path,
+                    "w",
+                    encoding="utf-8",
+                ) as f:
+                    f.write(
+                        f"# Источники: {url_file} "
+                        f"({len(urls)} шт.)\n#{breakdown}\n"
+                    )
+                    for line in report_lines + special_lines:
+                        f.write(line + "\n")
+                report_hint = f", отчёт {report_path}"
+            except Exception as e:
+                print(f"warn: отчёт источников не записан: {e}")
+
+        failed_sources = sum(err_types.values())
         print(
-            f"✅ Получено "
-            f"{len(links_with_source)} "
-            f"конфигов из "
-            f"{successful_sources}/"
-            f"{len(urls)} источников."
+            f"fetch: за {fmt_duration(time.monotonic() - t0)}, "
+            f"конфигов {len(links_with_source)}, "
+            f"ошибки {failed_sources}"
+            f"{report_hint}"
         )
 
     except Exception as e:
 
         print(
-            f"⚠️ Ошибка чтения "
-            f"{url_file}: {e}"
+            f"warn: чтение {url_file}: {e}"
         )
 
     return links_with_source

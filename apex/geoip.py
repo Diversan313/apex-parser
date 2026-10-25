@@ -28,8 +28,6 @@ def download_geoip_db():
     if os.path.exists(MMDB_PATH):
         return
 
-    print("📥 Скачиваю оффлайн базу GeoIP...")
-
     try:
         req = urllib.request.Request(
             MMDB_URL,
@@ -46,10 +44,9 @@ def download_geoip_db():
         with open(MMDB_PATH, "wb") as f:
             f.write(data)
 
-        print("✅ База GeoIP успешно загружена!")
 
     except Exception as e:
-        print(f"⚠️ Ошибка загрузки базы GeoIP: {e}")
+        print(f"warn: geoip база: {e}")
 
 
 def init_geoip():
@@ -60,7 +57,6 @@ def init_geoip():
             config.GEO_READER = config.maxminddb.open_database(MMDB_PATH)
         except Exception:
             config.GEO_READER = None
-
 
 
 def is_valid_public_host(host: str) -> bool:
@@ -124,10 +120,6 @@ def is_valid_public_host(host: str) -> bool:
 
     return True
 
-
-# ============================================================
-# DNS
-# ============================================================
 
 def resolve_host_cached(clean_host: str):
     clean_host = clean_host.strip(
@@ -217,8 +209,7 @@ def resolve_hosts_bulk(
 
     resolved = 0
     submitted = 0
-    done_reported = 0
-    print(f"🌐 DNS-прогрев: {len(uniq)} уникальных хостов (потоков: {workers})...")
+    dns_t0 = time.monotonic()
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         pending = set()
@@ -241,9 +232,6 @@ def resolve_hosts_bulk(
                         resolved += 1
                 except Exception:
                     pass
-                done_reported += 1
-                if done_reported % 2000 == 0:
-                    print(f"   🌐 DNS: готово {done_reported}/{len(uniq)}")
                 h = next(it, None)
                 if h is not None:
                     pending.add(pool.submit(resolve_host_cached, h))
@@ -253,14 +241,13 @@ def resolve_hosts_bulk(
     # exit из пула ждёт его сам
     skipped = len(uniq) - submitted
     if skipped > 0:
-        print(f"   ⚠️ DNS-прогрев: {skipped} хостов пропущены по дедлайну {int(budget)}с")
-    print(f"✅ DNS-прогрев завершён: резолвнуто {resolved}/{len(uniq)}")
+        print(f"warn: dns: {skipped} хостов пропущены по дедлайну {int(budget)}с")
+    print(
+        f"dns: {resolved}/{len(uniq)} хостов "
+        f"за {int(time.monotonic() - dns_t0)}с"
+    )
     return resolved
 
-
-# ============================================================
-# GEO
-# ============================================================
 
 def fetch_country_from_ip(
     ip_str: str,
@@ -360,10 +347,6 @@ def is_cf_ip(ip_str: str) -> bool:
         return any(ip_obj in n for n in config.CF_NETWORKS)
     return any(ip_obj in n for n in config.CF_IPV6_NETWORKS)
 
-
-# ============================================================
-# CLOUDFLARE
-# ============================================================
 
 def is_cloudflare_or_warp(
     host: str,

@@ -149,7 +149,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sources-report
-          path: logs/sources_report.txt
+          path: stats/sources_report*.txt
           if-no-files-found: ignore
 
       - name: Sync apex-sources
@@ -165,11 +165,14 @@ jobs:
           fi
 
           # Токен в заголовке, а не в URL: при 301-редиректе git выбрасывает
-          # userinfo из URL, и клон приватного репо уходит анонимно (exit 128).
+          # userinfo из URL, и клон приватного репозитория уходит анонимно (exit 128).
           # extraheader переживает редиректы; clone -c кладёт его в конфиг
           # клона — fetch/pull/push внутри temp_src наследуют авторизацию.
+          # GH_PAT маскируется сам, base64-производное — нет; маскируем руками.
+          AUTH_B64=$(printf 'x-access-token:%s' "$GH_PAT" | base64 | tr -d '\n')
+          echo "::add-mask::$AUTH_B64"
           git clone \
-            -c "http.https://github.com/.extraheader=Authorization: Basic $(printf 'x-access-token:%s' "$GH_PAT" | base64 | tr -d '\n')" \
+            -c "http.https://github.com/.extraheader=Authorization: Basic $AUTH_B64" \
             https://github.com/Diversan313/apex-sources.git temp_src
           cd temp_src
 

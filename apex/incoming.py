@@ -85,7 +85,6 @@ def download_white_ip() -> None:
     """
     url = (WHITE_IP_URL or "").strip()
     if not url:
-        print("📂 WHITE_IP_URL пуст — используем только локальный white_ip.txt")
         return
 
     try:
@@ -93,7 +92,7 @@ def download_white_ip() -> None:
         with urllib.request.urlopen(req, timeout=30, context=SSL_CONTEXT) as resp:
             data = resp.read().decode("utf-8", errors="ignore")
         if not data.strip():
-            print("⚠️ Remote white_ip пуст — локальный файл не трогаем")
+            print("warn: white_ip remote пуст, локальный файл не тронут")
             return
         lines = [
             ln.strip()
@@ -102,15 +101,14 @@ def download_white_ip() -> None:
         ]
         valid = [ln for ln in lines if _white_line_valid(ln)]
         if not valid:
-            print("⚠️ Remote white_ip без единого валидного IP/подсети — локальный файл не трогаем")
+            print("warn: white_ip remote без валидных строк, локальный файл не тронут")
             return
         with open(WHITE_IP_FILE, "w", encoding="utf-8") as f:
             f.write(data)
             if not data.endswith("\n"):
                 f.write("\n")
-        print(f"📥 White IP скачан с remote: {len(valid)} валидных строк → {WHITE_IP_FILE}")
     except Exception as e:
-        print(f"⚠️ Не удалось скачать white_ip: {e} — используем локальный файл")
+        print(f"warn: white_ip не скачан: {e}, используем локальный")
 
 
 def load_white_ips() -> Tuple[Set[str], List[str]]:
@@ -143,7 +141,7 @@ def load_white_ips() -> Tuple[Set[str], List[str]]:
                     continue
                 white_ips.update(parse_ip_or_resolve(line))
     except Exception as e:
-        print(f"⚠️ Ошибка чтения {WHITE_IP_FILE}: {e}")
+        print(f"warn: white_ip чтение: {e}")
     return white_ips, white_networks
 
 
@@ -155,7 +153,7 @@ def save_white_ips(white_ips: Set[str], white_networks: List[str] = None) -> Non
     """
     white_networks = list(white_networks or [])
     if not white_ips and not white_networks:
-        print("⚠️ White IP база пуста — файл не перезаписываем")
+        print("warn: white_ip база пуста, файл не перезаписан")
         return
 
     def net_sort_key(net):
@@ -177,20 +175,12 @@ def save_white_ips(white_ips: Set[str], white_networks: List[str] = None) -> Non
             f.write(ip + "\n")
 
 
-# ============================================================
-# PREVIOUS ALIVES
-# ============================================================
-
 def load_previous_alives():
 
     prev_wl = []
     prev_bl = []
 
     if not KEEP_PREV_ALIVES:
-        print(
-            "📂 KEEP_PREV_ALIVES=False — "
-            "прошлые alive не загружаем"
-        )
         return (
             prev_wl,
             prev_bl,
@@ -258,11 +248,7 @@ def load_previous_alives():
         except Exception:
             pass
 
-    print(
-        f"📂 Загружено из прошлых файлов: "
-        f"WL={len(prev_wl)}, "
-        f"BL={len(prev_bl)}"
-    )
+    print(f"прошлые alive: WL {len(prev_wl)}, BL {len(prev_bl)}")
 
     return (
         prev_wl,

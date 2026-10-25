@@ -24,7 +24,7 @@ async def get_latest_link(client, chat, topic_id, keyword):
                         return clean_url
     except Exception as e:
         # Логируем без указания каналов и топиков
-        print(f"⚠️ Ошибка при чтении источника в Telegram: {e}")
+        print(f"warn: tg: чтение источника: {e}")
     return None
 
 def update_source_file(target_file, tag_line, new_url):
@@ -75,9 +75,9 @@ def update_source_file(target_file, tag_line, new_url):
 
     # Логируем без указания файла и самой ссылки
     if updated:
-        print("🔄 Файл источников успешно обновлен.")
+        print("tg: файл источников обновлён")
     else:
-        print("❌ Не удалось обновить файл источников.")
+        print("warn: tg: файл источников не обновлён")
 
 async def main():
     try:
@@ -88,7 +88,6 @@ async def main():
             SOURCES_DIR,
         )
         if not ENABLE_TG_SOURCES:
-            print("⚠️ ENABLE_TG_SOURCES=False — обновление TG-источников отключено.")
             return
     except ImportError:
         # модуль запущен вне пакета apex — ориентируемся только на env:
@@ -98,17 +97,16 @@ async def main():
         SOURCES_DIR = ""
 
     if not SESSION_STRING:
-        print("⚠️ Переменная окружения не задана. Обновление отменено.")
+        print("warn: tg: TG_SESSION_STRING не задан, обновление пропущено")
         return
 
     if not os.path.exists(CONFIG_FILE):
-        print(f"⚠️ Файл конфигурации не найден. Нечего обновлять.")
+        print("warn: tg: конфиг не найден, нечего обновлять")
         return
 
     # база путей — та же, по которой основной прогон ищет файлы источников
     base = "" if SECURE_SOURCES_GITHUB else SOURCES_DIR
 
-    print("🕵️ Подключаемся к Telegram...")
     async with TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH) as client:
         with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
             configs = [line.strip() for line in f if line.strip() and not line.startswith('#')]
@@ -116,7 +114,7 @@ async def main():
         for config in configs:
             parts = config.split()
             if len(parts) < 4:
-                print("❌ Неверный формат в конфиге (нужно 4 параметра). Пропускаем.")
+                print("warn: tg: неверный формат в конфиге, пропущено")
                 continue
 
             topic_link = parts[0]
@@ -134,21 +132,20 @@ async def main():
 
             match = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', topic_link)
             if not match:
-                print("❌ Не удалось извлечь данные из ссылки в конфиге. Пропускаем.")
+                print("warn: tg: ссылка из конфига не разобрана, пропущено")
                 continue
             
             chat = match.group(1)
             topic_id = int(match.group(2))
 
             # Скрываем, что именно мы ищем и где
-            print("🔎 Проверяем источник в Telegram...")
             new_url = await get_latest_link(client, chat, topic_id, keyword)
             
             if new_url:
-                print("✅ Свежая ссылка найдена.")
+                print("tg: свежая ссылка найдена")
                 update_source_file(target_file, tag_line, new_url)
             else:
-                print("❌ Свежая ссылка не найдена.")
+                print("tg: свежая ссылка не найдена")
 
 if __name__ == "__main__":
     asyncio.run(main())

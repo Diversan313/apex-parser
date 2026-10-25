@@ -263,18 +263,10 @@ def select_wl_diverse(
 
         result.extend(selected)
 
-    print(
-        f"🎨 WL diversity: "
-        f"до={len(alive_items)}, "
-        f"после={len(result)}"
-    )
+    print(f"diversity WL: {len(alive_items)} -> {len(result)}")
 
     return result
 
-
-# ============================================================
-# BL PROTOCOL FILTER
-# ============================================================
 
 def filter_protocols_bl(
     alive_configs,
@@ -343,13 +335,8 @@ def filter_protocols_bl(
         ]
 
     print(
-        f"🎯 Фильтр BL протоколов: "
-        f"VLESS/Hy2: "
-        f"{len(priority)} шт. | "
-        f"Старые: "
-        f"{len(minority)} шт. "
-        f"(лимит "
-        f"{minority_ratio * 100:.0f}%)"
+        f"фильтр протоколов BL: {len(priority)} приоритетных, "
+        f"{len(minority)} старых (лимит {minority_ratio * 100:.0f}%)"
     )
 
     return (
@@ -357,11 +344,6 @@ def filter_protocols_bl(
         + minority
     )
 
-
-
-# ============================================================
-# SANITIZE LINK (чистка грязных параметров от источников)
-# ============================================================
 
 _VALID_NETWORKS = frozenset({
     "tcp", "raw", "ws", "http", "h2", "grpc", "gun", "quic", "kcp", "mkcp",
@@ -375,10 +357,6 @@ _VALID_FLOW = frozenset({
     "xtls-rprx-splice", "",
 })
 
-
-# ============================================================
-# HEAL: чистка рекламного мусора из параметров
-# ============================================================
 
 # Ключи-реклама: значение им не нужно вообще
 _AD_PARAM_KEYS = frozenset({
@@ -582,10 +560,6 @@ def sanitize_proxy_link(link: str) -> Optional[str]:
         return None
 
 
-# ============================================================
-# RENAME
-# ============================================================
-
 def rename_config(
     link: str,
     index: int,
@@ -656,11 +630,6 @@ def rename_config(
 
     return link
 
-
-
-# ============================================================
-# CLASH YAML (базовый экспорт для Clash / Mihomo / Meta)
-# ============================================================
 
 def _add_transport_opts(proxy: Dict[str, Any], network: str, pget) -> None:
     """

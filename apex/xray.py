@@ -133,10 +133,6 @@ def parse_bool_param(
     return default
 
 
-# ============================================================
-# LINK -> XRAY OUTBOUND
-# ============================================================
-
 def link_to_xray_outbound(
     link: str,
 ):
@@ -181,7 +177,6 @@ def link_to_xray_outbound(
             "streamSettings": {}
         }
 
-        # ====================================================
         # HYSTERIA2 / HY2
         #
         # Актуальная схема Xray (method, не network):
@@ -192,7 +187,6 @@ def link_to_xray_outbound(
         #   streamSettings.tlsSettings: { serverName, allowInsecure, alpn, ... }
         #   streamSettings.finalmask.udp: [ { type: salamander, settings: { password } } ]
         #   streamSettings.finalmask.quicParams: { brutalUp, brutalDown, udpHop }
-        # ====================================================
 
         if protocol in (
             "hysteria2",
@@ -395,9 +389,6 @@ def link_to_xray_outbound(
 
             return outbound
 
-        # ====================================================
-        # SHADOWSOCKS
-        # ====================================================
 
         if protocol == "ss":
 
@@ -475,9 +466,6 @@ def link_to_xray_outbound(
                 }
             )
 
-        # ====================================================
-        # VLESS
-        # ====================================================
 
         elif protocol == "vless":
 
@@ -547,9 +535,6 @@ def link_to_xray_outbound(
                 }
             )
 
-        # ====================================================
-        # TROJAN
-        # ====================================================
 
         elif protocol == "trojan":
 
@@ -591,9 +576,6 @@ def link_to_xray_outbound(
                 }
             )
 
-        # ====================================================
-        # VMESS
-        # ====================================================
 
         elif protocol == "vmess":
 
@@ -704,9 +686,6 @@ def link_to_xray_outbound(
         else:
             return None
 
-        # ====================================================
-        # SECURITY
-        # ====================================================
 
         security = first_param(
             query_params,
@@ -847,12 +826,10 @@ def link_to_xray_outbound(
                     reality_settings
                 )
 
-        # ====================================================
         # TRANSPORT
         #
         # CURRENT XRAY:
         # streamSettings.method
-        # ====================================================
 
         net = (
             first_param(
@@ -895,9 +872,6 @@ def link_to_xray_outbound(
             "none",
         )
 
-        # ====================================================
-        # XHTTP
-        # ====================================================
 
         if net in (
             "xhttp",
@@ -962,9 +936,6 @@ def link_to_xray_outbound(
                 xhttp_settings
             )
 
-        # ====================================================
-        # WEB SOCKET
-        # ====================================================
 
         elif net == "ws":
 
@@ -990,9 +961,6 @@ def link_to_xray_outbound(
                 ws_settings
             )
 
-        # ====================================================
-        # GRPC
-        # ====================================================
 
         elif net == "grpc":
 
@@ -1041,9 +1009,6 @@ def link_to_xray_outbound(
                 grpc_settings
             )
 
-        # ====================================================
-        # HTTP UPGRADE
-        # ====================================================
 
         elif net == "httpupgrade":
 
@@ -1054,9 +1019,6 @@ def link_to_xray_outbound(
                 "host": host_val,
             }
 
-        # ====================================================
-        # HTTP / H2
-        # ====================================================
 
         elif net in (
             "http",
@@ -1078,9 +1040,6 @@ def link_to_xray_outbound(
                 ),
             }
 
-        # ====================================================
-        # mKCP
-        # ====================================================
 
         elif net in (
             "kcp",
@@ -1099,9 +1058,6 @@ def link_to_xray_outbound(
                 }
             }
 
-        # ====================================================
-        # RAW
-        # ====================================================
 
         elif net in (
             "tcp",
@@ -1133,11 +1089,6 @@ def link_to_xray_outbound(
         return None
 
 
-
-# ============================================================
-# XRAY RUNTIME / ALIVE CHECKS
-# ============================================================
-
 def xray_core_ready() -> bool:
     """Бинарь Xray есть рядом с проектом?"""
     name = "xray.exe" if os.name == "nt" else "xray"
@@ -1165,8 +1116,6 @@ def ensure_xray_core() -> bool:
     )
     member = "xray.exe" if os.name == "nt" else "xray"
 
-    print("📥 Скачиваю ядро Xray...")
-
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
@@ -1175,9 +1124,8 @@ def ensure_xray_core() -> bool:
             break
         except Exception as e:
             if attempt == 2:
-                print(f"⚠️ Не удалось скачать ядро Xray: {e}")
+                print(f"warn: ядро Xray не скачано: {e}")
                 return False
-            print(f"   ↺ попытка {attempt + 2}/3...")
 
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as zf:
@@ -1186,10 +1134,9 @@ def ensure_xray_core() -> bool:
                 f.write(zf.read(target))
         if os.name != "nt":
             os.chmod(member, 0o755)
-        print(f"✅ Ядро Xray готово: {member} ({len(data) // 1024 // 1024} MB архив)")
         return True
     except Exception as e:
-        print(f"⚠️ Не удалось распаковать ядро Xray: {e}")
+        print(f"warn: ядро Xray не распаковано: {e}")
         return False
 
 
@@ -1244,20 +1191,12 @@ def print_xray_version():
             or result.stderr.strip()
         )
 
-        print(
-            "🧩 Xray version:"
-        )
-
-        print(
-            version_text[:1000]
-        )
+        # первая строка вывода уже несёт версию и платформу
+        print(f"xray: {version_text.splitlines()[0]}")
 
     except Exception as e:
 
-        print(
-            f"⚠️ Не удалось узнать "
-            f"версию Xray: {e}"
-        )
+        print(f"warn: версия Xray неизвестна: {e}")
 
 
 def get_xray_cmd() -> list:
@@ -1269,16 +1208,34 @@ def get_xray_cmd() -> list:
     ]
 
 
-# ============================================================
-# HYSTERIA2 (официальное ядро, опционально)
-# ============================================================
-
 def get_hy2_executable() -> str:
     return cfg.HY2_CORE_FILE
 
 
 def hy2_core_ready() -> bool:
     return os.path.exists(get_hy2_executable())
+
+
+_HY2_CORE_LOCK = threading.Lock()
+_HY2_CORE_TRIED = False
+
+
+def ensure_hy2_core() -> bool:
+    """
+    Ядро качаем один раз за прогон. Без lock hy2-тесты из параллельных
+    потоков одновременно видели «файла нет» и каждый качал свои 20+ MB;
+    _HY2_CORE_TRIED не повторяет попытку после неудачи — упадёт на том же URL.
+    """
+    global _HY2_CORE_TRIED
+    if hy2_core_ready():
+        return True
+    with _HY2_CORE_LOCK:
+        if hy2_core_ready():
+            return True
+        if _HY2_CORE_TRIED:
+            return False
+        _HY2_CORE_TRIED = True
+        return download_hy2_core()
 
 
 def download_hy2_core() -> bool:
@@ -1293,8 +1250,6 @@ def download_hy2_core() -> bool:
         else cfg.HY2_CORE_URL_LINUX
     )
 
-    print("📥 Скачиваю ядро Hysteria2...")
-
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
@@ -1305,13 +1260,11 @@ def download_hy2_core() -> bool:
             break
         except Exception as e:
             if attempt == 2:
-                print(f"⚠️ Не удалось скачать ядро Hysteria2: {e}")
+                print(f"warn: ядро Hysteria2 не скачано: {e}")
                 return False
-            print(f"   ↺ попытка {attempt + 2}/3...")
 
     if os.name != "nt":
         os.chmod(exe, 0o755)
-    print(f"✅ Ядро Hysteria2 скачано: {exe} ({len(data) // 1024 // 1024} MB)")
     return True
 
 
@@ -1402,7 +1355,7 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
     Тест hy2 через официальное ядро (http-proxy listener).
     Возвращает (is_ok, cc, reason) — как check_via_xray_detailed.
     """
-    if not hy2_core_ready() and not download_hy2_core():
+    if not ensure_hy2_core():
         return False, None, "Ядро Hysteria2 недоступно", None, None
 
     port = get_free_port()
@@ -1474,10 +1427,6 @@ def check_via_hysteria2(link: str, timeout: float = 8.0, min_success_count: int 
         except Exception:
             pass
 
-
-# ============================================================
-# XRAY CHECK
-# ============================================================
 
 def get_free_port() -> int:
     with socket.socket(
@@ -1608,7 +1557,6 @@ def get_exit_country_via_proxy(
             return cc, exit_ip
 
     return answers[0][1], exit_ip
-
 
 
 def check_via_xray_detailed(
@@ -1973,12 +1921,6 @@ def check_proxy_alive_detailed(
         None,
     )
 
-
-
-
-# ============================================================
-# OUTBOUND -> LINK
-# ============================================================
 
 def xray_outbound_to_link(ob: dict) -> str:
     """Xray outbound JSON → share-ссылка (vless/vmess/trojan/ss)."""

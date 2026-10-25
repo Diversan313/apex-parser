@@ -87,10 +87,6 @@ def parse_host_port(
     return None, None
 
 
-# ============================================================
-# PARSE LINK
-# ============================================================
-
 def parse_host_port_and_name(
     link: str,
 ):
@@ -255,10 +251,6 @@ def parse_host_port_and_name(
     return None, None, ""
 
 
-# ============================================================
-# SNI
-# ============================================================
-
 def extract_sni_from_link(
     link: str,
 ) -> str:
@@ -339,10 +331,6 @@ def extract_sni_from_link(
 
     return ""
 
-
-# ============================================================
-# ALL HOSTS / IPS
-# ============================================================
 
 def extract_all_hosts_and_ips_from_link(
     link: str,
@@ -439,10 +427,6 @@ def extract_all_hosts_and_ips_from_link(
 
     return list(hosts)
 
-
-# ============================================================
-# WHITE IP
-# ============================================================
 
 def parse_ip_or_resolve(
     item: str,
