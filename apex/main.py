@@ -15,6 +15,7 @@ from .config import (
     MAX_CONFIGS_PER_SUBNET_BL,
     WL_MIN_SUCCESS_COUNT,
     BL_MIN_SUCCESS_COUNT,
+    RU_SNI_RATIO,
 )
 from . import config as cfg
 from .geoip import init_geoip, is_cf_ip, resolve_hosts_bulk
