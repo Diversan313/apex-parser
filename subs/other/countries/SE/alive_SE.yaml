@@ -15,19 +15,32 @@ proxies:
       short-id: "b28db60d77c50b4f"
   - name: "🇸🇪 [BL] Сервер 2"
     type: vless
-    server: 191.44.114.179
+    server: se13-node.rumedia-cdn.com
     port: 2096
     uuid: "d1641bc6-3757-43db-815a-9b3f4d9b0d7e"
     network: "ws"
-    servername: "st33614.rumedia-cdn.com"
-    client-fingerprint: "firefox"
+    servername: "st5ff8a.rumedia-cdn.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
       path: "/cdn/v3/live"
       headers:
-        Host: "st33614.rumedia-cdn.com"
+        Host: "st5ff8a.rumedia-cdn.com"
   - name: "🇸🇪 [BL] Сервер 3"
+    type: vless
+    server: 191.44.114.154
+    port: 8443
+    uuid: "d1641bc6-3757-43db-815a-9b3f4d9b0d7e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.wikipedia.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ndQzAcG4g-2OhvFb8EjFnZyxJ2lhawiulTLJOZrK8lY"
+  - name: "🇸🇪 [BL] Сервер 4"
     type: vless
     server: 45.145.13.71
     port: 443
@@ -41,35 +54,19 @@ proxies:
     reality-opts:
       public-key: "ZTiDQm3YUqHXX-yuXleP3UdkNSi8EGsMtfzi6nuwc1E"
       short-id: "eecfe76af97a6132"
-  - name: "🇸🇪 [BL] Сервер 4"
+  - name: "🇸🇪 [BL] Сервер 5"
     type: vless
-    server: 13.143.180.50
-    port: 443
-    uuid: "9ea8b000-58ce-4f71-b108-989dd4f248f1"
-    network: "xhttp"
-    servername: "mirror.timeweb.ru"
+    server: 191.44.114.179
+    port: 8443
+    uuid: "d1641bc6-3757-43db-815a-9b3f4d9b0d7e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.wikipedia.org"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "fwQbdsfHEnx2pzokCnyN698SUq5fkQKngnsyPGjmeDg"
-    xhttp-opts:
-      path: "/ubuntu"
-  - name: "🇸🇪 [BL] Сервер 5"
-    type: vless
-    server: cliff.lmstream.org
-    port: 443
-    uuid: "9ea8b000-58ce-4f71-b108-989dd4f248f1"
-    network: "xhttp"
-    servername: "mirror.timeweb.ru"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "fwQbdsfHEnx2pzokCnyN698SUq5fkQKngnsyPGjmeDg"
-    xhttp-opts:
-      path: "/ubuntu"
-      mode: "stream-up"
+      public-key: "WEHGKyXsOD5i2kNCJ3GrjeNZQBsrzH76OrPDJ7x2YwY"
   - name: "🇸🇪 [BL] Сервер 6"
     type: vless
     server: 2.27.14.244
@@ -100,6 +97,19 @@ proxies:
       short-id: "7b6803a79bba5c52"
   - name: "🇸🇪 [BL] Сервер 8"
     type: vless
+    server: 31.77.18.220
+    port: 443
+    uuid: "4f51ca84-43ea-4087-b8a2-938e0ccbe27a"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "google.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
+  - name: "🇸🇪 [BL] Сервер 9"
+    type: vless
     server: 31.76.70.108
     port: 80
     uuid: "e0216964-ffa1-4d39-82c4-0e40879a470d"
@@ -112,7 +122,7 @@ proxies:
     reality-opts:
       public-key: "YQQP-rr9o-oUYjy5l1B4P-Pe2u3iBtUt9V1uirdQqgs"
       short-id: "6f1cb7b79a31b795"
-  - name: "🇸🇪 [BL] Сервер 9"
+  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 132.243.231.94
     port: 443
@@ -125,19 +135,6 @@ proxies:
     tls: true
     reality-opts:
       public-key: "MN2XIVlIusdWaGwyyrGZ7Ti3jzqjDlpMmc12WcrV1nU"
-  - name: "🇸🇪 [BL] Сервер 10"
-    type: vless
-    server: 31.77.18.220
-    port: 443
-    uuid: "4f51ca84-43ea-4087-b8a2-938e0ccbe27a"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "google.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
   - name: "🇸🇪 [BL] Сервер 11"
     type: vless
     server: 201.58.177.108

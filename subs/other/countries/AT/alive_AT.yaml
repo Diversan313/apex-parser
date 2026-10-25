@@ -15,14 +15,43 @@ proxies:
       short-id: "8fbdc8d37cc76852"
   - name: "🇦🇹 [BL] Сервер 2"
     type: vless
-    server: 193.160.140.140
-    port: 443
-    uuid: "992a73b7-1aaf-4567-8786-28d560e8376b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "at.lstu.ru"
+    server: 62.83.19.127
+    port: 8443
+    uuid: "2b0e5676-fb62-4bf0-9607-6e7818421e8e"
+    network: "ws"
+    servername: "au5.pad-sservice.lat"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "e0RV9wRJdsQbQ0ugn5QUhJcTgWsSTVsKQTXMKweMDUg"
+    ws-opts:
+      path: "/AU5W"
+      headers:
+        Host: "au5.pad-sservice.lat"
+  - name: "🇦🇹 [BL] Сервер 3"
+    type: vless
+    server: 62.83.41.69
+    port: 8443
+    uuid: "2b0e5676-fb62-4bf0-9607-6e7818421e8e"
+    network: "ws"
+    servername: "au6.pad-sservice.lat"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/AU6W"
+      headers:
+        Host: "au6.pad-sservice.lat"
+  - name: "🇦🇹 [BL] Сервер 4"
+    type: vless
+    server: 89.58.20.210
+    port: 8443
+    uuid: "2b0e5676-fb62-4bf0-9607-6e7818421e8e"
+    network: "ws"
+    servername: "au2.pad-sservice.lat"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/A11U"
+      headers:
+        Host: "au2.pad-service.com"
