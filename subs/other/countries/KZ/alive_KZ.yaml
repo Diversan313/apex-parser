@@ -15,19 +15,6 @@ proxies:
       short-id: "3c6fc84d"
   - name: "🇰🇿 [WL] Сервер 2"
     type: vless
-    server: 109.73.192.248
-    port: 443
-    uuid: "30572b57-f5ab-4eb8-82d4-a24d399b99f6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "almata.vkusnews.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Buy9pirx5Ih_LHwc6R3BCmvRL4g4Ljx6B3MEsZfIZhU"
-  - name: "🇰🇿 [WL] Сервер 3"
-    type: vless
     server: 31.130.153.101
     port: 443
     uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
@@ -40,20 +27,46 @@ proxies:
     reality-opts:
       public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
       short-id: "3c6fc84d"
+  - name: "🇰🇿 [WL] Сервер 3"
+    type: vless
+    server: 109.73.192.248
+    port: 443
+    uuid: "30572b57-f5ab-4eb8-82d4-a24d399b99f6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "almata.vkusnews.com"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Buy9pirx5Ih_LHwc6R3BCmvRL4g4Ljx6B3MEsZfIZhU"
   - name: "🇰🇿 [BL] Сервер 4"
+    type: vless
+    server: 93.183.87.107
+    port: 443
+    uuid: "d86e6fda-e519-46ab-98eb-9ff9a9da5984"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "lively-raptor.cdn.cachefleet.com"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "KOgPteoWEwtVtykS2FGV5NHdZw6197VzbITPGkUJDBQ"
+  - name: "🇰🇿 [BL] Сервер 5"
     type: vless
     server: 109.248.170.119
     port: 13447
     uuid: "b573cefb-7bc7-4a42-b407-b8b534e66773"
-    network: "tcp"
+    network: "raw"
     servername: "yahoo.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "_0wM2ep44eAcrgf5PflKaBivknCWT6kMvQBQUoScCkE"
       short-id: "83"
-  - name: "🇰🇿 [BL] Сервер 5"
+  - name: "🇰🇿 [BL] Сервер 6"
     type: vless
     server: 46.8.43.125
     port: 443
@@ -65,3 +78,16 @@ proxies:
     tls: true
     reality-opts:
       public-key: "ER-T5En54-sn6IXy7jU8vQVcBbOiWvznnezf3qZ273w"
+  - name: "🇰🇿 [BL] Сервер 7"
+    type: vmess
+    server: 38.107.234.57
+    port: 80
+    uuid: "567f4be5-12ab-42e1-b8d9-db6fd1fdd31c"
+    cipher: "auto"
+    alterId: 0
+    network: "ws"
+    servername: "3h-kazakhstan1.09vpn.com"
+    ws-opts:
+      path: "/vmess/"
+      headers:
+        Host: "3h-kazakhstan1.09vpn.com"

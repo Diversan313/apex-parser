@@ -36,7 +36,7 @@ proxies:
     uuid: "12af3df8-2ffe-48fe-9b60-376f015ea4f8"
     network: "grpc"
     servername: "www.semiconductor.samsung.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -114,16 +114,28 @@ proxies:
       public-key: "k4l6TxwkBbx9DhZAFpByq5rfCWFSgyOex3f_eFe9CWU"
       short-id: "83f8317a948bb769"
   - name: "🇨🇦 [BL] Сервер 9"
+    type: vless
+    server: 40.233.116.225
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
+  - name: "🇨🇦 [BL] Сервер 10"
     type: ss
     server: 149.22.95.183
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 10"
-    type: vmess
-    server: 23.162.200.198
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "raw"
+  - name: "🇨🇦 [BL/AI] Сервер 11"
+    type: ss
+    server: 51.222.155.113
+    port: 5601
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
