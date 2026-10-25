@@ -14,20 +14,6 @@ proxies:
       public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
       short-id: "3c6fc84d"
   - name: "🇫🇷 [WL] Сервер 2"
-    type: vless
-    server: 161.97.160.224
-    port: 443
-    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
-      short-id: "e6"
-  - name: "🇫🇷 [WL] Сервер 3"
     type: trojan
     server: 185.18.250.252
     port: 443
@@ -38,6 +24,21 @@ proxies:
       path: "/assignment"
       headers:
         Host: "www.calmlunch.com"
+  - name: "🇫🇷 [WL] Сервер 3"
+    type: vless
+    server: 140.225.199.133
+    port: 8443
+    uuid: "6c713691-3ca2-002b-ad25-113d1bed6b03"
+    network: "grpc"
+    servername: "strm.yandex.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "86EUYgrS7mazQ-GsiMnStyHSx9AlG8B_-KgXluNdWXI"
+      short-id: "d3ab13e9c496c399"
+    grpc-opts:
+      grpc-service-name: "google.storage.v2.Storage"
   - name: "🇫🇷 [WL] Сервер 4"
     type: vless
     server: 140.225.199.133
@@ -53,7 +54,23 @@ proxies:
       short-id: "d3ab13e9c496c399"
     grpc-opts:
       grpc-service-name: "google.storage.v2.Storage"
+      grpc-mode: "gun"
   - name: "🇫🇷 [WL] Сервер 5"
+    type: vless
+    server: 140.225.199.118
+    port: 8443
+    uuid: "6c713691-3ca2-002b-ad25-113d1bed6b03"
+    network: "grpc"
+    servername: "strm.yandex.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "86EUYgrS7mazQ-GsiMnStyHSx9AlG8B_-KgXluNdWXI"
+      short-id: "d3ab13e9c496c399"
+    grpc-opts:
+      grpc-service-name: "google.storage.v2.Storage"
+  - name: "🇫🇷 [WL] Сервер 6"
     type: vless
     server: 140.225.199.118
     port: 8443
@@ -69,21 +86,6 @@ proxies:
     grpc-opts:
       grpc-service-name: "google.storage.v2.Storage"
       grpc-mode: "gun"
-  - name: "🇫🇷 [WL] Сервер 6"
-    type: vless
-    server: 140.225.199.118
-    port: 8443
-    uuid: "6c713691-3ca2-002b-ad25-113d1bed6b03"
-    network: "grpc"
-    servername: "strm.yandex.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "86EUYgrS7mazQ-GsiMnStyHSx9AlG8B_-KgXluNdWXI"
-      short-id: "d3ab13e9c496c399"
-    grpc-opts:
-      grpc-service-name: "google.storage.v2.Storage"
   - name: "🇫🇷 [WL] Сервер 7"
     type: trojan
     server: 185.220.100.168
@@ -121,33 +123,30 @@ proxies:
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
     udp: true
     ws-opts:
       path: "/assignment"
-      headers:
-        Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 11"
     type: trojan
     server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
     udp: true
     ws-opts:
       path: "/assignment"
-      headers:
-        Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 12"
     type: trojan
     server: 185.255.179.166
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
     udp: true
     ws-opts:
       path: "/assignment"
-      headers:
-        Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 13"
     type: trojan
     server: 185.255.179.166
@@ -190,18 +189,6 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 17"
     type: vless
-    server: 62.210.91.10
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-  - name: "🇫🇷 [WL] Сервер 18"
-    type: vless
     server: 145.223.68.58
     port: 443
     uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
@@ -213,36 +200,7 @@ proxies:
     reality-opts:
       public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
       short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 19"
-    type: vless
-    server: 199.232.78.170
-    port: 443
-    uuid: "XpnTeam-48"
-    network: "ws"
-    servername: "ssl.fastly.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "Appxdn.global.ssl.fastly.net"
-  - name: "🇫🇷 [BL] Сервер 20"
-    type: vless
-    server: 143.246.211.163
-    port: 8443
-    uuid: "b3d079ff-b775-4ffe-bac9-41228b08b15b"
-    network: "xhttp"
-    servername: "fr.gorobsub.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
-    xhttp-opts:
-      path: "/ae1b809ceb77"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: vless
     server: 62.210.91.2
     port: 23576
@@ -255,7 +213,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: vless
     server: 137.74.16.237
     port: 443
@@ -269,7 +227,20 @@ proxies:
     reality-opts:
       public-key: "7LSzvilTVKGMtBDuKGeMrLtlhY7tQf5YcG566dEgO0I"
       short-id: "b390e0a721d242b0"
-  - name: "🇫🇷 [BL] Сервер 23"
+  - name: "🇫🇷 [BL] Сервер 20"
+    type: vless
+    server: 143.246.211.163
+    port: 443
+    uuid: "b3d079ff-b775-4ffe-bac9-41228b08b15b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fr.gorobsub.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
+  - name: "🇫🇷 [BL] Сервер 21"
     type: vless
     server: 95.182.82.14
     port: 443
@@ -284,7 +255,22 @@ proxies:
       short-id: "f362281040d91a1e"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇫🇷 [BL] Сервер 24"
+  - name: "🇫🇷 [BL] Сервер 22"
+    type: vless
+    server: static.freeinternet.skin
+    port: 443
+    uuid: "55c98c63-8e67-4750-a574-5f586782c1ab"
+    network: "grpc"
+    servername: "static.freeinternet.skin"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "f2evGKO94_eMGIuWv7OXrcVXTnqJjSxoflPqb24DFg0"
+      short-id: "f362281040d91a1e"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 51.77.217.70
     port: 2053
@@ -297,7 +283,7 @@ proxies:
     reality-opts:
       public-key: "g63cT3uI0Y5iUtj3m__RYz7nmR1eIK4AYikdnZCl63w"
       short-id: "bfe58beb41f1d09f"
-  - name: "🇫🇷 [BL] Сервер 25"
+  - name: "🇫🇷 [BL] Сервер 24"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -312,7 +298,7 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 26"
+  - name: "🇫🇷 [BL] Сервер 25"
     type: vless
     server: 46.105.38.220
     port: 26451
@@ -328,7 +314,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc_common2"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 27"
+  - name: "🇫🇷 [BL] Сервер 26"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -342,7 +328,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 28"
+  - name: "🇫🇷 [BL] Сервер 27"
     type: vless
     server: 161.97.66.16
     port: 443
@@ -355,21 +341,7 @@ proxies:
     reality-opts:
       public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
       short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 29"
-    type: vless
-    server: 199.232.78.160
-    port: 443
-    uuid: "XpnTeam-48"
-    network: "ws"
-    servername: "ssl.fastly.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "Appxdn.global.ssl.fastly.net"
-  - name: "🇫🇷 [BL] Сервер 30"
+  - name: "🇫🇷 [BL] Сервер 28"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -385,7 +357,7 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 31"
+  - name: "🇫🇷 [BL] Сервер 29"
     type: vless
     server: 51.77.144.182
     port: 8080
@@ -399,7 +371,7 @@ proxies:
     reality-opts:
       public-key: "twCZ2ZSURqQA2oUep4h2aj_3yJEEagFSQByn26bWWkI"
       short-id: "94d9456c33"
-  - name: "🇫🇷 [BL] Сервер 32"
+  - name: "🇫🇷 [BL] Сервер 30"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -415,16 +387,3 @@ proxies:
     xhttp-opts:
       path: "/OCrp5Ajs"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 33"
-    type: vless
-    server: 45.92.218.130
-    port: 443
-    uuid: "9ff5db63-88ff-4276-ab71-ac2b5cb2a740"
-    network: "tcp"
-    servername: "delivery.mp.microsoft.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "I0vZxWIjZYvtzlcvGaW01Q1U3M-vHD8iI8BM5KTuuiM"
-      short-id: "d3feff5d570d6b"

@@ -1,6 +1,19 @@
 proxies:
   - name: "🇪🇪 [BL] Сервер 1"
     type: vless
+    server: 45.12.63.81
+    port: 443
+    uuid: "32daf25d-9ffa-4f43-b6a3-2ebc21014681"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.vk.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "MN2XIVlIusdWaGwyyrGZ7Ti3jzqjDlpMmc12WcrV1nU"
+  - name: "🇪🇪 [BL] Сервер 2"
+    type: vless
     server: 132.243.65.82
     port: 443
     uuid: "4f35274e-006f-43e7-87be-c8cba4882b0c"
@@ -12,8 +25,23 @@ proxies:
       public-key: "UZKrOusu0M0i3gnqDanh2yXXkTibNEjj41Hsvah2XlI"
     xhttp-opts:
       path: "/"
+      host: "132.243.65.82"
       mode: "auto"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 3"
+    type: vless
+    server: 93.89.220.37
+    port: 443
+    uuid: "185e2bb3-2934-48d0-bbd5-dd20d16e83ee"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "ibm.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lwKaUQ81wJUJRsqAPsfTPj5V_f9N50UYEwzRI_nuq2g"
+      short-id: "e88cb983f3c97528"
+  - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 79.98.37.106
     port: 443
@@ -26,16 +54,3 @@ proxies:
     tls: true
     reality-opts:
       public-key: "USSepsAbvP9LpByHLV2xD2H8dq8GAJ6G0fINEqD4PAw"
-  - name: "🇪🇪 [BL] Сервер 3"
-    type: vless
-    server: 163.245.52.230
-    port: 443
-    uuid: "32daf25d-9ffa-4f43-b6a3-2ebc21014681"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.tradingview.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "MN2XIVlIusdWaGwyyrGZ7Ti3jzqjDlpMmc12WcrV1nU"
