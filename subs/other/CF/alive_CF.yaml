@@ -1,15 +1,29 @@
 proxies:
-  - name: "🇩🇪 [CF] Сервер 1"
+  - name: "🇺🇸 [CF] Сервер 1"
     type: vless
-    server: 103.27.157.120
+    server: 88.216.69.253
     port: 443
-    uuid: "025a80fb-233b-4714-b02d-f4384c653d58"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "download.amd.com"
-    client-fingerprint: "qq"
+    uuid: "d342d11e-d224-4463-b982-532309285094"
+    network: "ws"
+    servername: "ccc.010304.xyz"
+    client-fingerprint: "unsafe"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "k0883nIGfstbzb8hES-dQ1yPcBwbUbnsyg4w-UA5gkA"
-      short-id: "68aaa5222092bbea"
+    ws-opts:
+      path: "/fp"
+      headers:
+        Host: "ccc.010304.xyz"
+  - name: "🇺🇸 [CF] Сервер 2"
+    type: vless
+    server: 88.216.69.253
+    port: 443
+    uuid: "d342d11e-d224-4463-b982-532309285094"
+    network: "ws"
+    servername: "ccc.010304.xyz"
+    client-fingerprint: "unsafe"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/fp=chrome"
+      headers:
+        Host: "ccc.010304.xyz"
