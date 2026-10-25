@@ -1,17 +1,17 @@
 proxies:
-  - name: "🇪🇪 [WL] Сервер 1"
+  - name: "🇪🇪 [BL] Сервер 1"
     type: vless
-    server: 87.242.95.164
-    port: 8445
-    uuid: "3a4f6204-472c-4c69-b7be-cca84de97148"
+    server: 45.12.63.81
+    port: 443
+    uuid: "32daf25d-9ffa-4f43-b6a3-2ebc21014681"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
+    servername: "www.vk.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "l06r0clkHjHk7HRGpkDBJwZ1JJscSqfwHUQOrV3v3hQ"
+      public-key: "MN2XIVlIusdWaGwyyrGZ7Ti3jzqjDlpMmc12WcrV1nU"
   - name: "🇪🇪 [BL] Сервер 2"
     type: vless
     server: 194.26.141.223
@@ -28,22 +28,6 @@ proxies:
       short-id: "afee962d"
   - name: "🇪🇪 [BL] Сервер 3"
     type: vless
-    server: 212.87.190.147
-    port: 443
-    uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
-    network: "xhttp"
-    servername: "esti.kramiliantha.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NrHeHBE4mzlczsTWFOpO_2Pi4Iw3ySuxu_Pr9TsPPUU"
-      short-id: "8fc2eb4017c18576"
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      host: "esti.kramiliantha.sbs"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: vless
     server: 13.143.239.119
     port: 8443
     uuid: "f36c82e2-e33e-4054-960a-34619d9fdd5b"
@@ -58,6 +42,22 @@ proxies:
     xhttp-opts:
       path: "/x"
       mode: "packet-up"
+  - name: "🇪🇪 [BL] Сервер 4"
+    type: vless
+    server: 212.87.190.147
+    port: 443
+    uuid: "73274f8c-ac7b-4d71-b67a-1ea200c9ed82"
+    network: "xhttp"
+    servername: "esti.kramiliantha.sbs"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NrHeHBE4mzlczsTWFOpO_2Pi4Iw3ySuxu_Pr9TsPPUU"
+      short-id: "8fc2eb4017c18576"
+    xhttp-opts:
+      path: "/api/v1/sync/"
+      host: "esti.kramiliantha.sbs"
   - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 95.85.242.11
@@ -127,3 +127,44 @@ proxies:
     reality-opts:
       public-key: "2LWgemfg0df7tGt4icLbRG-Cz7QNPVr3g7xIdwbTTHQ"
       short-id: "caa05b44ba5b7b3d"
+  - name: "🇪🇪 [BL] Сервер 10"
+    type: vless
+    server: 194.26.229.112
+    port: 27443
+    uuid: "3a4f6204-472c-4c69-b7be-cca84de97148"
+    network: "grpc"
+    servername: "static.polina.mom"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "zIF5SLjmd3gzvGPhEBKjqLv8_-7MOHMpJciVEehL0C8"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇪🇪 [BL] Сервер 11"
+    type: vless
+    server: 87.242.95.164
+    port: 8445
+    uuid: "3a4f6204-472c-4c69-b7be-cca84de97148"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "passport.yandex.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "l06r0clkHjHk7HRGpkDBJwZ1JJscSqfwHUQOrV3v3hQ"
+  - name: "🇪🇪 [BL] Сервер 12"
+    type: vless
+    server: 31.59.218.35
+    port: 443
+    uuid: "7f6adf9d-42f1-4fec-ab22-fb7f66bf3adc"
+    network: "xhttp"
+    servername: "dk6cdov34a.hat.onl"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/media/v2/stream/3k1xkctgv07g"
+      host: "dk6cdov34a.hat.onl"
+      mode: "auto"
