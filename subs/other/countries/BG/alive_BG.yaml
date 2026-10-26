@@ -14,32 +14,18 @@ proxies:
       host: "randomquaint.net"
   - name: "🇧🇬 [WL] Сервер 2"
     type: vless
-    server: windytrout.net
+    server: 78.159.246.85
     port: 8443
     uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
     network: "xhttp"
-    servername: "windytrout.net"
+    servername: "fitindoor.net"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     xhttp-opts:
       path: "/api/v1/upload"
-      host: "windytrout.net"
+      host: "fitindoor.net"
   - name: "🇧🇬 [BL] Сервер 3"
-    type: vless
-    server: 195.123.226.21
-    port: 443
-    uuid: "6589c320-db68-43cd-a273-b46299bab355"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway.icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
-      short-id: "77bb0d07bddbc832"
-  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 45.9.156.28
     port: 443
@@ -55,7 +41,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "cloud.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 5"
+  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 45.9.156.27
     port: 443
@@ -70,7 +56,7 @@ proxies:
       short-id: "1be1bd931c98c84a"
     grpc-opts:
       grpc-service-name: "home.v1.ApiService"
-  - name: "🇧🇬 [BL] Сервер 6"
+  - name: "🇧🇬 [BL] Сервер 5"
     type: vless
     server: 45.9.156.24
     port: 443
@@ -85,3 +71,45 @@ proxies:
       short-id: "501ab3325b77e1ca"
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
+  - name: "🇧🇬 [BL] Сервер 6"
+    type: vless
+    server: 195.123.226.21
+    port: 443
+    uuid: "6589c320-db68-43cd-a273-b46299bab355"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
+      short-id: "77bb0d07bddbc832"
+  - name: "🇧🇬 [BL/CF] Сервер 7"
+    type: vless
+    server: 78.128.127.93
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
+  - name: "🇧🇬 [BL/CF] Сервер 8"
+    type: vless
+    server: 185.200.36.36
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
