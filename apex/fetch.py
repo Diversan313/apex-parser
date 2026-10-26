@@ -42,6 +42,7 @@ from .parse import parse_host_port
 from .xray import xray_outbound_to_link
 from .utils import happ
 from .utils.kameleon import fetch_kameleon
+from .utils.prox import prox_fetch, happ_decrypt_fallback
 from .utils.netlimit import install_network_limits, read_bounded
 from .utils.converters import foreign_yaml_to_links, singbox_outbound_to_link
 
@@ -264,6 +265,43 @@ def _is_transient_error(e: Exception) -> bool:
     return False
 
 
+def _prox_eligible(info: dict) -> bool:
+    """Prox включаем только для гео-блоков: панель отдала отказ
+    (401/403/406/451), заглушку с 200 без конфигов или оборвала
+    соединение. Таймауты и 404 — мимо: чужой IP их не лечит."""
+    if not _cfg.PROX_ENABLED:
+        return False
+    if info.get("conn_blocked"):
+        return True
+    status = info.get("http_status")
+    if status in (401, 403, 406, 451):
+        return True
+    if status in (200, 204) and not info.get("configs"):
+        return True
+    return False
+
+
+def _try_prox(url_clean: str, info: dict, _deadline: float):
+    """Третий уровень цепочки: контент с чужого IP.
+
+    Вызывается после провала прямых попыток и Kameleon. Не влезает в
+    остаток бюджета источника — Prox пропускается, источник падает
+    как без него.
+    """
+    if not _prox_eligible(info):
+        return None
+    remaining = _deadline - time.monotonic()
+    if remaining <= 1.0:
+        return None
+    pcontent = prox_fetch(url_clean, timeout=remaining)
+    if pcontent:
+        info["prox"] = True
+        info["http_status"] = 200
+        info["error"] = None
+        info["network_error"] = False
+    return pcontent
+
+
 def _extract_subscription_configs(
     content: str, info: dict, _depth: int = 0, _deadline: float = None
 ) -> list:
@@ -347,6 +385,10 @@ def _extract_subscription_configs(
         for h_link in happ.extract_happ_links(content):
             sub_url = happ.happ_link_to_subscription_url(h_link)
             if not sub_url:
+                # локальные ключи отстают от новых маркеров — внешний
+                # декрипт как fallback; недоступен тихо пропускаем
+                sub_url = happ_decrypt_fallback(h_link)
+            if not sub_url:
                 continue
             if time.monotonic() >= _deadline:
                 break
@@ -387,6 +429,7 @@ def fetch_single_url_with_details(
         "is_expired": False,
         "happ_decrypted": 0,
         "kameleon": False,
+        "prox": False,
         "total_lines": 0,
         "configs": [],
         "error": None,
@@ -453,6 +496,9 @@ def fetch_single_url_with_details(
                 # 404/400/401 и прочий перманент фейлится сразу
                 transient = _is_transient_error(e)
                 info["network_error"] = transient
+                # обрыв соединения — признак гео-фильтра; таймаут им не считается
+                if isinstance(e, (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError)):
+                    info["conn_blocked"] = True
                 if transient and attempt <= retries:
                     time.sleep(min(0.5 * attempt, max(0.0, _deadline - time.monotonic())))
                     continue
@@ -480,7 +526,15 @@ def fetch_single_url_with_details(
                 info["error"] = None
                 info["network_error"] = False
             else:
-                return info
+                # Kameleon не вытащил — последняя надежда: чужой IP
+                content = _try_prox(url_clean, info, _deadline)
+                if content is None:
+                    return info
+
+    if content is None:
+        # сюда попадают conn_blocked-источники и 401/403 при выключенном
+        # Kameleon — обе категории лечатся чужим IP
+        content = _try_prox(url_clean, info, _deadline)
 
     if content is None:
         return info
@@ -504,6 +558,19 @@ def fetch_single_url_with_details(
                 if kconfigs:
                     valid_configs = kconfigs
                     info["kameleon"] = True
+
+        # Prox: контент с чужого IP (гео-заглушка с 200 без конфигов)
+        if not valid_configs and _depth == 0:
+            pcontent = _try_prox(url_clean, info, _deadline)
+            if pcontent:
+                info["is_base64"] = False
+                info["is_json"] = False
+                info["total_lines"] = 0
+                valid_configs = _extract_subscription_configs(
+                    pcontent, info, _depth + 1, _deadline
+                )
+                # expired-проверка ниже должна видеть реальное тело
+                content = pcontent
 
         info["configs"] = list(dict.fromkeys(valid_configs))
         info["is_expired"] = content_looks_expired(content, info["configs"])
@@ -545,6 +612,7 @@ def _fetch_source_bounded(url: str, retries: int = 1) -> dict:
         "is_expired": False,
         "happ_decrypted": 0,
         "kameleon": False,
+        "prox": False,
         "total_lines": 0,
         "configs": [],
         "error": f"источник не уложился в {SOURCE_FETCH_DEADLINE}с (hard deadline)",
@@ -671,6 +739,7 @@ def fetch_links_parallel_with_source(
             "net_err": 0,
             "yaml": 0,
             "kameleon": 0,
+            "prox": 0,
         }
         err_types = {}
 
@@ -711,6 +780,8 @@ def fetch_links_parallel_with_source(
                 stats["yaml"] += 1
             if res.get("kameleon"):
                 stats["kameleon"] += 1
+            if res.get("prox"):
+                stats["prox"] += 1
             if err_text and not configs:
                 etype = err_text.split(":", 1)[0][:24]
                 err_types[etype] = err_types.get(etype, 0) + 1
@@ -732,6 +803,8 @@ def fetch_links_parallel_with_source(
                 fmt_parts.append(f"Happ:{res['happ_decrypted']}")
             if res.get("kameleon"):
                 fmt_parts.append("Kameleon")
+            if res.get("prox"):
+                fmt_parts.append("Prox")
             if res.get("is_expired"):
                 fmt_parts.append("Expired")
             fmt_str = f" [{'/'.join(fmt_parts)}]" if fmt_parts else ""
@@ -768,7 +841,7 @@ def fetch_links_parallel_with_source(
         breakdown = (
             f"конфигов {len(links_with_source)} у {stats['with_configs']}, "
             f"пустые {stats['empty_200']}, expired {stats['expired']}, "
-            f"yaml {stats['yaml']}, kameleon {stats['kameleon']}, "
+            f"yaml {stats['yaml']}, kameleon {stats['kameleon']}, prox {stats['prox']}, "
             f"HTTP-ошибки {stats['http_err']}, сетевые {stats['net_err']}, "
             f"дедлайны {stats['deadline']}"
         )
