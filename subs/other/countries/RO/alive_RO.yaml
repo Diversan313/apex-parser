@@ -1,32 +1,5 @@
 proxies:
-  - name: "🇷🇴 [WL/CF] Сервер 1"
-    type: vless
-    server: 194.180.191.249
-    port: 443
-    uuid: "817b61c8-9bf0-4365-8a52-e43dfad274a6"
-    network: "ws"
-    servername: "shin-ra.ccwu.cc"
-    client-fingerprint: "unsafe"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "shin-ra.ccwu.cc"
-  - name: "🇷🇴 [WL/CF] Сервер 2"
-    type: vless
-    server: 194.180.191.249
-    port: 443
-    uuid: "817b61c8-9bf0-4365-8a52-e43dfad274a6"
-    network: "ws"
-    servername: "shin-ra.ccwu.cc"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/fp=unsafe"
-      headers:
-        Host: "shin-ra.ccwu.cc"
-  - name: "🇷🇴 [BL] Сервер 3"
+  - name: "🇷🇴 [BL] Сервер 1"
     type: vless
     server: 188.241.241.36
     port: 8443
@@ -39,34 +12,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GUqm415-hOCPsm5OJnca6iwSmgMUbX_UmEqWT9Ch60I"
-  - name: "🇷🇴 [BL] Сервер 4"
-    type: vless
-    server: 46.28.67.55
-    port: 443
-    uuid: "d1a6a033-fdbd-46a6-a177-3370ba042b9f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "i2dJ1_XGDpp50qpEclh6SWSWkxt4B0t2hi2qOVQbeSU"
-      short-id: "d06d78e974491b6e"
-  - name: "🇷🇴 [BL] Сервер 5"
-    type: vless
-    server: 45.13.151.11
-    port: 443
-    uuid: "1506f2e0-ae12-4718-b5ab-c5609161300e"
-    network: "tcp"
-    servername: "eu14.cdn77.icu"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "EltWI8AOqkN8lMjRycweRRoFRah5hu6xiKtgBmQOdE8"
-      short-id: "1ed136481e0ede74"
-  - name: "🇷🇴 [BL] Сервер 6"
+  - name: "🇷🇴 [BL] Сервер 2"
     type: vless
     server: 82.117.255.174
     port: 443
@@ -80,3 +26,30 @@ proxies:
     reality-opts:
       public-key: "0QDBHaCRO2dPeeSVy3B3R_U12ZOvbvWl1JTFW_ZcpD0"
       short-id: "31e91d43e553bf32"
+  - name: "🇷🇴 [BL] Сервер 3"
+    type: vless
+    server: 45.13.151.11
+    port: 443
+    uuid: "1506f2e0-ae12-4718-b5ab-c5609161300e"
+    network: "tcp"
+    servername: "eu14.cdn77.icu"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EltWI8AOqkN8lMjRycweRRoFRah5hu6xiKtgBmQOdE8"
+      short-id: "1ed136481e0ede74"
+  - name: "🇷🇴 [BL] Сервер 4"
+    type: vless
+    server: 46.28.67.55
+    port: 443
+    uuid: "d1a6a033-fdbd-46a6-a177-3370ba042b9f"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "i2dJ1_XGDpp50qpEclh6SWSWkxt4B0t2hi2qOVQbeSU"
+      short-id: "d06d78e974491b6e"

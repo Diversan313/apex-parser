@@ -15,17 +15,19 @@ proxies:
       short-id: "b28db60d77c50b4f"
   - name: "🇸🇪 [BL] Сервер 2"
     type: vless
-    server: 191.44.114.179
-    port: 2096
-    uuid: "d1641bc6-3757-43db-815a-9b3f4d9b0d7e"
-    network: "ws"
-    servername: "st33614.rumedia-cdn.com"
+    server: 13.143.180.50
+    port: 443
+    uuid: "9ea8b000-58ce-4f71-b108-989dd4f248f1"
+    network: "xhttp"
+    servername: "mirror.timeweb.ru"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/cdn/v3/live"
-      headers:
-        Host: "st33614.rumedia-cdn.com"
+    reality-opts:
+      public-key: "fwQbdsfHEnx2pzokCnyN698SUq5fkQKngnsyPGjmeDg"
+    xhttp-opts:
+      path: "/ubuntu"
+      mode: "auto"
   - name: "🇸🇪 [BL] Сервер 3"
     type: vless
     server: 185.153.55.159
@@ -42,6 +44,32 @@ proxies:
       short-id: "b91fe4e1"
   - name: "🇸🇪 [BL] Сервер 4"
     type: vless
+    server: 138.124.250.22
+    port: 443
+    uuid: "1506f2e0-ae12-4718-b5ab-c5609161300e"
+    network: "tcp"
+    servername: "eu87.cdn77.icu"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EltWI8AOqkN8lMjRycweRRoFRah5hu6xiKtgBmQOdE8"
+      short-id: "1ed136481e0ede74"
+  - name: "🇸🇪 [BL] Сервер 5"
+    type: vless
+    server: 201.58.177.108
+    port: 443
+    uuid: "50a87e21-f0e2-4b53-a787-91adfe748f63"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "swedenafteraventura.space"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TyuIIquHoesD9YwMQJHda0YZ3Hy9Dh123dQ00iGK0QY"
+  - name: "🇸🇪 [BL] Сервер 6"
+    type: vless
     server: 2.26.55.145
     port: 1443
     uuid: "42a64b9a-ab79-4094-8656-30366a7c2ea3"
@@ -54,7 +82,7 @@ proxies:
     reality-opts:
       public-key: "PUj1la__ltNjv_ASE5n4HJY7GiRs--N-0aYhkcAApCI"
       short-id: "7b6803a79bba5c52"
-  - name: "🇸🇪 [BL] Сервер 5"
+  - name: "🇸🇪 [BL] Сервер 7"
     type: vless
     server: se.peregrine-sub.net
     port: 1443
@@ -68,60 +96,7 @@ proxies:
     reality-opts:
       public-key: "PUj1la__ltNjv_ASE5n4HJY7GiRs--N-0aYhkcAApCI"
       short-id: "7b6803a79bba5c52"
-  - name: "🇸🇪 [BL] Сервер 6"
-    type: vless
-    server: 31.22.93.23
-    port: 8443
-    uuid: "a39ef2cc-1fda-4be0-b1b4-4271c77a242b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "sw2.fast-brooklyn.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "buCmsdWi_xDF6E88-aMs7PAwKZX6RKdjjCFwmhoLLXw"
-      short-id: "ed56d4d2401f22cf"
-  - name: "🇸🇪 [BL] Сервер 7"
-    type: vless
-    server: 201.58.177.108
-    port: 443
-    uuid: "50a87e21-f0e2-4b53-a787-91adfe748f63"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "swedenafteraventura.space"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TyuIIquHoesD9YwMQJHda0YZ3Hy9Dh123dQ00iGK0QY"
   - name: "🇸🇪 [BL] Сервер 8"
-    type: vless
-    server: swedenafteraventura.space
-    port: 443
-    uuid: "50a87e21-f0e2-4b53-a787-91adfe748f63"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "swedenafteraventura.space"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TyuIIquHoesD9YwMQJHda0YZ3Hy9Dh123dQ00iGK0QY"
-  - name: "🇸🇪 [BL] Сервер 9"
-    type: vless
-    server: 138.124.250.22
-    port: 443
-    uuid: "1506f2e0-ae12-4718-b5ab-c5609161300e"
-    network: "tcp"
-    servername: "eu87.cdn77.icu"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "EltWI8AOqkN8lMjRycweRRoFRah5hu6xiKtgBmQOdE8"
-      short-id: "1ed136481e0ede74"
-  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 45.145.13.71
     port: 443
@@ -135,7 +110,7 @@ proxies:
     reality-opts:
       public-key: "ZTiDQm3YUqHXX-yuXleP3UdkNSi8EGsMtfzi6nuwc1E"
       short-id: "eecfe76af97a6132"
-  - name: "🇸🇪 [BL] Сервер 11"
+  - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 31.76.70.108
     port: 80
@@ -149,7 +124,7 @@ proxies:
     reality-opts:
       public-key: "YQQP-rr9o-oUYjy5l1B4P-Pe2u3iBtUt9V1uirdQqgs"
       short-id: "6f1cb7b79a31b795"
-  - name: "🇸🇪 [BL] Сервер 12"
+  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 2.27.14.244
     port: 443
@@ -163,7 +138,7 @@ proxies:
     reality-opts:
       public-key: "uakxTTpl0pQZxA-wu_QEsyVDUlErAxEKmFcnQrzABXw"
       short-id: "c24b46e36cc6d6fa"
-  - name: "🇸🇪 [BL] Сервер 13"
+  - name: "🇸🇪 [BL] Сервер 11"
     type: vless
     server: 191.44.114.154
     port: 8443
@@ -177,7 +152,7 @@ proxies:
     reality-opts:
       public-key: "ndQzAcG4g-2OhvFb8EjFnZyxJ2lhawiulTLJOZrK8lY"
       short-id: "c4359f3827231250"
-  - name: "🇸🇪 [BL] Сервер 14"
+  - name: "🇸🇪 [BL] Сервер 12"
     type: vless
     server: 31.77.18.220
     port: 443
@@ -190,34 +165,29 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
-  - name: "🇸🇪 [BL] Сервер 15"
+  - name: "🇸🇪 [BL] Сервер 13"
     type: vless
-    server: se-2.pythonsetupbib.online
-    port: 61374
-    uuid: "f8d52ece-fad4-478d-875d-df6eed3befa7"
-    network: "xhttp"
-    servername: "se-2.pythonsetupbib.online"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI"
-    xhttp-opts:
-      path: "/"
-      host: "se-2.pythonsetupbib.online"
-      mode: "packet-up"
-  - name: "🇸🇪 [BL] Сервер 16"
-    type: vless
-    server: 13.143.180.50
-    port: 443
-    uuid: "9ea8b000-58ce-4f71-b108-989dd4f248f1"
-    network: "xhttp"
-    servername: "mirror.timeweb.ru"
+    server: 191.44.114.179
+    port: 8443
+    uuid: "d1641bc6-3757-43db-815a-9b3f4d9b0d7e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.wikipedia.org"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "fwQbdsfHEnx2pzokCnyN698SUq5fkQKngnsyPGjmeDg"
-    xhttp-opts:
-      path: "/ubuntu"
-      mode: "auto"
+      public-key: "WEHGKyXsOD5i2kNCJ3GrjeNZQBsrzH76OrPDJ7x2YwY"
+  - name: "🇸🇪 [BL] Сервер 14"
+    type: vless
+    server: 136.148.212.204
+    port: 25387
+    uuid: "5a519754-a673-4462-83f6-5eb25d2af141"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_nrnGiJUdyeLv2afSwe6P4j02AMayY34WFMjUJp5Kwc"
+      short-id: "9608a9c65d315d52"
