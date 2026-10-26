@@ -15,6 +15,21 @@ proxies:
       grpc-service-name: "grpc"
   - name: "🇧🇬 [WL] Сервер 2"
     type: vless
+    server: 37.18.14.168
+    port: 444
+    uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
+    network: "grpc"
+    servername: "passport.yandex.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
+  - name: "🇧🇬 [WL] Сервер 3"
+    type: vless
     server: 78.159.246.179
     port: 8443
     uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
@@ -26,7 +41,21 @@ proxies:
     xhttp-opts:
       path: "/api/v1/upload"
       host: "randomquaint.net"
-  - name: "🇧🇬 [BL] Сервер 3"
+  - name: "🇧🇬 [BL] Сервер 4"
+    type: vless
+    server: 195.123.226.21
+    port: 443
+    uuid: "6589c320-db68-43cd-a273-b46299bab355"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
+      short-id: "77bb0d07bddbc832"
+  - name: "🇧🇬 [BL] Сервер 5"
     type: vless
     server: 45.9.156.28
     port: 443
@@ -42,7 +71,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "cloud.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 4"
+  - name: "🇧🇬 [BL] Сервер 6"
     type: vless
     server: 45.9.156.27
     port: 443
@@ -57,7 +86,7 @@ proxies:
       short-id: "1be1bd931c98c84a"
     grpc-opts:
       grpc-service-name: "home.v1.ApiService"
-  - name: "🇧🇬 [BL] Сервер 5"
+  - name: "🇧🇬 [BL] Сервер 7"
     type: vless
     server: 45.9.156.24
     port: 443
@@ -72,17 +101,3 @@ proxies:
       short-id: "501ab3325b77e1ca"
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
-  - name: "🇧🇬 [BL] Сервер 6"
-    type: vless
-    server: 195.123.226.21
-    port: 443
-    uuid: "6589c320-db68-43cd-a273-b46299bab355"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway.icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
-      short-id: "77bb0d07bddbc832"
