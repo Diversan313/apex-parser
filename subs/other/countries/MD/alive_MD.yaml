@@ -16,6 +16,48 @@ proxies:
       grpc-service-name: "stats.v2.PushService"
   - name: "🇲🇩 [WL] Сервер 2"
     type: vless
+    server: 89.35.14.33
+    port: 443
+    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
+    network: "grpc"
+    servername: "md4.univesalsrv.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TZVMqglhHzteJ6t34mtku75LKzXNq0CB6glKYMAH6zg"
+      short-id: "8e07337954f9823f"
+    grpc-opts:
+      grpc-service-name: "hub.v1.ApiService"
+  - name: "🇲🇩 [BL] Сервер 3"
+    type: vless
+    server: md4.univesalsrv.com
+    port: 443
+    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
+    network: "grpc"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "TZVMqglhHzteJ6t34mtku75LKzXNq0CB6glKYMAH6zg"
+      short-id: "8e07337954f9823f"
+    grpc-opts:
+      grpc-service-name: "hub.v1.ApiService"
+  - name: "🇲🇩 [BL] Сервер 4"
+    type: vless
+    server: 217.69.167.203
+    port: 43000
+    uuid: "a094cdfb-8894-4a0e-8299-5ece1078a857"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "A8sWghnS7fSui7vIrx18mCX4rx1nr-yBpYKmwmkcXjo"
+      short-id: "870721a2"
+  - name: "🇲🇩 [BL] Сервер 5"
+    type: vless
     server: 89.35.14.30
     port: 443
     uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
@@ -30,20 +72,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "hub.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇲🇩 [BL] Сервер 3"
-    type: vless
-    server: 217.69.167.203
-    port: 43000
-    uuid: "a094cdfb-8894-4a0e-8299-5ece1078a857"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "A8sWghnS7fSui7vIrx18mCX4rx1nr-yBpYKmwmkcXjo"
-      short-id: "870721a2"
-  - name: "🇲🇩 [BL] Сервер 4"
+  - name: "🇲🇩 [BL] Сервер 6"
     type: vless
     server: 89.35.14.34
     port: 443
@@ -58,36 +87,6 @@ proxies:
       short-id: "aa9884f2982b7d3c"
     grpc-opts:
       grpc-service-name: "app.v1.PushService"
-  - name: "🇲🇩 [BL] Сервер 5"
-    type: vless
-    server: md5.univesalsrv.com
-    port: 443
-    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
-    network: "grpc"
-    servername: "md5.univesalsrv.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "99MRki6b93wC-hhDHe9yq3IXE3KtPGw4RkFAnpI-8gg"
-      short-id: "aa9884f2982b7d3c"
-    grpc-opts:
-      grpc-service-name: "app.v1.PushService"
-  - name: "🇲🇩 [BL] Сервер 6"
-    type: vless
-    server: 89.35.14.33
-    port: 443
-    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
-    network: "grpc"
-    servername: "md4.univesalsrv.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "TZVMqglhHzteJ6t34mtku75LKzXNq0CB6glKYMAH6zg"
-      short-id: "8e07337954f9823f"
-    grpc-opts:
-      grpc-service-name: "hub.v1.ApiService"
   - name: "🇲🇩 [BL] Сервер 7"
     type: vless
     server: 89.35.14.32
