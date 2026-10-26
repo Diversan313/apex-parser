@@ -195,6 +195,7 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countr
 * [apernet/hysteria](https://github.com/apernet/hysteria) — официальное ядро Hysteria2 для проверки hy2-конфигураций
 * [ip-api.com](https://ip-api.com/), [ip.sb](https://ip.sb/), [ip2location.io](https://www.ip2location.io/) — онлайн GeoIP-сервисы
 * [cron-job.org](https://cron-job.org/) — сервис для запуска Github Actions по расписанию
+* [kfwl.lol](https://kfwl.lol/), [linllc](https://p.linllc.site/) — онлайн прокси-сервисы 
 * [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) / [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb) — оффлайн база GeoIP
 * [hxehex/russia-mobile-internet-whitelist](https://github.com/hxehex/russia-mobile-internet-whitelist) — SNI-список для мобильного интернета
 * [RKP_bypass_configs](https://github.com/RKPchannel/RKP_bypass_configs) (RKP)
