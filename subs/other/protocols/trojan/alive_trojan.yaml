@@ -1,17 +1,6 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: trojan
-    server: 185.18.250.252
-    port: 443
-    password: "humanity"
-    sni: "www.calmlunch.com"
-    udp: true
-    ws-opts:
-      path: "/assignment"
-      headers:
-        Host: "www.calmlunch.com"
-  - name: "🇫🇷 [WL] Сервер 2"
-    type: trojan
     server: 185.220.100.168
     port: 443
     password: "humanity"
@@ -20,7 +9,7 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [WL] Сервер 3"
+  - name: "🇫🇷 [WL] Сервер 2"
     type: trojan
     server: 185.220.100.168
     port: 443
@@ -31,9 +20,19 @@ proxies:
       path: "/%2Fassignment"
       headers:
         Host: "www.calmlunch.com"
-  - name: "🇫🇷 [WL] Сервер 4"
+  - name: "🇫🇷 [WL] Сервер 3"
     type: trojan
     server: 185.220.100.168
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+  - name: "🇫🇷 [WL] Сервер 4"
+    type: trojan
+    server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -53,7 +52,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 6"
     type: trojan
-    server: 185.225.68.232
+    server: 185.255.179.166
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -71,16 +70,17 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [WL] Сервер 8"
+  - name: "🇱🇹 [WL] Сервер 8"
     type: trojan
-    server: 185.255.179.166
+    server: 88.216.69.253
     port: 443
     password: "humanity"
-    sni: "www.calmlunch.com"
-    client-fingerprint: "chrome"
+    sni: "www.pleadcourt.org"
     udp: true
     ws-opts:
       path: "/assignment"
+      headers:
+        Host: "www.pleadcourt.org"
   - name: "🇳🇱 [WL] Сервер 9"
     type: trojan
     server: 88.216.69.253
@@ -111,37 +111,9 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [WL] Сервер 12"
+  - name: "🇳🇱 [BL] Сервер 12"
     type: trojan
-    server: 45.130.125.18
-    port: 443
-    password: "humanity"
-    sni: "www.calmlunch.com"
-    client-fingerprint: "chrome"
-    udp: true
-    ws-opts:
-      path: "/assignment"
-  - name: "🇭🇰 [BL] Сервер 13"
-    type: trojan
-    server: 2.27.109.179
-    port: 45464
-    password: "XuMweB2PWs"
-    sni: "2.27.109.179.sslip.io"
-    udp: true
-  - name: "🇳🇱 [BL] Сервер 14"
-    type: trojan
-    server: 144.31.205.106
-    port: 443
-    password: "humanity"
-    sni: "www.pleadcourt.org"
-    udp: true
-    ws-opts:
-      path: "/assignment"
-      headers:
-        Host: "www.pleadcourt.org"
-  - name: "🇳🇱 [BL] Сервер 15"
-    type: trojan
-    server: 31.57.190.71
+    server: 219.76.13.177
     port: 443
     password: "humanity"
     sni: "www.pleadcourt.org"
@@ -151,25 +123,23 @@ proxies:
       path: "/assignment"
       headers:
         Host: "www.pleadcourt.org"
-  - name: "🇳🇱 [BL] Сервер 16"
+  - name: "🇳🇱 [BL] Сервер 13"
     type: trojan
-    server: 46.62.164.121
+    server: 46.225.77.98
     port: 443
     password: "humanity"
     sni: "www.pleadcourt.org"
+    client-fingerprint: "unsafe"
     udp: true
     ws-opts:
       path: "/assignment"
-      headers:
-        Host: "www.pleadcourt.org"
-  - name: "🇳🇱 [BL] Сервер 17"
+  - name: "🇳🇱 [BL] Сервер 14"
     type: trojan
-    server: 46.62.204.134
+    server: 148.253.212.42
     port: 443
     password: "humanity"
     sni: "www.pleadcourt.org"
+    client-fingerprint: "chrome"
     udp: true
     ws-opts:
       path: "/assignment"
-      headers:
-        Host: "www.pleadcourt.org"
