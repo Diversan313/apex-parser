@@ -25,22 +25,8 @@ proxies:
       headers:
         Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 3"
-    type: vless
-    server: 194.33.34.108
-    port: 443
-    uuid: "3cd95e58-9f0a-47e1-9937-64a58e949aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "stats.vk-portal.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "6eN2NciEaZis5J4muRRqpfLQ1OglI3A8lNSTmAGo6Do"
-      short-id: "3c6fc84d"
-  - name: "🇫🇷 [WL] Сервер 4"
     type: trojan
-    server: 185.225.68.232
+    server: 185.220.100.168
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -48,9 +34,20 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
+  - name: "🇫🇷 [WL] Сервер 4"
+    type: trojan
+    server: 185.220.100.168
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    udp: true
+    ws-opts:
+      path: "/%2Fassignment"
+      headers:
+        Host: "www.calmlunch.com"
   - name: "🇫🇷 [WL] Сервер 5"
     type: trojan
-    server: 185.225.68.232
+    server: 185.220.100.168
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -60,7 +57,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 6"
     type: trojan
-    server: 185.255.179.166
+    server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -70,7 +67,7 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 7"
     type: trojan
-    server: 185.255.179.166
+    server: 185.225.68.232
     port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
@@ -80,8 +77,8 @@ proxies:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 8"
     type: trojan
-    server: 91.245.225.79
-    port: 2053
+    server: 185.255.179.166
+    port: 443
     password: "humanity"
     sni: "www.calmlunch.com"
     client-fingerprint: "chrome"
@@ -89,6 +86,16 @@ proxies:
     ws-opts:
       path: "/assignment"
   - name: "🇫🇷 [WL] Сервер 9"
+    type: trojan
+    server: 185.255.179.166
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    client-fingerprint: "chrome"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+  - name: "🇫🇷 [WL] Сервер 10"
     type: trojan
     server: 91.245.225.79
     port: 2053
@@ -98,34 +105,16 @@ proxies:
     udp: true
     ws-opts:
       path: "/assignment"
-  - name: "🇫🇷 [BL] Сервер 10"
-    type: vless
-    server: 62.210.91.2
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
+  - name: "🇫🇷 [WL] Сервер 11"
+    type: trojan
+    server: 91.245.225.79
+    port: 2053
+    password: "humanity"
+    sni: "www.calmlunch.com"
     client-fingerprint: "chrome"
     udp: true
-    tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-      short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 11"
-    type: vless
-    server: 185.156.72.106
-    port: 10443
-    uuid: "0869a7d7-b8e8-42be-8bca-84b0ab07744a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "stackoverflow.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "XNfikFybWtjJjWU7-QBGrr-D9YUW0uSK_sR7mDDUmRU"
-      short-id: "6ba85179"
+    ws-opts:
+      path: "/assignment"
   - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 87.76.211.161
@@ -141,6 +130,20 @@ proxies:
       public-key: "HRmmr0Ii4Tr9jPLwratvLhee3_VWFNK47T8AAo7kzww"
   - name: "🇫🇷 [BL] Сервер 13"
     type: vless
+    server: 62.210.91.2
+    port: 23576
+    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fuck.rkn"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
+      short-id: "01"
+  - name: "🇫🇷 [BL] Сервер 14"
+    type: vless
     server: 194.24.161.220
     port: 443
     uuid: "4c5a54b3-774e-4391-b78e-f3e9fa928792"
@@ -151,20 +154,6 @@ proxies:
     tls: true
     ws-opts:
       path: "/api/metric/ws"
-  - name: "🇫🇷 [BL] Сервер 14"
-    type: vless
-    server: 178.250.157.231
-    port: 443
-    uuid: "37ca5f34-2531-4fda-a781-20f3845fea88"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "lifeskaterstudent.caskstudio.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "pObQ7F063LsHc_lDuUfzPnx83C-goIPyyffMZs1CG0U"
-      short-id: "c9e5505275320b51"
   - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: 137.74.16.237
@@ -212,29 +201,15 @@ proxies:
     server: 45.92.218.130
     port: 443
     uuid: "9ff5db63-88ff-4276-ab71-ac2b5cb2a740"
-    network: "tcp"
+    network: "raw"
     servername: "delivery.mp.microsoft.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "I0vZxWIjZYvtzlcvGaW01Q1U3M-vHD8iI8BM5KTuuiM"
       short-id: "d3feff5d570d6b"
   - name: "🇫🇷 [BL] Сервер 19"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 46.105.38.220
     port: 26451
@@ -250,7 +225,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc_common2"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -264,7 +239,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 21"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -280,6 +255,19 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
+  - name: "🇫🇷 [BL] Сервер 22"
+    type: vless
+    server: 161.97.66.16
+    port: 443
+    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
+      short-id: "086bf957"
   - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 51.77.144.182
@@ -310,3 +298,27 @@ proxies:
     xhttp-opts:
       path: "/OCrp5Ajs"
       mode: "auto"
+  - name: "🇫🇷 [BL] Сервер 25"
+    type: vless
+    server: france.utiltools.site
+    port: 443
+    uuid: "5ec704de-b6fd-4169-9525-bc247bcbfda0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "france.utiltools.site"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drY21DHNOr6ezJLA2B10mzTExeJ9-gVBfTBNLwVBtWI"
+  - name: "🇫🇷 [BL] Сервер 26"
+    type: trojan
+    server: 5.44.46.142
+    port: 443
+    password: "humanity"
+    sni: "www.calmlunch.com"
+    udp: true
+    ws-opts:
+      path: "/assignment"
+      headers:
+        Host: "www.calmlunch.com"

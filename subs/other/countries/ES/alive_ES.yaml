@@ -1,6 +1,21 @@
 proxies:
   - name: "🇪🇸 [BL] Сервер 1"
     type: vless
+    server: 45.151.101.107
+    port: 8443
+    uuid: "fc21089b-9d5d-4285-8a36-dab4b83d1699"
+    network: "xhttp"
+    servername: "cdn-es.cahmes.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "dSH20qQm9nyDIN1gI1KyUjtVOilHh0wG8t-Xw1iz638"
+      short-id: "01f0a0809d05552b"
+    xhttp-opts:
+      path: "/xhttp"
+  - name: "🇪🇸 [BL] Сервер 2"
+    type: vless
     server: 156.252.229.11
     port: 8443
     uuid: "3e21e3d3-6d26-4155-b851-764dd8e8c6b5"
@@ -12,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "7jPluypHwPilf_Mq7JOY96SwKkbK35WuIlN1HwGQ_0A"
       short-id: "974f7f8f"
-  - name: "🇪🇸 [BL] Сервер 2"
+  - name: "🇪🇸 [BL] Сервер 3"
     type: vless
     server: 46.28.71.247
     port: 443
@@ -20,13 +35,13 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "v4MuZIvFrTPT5GHMSaPryUAbIZlLstmsUTzmC1E-JTE"
       short-id: "0dfc23fe80778c00"
-  - name: "🇪🇸 [BL] Сервер 3"
+  - name: "🇪🇸 [BL] Сервер 4"
     type: vless
     server: 193.238.154.78
     port: 443
@@ -40,20 +55,6 @@ proxies:
     reality-opts:
       public-key: "4eE3K8Eac-ELze-LwRyJolqmhPqgCVqwQM1DKu6i0Ts"
       short-id: "e93d46ee3735069e"
-  - name: "🇪🇸 [BL] Сервер 4"
-    type: vless
-    server: 213.152.165.204
-    port: 2095
-    uuid: "f3ac0d2c-4b86-4f53-8070-89f69daba8f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "OKksVHWL5JepTv7if7Ta_L_7vn8OxW0INwV71HJM1jI"
-      short-id: "3869d49a9a79e06a"
   - name: "🇪🇸 [BL] Сервер 5"
     type: vless
     server: 76.164.203.135
@@ -62,7 +63,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "zses.eu-cdn294.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "random"
     udp: true
     tls: true
     reality-opts:
@@ -122,12 +123,28 @@ proxies:
       mode: "auto"
   - name: "🇪🇸 [BL] Сервер 10"
     type: vless
+    server: spa.ikistore.online
+    port: 443
+    uuid: "345e0ef7-6861-4722-ab44-799c37507b24"
+    network: "xhttp"
+    servername: "spa.ikistore.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "RA96nXAM5OoBkVSecYR0Rp-KBQ2LulWIc2883BFJeiY"
+      short-id: "5f5962cc9ec6b180"
+    xhttp-opts:
+      path: "/content"
+      mode: "packet-up"
+  - name: "🇪🇸 [BL] Сервер 11"
+    type: vless
     server: 212.227.235.66
     port: 2053
     uuid: "ead0dd61-d398-40ad-80d6-a0e1e516d7d3"
-    network: "tcp"
+    network: "raw"
     servername: "www.apple.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
