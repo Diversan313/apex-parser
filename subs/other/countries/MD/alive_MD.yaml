@@ -1,21 +1,36 @@
 proxies:
-  - name: "🇲🇩 [BL] Сервер 1"
+  - name: "🇲🇩 [WL] Сервер 1"
     type: vless
-    server: 89.35.14.31
+    server: 89.35.14.32
     port: 443
     uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
     network: "grpc"
-    servername: "md2.univesalsrv.com"
-    client-fingerprint: "chrome"
+    servername: "md3.univesalsrv.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "JXFsWHYjhAcR-7yz9tuCTMdcfuiyC9a-C9ewA55Z63o"
-      short-id: "d36a38659ce106cb"
+      public-key: "q38CddDj2g-XNDc0uW1m6S6b8iGY_Bne2RwX7C_FYCQ"
+      short-id: "9a72d40f1ff882b3"
     grpc-opts:
-      grpc-service-name: "hub.v1.SyncService"
+      grpc-service-name: "stats.v2.PushService"
+  - name: "🇲🇩 [WL] Сервер 2"
+    type: vless
+    server: 89.35.14.30
+    port: 443
+    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
+    network: "grpc"
+    servername: "md1.univesalsrv.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xWejOQUn2koOUorUPSrHMLM-lyHlZ441KzxKc9bLmkY"
+      short-id: "221ba6174224ca5b"
+    grpc-opts:
+      grpc-service-name: "hub.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇲🇩 [BL] Сервер 2"
+  - name: "🇲🇩 [BL] Сервер 3"
     type: vless
     server: 217.69.167.203
     port: 43000
@@ -28,37 +43,7 @@ proxies:
     reality-opts:
       public-key: "A8sWghnS7fSui7vIrx18mCX4rx1nr-yBpYKmwmkcXjo"
       short-id: "870721a2"
-  - name: "🇲🇩 [BL] Сервер 3"
-    type: vless
-    server: 89.35.14.34
-    port: 443
-    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
-    network: "grpc"
-    servername: "md5.univesalsrv.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "99MRki6b93wC-hhDHe9yq3IXE3KtPGw4RkFAnpI-8gg"
-      short-id: "aa9884f2982b7d3c"
-    grpc-opts:
-      grpc-service-name: "app.v1.PushService"
   - name: "🇲🇩 [BL] Сервер 4"
-    type: vless
-    server: md2.univesalsrv.com
-    port: 443
-    uuid: "2f35965a-9a9b-45fd-ba32-987296dfb6be"
-    network: "grpc"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "JXFsWHYjhAcR-7yz9tuCTMdcfuiyC9a-C9ewA55Z63o"
-      short-id: "d36a38659ce106cb"
-    grpc-opts:
-      grpc-service-name: "hub.v1.SyncService"
-      grpc-mode: "gun"
-  - name: "🇲🇩 [BL] Сервер 5"
     type: vless
     server: 89.35.14.32
     port: 443
