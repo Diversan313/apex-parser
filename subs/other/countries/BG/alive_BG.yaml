@@ -19,7 +19,7 @@ proxies:
     uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
     network: "xhttp"
     servername: "randomquaint.net"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     xhttp-opts:
@@ -27,6 +27,20 @@ proxies:
       host: "randomquaint.net"
       mode: "auto"
   - name: "🇧🇬 [BL] Сервер 3"
+    type: vless
+    server: 78.159.246.85
+    port: 8443
+    uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
+    network: "xhttp"
+    servername: "fitindoor.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "fitindoor.net"
+      mode: "packet-up"
+  - name: "🇧🇬 [BL] Сервер 4"
     type: vless
     server: 81.94.148.232
     port: 8443
@@ -40,21 +54,21 @@ proxies:
       path: "/api/v1/upload"
       host: "windytrout.net"
       mode: "auto"
-  - name: "🇧🇬 [BL] Сервер 4"
+  - name: "🇧🇬 [BL] Сервер 5"
     type: vless
-    server: 78.159.246.85
-    port: 8443
-    uuid: "2c634977-584e-4e1f-b501-1b70c77a6743"
-    network: "xhttp"
-    servername: "fitindoor.net"
+    server: 2.59.218.23
+    port: 443
+    uuid: "e0216964-ffa1-4d39-82c4-0e40879a470d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sof.lamibeauty.site"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v1/upload"
-      host: "fitindoor.net"
-      mode: "auto"
-  - name: "🇧🇬 [BL] Сервер 5"
+    reality-opts:
+      public-key: "Nvv8Dl8Ep7mVDOwYn5fiirUIRglzJmbMMhuMdKNAOUo"
+      short-id: "0c911aba142876ed"
+  - name: "🇧🇬 [BL] Сервер 6"
     type: vless
     server: 45.9.156.28
     port: 443
@@ -70,7 +84,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "cloud.v1.RelayService"
       grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 6"
+  - name: "🇧🇬 [BL] Сервер 7"
     type: vless
     server: 45.9.156.27
     port: 443
@@ -85,7 +99,7 @@ proxies:
       short-id: "1be1bd931c98c84a"
     grpc-opts:
       grpc-service-name: "home.v1.ApiService"
-  - name: "🇧🇬 [BL] Сервер 7"
+  - name: "🇧🇬 [BL] Сервер 8"
     type: vless
     server: 45.9.156.24
     port: 443
@@ -100,30 +114,3 @@ proxies:
       short-id: "501ab3325b77e1ca"
     grpc-opts:
       grpc-service-name: "api.v2.PushService"
-  - name: "🇧🇬 [BL] Сервер 8"
-    type: vless
-    server: 23.137.251.236
-    port: 45821
-    uuid: "f73538f3-737d-41d8-b1e7-8a6bd8d2e7c0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "RymFn9pFlHaMQpps5joHsmg0fOeWcaQiMOLR5IIfuWY"
-  - name: "🇧🇬 [BL] Сервер 9"
-    type: vless
-    server: 2.59.218.23
-    port: 443
-    uuid: "e0216964-ffa1-4d39-82c4-0e40879a470d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "sof.lamibeauty.site"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Nvv8Dl8Ep7mVDOwYn5fiirUIRglzJmbMMhuMdKNAOUo"
-      short-id: "0c911aba142876ed"
