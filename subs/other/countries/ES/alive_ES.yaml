@@ -48,7 +48,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "a7e9803d2255.j.cloudfront.hls.ttvnw.net"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -94,18 +94,17 @@ proxies:
       mode: "auto"
   - name: "🇪🇸 [BL] Сервер 8"
     type: vless
-    server: 213.152.165.204
-    port: 2095
-    uuid: "f3ac0d2c-4b86-4f53-8070-89f69daba8f5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
+    server: 212.227.235.66
+    port: 2053
+    uuid: "ead0dd61-d398-40ad-80d6-a0e1e516d7d3"
+    network: "raw"
     servername: "www.apple.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "OKksVHWL5JepTv7if7Ta_L_7vn8OxW0INwV71HJM1jI"
-      short-id: "3869d49a9a79e06a"
+      public-key: "7Y6Xb5Ql_03K25x8yKUSOKI2JTOMyv2nyCcFza90uxk"
+      short-id: "29e8dcd2b37aaa7f"
   - name: "🇪🇸 [BL] Сервер 9"
     type: vless
     server: spa.ikistore.online
@@ -123,29 +122,37 @@ proxies:
       path: "/content"
       mode: "packet-up"
   - name: "🇪🇸 [BL] Сервер 10"
-    type: vless
-    server: 212.227.235.66
-    port: 2053
-    uuid: "ead0dd61-d398-40ad-80d6-a0e1e516d7d3"
-    network: "raw"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
+    type: trojan
+    server: 66.163.118.244
+    port: 443
+    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
+    sni: "api.discovergreatjobsandadvanceyourcareer.com"
     udp: true
-    tls: true
-    reality-opts:
-      public-key: "7Y6Xb5Ql_03K25x8yKUSOKI2JTOMyv2nyCcFza90uxk"
-      short-id: "29e8dcd2b37aaa7f"
   - name: "🇪🇸 [BL] Сервер 11"
+    type: trojan
+    server: 66.163.118.62
+    port: 443
+    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
+    sni: "courses.discovergreatjobsandadvanceyourcareer.com"
+    udp: true
+  - name: "🇪🇸 [BL] Сервер 12"
     type: trojan
     server: 66.163.118.166
     port: 443
     password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
     sni: "learn.discovergreatjobsandadvanceyourcareer.com"
     udp: true
-  - name: "🇪🇸 [BL] Сервер 12"
+  - name: "🇪🇸 [BL] Сервер 13"
     type: trojan
-    server: 66.163.118.244
+    server: 66.163.118.131
     port: 443
     password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
-    sni: "api.discovergreatjobsandadvanceyourcareer.com"
+    sni: "www.discovergreatjobsandadvanceyourcareer.com"
+    udp: true
+  - name: "🇪🇸 [BL] Сервер 14"
+    type: trojan
+    server: 66.163.118.251
+    port: 443
+    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
+    sni: "resources.discovergreatjobsandadvanceyourcareer.com"
     udp: true
