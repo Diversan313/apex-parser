@@ -181,6 +181,16 @@ https://raw.githubusercontent.com/Diversan313/apex-parser/main/subs/other/countr
 
 Закрытый репозиторий обеспечивает защиту уникальных источников и настроек, при этом результаты работы регулярно публикуются в открытый доступ.
 
+## Звездочки
+
+<a href="https://www.star-history.com/?repos=diversan313%2Fapex-parser&type=date&legend=top-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=diversan313/apex-parser&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=diversan313/apex-parser&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=diversan313/apex-parser&type=date&legend=top-left" />
+ </picture>
+</a>
+
 ### Лицензия и использование (MIT)
 
 Код открытого репозитория доступен свободно по лицензии **MIT**.
