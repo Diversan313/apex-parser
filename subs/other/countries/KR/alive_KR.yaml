@@ -1,24 +1,10 @@
 proxies:
   - name: "🇰🇷 [BL] Сервер 1"
     type: vless
-    server: 43.200.255.38
-    port: 443
-    uuid: "7e68e32f-8015-4f37-9082-70e8b0b58043"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "momo.coursemos.io"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "DHOrfoin7TeRpnIoU3d6qT5Yrq3QPVFp49kApATA4iE"
-      short-id: "e04a526b0b09c765"
-  - name: "🇰🇷 [BL] Сервер 2"
-    type: vless
     server: 3.39.4.109
     port: 18967
     uuid: "814bd064-544d-4255-a070-5705c03f6da9"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.apple.com"
     client-fingerprint: "chrome"
@@ -27,12 +13,38 @@ proxies:
     reality-opts:
       public-key: "k2hPp0tTW0Da-HK94wYpSCLbuK44LfGqC2MSJIM1Ti0"
       short-id: "48050fab"
-  - name: "🇰🇷 [BL] Сервер 3"
+  - name: "🇰🇷 [BL] Сервер 2"
+    type: vless
+    server: 141.164.40.4
+    port: 443
+    uuid: "30e52776-55ac-3cb4-8d36-e2910f07e2c3"
+    network: "xhttp"
+    servername: "u695098u66e05ed8s2448.xxti.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "bfaa4bbe8cd76b7477b05453d8d48ecc"
+      host: "66e05ed8s2448.xxti.top"
+  - name: "🇰🇷 [BL/CF] Сервер 3"
+    type: vless
+    server: 64.110.79.66
+    port: 8443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/fp=chrome"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇰🇷 [BL] Сервер 4"
     type: vless
     server: 151.245.106.49
     port: 2053
     uuid: "a2de9567-9646-45a9-a410-7303a43bdb6c"
-    network: "tcp"
+    network: "raw"
     servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
