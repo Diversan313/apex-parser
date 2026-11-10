@@ -4,16 +4,30 @@ proxies:
     server: 81.177.215.81
     port: 443
     uuid: "3f25b15b-1777-4c08-9ade-60336ac92a82"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "misha2.plus-hit.ru"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "N4UtYAhibzkb0n_U2Qmqze5-lZMQqDozqg7OCqvufGA"
       short-id: "7c8e3d4a9b1f26d3"
-  - name: "🇦🇹 [BL] Сервер 2"
+  - name: "🇦🇹 [BL/CF] Сервер 2"
+    type: vless
+    server: 193.219.97.198
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇦🇹 [BL] Сервер 3"
     type: vless
     server: 66.90.106.28
     port: 443
@@ -27,28 +41,15 @@ proxies:
     reality-opts:
       public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
       short-id: "428ef87fd47a3a32"
-  - name: "🇦🇹 [BL/CF] Сервер 3"
-    type: vless
-    server: 193.219.97.198
-    port: 443
-    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
-    network: "ws"
-    servername: "fs.qicai99.com"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/fp=chrome"
-      headers:
-        Host: "fs.qicai99.com"
   - name: "🇦🇹 [BL] Сервер 4"
-    type: vmess
-    server: 154.47.19.225
-    port: 1270
-    uuid: "5c040f1d-45db-43bd-8d46-e4950e433735"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-    servername: "xmfhlpy.com"
-    tls: true
-    ws-opts:
-      path: "/"
+    type: ss
+    server: 152.53.1.57
+    port: 8388
+    password: "AdawffFMHymlasRb0VOP3HFf7sTG5sJx"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇦🇹 [BL] Сервер 5"
+    type: ss
+    server: 82.110.60.9
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
