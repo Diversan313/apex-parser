@@ -1,11 +1,27 @@
 proxies:
   - name: "🇿🇦 [BL] Сервер 1"
+    type: vless
+    server: 212.41.9.190
+    port: 8443
+    uuid: "db57c865-2318-4fd2-8aea-e8ba58ec696d"
+    network: "grpc"
+    servername: "s3.storage.selcloud.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_h_4Tmkb2bq5yNs_TkzHm4g_dJTZLeKiNGAN9tuP22Y"
+      short-id: "c42a4d4d"
+    grpc-opts:
+      grpc-service-name: "cas-za"
+      grpc-mode: "gun"
+  - name: "🇿🇦 [BL] Сервер 2"
     type: ss
     server: 102.37.156.224
     port: 443
     password: "aduB9HGxQHjA2SBMRjkHX6"
     cipher: "chacha20-ietf-poly1305"
-  - name: "🇿🇦 [BL] Сервер 2"
+  - name: "🇿🇦 [BL] Сервер 3"
     type: ss
     server: 102.133.165.160
     port: 16233
