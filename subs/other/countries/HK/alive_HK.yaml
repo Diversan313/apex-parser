@@ -1,17 +1,18 @@
 proxies:
-  - name: "🇭🇰 [WL] Сервер 1"
+  - name: "🇭🇰 [BL] Сервер 1"
     type: vless
-    server: 82.29.36.252
-    port: 443
-    uuid: "e751087d-f585-481b-9397-cad198b1169b"
+    server: hk3n.wxgqlfx.vip
+    port: 35193
+    uuid: "35cbae61-ee10-4cb9-abb8-4950b35e9851"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.mtr.com.hk"
-    client-fingerprint: "firefox"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "N-fcZsehZk3eIoo3bfjCdtYXsy1luM9Iz6LscVEr33U"
+      public-key: "d_pn_DMaIxhCkNh80h0Mc7nP94hrlN--I8liOIREDxE"
+      short-id: "e8daed2d"
   - name: "🇭🇰 [BL] Сервер 2"
     type: vless
     server: 111.68.14.18
@@ -19,22 +20,23 @@ proxies:
     uuid: "f4dc7e38-f861-460b-b1af-d8a5fa141d7b"
     network: "tcp"
     servername: "cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "iPjmjJ-QoIFgm0QumbMLLpT1w9w_HZNqRjtPoFqx7WY"
       short-id: "c6e2572e3267"
-  - name: "🇭🇰 [BL] Сервер 3"
+  - name: "🇭🇰 [BL/CF] Сервер 3"
     type: vless
-    server: 209.33.160.122
-    port: 39098
-    uuid: "7852e4df-db54-4f75-a35e-3b8fbe89e56d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dash.cloudflare.com"
-    client-fingerprint: "chrome"
+    server: 38.47.220.144
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "DtOZ39u6MyQMG96tl13-M7-HeaqQzW2RLBVPk9py-Vg"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
