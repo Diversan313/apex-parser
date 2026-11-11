@@ -1,20 +1,6 @@
 proxies:
   - name: "🇱🇻 [BL] Сервер 1"
     type: vless
-    server: 195.123.213.28
-    port: 443
-    uuid: "02fcc1a4-ee90-4970-8bbb-4ffaa8109d24"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
-      short-id: "5c256336e3b673fa"
-  - name: "🇱🇻 [BL] Сервер 2"
-    type: vless
     server: 217.60.60.243
     port: 443
     uuid: "42a64b9a-ab79-4094-8656-30366a7c2ea3"
@@ -26,20 +12,19 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇱🇻 [BL] Сервер 3"
+  - name: "🇱🇻 [BL] Сервер 2"
     type: vless
-    server: 45.43.79.92
-    port: 443
-    uuid: "042b12d8-bac4-4b3a-b661-79e333f08e4e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "vikt659.isgood.host"
+    server: 2.26.88.240
+    port: 4443
+    uuid: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
+    network: "xhttp"
+    servername: "lv3.nexfile.net"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "M4Y9h339sntl5wEpiCa7f4IKhJ_8JLzPnAz2IzKlngM"
-      short-id: "af4ca5d16438c938"
-  - name: "🇱🇻 [BL] Сервер 4"
+    xhttp-opts:
+      path: "/api/v1/sync/"
+      mode: "auto"
+  - name: "🇱🇻 [BL] Сервер 3"
     type: vless
     server: 138.124.180.137
     port: 443
