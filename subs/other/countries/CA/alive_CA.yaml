@@ -7,6 +7,7 @@ proxies:
     network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -55,21 +56,6 @@ proxies:
       public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
       short-id: "027af64166562b09"
   - name: "🇨🇦 [BL] Сервер 5"
-    type: trojan
-    server: 216.152.147.79
-    port: 443
-    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
-    sni: "blog.connectingpeoplewithgreatjobs.com"
-    udp: true
-  - name: "🇨🇦 [BL] Сервер 6"
-    type: vmess
-    server: 169.197.142.22
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 7"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -77,7 +63,15 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 8"
+  - name: "🇨🇦 [BL] Сервер 6"
+    type: vmess
+    server: 169.197.142.22
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
+  - name: "🇨🇦 [BL] Сервер 7"
     type: vmess
     server: 134.195.196.211
     port: 18000
@@ -85,11 +79,17 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 9"
+  - name: "🇨🇦 [BL] Сервер 8"
     type: ss
     server: 51.222.141.125
     port: 445
     password: "zDNVedRFPQexG9v"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 9"
+    type: ss
+    server: 51.222.200.165
+    port: 5000
+    password: "Y6R9pAtvxxzmGC"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 10"
     type: ss
@@ -98,6 +98,12 @@ proxies:
     password: "kDWvXYZoTBcGkC4"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 11"
+    type: ss
+    server: 51.222.155.113
+    port: 5601
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 12"
     type: ss
     server: 51.222.155.32
     port: 5003
