@@ -1,5 +1,32 @@
 proxies:
-  - name: "🇬🇷 [BL/CF] Сервер 1"
+  - name: "🇬🇷 [BL] Сервер 1"
+    type: vless
+    server: 85.90.197.220
+    port: 443
+    uuid: "8f704ed6-9a1a-4d04-94dd-1bff501716de"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "biNcdU5mywtNw-KyPpLHindBxdEyAolT1WJ26N0b7y4"
+      short-id: "94acb54627612d43"
+  - name: "🇬🇷 [BL/CF] Сервер 2"
+    type: vless
+    server: 85.90.197.159
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇬🇷 [BL/CF] Сервер 3"
     type: vless
     server: 85.90.197.158
     port: 443
@@ -9,18 +36,6 @@ proxies:
     udp: true
     tls: true
     ws-opts:
-      path: "/fp=chrome"
+      path: "/"
       headers:
         Host: "fs.qicai99.com"
-  - name: "🇬🇷 [BL/CF] Сервер 2"
-    type: vless
-    server: 85.90.197.159
-    port: 443
-    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
-    network: "ws"
-    servername: "fs.qicai99.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"

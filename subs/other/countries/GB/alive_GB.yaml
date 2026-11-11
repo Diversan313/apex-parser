@@ -1,18 +1,18 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 95.163.232.240
-    port: 443
-    uuid: "010be6fa-ab5f-404a-9edf-ab2db1f09f0c"
-    network: "ws"
-    servername: "api.neuroblur.top"
-    client-fingerprint: "ios"
+    server: 193.188.21.253
+    port: 10444
+    uuid: "57f7772d-f5d6-4d8f-992d-5fa5e0d6da55"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/api/generate"
-      headers:
-        Host: "api.neuroblur.top"
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 138.124.125.193
@@ -29,18 +29,18 @@ proxies:
       short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 3"
     type: vless
-    server: prime.jarbook.net
-    port: 443
-    uuid: "95d0e214-eab0-4701-93ed-fea4f1b56062"
-    network: "raw"
+    server: 179.254.190.22
+    port: 2443
+    uuid: "a9496f88-4c9f-4011-93a7-8b14c2101684"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "prime.jarbook.net"
+    servername: "node21.overcdn.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "oAX7soFKfN3xURgCD26trmjeF-e-eEjW3pBVXuuvW0k"
-      short-id: "77a8c8c8"
+      public-key: "J5ITJbg5FQFembAfkogKHHQB6DigsFXQxK7xu-QMWUs"
+      short-id: "a20d3ed244c76426"
   - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: static-uk.song69.fun
@@ -130,4 +130,16 @@ proxies:
     server: 185.176.206.9
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 11"
+    type: ss
+    server: 158.173.24.73
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 12"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
     cipher: "aes-256-gcm"
