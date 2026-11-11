@@ -15,20 +15,6 @@ proxies:
       short-id: "298938469938"
   - name: "🇵🇱 [WL] Сервер 2"
     type: vless
-    server: 188.72.103.4
-    port: 443
-    uuid: "40c8a202-4b7f-45a6-b0aa-37db0fac4df8"
-    network: "xhttp"
-    servername: "cdn-ya.shamanapp.online"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/media/hls/720p/"
-      host: "cdn-ya.shamanapp.online"
-      mode: "packet-up"
-  - name: "🇵🇱 [WL] Сервер 3"
-    type: vless
     server: 185.86.147.175
     port: 443
     uuid: "7955bf18-35c4-412d-aabd-c0b36c793063"
@@ -41,7 +27,7 @@ proxies:
       path: "/service/telemetry/045d381f1166/"
       headers:
         Host: "bhjolq0d0l.flowersgood.top"
-  - name: "🇵🇱 [WL] Сервер 4"
+  - name: "🇵🇱 [WL] Сервер 3"
     type: vless
     server: bhjolq0d0l.flowersgood.top
     port: 443
@@ -55,21 +41,20 @@ proxies:
       path: "/service/telemetry/045d381f1166/"
       headers:
         Host: "bhjolq0d0l.flowersgood.top"
-  - name: "🇵🇱 [WL] Сервер 5"
+  - name: "🇵🇱 [BL] Сервер 4"
     type: vless
-    server: cdn-yb.shamanapp.online
+    server: 82.118.22.161
     port: 443
-    uuid: "40c8a202-4b7f-45a6-b0aa-37db0fac4df8"
-    network: "xhttp"
-    servername: "cdn-yb.shamanapp.online"
-    client-fingerprint: "chrome"
+    uuid: "05488656-d4bf-4634-8b2e-e4ff5a56c7e2"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/media/hls/720p/"
-      host: "cdn-yb.shamanapp.online"
-      mode: "packet-up"
-  - name: "🇵🇱 [BL] Сервер 6"
+    reality-opts:
+      public-key: "xY1KpNxaIGmi6jfeudYQ_aaLGQqWK_uHStnwUFd2_2E"
+      short-id: "fa3ea655619a3e78"
+  - name: "🇵🇱 [BL] Сервер 5"
     type: vless
     server: 150.251.113.34
     port: 443
@@ -82,22 +67,34 @@ proxies:
     reality-opts:
       public-key: "8yMLSTbkpJFfbgTjNzotzz7U8OT6AERrclgKdKrXXW8"
       short-id: "150a627d15154cf2"
+  - name: "🇵🇱 [BL] Сервер 6"
+    type: vless
+    server: f926f3dc9431ce39.topology.gslb.yccdn.ru
+    port: 443
+    uuid: "41e4149b-f553-4570-9a1b-afa5d7fd55b9"
+    network: "xhttp"
+    servername: "cdn-ya.shamanapp.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/media/hls/720p/"
+      host: "cdn-ya.shamanapp.online"
+      mode: "packet-up"
   - name: "🇵🇱 [BL] Сервер 7"
     type: vless
-    server: 188.225.25.35
-    port: 8443
-    uuid: "d933fd4d-a335-4868-9dea-d64d9da1d5d3"
-    network: "grpc"
-    servername: "ru.starkclaude.top"
+    server: 150.251.112.45
+    port: 2066
+    uuid: "f333ac5d-1e0b-4947-a123-7bb605803ad8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tiktok.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "rJ-fFNYXh7WW9LuYe1N71fh7nAEe5i09Pi5ZDSDlH1s"
-      short-id: "4951a2313524dd8f"
-    grpc-opts:
-      grpc-service-name: "ozone"
-      grpc-mode: "gun"
+      public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
+      short-id: "d18f4e"
   - name: "🇵🇱 [BL] Сервер 8"
     type: vless
     server: 138.124.242.46
@@ -225,22 +222,6 @@ proxies:
       grpc-mode: "gun"
   - name: "🇵🇱 [BL] Сервер 17"
     type: vless
-    server: 201.58.189.105
-    port: 2083
-    uuid: "d7ddade6-b7a0-4cab-a910-d5d5c378d98a"
-    network: "grpc"
-    servername: "dl.google.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "B7x5bYp-YhtLeH31zYcilpKFCkGTMe3jtSECSw-bMC4"
-      short-id: "8bd80253"
-    grpc-opts:
-      grpc-service-name: "google.storage.v2.Storage"
-      grpc-mode: "gun"
-  - name: "🇵🇱 [BL] Сервер 18"
-    type: vless
     server: 31.76.32.122
     port: 443
     uuid: "71b566cb-78c4-48e4-af5b-720e4f7884f2"
@@ -253,7 +234,7 @@ proxies:
     reality-opts:
       public-key: "O35Np_ugrc3mUDIEO4UnViEwRobM2r9kqQCdcdCHjEI"
       short-id: "cb33163cf9c03ab1"
-  - name: "🇵🇱 [BL] Сервер 19"
+  - name: "🇵🇱 [BL] Сервер 18"
     type: vless
     server: 222.167.245.16
     port: 443
@@ -266,7 +247,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
-  - name: "🇵🇱 [BL] Сервер 20"
+  - name: "🇵🇱 [BL] Сервер 19"
     type: vless
     server: poland.biznes.lol
     port: 443
@@ -279,7 +260,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
-  - name: "🇵🇱 [BL] Сервер 21"
+  - name: "🇵🇱 [BL] Сервер 20"
     type: vless
     server: 2.26.224.174
     port: 8443
@@ -293,7 +274,7 @@ proxies:
     reality-opts:
       public-key: "d6qmF8ibk_PxtDJPzSa7LKw9VUI_mZ59DrTvmW3RaFc"
       short-id: "10983e6c816181c2"
-  - name: "🇵🇱 [BL] Сервер 22"
+  - name: "🇵🇱 [BL] Сервер 21"
     type: vless
     server: 45.152.202.86
     port: 443
@@ -307,7 +288,7 @@ proxies:
     reality-opts:
       public-key: "3WKoZ9V3OLA_QuOcqTtGurNFlrDL60LlzVvVP_EjV3c"
       short-id: "3ef49eb261f27eeb"
-  - name: "🇵🇱 [BL] Сервер 23"
+  - name: "🇵🇱 [BL] Сервер 22"
     type: vless
     server: 13.143.167.154
     port: 443
@@ -320,17 +301,3 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇵🇱 [BL] Сервер 24"
-    type: vless
-    server: 150.251.112.45
-    port: 2066
-    uuid: "f333ac5d-1e0b-4947-a123-7bb605803ad8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tiktok.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
-      short-id: "d18f4e"

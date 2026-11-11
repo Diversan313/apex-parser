@@ -7,13 +7,27 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "tiktok.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
       short-id: "d18f4e"
   - name: "🇨🇦 [BL] Сервер 2"
+    type: vless
+    server: ca1.fox-lisa.ru
+    port: 443
+    uuid: "ccb8ff48-3934-4250-b4ec-bb76b95d154f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ca1.fox-lisa.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
+      short-id: "027af64166562b09"
+  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 86.107.168.129
     port: 443
@@ -27,17 +41,11 @@ proxies:
     reality-opts:
       public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
       short-id: "027af64166562b09"
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇨🇦 [BL] Сервер 4"
     type: ss
     server: 51.222.141.125
     port: 445
     password: "zDNVedRFPQexG9v"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 4"
-    type: ss
-    server: 51.79.85.185
-    port: 8118
-    password: "cdBIDV42DCwnfIN"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 5"
     type: ss
@@ -82,16 +90,42 @@ proxies:
     password: "zDNVedRFPQexG9v"
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 12"
+    type: vmess
+    server: 23.162.200.198
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
+    ws-opts:
+      path: "/eyJqdW5rIjoiNUZVWmdPNWNpTW5LOCIsInByb3RvY29sIjoidmwiLCJtb2RlIjoicHJlZml4IiwicGFuZWxJUHMiOlsiWzI2MDI6ZmM1OTpiMDo2NDo6XSJdfQ"
+  - name: "🇨🇦 [BL] Сервер 13"
+    type: vmess
+    server: 134.195.196.211
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
+  - name: "🇨🇦 [BL] Сервер 14"
     type: trojan
     server: 216.152.147.79
     port: 443
     password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
     sni: "blog.connectingpeoplewithgreatjobs.com"
     udp: true
-  - name: "🇨🇦 [BL] Сервер 13"
+  - name: "🇨🇦 [BL] Сервер 15"
     type: trojan
     server: 216.152.147.152
     port: 443
     password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
     sni: "learn.connectingpeoplewithgreatjobs.com"
+    udp: true
+  - name: "🇨🇦 [BL] Сервер 16"
+    type: trojan
+    server: 216.152.147.48
+    port: 443
+    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
+    sni: "courses.connectingpeoplewithgreatjobs.com"
+    client-fingerprint: "chrome"
     udp: true
