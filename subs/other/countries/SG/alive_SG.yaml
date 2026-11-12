@@ -55,18 +55,17 @@ proxies:
       short-id: "2df2bd9d8366cef1"
   - name: "🇸🇬 [BL] Сервер 5"
     type: vless
-    server: www.zoom.us
-    port: 443
-    uuid: "b19c62cc-f2c2-4895-aee1-978a0f58f8c8"
-    network: "ws"
-    servername: "matrix.phonicsindia.mobi"
+    server: 511.150333.xyz
+    port: 21001
+    uuid: "41b1c169-5905-4d98-b6a6-56896c25737c"
+    network: "tcp"
+    servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "matrix.phonicsindia.mobi"
+    reality-opts:
+      public-key: "HZwHZBP3x4Yo4UQiHcypRJIU_UdZY5OAapQM8RUqVAU"
+      short-id: "ab39fc68ab3dee81"
   - name: "🇸🇬 [BL] Сервер 6"
     type: vless
     server: 67.159.52.81
@@ -95,7 +94,21 @@ proxies:
       path: "/free-server.techsonic.dev"
       headers:
         Host: "free-server.techsonic.dev"
-  - name: "🇸🇬 [BL] Сервер 8"
+  - name: "🇸🇬 [BL/CF] Сервер 8"
+    type: vless
+    server: 23.156.153.40
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇸🇬 [BL] Сервер 9"
     type: vless
     server: 140.245.62.225
     port: 36442
@@ -104,17 +117,6 @@ proxies:
     flow: "xtls-rprx-vision"
     servername: "xjpp.zjlo.top"
     client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇬 [BL] Сервер 9"
-    type: vless
-    server: xjpp.zjlo.top
-    port: 36442
-    uuid: "c6624b96-e346-490b-9145-74c2543a9483"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "xjpp.zjlo.top"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
   - name: "🇸🇬 [BL] Сервер 10"
@@ -192,3 +194,10 @@ proxies:
       path: "/fp=chrome"
       headers:
         Host: "fs.qicai99.com"
+  - name: "🇸🇬 [BL] Сервер 16"
+    type: trojan
+    server: 149.28.130.108
+    port: 443
+    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
+    sni: "searchcreativejobsandshowcaseyourartistictalents.com"
+    udp: true
