@@ -1,5 +1,33 @@
 proxies:
-  - name: "🇨🇭 [BL] Сервер 1"
+  - name: "🇨🇭 [WL] Сервер 1"
+    type: vless
+    server: chcdn.fius.dev
+    port: 443
+    uuid: "00018846-513b-6e3b-5301-9c9ff2d375a3"
+    network: "xhttp"
+    servername: "chcdn.fius.dev"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api-test"
+      host: "chcdn.fius.dev"
+      mode: "packet-up"
+  - name: "🇨🇭 [WL] Сервер 2"
+    type: vless
+    server: 212.192.241.171
+    port: 443
+    uuid: "5b2f074c-6f61-4faa-8bea-dbe8f0a90021"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api4-453b458bbf43b6.rbc.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "CMkW1axrhEXoiJ6anMz9XEjlfqlAtEZya7L0b5ZPMyw"
+      short-id: "7e77e7e2cf2b7a79"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: vless
     server: 45.90.59.15
     port: 443
@@ -13,7 +41,51 @@ proxies:
     reality-opts:
       public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
       short-id: "19253fae84102271"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [BL] Сервер 4"
+    type: vless
+    server: nl-salad-12.fantoff.online
+    port: 8443
+    uuid: "7d4a5c8f-0cdb-41b9-8898-807a1b7335e4"
+    network: "grpc"
+    servername: "nl-salad-12.fantoff.online"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2VDvK_MUMJQou2QHniofZOKRHcslWrJ6wtblKf2AilY"
+      short-id: "7f2e9c4b1a8d6e55"
+    grpc-opts:
+      grpc-service-name: "nl-salad-12_grpc"
+      grpc-mode: "gun"
+  - name: "🇨🇭 [BL] Сервер 5"
+    type: vless
+    server: prvtch.titun.su
+    port: 443
+    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "perevodchiki.su"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
+      short-id: "428ef87fd47a3a32"
+  - name: "🇨🇭 [BL] Сервер 6"
+    type: vless
+    server: 81.17.18.109
+    port: 443
+    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "perevodchiki.su"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
+      short-id: "428ef87fd47a3a32"
+  - name: "🇨🇭 [BL] Сервер 7"
     type: vless
     server: 74.161.152.237
     port: 2083
@@ -27,7 +99,7 @@ proxies:
     reality-opts:
       public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
       short-id: "0123456789abcdef"
-  - name: "🇨🇭 [BL] Сервер 3"
+  - name: "🇨🇭 [BL] Сервер 8"
     type: trojan
     server: 208.69.78.33
     port: 443
