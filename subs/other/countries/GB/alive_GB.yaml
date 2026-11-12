@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇬🇧 [WL] Сервер 1"
-    type: vless
-    server: 213.176.92.168
-    port: 10444
-    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "video.yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 2"
+  - name: "🇬🇧 [BL] Сервер 1"
     type: vless
     server: 83.147.18.3
     port: 443
@@ -27,6 +13,22 @@ proxies:
     reality-opts:
       public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
       short-id: "fd8cf7e1173f0edb"
+  - name: "🇬🇧 [BL] Сервер 2"
+    type: vless
+    server: 176.108.242.15
+    port: 1505
+    uuid: "ae8aa74e-e344-45e6-a87a-04b8b9349a5d"
+    network: "grpc"
+    servername: "iv.kommersant.ru"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "5nRL3eh_pQWHdej0It-V9mOapVLSi4PgkgjG9iqhpSw"
+      short-id: "a5bd715862513387"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 138.124.125.193
@@ -62,39 +64,28 @@ proxies:
     uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "bizorg.su"
+    servername: "50.7.227.78"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
       short-id: "428ef87fd47a3a32"
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL/CF] Сервер 6"
     type: vless
-    server: 179.254.190.22
-    port: 2443
-    uuid: "a9496f88-4c9f-4011-93a7-8b14c2101684"
+    server: 138.124.125.12
+    port: 443
+    uuid: "39b5f752-9312-4a05-9b3b-a1ff44155eec"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "node21.overcdn.ru"
+    servername: "sync.wikilegia.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "J5ITJbg5FQFembAfkogKHHQB6DigsFXQxK7xu-QMWUs"
-      short-id: "a20d3ed244c76426"
+      public-key: "G4pdR-Y6SfzxTDtU89V6CMwp1x7MovY9Ax_ZnTcmnUw"
+      short-id: "af15023a7f94f76c"
   - name: "🇬🇧 [BL] Сервер 7"
-    type: vless
-    server: 45.145.167.80
-    port: 23030
-    uuid: "30b99882-86ca-46a2-8aad-6f1b97407d22"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gb.ezhiknet.work"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 95.163.153.141
     port: 8443
@@ -109,7 +100,7 @@ proxies:
       short-id: "c9ea2355ddeab39b"
     xhttp-opts:
       path: "/"
-  - name: "🇬🇧 [BL] Сервер 9"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 195.72.166.251
     port: 443
@@ -122,7 +113,7 @@ proxies:
     reality-opts:
       public-key: "RKDT6fVgcZS8Qfzhv5rbeHRIflA3UTKD_HNLJyOoUwk"
       short-id: "25349b36802f"
-  - name: "🇬🇧 [BL] Сервер 10"
+  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: 136.176.68.34
     port: 443
@@ -136,7 +127,7 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 11"
+  - name: "🇬🇧 [BL] Сервер 10"
     type: vless
     server: 34.39.80.57
     port: 50818
@@ -148,13 +139,13 @@ proxies:
     tls: true
     ws-opts:
       path: "/GunService"
-  - name: "🇬🇧 [BL] Сервер 12"
+  - name: "🇬🇧 [BL] Сервер 11"
     type: ss
     server: 185.176.206.9
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇬🇧 [BL] Сервер 13"
+  - name: "🇬🇧 [BL] Сервер 12"
     type: ss
     server: 94.156.250.148
     port: 7001
