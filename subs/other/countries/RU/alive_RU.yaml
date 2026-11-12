@@ -1,5 +1,33 @@
 proxies:
-  - name: "🇷🇺 [WL/AI] Сервер 1"
+  - name: "🇷🇺 [WL] Сервер 1"
+    type: vless
+    server: 185.178.208.167
+    port: 443
+    uuid: "4662bf2b-af58-0001-ae5f-ef3d7d3a624f"
+    network: "ws"
+    servername: "mbr.rkn-pediki.site"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "mbr.rkn-pediki.site"
+  - name: "🇷🇺 [WL] Сервер 2"
+    type: vless
+    server: 185.178.208.167
+    port: 443
+    uuid: "2b5962e8-1ec2-0001-bdab-cefa57555d2a"
+    network: "ws"
+    servername: "mbr.rkn-pediki.site"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "mbr.rkn-pediki.site"
+  - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 138.124.14.209
     port: 443
@@ -13,20 +41,7 @@ proxies:
     reality-opts:
       public-key: "X5QCQAU6PhQ0ZYdMfsOD8SzK2tAcKqGbqHcGKOCkHg0"
       short-id: "3e70d4cbb01bddfd"
-  - name: "🇷🇺 [WL] Сервер 2"
-    type: vless
-    server: 176.57.215.54
-    port: 37508
-    uuid: "ef02c262-77a0-429f-8b8f-9eb6ad18f8c0"
-    network: "grpc"
-    servername: "www.oracle.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_Iqh4SUi85b59zoNhLWVZrSGMNa45OTgK3fWrjZI0l8"
-      short-id: "d3"
-  - name: "🇷🇺 [WL] Сервер 3"
+  - name: "🇷🇺 [WL] Сервер 4"
     type: ss
     server: 38.60.223.125
     port: 13108

@@ -1,10 +1,37 @@
 proxies:
-  - name: "🇦🇪 [BL] Сервер 1"
+  - name: "🇦🇪 [WL] Сервер 1"
+    type: vless
+    server: 185.86.147.175
+    port: 443
+    uuid: "7955bf18-35c4-412d-aabd-c0b36c793063"
+    network: "ws"
+    servername: "bhjolq0d0l.flowersgood.top"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/service/telemetry/045d381f1166/"
+      headers:
+        Host: "bhjolq0d0l.flowersgood.top"
+  - name: "🇦🇪 [WL] Сервер 2"
+    type: vless
+    server: bhjolq0d0l.flowersgood.top
+    port: 443
+    uuid: "7955bf18-35c4-412d-aabd-c0b36c793063"
+    network: "ws"
+    servername: "bhjolq0d0l.flowersgood.top"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/service/telemetry/045d381f1166/"
+      headers:
+        Host: "bhjolq0d0l.flowersgood.top"
+  - name: "🇦🇪 [BL] Сервер 3"
     type: vless
     server: 200.102.183.45
     port: 443
     uuid: "664f65f4-33b3-43a3-b9e5-68192d1d428e"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "dune-falcon.cdn.cachefleet.com"
     client-fingerprint: "firefox"
@@ -13,3 +40,11 @@ proxies:
     reality-opts:
       public-key: "cH5ij6-s09W0Dx3Bnxhh4fHeVnjM_TrS1rZWfdgBPi8"
       short-id: "0268c715cf2f61e7"
+  - name: "🇦🇪 [BL] Сервер 4"
+    type: trojan
+    server: Sclass-C1.catcat321.com
+    port: 20086
+    password: "d9064589-74af-432a-9390-5d8a9da281bf"
+    sni: "hk.catxstar.com"
+    client-fingerprint: "chrome"
+    udp: true
