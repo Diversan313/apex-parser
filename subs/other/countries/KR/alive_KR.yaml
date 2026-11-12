@@ -1,6 +1,34 @@
 proxies:
   - name: "🇰🇷 [BL] Сервер 1"
     type: vless
+    server: 200.102.183.80
+    port: 443
+    uuid: "664f65f4-33b3-43a3-b9e5-68192d1d428e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cedar-tide.cdn.cachefleet.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "sp_KKjJjc7cyVd8jkaPNfRtB9UxyZT6CfF62uYqcMlI"
+      short-id: "69828f96b0fcc801"
+  - name: "🇰🇷 [BL/CF] Сервер 2"
+    type: vless
+    server: 64.110.79.66
+    port: 8443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇰🇷 [BL] Сервер 3"
+    type: vless
     server: 43.155.182.152
     port: 443
     uuid: "3567660e-d2a7-4a8a-b379-2ff61e7f52ba"
