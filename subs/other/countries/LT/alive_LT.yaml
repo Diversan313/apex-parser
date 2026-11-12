@@ -1,15 +1,14 @@
 proxies:
-  - name: "🇱🇹 [BL/CF] Сервер 1"
+  - name: "🇱🇹 [BL] Сервер 1"
     type: vless
-    server: 85.206.161.209
+    server: 84.32.209.103
     port: 443
-    uuid: "20e565e1-3858-40bf-94e8-4ec9624fc985"
-    network: "ws"
-    servername: "wallweb8.pages.dev"
+    uuid: "3f25b15b-1777-4c08-9ade-60336ac92a82"
+    network: "grpc"
+    servername: "edge-lt.lindenpixel.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "wallweb8.pages.dev"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "multi"
