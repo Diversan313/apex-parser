@@ -1,20 +1,6 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
-    server: 161.97.160.224
-    port: 443
-    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
-      short-id: "e6"
-  - name: "🇫🇷 [WL/AI] Сервер 2"
-    type: vless
     server: 77.232.36.228
     port: 443
     uuid: "c059d2b8-d7d6-4873-b5e8-2c5f6cd908bb"
@@ -30,6 +16,22 @@ proxies:
       path: "/"
       host: "ya.ru"
       mode: "auto"
+  - name: "🇫🇷 [WL] Сервер 2"
+    type: vless
+    server: 77.232.36.228
+    port: 443
+    uuid: "c059d2b8-d7d6-4873-b5e8-2c5f6cd908bb"
+    network: "xhttp"
+    servername: "ya.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "nGTRCnoPVEFz6M7S-dr3rfnfuZONPtCgEczaxy53-XQ"
+      short-id: "b997e34399a919f3"
+    xhttp-opts:
+      path: "/"
+      host: "ya.ru"
   - name: "🇫🇷 [BL] Сервер 3"
     type: vless
     server: 143.246.204.21
@@ -90,43 +92,7 @@ proxies:
     reality-opts:
       public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
       short-id: "086bf957"
-  - name: "🇫🇷 [BL/AI] Сервер 7"
-    type: vless
-    server: ai.smrtai.top
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 8"
-    type: vless
-    server: fr.vip-get.ru
-    port: 8443
-    uuid: "f1c3915d-7be6-4449-976e-bd48742eeec1"
-    network: "ws"
-    servername: "fr.vip-get.ru"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/api/download"
-  - name: "🇫🇷 [BL] Сервер 9"
-    type: vless
-    server: 213.176.73.220
-    port: 8443
-    uuid: "f1c3915d-7be6-4449-976e-bd48742eeec1"
-    network: "ws"
-    servername: "fr.vip-get.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/api/download"
-  - name: "🇫🇷 [BL] Сервер 10"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 3.169.9.125
     port: 443
@@ -140,21 +106,7 @@ proxies:
       path: "/"
       headers:
         Host: "d1afk2ndm8pox3.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 11"
-    type: vless
-    server: 3.168.218.6
-    port: 443
-    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "d1afk2ndm8pox3.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d1afk2ndm8pox3.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 8"
     type: vless
     server: 3.168.217.188
     port: 443
@@ -168,49 +120,21 @@ proxies:
       path: "/"
       headers:
         Host: "d1afk2ndm8pox3.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
-    server: 3.168.218.11
+    server: 3.168.217.190
     port: 443
     uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
     network: "ws"
-    servername: "d1aedflfr97jes.cloudfront.net"
+    servername: "d1afk2ndm8pox3.cloudfront.net"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
       path: "/"
       headers:
-        Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 14"
-    type: vless
-    server: 3.168.218.7
-    port: 443
-    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "d1aedflfr97jes.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 15"
-    type: vless
-    server: 3.168.218.8
-    port: 443
-    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "d1aedflfr97jes.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 16"
+        Host: "d1afk2ndm8pox3.cloudfront.net"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 200.102.183.5
     port: 8443
@@ -223,7 +147,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "N8QooY7tm45gPX-9AQVg8ZYCCYqqfaiX8NGM96IvTBI"
-  - name: "🇫🇷 [BL] Сервер 17"
+  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -238,21 +162,7 @@ proxies:
     xhttp-opts:
       path: "/ae1b809ceb77"
       host: "fr.gorobsub.com"
-  - name: "🇫🇷 [BL] Сервер 18"
-    type: vless
-    server: 177.202.73.151
-    port: 443
-    uuid: "7b91b2c3-8af3-449b-a555-00c9460989f4"
-    network: "ws"
-    servername: "lvi.su"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/vpn-relay?token=27fede42482b3c29d4c1c9640876c250&pool=whitelist2"
-      headers:
-        Host: "lvi.su"
-  - name: "🇫🇷 [BL] Сервер 19"
+  - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 67.159.44.219
     port: 443
@@ -266,21 +176,7 @@ proxies:
     reality-opts:
       public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
       short-id: "428ef87fd47a3a32"
-  - name: "🇫🇷 [BL] Сервер 20"
-    type: vless
-    server: api.videodolina.cc
-    port: 443
-    uuid: "fb7eb79a-e746-4fb4-acdb-fa54e73e3258"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "api.videodolina.cc"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
-      short-id: "a8"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -295,7 +191,7 @@ proxies:
       short-id: "21569dd6"
     xhttp-opts:
       path: "/OCrp5Ajs"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -309,7 +205,7 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 23"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: 138.124.251.98
     port: 443
@@ -323,7 +219,7 @@ proxies:
     reality-opts:
       public-key: "yr_opKG6DGTppNDXkk-DhGSYJZXbb9o-caexk2FZO38"
       short-id: "8f3c6e2a1b5d4f09"
-  - name: "🇫🇷 [BL] Сервер 24"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 20.19.83.143
     port: 2083
