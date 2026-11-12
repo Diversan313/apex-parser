@@ -15,7 +15,7 @@ proxies:
         Host: "mbr.rkn-pediki.site"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
-    server: 185.178.208.167
+    server: mbr.rkn-pediki.site
     port: 443
     uuid: "2b5962e8-1ec2-0001-bdab-cefa57555d2a"
     network: "ws"
@@ -29,19 +29,31 @@ proxies:
         Host: "mbr.rkn-pediki.site"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: 138.124.14.209
+    server: 185.178.208.167
     port: 443
-    uuid: "c059d2b8-d7d6-4873-b5e8-2c5f6cd908bb"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cdn.savesafe.space"
+    uuid: "2b5962e8-1ec2-0001-bdab-cefa57555d2a"
+    network: "ws"
+    servername: "mbr.rkn-pediki.site"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "mbr.rkn-pediki.site"
+  - name: "🇷🇺 [WL] Сервер 4"
+    type: vless
+    server: vps3.nemnogogo.com
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "X5QCQAU6PhQ0ZYdMfsOD8SzK2tAcKqGbqHcGKOCkHg0"
-      short-id: "3e70d4cbb01bddfd"
-  - name: "🇷🇺 [WL] Сервер 4"
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: ss
     server: 38.60.223.125
     port: 13108
