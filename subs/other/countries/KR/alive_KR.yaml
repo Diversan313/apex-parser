@@ -1,13 +1,14 @@
 proxies:
-  - name: "🇬🇷 [BL/CF] Сервер 1"
+  - name: "🇰🇷 [BL/CF] Сервер 1"
     type: vless
-    server: 85.90.197.158
-    port: 443
+    server: 64.110.79.66
+    port: 8443
     uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
     network: "ws"
     servername: "fs.qicai99.com"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/fp"
+      headers:
+        Host: "fs.qicai99.com"
