@@ -27,47 +27,31 @@ proxies:
       short-id: "2df2bd9d8366cef1"
   - name: "🇸🇬 [BL] Сервер 3"
     type: vless
-    server: 149.118.58.235
-    port: 24204
-    uuid: "2ab54cbc-bea6-4b79-8833-7b3354b97500"
+    server: 511.150333.xyz
+    port: 21001
+    uuid: "41b1c169-5905-4d98-b6a6-56896c25737c"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.asus.com"
-    client-fingerprint: "firefox"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "cYQgUq-cSRENj3PWzyBLvXqIdVYSTqQ8vrnYGATiliI"
-      short-id: "7788afae"
+      public-key: "HZwHZBP3x4Yo4UQiHcypRJIU_UdZY5OAapQM8RUqVAU"
+      short-id: "ab39fc68ab3dee81"
   - name: "🇸🇬 [BL] Сервер 4"
     type: vless
-    server: 161.118.200.170
-    port: 443
-    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
-    network: "ws"
-    servername: "fs.qicai99.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/fp=chrome"
-      headers:
-        Host: "fs.qicai99.com"
-  - name: "🇸🇬 [BL] Сервер 5"
-    type: vless
-    server: 170.205.36.116
-    port: 8443
-    uuid: "c9bf7875-6722-43cd-91d8-d0528a57e426"
+    server: 510.150333.xyz
+    port: 21002
+    uuid: "67952583-8572-42e1-943d-0602794f885b"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dl.google.com"
+    servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "5Oh9-P6sO_Fly4XU_sN0JOb4Ek3FgoMznhDExI70GEk"
-      short-id: "ab96"
-  - name: "🇸🇬 [BL] Сервер 6"
+      public-key: "IRaSB0ImgMO7fsrIbh9i3Pz-bgo5F1jKeC51Fpfs9AA"
+      short-id: "d9a6b52e98121db2"
+  - name: "🇸🇬 [BL] Сервер 5"
     type: vless
     server: 139.162.27.96
     port: 2096
@@ -81,7 +65,7 @@ proxies:
       path: "/free-server.techsonic.dev"
       headers:
         Host: "free-server.techsonic.dev"
-  - name: "🇸🇬 [BL] Сервер 7"
+  - name: "🇸🇬 [BL] Сервер 6"
     type: vless
     server: 84.32.23.119
     port: 443
@@ -95,6 +79,20 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
+  - name: "🇸🇬 [BL] Сервер 7"
+    type: vless
+    server: www.zoom.us
+    port: 443
+    uuid: "b19c62cc-f2c2-4895-aee1-978a0f58f8c8"
+    network: "ws"
+    servername: "matrix.phonicsindia.mobi"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "matrix.phonicsindia.mobi"
   - name: "🇸🇬 [BL] Сервер 8"
     type: vless
     server: 52.77.214.112
@@ -131,18 +129,18 @@ proxies:
     tls: true
   - name: "🇸🇬 [BL] Сервер 11"
     type: vless
-    server: 188.166.182.158
+    server: 170.205.36.116
     port: 8443
-    uuid: "ec88e991-7f74-4615-a488-c3a91cc6f362"
+    uuid: "c9bf7875-6722-43cd-91d8-d0528a57e426"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.bing.com"
+    servername: "dl.google.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "PQ8fVzaFrD3ANIzDmgE67H6FhCkQUbNymBkqe35fPjw"
-      short-id: "6f903d8e630fc0aa"
+      public-key: "5Oh9-P6sO_Fly4XU_sN0JOb4Ek3FgoMznhDExI70GEk"
+      short-id: "ab96"
   - name: "🇸🇬 [BL/CF] Сервер 12"
     type: vless
     server: 172.104.60.54
@@ -218,9 +216,12 @@ proxies:
     network: "tcp"
     servername: "149.88.23.202"
   - name: "🇸🇬 [BL] Сервер 18"
-    type: trojan
-    server: 149.28.130.108
-    port: 443
-    password: "0ab6c98dae3b48e8b9c4a776b6c9c19a"
-    sni: "searchcreativejobsandshowcaseyourartistictalents.com"
-    udp: true
+    type: vmess
+    server: 149.88.23.207
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    ws-opts:
+      path: "/"
