@@ -29,34 +29,6 @@ proxies:
         Host: "mbr.rkn-pediki.site"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: mbr.rkn-pediki.site
-    port: 443
-    uuid: "2b5962e8-1ec2-0001-bdab-cefa57555d2a"
-    network: "ws"
-    servername: "mbr.rkn-pediki.site"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/session"
-      headers:
-        Host: "mbr.rkn-pediki.site"
-  - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: mbr.rkn-pediki.site
-    port: 443
-    uuid: "4662bf2b-af58-0001-ae5f-ef3d7d3a624f"
-    network: "ws"
-    servername: "mbr.rkn-pediki.site"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/session"
-      headers:
-        Host: "mbr.rkn-pediki.site"
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
     server: 45.139.27.164
     port: 443
     uuid: "fa081e9f-7574-4e18-8928-31aa5ac923c7"
@@ -69,37 +41,15 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL] Сервер 4"
     type: vless
-    server: 129.101.98.60
+    server: vps3.nemnogogo.com
     port: 443
-    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru7e2bab87cc39.eu-cdn539.com"
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
-      short-id: "3992cc7fb9fcbe58"
-  - name: "🇷🇺 [WL] Сервер 7"
-    type: vless
-    server: ru7e2bab87cc39.eu-cdn539.com
-    port: 443
-    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru7e2bab87cc39.eu-cdn539.com"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
-      short-id: "3992cc7fb9fcbe58"
-  - name: "🇷🇺 [WL] Сервер 8"
-    type: ss
-    server: 38.60.223.125
-    port: 13108
-    password: "8722de56b6c0b3f6a4d01cf91c07e6aa"
-    cipher: "aes-128-gcm"
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
