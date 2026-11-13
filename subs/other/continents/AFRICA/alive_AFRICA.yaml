@@ -1,10 +1,20 @@
 proxies:
-  - name: "🇿🇦 [BL] Сервер 1"
-    type: ss
-    server: 20.164.204.82
-    port: 443
-    password: "zJINhErlCXBpyP95"
-    cipher: "chacha20-ietf-poly1305"
+  - name: "🇿🇦 [BL/AI] Сервер 1"
+    type: vless
+    server: 102.208.217.14
+    port: 2087
+    uuid: "ead4a562-edf2-40cf-ad33-13ae98546226"
+    network: "grpc"
+    servername: "dl.google.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "eeD55i5qwcb8fvWZuJF6o-o2Ums4QEenTer8iNtobUk"
+      short-id: "d9d5b093"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇿🇦 [BL] Сервер 2"
     type: ss
     server: 102.37.156.224
