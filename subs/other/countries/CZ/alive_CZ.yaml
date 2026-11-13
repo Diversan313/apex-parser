@@ -1,20 +1,6 @@
 proxies:
   - name: "🇨🇿 [BL] Сервер 1"
     type: vless
-    server: 195.123.245.241
-    port: 443
-    uuid: "7c053ca8-38cc-45e2-930c-eda1fd66f903"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway.icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "hlY5ce1UsVIgE46y5PlEZhUsSaXUnCtoDLLaGrhInjw"
-      short-id: "23d0950d60bc0d5b"
-  - name: "🇨🇿 [BL] Сервер 2"
-    type: vless
     server: 153.52.69.249
     port: 443
     uuid: "7ad63b26-bf70-4872-8fab-ebaf73a1e19d"
@@ -27,6 +13,20 @@ proxies:
     reality-opts:
       public-key: "WVfpQqoeOrTtCq052_IOxvMv7RCWfLlAOxEfsH1aa2U"
       short-id: "d5492c7a39515c65"
+  - name: "🇨🇿 [BL] Сервер 2"
+    type: vless
+    server: 195.123.245.241
+    port: 443
+    uuid: "7c053ca8-38cc-45e2-930c-eda1fd66f903"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "hlY5ce1UsVIgE46y5PlEZhUsSaXUnCtoDLLaGrhInjw"
+      short-id: "23d0950d60bc0d5b"
   - name: "🇨🇿 [BL] Сервер 3"
     type: vless
     server: 212.102.38.25
@@ -41,3 +41,19 @@ proxies:
     reality-opts:
       public-key: "23cb4W9THzBKsrECsLh-A_FcKZfkAtUONoDze8-GnQE"
       short-id: "e90360ec7cc61b20"
+  - name: "🇨🇿 [BL] Сервер 4"
+    type: vless
+    server: 46.28.70.6
+    port: 443
+    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
+    network: "grpc"
+    servername: "cza.kosmosapp.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
+      short-id: "27350908de933e09"
+    grpc-opts:
+      grpc-service-name: "neurex"
+      grpc-mode: "gun"

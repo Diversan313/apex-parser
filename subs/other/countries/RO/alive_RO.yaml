@@ -1,18 +1,20 @@
 proxies:
-  - name: "🇷🇴 [BL] Сервер 1"
+  - name: "🇷🇴 [WL] Сервер 1"
     type: vless
-    server: 201.8.80.82
-    port: 443
-    uuid: "0f677c30-da27-4e25-a002-a845240adfc6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "forumdrun.xubi.org"
-    client-fingerprint: "firefox"
+    server: 88.218.42.115
+    port: 2087
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
+    network: "xhttp"
+    servername: "edge-3b715ba41dc5.eu-cdn539.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "SS-XyOr9wL4mqZPuAaGPAaROVy3_CSP6jFtvZemn21g"
-      short-id: "a1b2c3d4e5f60718"
+      public-key: "MQUz0Jo-eQsVmKHD1zHsF2NsnFV6aOwvPN4t4kxJfGs"
+      short-id: "f539882617db0a7b"
+    xhttp-opts:
+      path: "/workspace/c884de3b8b4941ad"
+      mode: "stream-one"
   - name: "🇷🇴 [BL] Сервер 2"
     type: vless
     server: 46.28.67.55
@@ -27,6 +29,22 @@ proxies:
       public-key: "i2dJ1_XGDpp50qpEclh6SWSWkxt4B0t2hi2qOVQbeSU"
       short-id: "d06d78e974491b6e"
   - name: "🇷🇴 [BL] Сервер 3"
+    type: vless
+    server: 46.28.67.211
+    port: 443
+    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
+    network: "grpc"
+    servername: "roa.kosmosapp.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
+      short-id: "27350908de933e09"
+    grpc-opts:
+      grpc-service-name: "neurex"
+      grpc-mode: "gun"
+  - name: "🇷🇴 [BL] Сервер 4"
     type: vless
     server: 80.96.108.29
     port: 8443
