@@ -1,31 +1,31 @@
 proxies:
   - name: "🇵🇱 [BL] Сервер 1"
     type: vless
-    server: 150.251.113.34
+    server: 82.118.22.161
     port: 443
-    uuid: "d7d724b5-17ce-4f3c-877d-dfbf0f07afa1"
+    uuid: "05488656-d4bf-4634-8b2e-e4ff5a56c7e2"
     network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     udp: true
     tls: true
     reality-opts:
-      public-key: "8yMLSTbkpJFfbgTjNzotzz7U8OT6AERrclgKdKrXXW8"
-      short-id: "150a627d15154cf2"
-  - name: "🇵🇱 [BL] Сервер 2"
+      public-key: "xY1KpNxaIGmi6jfeudYQ_aaLGQqWK_uHStnwUFd2_2E"
+      short-id: "fa3ea655619a3e78"
+  - name: "🇵🇱 [BL/AI] Сервер 2"
     type: vless
-    server: 3.168.218.6
+    server: api.mediatropa.cc
     port: 443
-    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "d2ex4nxd2e01ub.cloudfront.net"
-    client-fingerprint: "chrome"
+    uuid: "1744f594-bc6e-471e-b055-8a8cc1cb3d01"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediatropa.cc"
+    client-fingerprint: "qq"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d2ex4nxd2e01ub.cloudfront.net"
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
   - name: "🇵🇱 [BL] Сервер 3"
     type: vless
     server: 3.168.218.14
@@ -42,7 +42,21 @@ proxies:
         Host: "d2ex4nxd2e01ub.cloudfront.net"
   - name: "🇵🇱 [BL] Сервер 4"
     type: vless
-    server: 3.168.218.9
+    server: 3.168.218.6
+    port: 443
+    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
+    network: "ws"
+    servername: "d2ex4nxd2e01ub.cloudfront.net"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "d2ex4nxd2e01ub.cloudfront.net"
+  - name: "🇵🇱 [BL] Сервер 5"
+    type: vless
+    server: 3.168.217.188
     port: 443
     uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
     network: "ws"
@@ -54,7 +68,21 @@ proxies:
       path: "/"
       headers:
         Host: "d2ex4nxd2e01ub.cloudfront.net"
-  - name: "🇵🇱 [BL] Сервер 5"
+  - name: "🇵🇱 [BL] Сервер 6"
+    type: vless
+    server: 201.58.190.235
+    port: 443
+    uuid: "247802ca-0fbb-428a-b807-91a6e571b5c7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "static-pl.snobvpn.online"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "iENUFfise6O4hYZVRinO4aye7XCr4Op7QzQuwTUsgR8"
+      short-id: "93be3684474b67a8"
+  - name: "🇵🇱 [BL] Сервер 7"
     type: vless
     server: 200.102.183.115
     port: 443
@@ -67,38 +95,6 @@ proxies:
     tls: true
     reality-opts:
       public-key: "N8QooY7tm45gPX-9AQVg8ZYCCYqqfaiX8NGM96IvTBI"
-  - name: "🇵🇱 [BL] Сервер 6"
-    type: vless
-    server: 201.8.64.229
-    port: 443
-    uuid: "26cfcdeb-3bdc-4b55-9a7f-a5f8c38aafd8"
-    network: "xhttp"
-    servername: "5b1b23x.pl5.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "aC3_cPgcJMJUtJkRodl6Al7yDhWa5Gbzyka8xWhbuWw"
-      short-id: "bc67acebb01173a7"
-    xhttp-opts:
-      path: "/eb278d1e559e"
-      mode: "auto"
-  - name: "🇵🇱 [BL] Сервер 7"
-    type: vless
-    server: 5b1b23x.pl5.h1clayd.click
-    port: 443
-    uuid: "26cfcdeb-3bdc-4b55-9a7f-a5f8c38aafd8"
-    network: "xhttp"
-    servername: "5b1b23x.pl5.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "aC3_cPgcJMJUtJkRodl6Al7yDhWa5Gbzyka8xWhbuWw"
-      short-id: "bc67acebb01173a7"
-    xhttp-opts:
-      path: "/eb278d1e559e"
-      mode: "auto"
   - name: "🇵🇱 [BL] Сервер 8"
     type: vless
     server: 31.76.32.122
@@ -129,20 +125,18 @@ proxies:
       short-id: "d18f4e"
   - name: "🇵🇱 [BL] Сервер 10"
     type: vless
-    server: api.alder.lalibobi.online
+    server: tamm.lalibobi.online
     port: 443
     uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "grpc"
-    servername: "api.alder.lalibobi.online"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tamm.lalibobi.online"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "tKzo0qk-NJCNnmxmSgP7uGmd9VHKiTG2L-YqXYGj4Dc"
-      short-id: "203242200f9d16be"
-    grpc-opts:
-      grpc-service-name: "shop.v1.Catalog"
-      grpc-mode: "gun"
+      public-key: "udljvtKYKYz9NOpsEdmvt-IuBJMkQLGeyAohrSeItmY"
+      short-id: "5faef98b08cf055c"
   - name: "🇵🇱 [BL] Сервер 11"
     type: vless
     server: 201.58.189.105

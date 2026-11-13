@@ -5,7 +5,7 @@ proxies:
     port: 443
     uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
     network: "tcp"
-    flow: "xtls-rprx-vision-udp443"
+    flow: "xtls-rprx-vision"
     servername: "passport.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
@@ -15,35 +15,19 @@ proxies:
       short-id: "e6"
   - name: "🇫🇷 [WL] Сервер 2"
     type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 3"
-    type: vless
-    server: 145.223.68.58
+    server: 161.97.160.224
     port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
+    network: "tcp"
+    flow: "xtls-rprx-vision-udp443"
+    servername: "passport.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 4"
+      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
+      short-id: "e6"
+  - name: "🇫🇷 [BL] Сервер 3"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -59,7 +43,7 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -74,7 +58,7 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 161.97.66.16
     port: 443
@@ -87,20 +71,47 @@ proxies:
     reality-opts:
       public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
       short-id: "086bf957"
-  - name: "🇫🇷 [BL/AI] Сервер 7"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
-    server: ai.smrtai.top
+    server: 3.168.219.0
     port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
+    uuid: "ad9a885d-93bb-48e3-9937-57f1116b64e3"
+    network: "ws"
+    servername: "d1aedflfr97jes.cloudfront.net"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "d1aedflfr97jes.cloudfront.net"
+  - name: "🇫🇷 [BL] Сервер 8"
+    type: vless
+    server: paris.freegate.win
+    port: 443
+    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
     network: "tcp"
-    servername: "www.cloudflare.com"
+    flow: "xtls-rprx-vision"
+    servername: "paris.freegate.win"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
+  - name: "🇫🇷 [BL] Сервер 9"
+    type: vless
+    server: france.freegate.win
+    port: 443
+    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "france.freegate.win"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 9"
+      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -116,7 +127,7 @@ proxies:
     xhttp-opts:
       path: "/ae1b809ceb77"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 10"
+  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 200.102.183.5
     port: 8443
@@ -129,7 +140,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "N8QooY7tm45gPX-9AQVg8ZYCCYqqfaiX8NGM96IvTBI"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 200.102.183.57
     port: 80
@@ -142,7 +153,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "qi8ws15c7jv5q2fa"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -157,7 +168,7 @@ proxies:
       short-id: "21569dd6"
     xhttp-opts:
       path: "/OCrp5Ajs"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: vless
     server: 31.76.68.86
     port: 443
@@ -171,7 +182,7 @@ proxies:
     reality-opts:
       public-key: "CMTA5uuaIVIeqHslZMT3CbFwP8F5ysMLii72ybsTlyY"
       short-id: "e2a4c6b8"
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -184,7 +195,7 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 212.69.86.159
     port: 8447
@@ -198,7 +209,7 @@ proxies:
       short-id: "732ef4f5320b5e19"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇫🇷 [BL] Сервер 16"
+  - name: "🇫🇷 [BL] Сервер 17"
     type: vless
     server: 20.19.83.143
     port: 2083
@@ -212,31 +223,3 @@ proxies:
     reality-opts:
       public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
       short-id: "0123456789abcdef"
-  - name: "🇫🇷 [BL] Сервер 17"
-    type: vless
-    server: 3.168.219.0
-    port: 443
-    uuid: "ad9a885d-93bb-48e3-9937-57f1116b64e3"
-    network: "ws"
-    servername: "d1aedflfr97jes.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 18"
-    type: vless
-    server: fr1.fox-lisa.ru
-    port: 443
-    uuid: "ccb8ff48-3934-4250-b4ec-bb76b95d154f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fr1.fox-lisa.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
-      short-id: "027af64166562b09"
