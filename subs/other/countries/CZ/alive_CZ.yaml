@@ -13,7 +13,21 @@ proxies:
     reality-opts:
       public-key: "_qSbW4JL4Ffqvj25vX-6a2ul9Qlj6PBdlF0ghsf_0RQ"
       short-id: "a9dc98a7dc87a7dc"
-  - name: "🇨🇿 [BL] Сервер 2"
+  - name: "🇨🇿 [BL/CF] Сервер 2"
+    type: vless
+    server: 188.137.178.174
+    port: 8443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇨🇿 [BL] Сервер 3"
     type: vless
     server: 153.52.69.249
     port: 443
@@ -27,16 +41,15 @@ proxies:
     reality-opts:
       public-key: "WVfpQqoeOrTtCq052_IOxvMv7RCWfLlAOxEfsH1aa2U"
       short-id: "d5492c7a39515c65"
-  - name: "🇨🇿 [BL/CF] Сервер 3"
+  - name: "🇨🇿 [BL] Сервер 4"
     type: vless
-    server: 188.137.178.174
-    port: 8443
-    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
-    network: "ws"
-    servername: "fs.qicai99.com"
+    server: 189.74.118.11
+    port: 443
+    uuid: "27b9f6d7-1668-4b8a-acf1-11398febcfee"
+    network: "grpc"
+    servername: "cz.mediastvor.cc"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/fp=chrome"
-      headers:
-        Host: "fs.qicai99.com"
+    grpc-opts:
+      grpc-service-name: "r7Kp4mN9tQ2v"

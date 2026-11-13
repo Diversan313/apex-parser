@@ -1,19 +1,6 @@
 proxies:
   - name: "🇮🇹 [BL] Сервер 1"
     type: vless
-    server: 82.118.16.187
-    port: 443
-    uuid: "dc2259c4-388e-4285-ba18-df619b6672b6"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R5ycsjJ-v024902dMSqTsSdqxUwCFEXMebdBEWFt9VU"
-      short-id: "cd6065902eea7a02"
-  - name: "🇮🇹 [BL] Сервер 2"
-    type: vless
     server: 82.118.16.189
     port: 443
     uuid: "29f178f7-f96f-46ba-8fc0-bbcd690ba788"
@@ -26,12 +13,12 @@ proxies:
     reality-opts:
       public-key: "zmo2VkZkfjh2kWjaRghXUs39ImQo87LmPhjvzbX3yB4"
       short-id: "1e9a49dd374c1191"
-  - name: "🇮🇹 [BL] Сервер 3"
+  - name: "🇮🇹 [BL] Сервер 2"
     type: vless
     server: 103.241.66.51
-    port: 8443
+    port: 2053
     uuid: "ada5e5c0-317c-48e1-8152-10ff38fc6d26"
-    network: "grpc"
+    network: "xhttp"
     servername: "video.ds-cdn.online"
     client-fingerprint: "firefox"
     udp: true
@@ -39,24 +26,26 @@ proxies:
     reality-opts:
       public-key: "1aRX6e5pkQgmGaGCvCCdk6sdKCatb-fPMtVBlqj3tjw"
       short-id: "ec1126df90f69ecd"
-    grpc-opts:
-      grpc-service-name: "grpc-it"
-      grpc-mode: "gun"
-  - name: "🇮🇹 [BL] Сервер 4"
+    xhttp-opts:
+      path: "/internal/tunnel"
+      mode: "auto"
+  - name: "🇮🇹 [BL] Сервер 3"
     type: vless
-    server: 203.23.179.123
-    port: 443
-    uuid: "fa081e9f-7574-0002-8928-31aa5ac923c7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "de1-b.sbcweb.net"
-    client-fingerprint: "firefox"
+    server: wwe.fantoff.online
+    port: 8443
+    uuid: "7d4a5c8f-0cdb-41b9-8898-807a1b7335e4"
+    network: "grpc"
+    servername: "wwe.fantoff.online"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
-      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
-      short-id: "868419504747f6de"
-  - name: "🇮🇹 [BL] Сервер 5"
+      public-key: "2VDvK_MUMJQou2QHniofZOKRHcslWrJ6wtblKf2AilY"
+      short-id: "7f2e9c4b1a8d6e55"
+    grpc-opts:
+      grpc-service-name: "wwe_grpc"
+      grpc-mode: "gun"
+  - name: "🇮🇹 [BL] Сервер 4"
     type: vless
     server: 45.137.201.66
     port: 443
@@ -70,6 +59,20 @@ proxies:
     reality-opts:
       public-key: "c8IEc_c_QBmI5YAwILoVH0xw2xC4AJgJDKEYKcmKogo"
       short-id: "7f2e9c4b1a8d6e55"
+  - name: "🇮🇹 [BL] Сервер 5"
+    type: vless
+    server: 203.23.179.123
+    port: 443
+    uuid: "fa081e9f-7574-0002-8928-31aa5ac923c7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "de1-b.sbcweb.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
+      short-id: "868419504747f6de"
   - name: "🇮🇹 [BL] Сервер 6"
     type: vless
     server: 172.213.24.16
