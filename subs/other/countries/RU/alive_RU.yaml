@@ -29,33 +29,47 @@ proxies:
         Host: "mbr.rkn-pediki.site"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: cdn.oldertown.ru
+    server: mbr.rkn-pediki.site
     port: 443
-    uuid: "29777784-b5ad-4e2a-be7b-335f033ab97c"
-    network: "xhttp"
-    servername: "cdn.oldertown.ru"
-    client-fingerprint: "firefox"
+    uuid: "2b5962e8-1ec2-0001-bdab-cefa57555d2a"
+    network: "ws"
+    servername: "mbr.rkn-pediki.site"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v4/media/session/poll"
-      host: "cdn.oldertown.ru"
-      mode: "packet-up"
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "mbr.rkn-pediki.site"
   - name: "🇷🇺 [WL] Сервер 4"
     type: vless
-    server: 217.199.253.177
+    server: 129.101.98.60
     port: 443
-    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "rua.kosmosapp.net"
+    servername: "ru7e2bab87cc39.eu-cdn539.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
-      short-id: "27350908de933e09"
+      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
+      short-id: "3992cc7fb9fcbe58"
   - name: "🇷🇺 [WL] Сервер 5"
+    type: vless
+    server: ru7e2bab87cc39.eu-cdn539.com
+    port: 443
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ru7e2bab87cc39.eu-cdn539.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
+      short-id: "3992cc7fb9fcbe58"
+  - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 45.139.27.164
     port: 443
@@ -69,17 +83,3 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
-  - name: "🇷🇺 [WL] Сервер 6"
-    type: vless
-    server: ru7e2bab87cc39.eu-cdn539.com
-    port: 443
-    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru7e2bab87cc39.eu-cdn539.com"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
-      short-id: "3992cc7fb9fcbe58"

@@ -28,20 +28,6 @@ proxies:
       short-id: "868419504747f6de"
   - name: "🇸🇪 [BL] Сервер 3"
     type: vless
-    server: 185.139.228.50
-    port: 443
-    uuid: "59826450-4d21-41ac-8fcb-ebe2f655d368"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "se-4.crispriver.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "PHzBVMB_KdrkQR8oNjpBUiVeYawlZCwgAMHdRIzMLnw"
-      short-id: "bee060a0239c97a4"
-  - name: "🇸🇪 [BL] Сервер 4"
-    type: vless
     server: 138.124.86.230
     port: 48115
     uuid: "b2fe1fa4-6a79-4938-a3f4-63b54ae7f16b"
@@ -52,6 +38,22 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
+  - name: "🇸🇪 [BL] Сервер 4"
+    type: vless
+    server: 185.117.89.74
+    port: 443
+    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
+    network: "grpc"
+    servername: "seb.kosmosapp.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
+      short-id: "27350908de933e09"
+    grpc-opts:
+      grpc-service-name: "neurex"
+      grpc-mode: "gun"
   - name: "🇸🇪 [BL] Сервер 5"
     type: vless
     server: 84.32.154.73
@@ -68,21 +70,21 @@ proxies:
       short-id: "c6f97313"
   - name: "🇸🇪 [BL] Сервер 6"
     type: vless
-    server: se1.slowframe.org
-    port: 8443
-    uuid: "e50e6851-a29a-45a1-811d-1e9230c1512a"
+    server: get.jarbook.net
+    port: 443
+    uuid: "dd5bed0b-ee77-481b-9f2c-250a632ddd9f"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "se1.slowframe.org"
-    client-fingerprint: "firefox"
+    servername: "get.jarbook.net"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "lQn0k9GCrG7Hh34b8ezAyVjc9KBCxQm3oP0xdxKGy0U"
-      short-id: "35cb85e41b041622"
+      public-key: "BIy6H-jndn24Ukyw83ML8LDB1HL8WLJmfCADEy8lzVs"
+      short-id: "c6f97313"
   - name: "🇸🇪 [BL] Сервер 7"
     type: vless
-    server: 2.27.23.223
+    server: se1.slowframe.org
     port: 8443
     uuid: "e50e6851-a29a-45a1-811d-1e9230c1512a"
     network: "tcp"
@@ -96,34 +98,46 @@ proxies:
       short-id: "35cb85e41b041622"
   - name: "🇸🇪 [BL] Сервер 8"
     type: vless
-    server: 185.117.89.74
-    port: 443
-    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
-    network: "grpc"
-    servername: "seb.kosmosapp.net"
+    server: 2.27.23.223
+    port: 8443
+    uuid: "e50e6851-a29a-45a1-811d-1e9230c1512a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "se1.slowframe.org"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
-      short-id: "27350908de933e09"
-    grpc-opts:
-      grpc-service-name: "neurex"
-      grpc-mode: "gun"
+      public-key: "lQn0k9GCrG7Hh34b8ezAyVjc9KBCxQm3oP0xdxKGy0U"
+      short-id: "35cb85e41b041622"
   - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 84.32.217.164
     port: 443
     uuid: "fa081e9f-7574-4e18-8928-31aa5ac923c7"
-    network: "raw"
+    network: "tcp"
     servername: "tcpswed1.figurapn.ru"
-    client-fingerprint: "firefox"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
   - name: "🇸🇪 [BL] Сервер 10"
+    type: vless
+    server: 185.139.228.50
+    port: 443
+    uuid: "59826450-4d21-41ac-8fcb-ebe2f655d368"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "se-4.crispriver.sbs"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "PHzBVMB_KdrkQR8oNjpBUiVeYawlZCwgAMHdRIzMLnw"
+      short-id: "bee060a0239c97a4"
+  - name: "🇸🇪 [BL] Сервер 11"
     type: vless
     server: 31.77.18.220
     port: 443
@@ -136,7 +150,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
-  - name: "🇸🇪 [BL] Сервер 11"
+  - name: "🇸🇪 [BL] Сервер 12"
     type: vless
     server: 141.227.160.61
     port: 8443
@@ -150,3 +164,23 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
+  - name: "🇸🇪 [BL] Сервер 13"
+    type: vless
+    server: 62.182.193.228
+    port: 8443
+    uuid: "c0d58ed7-41f8-4cf4-b61b-8ba8f6be9a46"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "nekoboxo.isgood.host"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "G3ZzvlhhrESJFCm41agmCMitg14XGzIAaS5DpdxZxkI"
+      short-id: "da5e9707"
+  - name: "🇸🇪 [BL] Сервер 14"
+    type: ss
+    server: 70.34.212.124
+    port: 8388
+    password: "AxIYWtskJWIIaefW"
+    cipher: "aes-256-gcm"
