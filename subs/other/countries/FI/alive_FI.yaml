@@ -28,6 +28,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "lalibobi.tw.de1.Connect"
+      grpc-mode: "gun"
   - name: "🇫🇮 [BL] Сервер 3"
     type: vless
     server: 72.35.246.39
@@ -124,14 +125,18 @@ proxies:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
   - name: "🇫🇮 [BL] Сервер 10"
     type: vless
-    server: 65.109.208.183
+    server: 178.214.125.1
     port: 443
-    uuid: "5f07a2a1-82a5-494d-847b-b882e6903192"
+    uuid: "3f3160a0-747d-4fed-bf3d-4d884bfa964d"
     network: "tcp"
-    servername: "free.for.member.iiproxy.com"
-    client-fingerprint: "firefox"
+    flow: "xtls-rprx-vision"
+    servername: "conf.emaar.ru"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
+    reality-opts:
+      public-key: "ZxCwJxbsZWJYYCPzeWj7_fxJMVhwh4XGfpvjmEIQjHY"
+      short-id: "6172ba9cffe9c22f"
   - name: "🇫🇮 [BL] Сервер 11"
     type: vless
     server: 107.181.151.128
@@ -140,7 +145,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.mozilla.org"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -148,18 +153,18 @@ proxies:
       short-id: "8f79726c5002"
   - name: "🇫🇮 [BL] Сервер 12"
     type: vless
-    server: 178.214.125.1
+    server: 146.103.118.189
     port: 443
-    uuid: "3f3160a0-747d-4fed-bf3d-4d884bfa964d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "conf.emaar.ru"
-    client-fingerprint: "edge"
+    uuid: "ce698f0c-a8ec-474a-b5d8-3be8032deeb8"
+    network: "ws"
+    servername: "nl2.574ck.xyz"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "ZxCwJxbsZWJYYCPzeWj7_fxJMVhwh4XGfpvjmEIQjHY"
-      short-id: "6172ba9cffe9c22f"
+    ws-opts:
+      path: "/574ck-finland"
+      headers:
+        Host: "nl2.574ck.xyz"
   - name: "🇫🇮 [BL/CF] Сервер 13"
     type: vless
     server: 138.124.124.157
@@ -172,3 +177,17 @@ proxies:
     tls: true
     ws-opts:
       path: "/"
+  - name: "🇫🇮 [BL/CF] Сервер 14"
+    type: vless
+    server: 138.124.49.108
+    port: 8443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "fs.qicai99.com"
