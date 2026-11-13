@@ -1,33 +1,5 @@
 proxies:
-  - name: "🇬🇧 [WL] Сервер 1"
-    type: vless
-    server: 213.176.92.168
-    port: 10444
-    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "video.yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 2"
-    type: vless
-    server: 31.177.111.121
-    port: 443
-    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
-    network: "ws"
-    servername: "100gramm.pro"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/service/telemetry/44fc835751aa/"
-      headers:
-        Host: "100gramm.pro"
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 1"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -41,50 +13,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 4"
-    type: vless
-    server: fduknew.titun.su
-    port: 443
-    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bizorg.su"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
-      short-id: "428ef87fd47a3a32"
-  - name: "🇬🇧 [BL] Сервер 5"
-    type: vless
-    server: 50.7.227.82
-    port: 443
-    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bizorg.su"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
-      short-id: "428ef87fd47a3a32"
-  - name: "🇬🇧 [BL] Сервер 6"
-    type: vless
-    server: 5.149.250.41
-    port: 443
-    uuid: "f8cb3c89-32af-4255-bebc-d90aad175069"
-    network: "grpc"
-    servername: "gba.kosmosapp.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
-      short-id: "27350908de933e09"
-    grpc-opts:
-      grpc-service-name: "neurex"
-  - name: "🇬🇧 [BL] Сервер 7"
+  - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 50.7.193.150
     port: 443
@@ -98,7 +27,35 @@ proxies:
     reality-opts:
       public-key: "oAX7soFKfN3xURgCD26trmjeF-e-eEjW3pBVXuuvW0k"
       short-id: "77a8c8c8"
-  - name: "🇬🇧 [BL] Сервер 8"
+  - name: "🇬🇧 [BL] Сервер 3"
+    type: vless
+    server: 50.7.227.82
+    port: 443
+    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "bizorg.su"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
+      short-id: "428ef87fd47a3a32"
+  - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: fduknew.titun.su
+    port: 443
+    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "bizorg.su"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
+      short-id: "428ef87fd47a3a32"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 95.163.153.141
     port: 8443
@@ -113,7 +70,7 @@ proxies:
       short-id: "c9ea2355ddeab39b"
     xhttp-opts:
       path: "/"
-  - name: "🇬🇧 [BL] Сервер 9"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 34.39.80.57
     port: 50818
@@ -125,7 +82,9 @@ proxies:
     tls: true
     ws-opts:
       path: "/GunService"
-  - name: "🇬🇧 [BL] Сервер 10"
+      headers:
+        Host: "yingguo.rymaker.cn"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 136.176.68.34
     port: 443
@@ -139,7 +98,7 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 11"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 94.177.253.26
     port: 443
@@ -153,7 +112,7 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
-  - name: "🇬🇧 [BL] Сервер 12"
+  - name: "🇬🇧 [BL] Сервер 9"
     type: ss
     server: 185.176.206.9
     port: 19999
