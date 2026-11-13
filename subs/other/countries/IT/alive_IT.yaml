@@ -14,10 +14,26 @@ proxies:
       short-id: "cd6065902eea7a02"
   - name: "🇮🇹 [BL] Сервер 2"
     type: vless
+    server: wwe.fantoff.online
+    port: 8443
+    uuid: "7d4a5c8f-0cdb-41b9-8898-807a1b7335e4"
+    network: "grpc"
+    servername: "wwe.fantoff.online"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2VDvK_MUMJQou2QHniofZOKRHcslWrJ6wtblKf2AilY"
+      short-id: "7f2e9c4b1a8d6e55"
+    grpc-opts:
+      grpc-service-name: "wwe_grpc"
+      grpc-mode: "gun"
+  - name: "🇮🇹 [BL] Сервер 3"
+    type: vless
     server: 103.241.66.51
-    port: 2053
+    port: 8443
     uuid: "ada5e5c0-317c-48e1-8152-10ff38fc6d26"
-    network: "xhttp"
+    network: "grpc"
     servername: "video.ds-cdn.online"
     client-fingerprint: "firefox"
     udp: true
@@ -25,23 +41,9 @@ proxies:
     reality-opts:
       public-key: "1aRX6e5pkQgmGaGCvCCdk6sdKCatb-fPMtVBlqj3tjw"
       short-id: "ec1126df90f69ecd"
-    xhttp-opts:
-      path: "/internal/tunnel"
-      mode: "auto"
-  - name: "🇮🇹 [BL] Сервер 3"
-    type: vless
-    server: wwe.fantoff.online
-    port: 443
-    uuid: "7d4a5c8f-0cdb-41b9-8898-807a1b7335e4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "wwe.fantoff.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "c8IEc_c_QBmI5YAwILoVH0xw2xC4AJgJDKEYKcmKogo"
-      short-id: "7f2e9c4b1a8d6e55"
+    grpc-opts:
+      grpc-service-name: "grpc-it"
+      grpc-mode: "gun"
   - name: "🇮🇹 [BL] Сервер 4"
     type: vless
     server: 172.213.24.16
