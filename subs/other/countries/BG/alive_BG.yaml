@@ -1,7 +1,7 @@
 proxies:
   - name: "🇧🇬 [BL] Сервер 1"
     type: vless
-    server: 78.159.250.83
+    server: earlytrain.net
     port: 8443
     uuid: "37af0181-5598-4aad-a040-d926bcb65757"
     network: "xhttp"
@@ -15,6 +15,19 @@ proxies:
       mode: "auto"
   - name: "🇧🇬 [BL] Сервер 2"
     type: vless
+    server: 88.80.150.15
+    port: 443
+    uuid: "1d46250c-f015-439d-a7fd-c4d9e2a4c63d"
+    network: "grpc"
+    servername: "bg2.oncloudvpn.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
+  - name: "🇧🇬 [BL] Сервер 3"
+    type: vless
     server: 195.123.226.21
     port: 443
     uuid: "6589c320-db68-43cd-a273-b46299bab355"
@@ -27,29 +40,3 @@ proxies:
     reality-opts:
       public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
       short-id: "77bb0d07bddbc832"
-  - name: "🇧🇬 [BL] Сервер 3"
-    type: vless
-    server: 91.92.137.165
-    port: 443
-    uuid: "1d46250c-f015-439d-a7fd-c4d9e2a4c63d"
-    network: "grpc"
-    servername: "bg.oncloudvpn.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇧🇬 [BL] Сервер 4"
-    type: vless
-    server: 88.80.150.15
-    port: 443
-    uuid: "1d46250c-f015-439d-a7fd-c4d9e2a4c63d"
-    network: "grpc"
-    servername: "bg2.oncloudvpn.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
