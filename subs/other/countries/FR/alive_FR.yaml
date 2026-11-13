@@ -31,20 +31,6 @@ proxies:
       mode: "auto"
   - name: "🇫🇷 [BL] Сервер 3"
     type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 4"
-    type: vless
     server: 62.210.24.143
     port: 32202
     uuid: "28148be2-61a7-4f36-8adb-030cc9f82bd0"
@@ -59,7 +45,7 @@ proxies:
     xhttp-opts:
       path: "/G3EEoH63"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -74,9 +60,22 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 161.97.66.16
+    port: 443
+    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
+      short-id: "086bf957"
+  - name: "🇫🇷 [BL/AI] Сервер 6"
+    type: vless
+    server: ai.smrtai.top
     port: 443
     uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
     network: "tcp"
@@ -117,33 +116,19 @@ proxies:
         Host: "dkfsoyk9ju2as.cloudfront.net"
   - name: "🇫🇷 [BL] Сервер 9"
     type: vless
-    server: 3.168.217.188
+    server: 151.101.36.88
     port: 443
     uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "dkfsoyk9ju2as.cloudfront.net"
-    client-fingerprint: "chrome"
+    network: "xhttp"
+    servername: "accounts.fastly.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
+    xhttp-opts:
       path: "/"
-      headers:
-        Host: "dkfsoyk9ju2as.cloudfront.net"
+      host: "ovd5.global.ssl.fastly.net"
+      mode: "auto"
   - name: "🇫🇷 [BL] Сервер 10"
-    type: vless
-    server: 3.168.218.6
-    port: 443
-    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
-    network: "ws"
-    servername: "dkfsoyk9ju2as.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "dkfsoyk9ju2as.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 3.168.217.190
     port: 443
@@ -151,6 +136,20 @@ proxies:
     network: "ws"
     servername: "d1afk2ndm8pox3.cloudfront.net"
     client-fingerprint: "ios"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "d1afk2ndm8pox3.cloudfront.net"
+  - name: "🇫🇷 [BL] Сервер 11"
+    type: vless
+    server: 3.168.218.6
+    port: 443
+    uuid: "67cd3349-f789-4cbb-8b91-4b6b1654ce7c"
+    network: "ws"
+    servername: "d1afk2ndm8pox3.cloudfront.net"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
@@ -204,20 +203,6 @@ proxies:
       grpc-mode: "gun"
   - name: "🇫🇷 [BL] Сервер 15"
     type: vless
-    server: 138.124.251.98
-    port: 443
-    uuid: "1d1eda2e-0bd7-4478-877b-1c5425c6c4dd"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tradingview.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yr_opKG6DGTppNDXkk-DhGSYJZXbb9o-caexk2FZO38"
-      short-id: "8f3c6e2a1b5d4f09"
-  - name: "🇫🇷 [BL] Сервер 16"
-    type: vless
     server: 20.19.83.143
     port: 2083
     uuid: "52a5a29f-c162-411a-8a37-a3f11b0dc537"
@@ -230,7 +215,7 @@ proxies:
     reality-opts:
       public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
       short-id: "0123456789abcdef"
-  - name: "🇫🇷 [BL] Сервер 17"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 62.210.70.194
     port: 37783
