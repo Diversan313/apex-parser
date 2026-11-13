@@ -1,19 +1,33 @@
 proxies:
-  - name: "🇬🇧 [BL] Сервер 1"
+  - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 83.147.18.3
-    port: 443
-    uuid: "9f61cdf4-810d-4052-bbc7-2da0c8e20104"
-    network: "raw"
+    server: 213.176.92.168
+    port: 10444
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    servername: "video.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
-      short-id: "fd8cf7e1173f0edb"
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 2"
+    type: vless
+    server: 31.177.111.121
+    port: 443
+    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
+    network: "ws"
+    servername: "100gramm.pro"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/service/telemetry/44fc835751aa/"
+      headers:
+        Host: "100gramm.pro"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -27,24 +41,21 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL/AI] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
-    server: 87.242.95.133
-    port: 9443
+    server: fduknew.titun.su
+    port: 443
     uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
-    network: "xhttp"
-    servername: "wrab.online"
-    client-fingerprint: "firefox"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "bizorg.su"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
-      public-key: "hSTtlpXKAYVVu5ybX3hQfq8dfsUrO_HoFVgfGGoCHVw"
-      short-id: "0123456789abcdef"
-    xhttp-opts:
-      path: "/"
-      host: "wrab.online"
-      mode: "auto"
-  - name: "🇬🇧 [BL] Сервер 4"
+      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
+      short-id: "428ef87fd47a3a32"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 50.7.227.82
     port: 443
@@ -58,34 +69,7 @@ proxies:
     reality-opts:
       public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
       short-id: "428ef87fd47a3a32"
-  - name: "🇬🇧 [BL] Сервер 5"
-    type: vless
-    server: fduknew.titun.su
-    port: 443
-    uuid: "90157e25-cee1-4217-921e-91f300bc1a24"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bizorg.su"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1vSZjvhZO01oAEH3b7eebR1qF5dLU1Dq2E7xu8pwGSs"
-      short-id: "428ef87fd47a3a32"
   - name: "🇬🇧 [BL] Сервер 6"
-    type: vless
-    server: 201.58.133.201
-    port: 443
-    uuid: "18c2de74-7d3f-48f8-a0ef-757a533abd56"
-    network: "tcp"
-    servername: "eu121.cdn77.icu"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zYNnGVEkMFCUR_9NcYeaXfm9A_L-PP6iG2sIIST6S0M"
-      short-id: "1ed136481e0ede74"
-  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 5.149.250.41
     port: 443
@@ -100,7 +84,20 @@ proxies:
       short-id: "27350908de933e09"
     grpc-opts:
       grpc-service-name: "neurex"
-      grpc-mode: "gun"
+  - name: "🇬🇧 [BL] Сервер 7"
+    type: vless
+    server: 50.7.193.150
+    port: 443
+    uuid: "2232d904-8e6a-4202-8240-6efd8aec02e9"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "prime.jarbook.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "oAX7soFKfN3xURgCD26trmjeF-e-eEjW3pBVXuuvW0k"
+      short-id: "77a8c8c8"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 95.163.153.141
@@ -157,28 +154,8 @@ proxies:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "868419504747f6de"
   - name: "🇬🇧 [BL] Сервер 12"
-    type: vless
-    server: 200.102.183.30
-    port: 443
-    uuid: "664f65f4-33b3-43a3-b9e5-68192d1d428e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "misty-harbor.cdn.cachefleet.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "OQAbaaN0abHDcEOtiu5rpU_A4Op_gDbOzuAVlHplP3s"
-      short-id: "aa5294f481769382"
-  - name: "🇬🇧 [BL] Сервер 13"
     type: ss
     server: 185.176.206.9
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇬🇧 [BL] Сервер 14"
-    type: ss
-    server: 94.156.250.148
-    port: 7001
-    password: "RexnBgU7EV5ADxG"
     cipher: "aes-256-gcm"
