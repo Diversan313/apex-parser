@@ -5,7 +5,7 @@ proxies:
     port: 443
     uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
     network: "tcp"
-    flow: "xtls-rprx-vision"
+    flow: "xtls-rprx-vision-udp443"
     servername: "passport.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
@@ -19,7 +19,7 @@ proxies:
     port: 443
     uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
     network: "tcp"
-    flow: "xtls-rprx-vision-udp443"
+    flow: "xtls-rprx-vision"
     servername: "passport.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
@@ -40,38 +40,7 @@ proxies:
       path: "/fp=firefox"
       headers:
         Host: "parsa-panel-dy55x.railway1385-2a46.workers.dev"
-  - name: "🇫🇷 [WL] Сервер 4"
-    type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇫🇷 [WL] Сервер 5"
-    type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
     server: 145.223.68.58
     port: 443
@@ -85,6 +54,35 @@ proxies:
     reality-opts:
       public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
       short-id: "a44ff7d2e80213c2"
+  - name: "🇫🇷 [BL] Сервер 5"
+    type: vless
+    server: 83.141.88.195
+    port: 443
+    uuid: "32a3ca35-8426-439e-85fd-0446ce5b4a7b"
+    network: "xhttp"
+    servername: "hannover.gosgenarchive.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4ltYIatUJFFjrW8ZBDGLJaun0BnYIgxn-jmpmTEDGyc"
+    xhttp-opts:
+      path: "/"
+  - name: "🇫🇷 [BL] Сервер 6"
+    type: vless
+    server: 83.141.88.128
+    port: 443
+    uuid: "32a3ca35-8426-439e-85fd-0446ce5b4a7b"
+    network: "xhttp"
+    servername: "nuremberg.gosgenarchive.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4ltYIatUJFFjrW8ZBDGLJaun0BnYIgxn-jmpmTEDGyc"
+    xhttp-opts:
+      path: "/"
+      mode: "auto"
   - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 62.210.24.143
@@ -144,18 +142,29 @@ proxies:
       short-id: "086bf957"
   - name: "🇫🇷 [BL] Сервер 12"
     type: vless
-    server: france.freegate.win
+    server: 185.42.24.231
     port: 443
-    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "france.freegate.win"
+    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
+    network: "grpc"
+    servername: "fr4.cyphervpn.pro"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
+    grpc-opts:
+      grpc-service-name: "fr4grpc"
   - name: "🇫🇷 [BL] Сервер 13"
+    type: vless
+    server: 178.214.118.176
+    port: 8443
+    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
+    network: "grpc"
+    servername: "fr4.cyphervpn.pro"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "fr4grpc"
+  - name: "🇫🇷 [BL/AI] Сервер 14"
     type: vless
     server: 153.80.179.111
     port: 443
@@ -168,32 +177,20 @@ proxies:
     tls: true
     reality-opts:
       public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
-    server: 31.59.105.137
+    server: fr1.fox-lisa.ru
     port: 443
-    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
+    uuid: "ccb8ff48-3934-4250-b4ec-bb76b95d154f"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "paris.freegate.win"
+    servername: "fr1.fox-lisa.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
-  - name: "🇫🇷 [BL] Сервер 15"
-    type: vless
-    server: paris.freegate.win
-    port: 443
-    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "paris.freegate.win"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
+      public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
+      short-id: "027af64166562b09"
   - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 147.90.13.146
@@ -210,6 +207,19 @@ proxies:
       short-id: "027af64166562b09"
   - name: "🇫🇷 [BL] Сервер 17"
     type: vless
+    server: 31.59.105.137
+    port: 443
+    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "paris.freegate.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
+  - name: "🇫🇷 [BL] Сервер 18"
+    type: vless
     server: 200.102.183.226
     port: 80
     uuid: "664f65f4-33b3-43a3-b9e5-68192d1d428e"
@@ -220,7 +230,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "qi8ws15c7jv5q2fa"
-  - name: "🇫🇷 [BL] Сервер 18"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: vless
     server: 200.102.183.57
     port: 80
@@ -233,7 +243,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "qi8ws15c7jv5q2fa"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 19"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 31.76.68.86
     port: 443
@@ -247,7 +257,7 @@ proxies:
     reality-opts:
       public-key: "CMTA5uuaIVIeqHslZMT3CbFwP8F5ysMLii72ybsTlyY"
       short-id: "e2a4c6b8"
-  - name: "🇫🇷 [BL] Сервер 20"
+  - name: "🇫🇷 [BL] Сервер 21"
     type: vless
     server: 3.168.219.0
     port: 443
@@ -261,7 +271,19 @@ proxies:
       path: "/"
       headers:
         Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 22"
+    type: vless
+    server: 178.214.118.219
+    port: 18443
+    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
+    network: "grpc"
+    servername: "main.vimeostream.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "maingrpc"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -277,7 +299,7 @@ proxies:
     xhttp-opts:
       path: "/ae1b809ceb77"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 24"
     type: vless
     server: 20.19.83.143
     port: 2083
@@ -291,7 +313,7 @@ proxies:
     reality-opts:
       public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
       short-id: "0123456789abcdef"
-  - name: "🇫🇷 [BL/CF] Сервер 23"
+  - name: "🇫🇷 [BL/CF] Сервер 25"
     type: vless
     server: 104.239.72.227
     port: 443
@@ -305,7 +327,7 @@ proxies:
       path: "/stream/PANEL_ZEUS/ccc0e8cd3a83"
       headers:
         Host: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
-  - name: "🇫🇷 [BL/CF] Сервер 24"
+  - name: "🇫🇷 [BL/CF] Сервер 26"
     type: vless
     server: 92.53.190.167
     port: 443
@@ -319,7 +341,7 @@ proxies:
       path: "/stream/PANEL_ZEUS/ccc0e8cd3a83"
       headers:
         Host: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
-  - name: "🇫🇷 [BL/CF] Сервер 25"
+  - name: "🇫🇷 [BL/CF] Сервер 27"
     type: vless
     server: 84.235.245.65
     port: 2096
@@ -333,7 +355,7 @@ proxies:
       path: "/"
       headers:
         Host: "fs.qicai99.com"
-  - name: "🇫🇷 [BL] Сервер 26"
+  - name: "🇫🇷 [BL] Сервер 28"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -346,7 +368,7 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 27"
+  - name: "🇫🇷 [BL] Сервер 29"
     type: vless
     server: 212.69.86.159
     port: 8447
@@ -360,7 +382,7 @@ proxies:
       short-id: "732ef4f5320b5e19"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇫🇷 [BL] Сервер 28"
+  - name: "🇫🇷 [BL] Сервер 30"
     type: vless
     server: 31.97.199.38
     port: 8443
@@ -368,49 +390,13 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "africamediaconnect.fr"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "GcraWawjMdjBJLD_HvSZ3BQuHvFnSWjbesCkMeCaITY"
       short-id: "5b4a12ef7e1694dd"
-  - name: "🇫🇷 [BL] Сервер 29"
-    type: vless
-    server: 178.214.118.176
-    port: 8443
-    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
-    network: "grpc"
-    servername: "fr4.cyphervpn.pro"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "fr4grpc"
-  - name: "🇫🇷 [BL] Сервер 30"
-    type: vless
-    server: 185.42.24.231
-    port: 443
-    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
-    network: "grpc"
-    servername: "fr4.cyphervpn.pro"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "fr4grpc"
   - name: "🇫🇷 [BL] Сервер 31"
-    type: vless
-    server: 178.214.118.219
-    port: 18443
-    uuid: "f5a049c3-2c0a-4056-a780-8ef2327cb6c2"
-    network: "grpc"
-    servername: "main.vimeostream.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "maingrpc"
-  - name: "🇫🇷 [BL] Сервер 32"
     type: vless
     server: 62.210.70.194
     port: 37783
