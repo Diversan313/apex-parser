@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇧🇾 [WL] Сервер 1"
+  - name: "🇧🇾 [WL/AI] Сервер 1"
     type: vless
     server: 62.173.149.165
     port: 8443
@@ -57,16 +57,14 @@ proxies:
       short-id: "8debcf36f1cc69ff"
   - name: "🇧🇾 [BL] Сервер 5"
     type: vless
-    server: 194.58.60.203
-    port: 443
-    uuid: "bbb54e5f-cf6c-4c96-be43-a3df7e687606"
-    network: "grpc"
-    servername: "node43.lmdscdn.ru"
-    client-fingerprint: "firefox"
+    server: bl1.nexfile.net
+    port: 4443
+    uuid: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
+    network: "xhttp"
+    servername: "bl1.nexfile.net"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "PVlnR_I9tZ8hKhOHW6ySpSofhsaShcBQ_JV2-0TePVA"
-      short-id: "57bc9918f888c69c"
-    grpc-opts:
-      grpc-service-name: "livestreamcontent"
+    xhttp-opts:
+      path: "/api/v1/sync/"
+      mode: "auto"

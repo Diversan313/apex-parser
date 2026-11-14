@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇱🇻 [WL] Сервер 1"
+  - name: "🇱🇻 [WL/AI] Сервер 1"
     type: vless
     server: 62.173.149.165
     port: 8443
@@ -15,6 +15,20 @@ proxies:
       short-id: "542a83882d6461d5"
   - name: "🇱🇻 [BL] Сервер 2"
     type: vless
+    server: 195.123.213.28
+    port: 443
+    uuid: "02fcc1a4-ee90-4970-8bbb-4ffaa8109d24"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
+      short-id: "5c256336e3b673fa"
+  - name: "🇱🇻 [BL] Сервер 3"
+    type: vless
     server: 138.124.180.137
     port: 443
     uuid: "5234b2b7-5e07-422c-8159-d62a676c00c6"
@@ -27,45 +41,7 @@ proxies:
     reality-opts:
       public-key: "GBdkyDLfr0LIZo_94Xv8ycAKOmkjArYzwJAEMhuXX2c"
       short-id: "33acba1b"
-  - name: "🇱🇻 [BL] Сервер 3"
-    type: vless
-    server: 2.26.88.240
-    port: 4443
-    uuid: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
-    network: "xhttp"
-    servername: "lv3.nexfile.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      host: "lv3.nexfile.net"
   - name: "🇱🇻 [BL] Сервер 4"
-    type: vless
-    server: 2.26.88.140
-    port: 4443
-    uuid: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
-    network: "xhttp"
-    servername: "lv3.nexfile.net"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      mode: "auto"
-  - name: "🇱🇻 [BL] Сервер 5"
-    type: vless
-    server: 217.60.60.243
-    port: 443
-    uuid: "42a64b9a-ab79-4094-8656-30366a7c2ea3"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "lv.peregrine-sub.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇱🇻 [BL] Сервер 6"
     type: vless
     server: 83.141.68.185
     port: 443
