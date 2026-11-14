@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇬🇧 [BL] Сервер 1"
+  - name: "🇬🇧 [WL] Сервер 1"
+    type: vless
+    server: 213.176.92.168
+    port: 10444
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -13,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 2"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 185.122.167.103
     port: 59130
@@ -27,22 +41,6 @@ proxies:
     reality-opts:
       public-key: "6Lh48ni3w8oe9QW3xVzNMIE5LU-p5VPHPMCUtVMOmgo"
       short-id: "14"
-  - name: "🇬🇧 [BL] Сервер 3"
-    type: vless
-    server: api.alder.lalibobi.online
-    port: 443
-    uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "grpc"
-    servername: "api.alder.lalibobi.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tKzo0qk-NJCNnmxmSgP7uGmd9VHKiTG2L-YqXYGj4Dc"
-      short-id: "203242200f9d16be"
-    grpc-opts:
-      grpc-service-name: "shop.v1.Catalog"
-      grpc-mode: "gun"
   - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 79.98.38.24
@@ -75,18 +73,18 @@ proxies:
       path: "/"
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
-    server: 34.39.80.57
-    port: 50818
-    uuid: "408c814e-f70a-4d16-b3b3-8182bb70211d"
-    network: "ws"
-    servername: "yingguo.rymaker.cn"
-    client-fingerprint: "chrome"
+    server: 50.7.154.76
+    port: 443
+    uuid: "89975d90-b31a-4219-8f07-6e4f1c14b211"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediasvyaz.cc"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/GunService"
-      headers:
-        Host: "yingguo.rymaker.cn"
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
   - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 136.176.68.34
