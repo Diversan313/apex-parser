@@ -15,6 +15,20 @@ proxies:
       short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
+    server: 83.147.18.3
+    port: 443
+    uuid: "9f61cdf4-810d-4052-bbc7-2da0c8e20104"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
+      short-id: "fd8cf7e1173f0edb"
+  - name: "🇬🇧 [BL] Сервер 3"
+    type: vless
     server: 138.124.125.193
     port: 10444
     uuid: "e57ce64d-5a1a-4a90-96df-9e1bd3ad26e4"
@@ -27,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 50.7.193.133
     port: 443
@@ -41,7 +55,21 @@ proxies:
     reality-opts:
       public-key: "oAX7soFKfN3xURgCD26trmjeF-e-eEjW3pBVXuuvW0k"
       short-id: "77a8c8c8"
-  - name: "🇬🇧 [BL] Сервер 4"
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: 185.122.167.103
+    port: 59130
+    uuid: "b771804e-a62c-429f-a56c-9f0a452d8f6e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "nvplm.stg.nvidia.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "6Lh48ni3w8oe9QW3xVzNMIE5LU-p5VPHPMCUtVMOmgo"
+      short-id: "14"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 82.148.253.235
     port: 443
@@ -55,7 +83,7 @@ proxies:
     reality-opts:
       public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
       short-id: "027af64166562b09"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: ae1.fox-lisa.ru
     port: 443
@@ -69,51 +97,18 @@ proxies:
     reality-opts:
       public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
       short-id: "027af64166562b09"
-  - name: "🇬🇧 [BL] Сервер 6"
-    type: vless
-    server: 185.122.167.103
-    port: 59130
-    uuid: "b771804e-a62c-429f-a56c-9f0a452d8f6e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nvplm.stg.nvidia.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "6Lh48ni3w8oe9QW3xVzNMIE5LU-p5VPHPMCUtVMOmgo"
-      short-id: "14"
-  - name: "🇬🇧 [BL] Сервер 7"
-    type: vless
-    server: 79.98.38.24
-    port: 443
-    uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "grpc"
-    servername: "api.alder.lalibobi.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tKzo0qk-NJCNnmxmSgP7uGmd9VHKiTG2L-YqXYGj4Dc"
-      short-id: "203242200f9d16be"
-    grpc-opts:
-      grpc-service-name: "shop.v1.Catalog"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
-    server: api.alder.lalibobi.online
-    port: 443
-    uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "grpc"
-    servername: "api.alder.lalibobi.online"
-    client-fingerprint: "firefox"
+    server: 34.39.80.57
+    port: 50818
+    uuid: "408c814e-f70a-4d16-b3b3-8182bb70211d"
+    network: "ws"
+    servername: "yingguo.rymaker.cn"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "tKzo0qk-NJCNnmxmSgP7uGmd9VHKiTG2L-YqXYGj4Dc"
-      short-id: "203242200f9d16be"
-    grpc-opts:
-      grpc-service-name: "shop.v1.Catalog"
-      grpc-mode: "gun"
+    ws-opts:
+      path: "/GunService"
   - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: 95.163.153.141
@@ -131,20 +126,6 @@ proxies:
       path: "/"
   - name: "🇬🇧 [BL] Сервер 10"
     type: vless
-    server: 34.39.80.57
-    port: 50818
-    uuid: "408c814e-f70a-4d16-b3b3-8182bb70211d"
-    network: "ws"
-    servername: "yingguo.rymaker.cn"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/GunService"
-      headers:
-        Host: "yingguo.rymaker.cn"
-  - name: "🇬🇧 [BL] Сервер 11"
-    type: vless
     server: 136.176.68.34
     port: 443
     uuid: "dbf3f074-3b18-43f3-b82a-debd8c879c69"
@@ -157,19 +138,13 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 12"
+  - name: "🇬🇧 [BL] Сервер 11"
     type: ss
     server: 185.176.206.9
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇬🇧 [BL] Сервер 13"
-    type: ss
-    server: 158.173.24.73
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
-  - name: "🇬🇧 [BL] Сервер 14"
+  - name: "🇬🇧 [BL] Сервер 12"
     type: ss
     server: 94.156.250.148
     port: 7001
