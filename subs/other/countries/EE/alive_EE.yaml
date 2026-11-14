@@ -1,18 +1,17 @@
 proxies:
   - name: "🇪🇪 [BL] Сервер 1"
     type: vless
-    server: 185.155.55.2
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
+    server: 194.55.239.18
+    port: 443
+    uuid: "3ecbd833-40d8-4ddb-b80b-a7c4628ec7e5"
+    network: "grpc"
+    servername: "d4x-ee.cloud-cdn.xyz"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
+    grpc-opts:
+      grpc-service-name: "vlgrpc"
+      grpc-mode: "gun"
   - name: "🇪🇪 [BL] Сервер 2"
     type: vless
     server: 31.56.187.145
@@ -43,7 +42,7 @@ proxies:
       short-id: "b6f0baf4126ada5f"
   - name: "🇪🇪 [BL] Сервер 4"
     type: vless
-    server: ee.puflino.com
+    server: 185.155.55.2
     port: 8443
     uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
     network: "tcp"
@@ -55,19 +54,3 @@ proxies:
     reality-opts:
       public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
       short-id: "661766b2bcef440a"
-  - name: "🇪🇪 [BL] Сервер 5"
-    type: vless
-    server: eee-1.aloranode.top
-    port: 10443
-    uuid: "b36a14f8-fc3f-4142-968f-48031cf5f330"
-    network: "xhttp"
-    servername: "eee-1.aloranode.top"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_8OfJZ6O4a1K7A0i7F7UQOwxm7GOv-nBSJCcU80Pc1A"
-      short-id: "21d6ff06b0c966a2"
-    xhttp-opts:
-      path: "/rcAkNmACuH0V/"
-      mode: "auto"

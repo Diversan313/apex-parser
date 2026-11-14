@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇧🇾 [BL] Сервер 1"
+  - name: "🇧🇾 [WL/AI] Сервер 1"
+    type: vless
+    server: 62.173.149.165
+    port: 8443
+    uuid: "43f863f9-d9a6-12c0-b584-a02b1737a174"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ya.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_bXTdS7SEP3arribAnbsdiC3VXRhKRVCsYI533sjsCM"
+      short-id: "542a83882d6461d5"
+  - name: "🇧🇾 [BL] Сервер 2"
     type: vless
     server: 178.172.227.124
     port: 10444
@@ -13,20 +27,6 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇧🇾 [BL] Сервер 2"
-    type: vless
-    server: 178.172.227.228
-    port: 10444
-    uuid: "b6e5dc56-836f-48c1-9163-b0b0b43b647d"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "ads.x5.ru"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
   - name: "🇧🇾 [BL] Сервер 3"
     type: vless
     server: 95.128.71.79
@@ -35,7 +35,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ads.x5.ru"
-    client-fingerprint: "chrome"
+    client-fingerprint: "safari"
     udp: true
     tls: true
     reality-opts:
@@ -43,14 +43,15 @@ proxies:
       short-id: "8debcf36f1cc69ff"
   - name: "🇧🇾 [BL] Сервер 4"
     type: vless
-    server: bl1.nexfile.net
-    port: 4443
-    uuid: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
-    network: "xhttp"
-    servername: "bl1.nexfile.net"
-    client-fingerprint: "chrome"
+    server: 178.172.227.228
+    port: 10444
+    uuid: "b6e5dc56-836f-48c1-9163-b0b0b43b647d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ads.x5.ru"
+    client-fingerprint: "safari"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v1/sync/"
-      mode: "auto"
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
