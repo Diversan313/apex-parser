@@ -1,9 +1,29 @@
 proxies:
-  - name: "🇦🇪 [BL] Сервер 1"
-    type: trojan
-    server: 16.106.7.232
-    port: 20123
-    password: "d9064589-74af-432a-9390-5d8a9da281bf"
-    sni: "hk.catxstar.com"
-    client-fingerprint: "chrome"
+  - name: "🇦🇪 [WL] Сервер 1"
+    type: vless
+    server: bhjolq0d0l.flowersgood.top
+    port: 443
+    uuid: "7955bf18-35c4-412d-aabd-c0b36c793063"
+    network: "ws"
+    servername: "bhjolq0d0l.flowersgood.top"
+    client-fingerprint: "ios"
     udp: true
+    tls: true
+    ws-opts:
+      path: "/service/telemetry/045d381f1166/"
+      headers:
+        Host: "bhjolq0d0l.flowersgood.top"
+  - name: "🇦🇪 [BL] Сервер 2"
+    type: vless
+    server: 48.102.168.5
+    port: 443
+    uuid: "7b91b2c3-8af3-449b-a555-00c9460989f4"
+    network: "ws"
+    servername: "lvi.su"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/vpn-relay?token=27fede42482b3c29d4c1c9640876c250&pool=whitelist2"
+      headers:
+        Host: "lvi.su"
