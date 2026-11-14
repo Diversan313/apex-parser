@@ -1,6 +1,18 @@
 proxies:
   - name: "🇨🇿 [BL] Сервер 1"
     type: vless
+    server: 189.74.118.3
+    port: 443
+    uuid: "9c36e2b4-db6d-400f-9755-3046b981698b"
+    network: "grpc"
+    servername: "cz-next.mediastvor.cc"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "r7Kp4mN9tQ2v"
+  - name: "🇨🇿 [BL] Сервер 2"
+    type: vless
     server: 153.52.69.249
     port: 443
     uuid: "7ad63b26-bf70-4872-8fab-ebaf73a1e19d"
@@ -13,15 +25,15 @@ proxies:
     reality-opts:
       public-key: "WVfpQqoeOrTtCq052_IOxvMv7RCWfLlAOxEfsH1aa2U"
       short-id: "d5492c7a39515c65"
-  - name: "🇨🇿 [BL] Сервер 2"
+  - name: "🇨🇿 [BL/CF] Сервер 3"
     type: vless
-    server: 189.74.118.3
-    port: 443
-    uuid: "9c36e2b4-db6d-400f-9755-3046b981698b"
-    network: "grpc"
-    servername: "cz-next.mediastvor.cc"
-    client-fingerprint: "qq"
+    server: 188.137.178.174
+    port: 8443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    grpc-opts:
-      grpc-service-name: "r7Kp4mN9tQ2v"
+    ws-opts:
+      path: "/"
