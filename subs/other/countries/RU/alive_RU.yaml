@@ -15,16 +15,18 @@ proxies:
       mode: "auto"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
-    server: 201.24.121.243
-    port: 443
-    uuid: "32b5ca9b-3f81-4031-965d-e8b074216e8d"
-    network: "grpc"
-    servername: "kk-ru24a1.testkknegr.online"
-    client-fingerprint: "chrome"
+    server: windytrout.net
+    port: 2053
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "xhttp"
+    servername: "windytrout.net"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    grpc-opts:
-      grpc-service-name: "vlgrpc"
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "windytrout.net"
+      mode: "auto"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 185.16.213.6
@@ -33,7 +35,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "internity.ru"
-    client-fingerprint: "qq"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
@@ -83,6 +85,18 @@ proxies:
       short-id: "42695b59d82528a4"
   - name: "🇷🇺 [WL] Сервер 7"
     type: vless
+    server: vps3.nemnogogo.com
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 8"
+    type: vless
     server: 146.19.128.58
     port: 443
     uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
@@ -95,15 +109,3 @@ proxies:
     reality-opts:
       public-key: "CMTA5uuaIVIeqHslZMT3CbFwP8F5ysMLii72ybsTlyY"
       short-id: "e2a4c6b8"
-  - name: "🇷🇺 [WL] Сервер 8"
-    type: vless
-    server: vps3.nemnogogo.com
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
