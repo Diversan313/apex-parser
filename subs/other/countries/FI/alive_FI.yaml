@@ -1,17 +1,35 @@
 proxies:
-  - name: "🇫🇮 [BL] Сервер 1"
+  - name: "🇫🇮 [WL] Сервер 1"
     type: vless
-    server: 191.217.252.31
-    port: 443
-    uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "ws"
-    servername: "media.saari.lalibobi.online"
+    server: 109.71.245.99
+    port: 8443
+    uuid: "f09ca6e3-c547-4f91-95f5-77f34c4282ac"
+    network: "xhttp"
+    servername: "music.yandex.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/live/showroom"
+    reality-opts:
+      public-key: "oeaOjlr45iDKroH7RIhUq-epbwnRAmG7jeXZHlbSzj4"
+      short-id: "835bff7d47836e88"
+    xhttp-opts:
+      path: "/029d7a23f5ba"
+      mode: "auto"
   - name: "🇫🇮 [BL] Сервер 2"
+    type: vless
+    server: 185.125.101.224
+    port: 443
+    uuid: "ccb8ff48-3934-4250-b4ec-bb76b95d154f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fi1.fox-lisa.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
+      short-id: "027af64166562b09"
+  - name: "🇫🇮 [BL] Сервер 3"
     type: vless
     server: 31.76.114.22
     port: 443
@@ -24,7 +42,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Uzl_JRMLrzPaB_3IuRDwE6uTldkeSgJKpppY-xNjA0M"
-  - name: "🇫🇮 [BL] Сервер 3"
+  - name: "🇫🇮 [BL] Сервер 4"
     type: vless
     server: finland.freegate.win
     port: 443
@@ -37,7 +55,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Uzl_JRMLrzPaB_3IuRDwE6uTldkeSgJKpppY-xNjA0M"
-  - name: "🇫🇮 [BL] Сервер 4"
+  - name: "🇫🇮 [BL] Сервер 5"
     type: vless
     server: 153.56.228.241
     port: 443
@@ -50,20 +68,6 @@ proxies:
     reality-opts:
       public-key: "_oCg5rCW6XTxriBPzbd_AX0os6QhenVYO9cbrsDSyRY"
       short-id: "cf2a731a5f2dc451"
-  - name: "🇫🇮 [BL] Сервер 5"
-    type: vless
-    server: fi1.fox-lisa.ru
-    port: 443
-    uuid: "ccb8ff48-3934-4250-b4ec-bb76b95d154f"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "fi1.fox-lisa.ru"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "NaCZ-sS4poEbFwKmD7ePAVyc5OhHxsD9nkAStjXkoWs"
-      short-id: "027af64166562b09"
   - name: "🇫🇮 [BL] Сервер 6"
     type: vless
     server: 13.143.173.15
@@ -91,7 +95,33 @@ proxies:
     reality-opts:
       public-key: "tfFzmbVByvoZxxIEUiHMv22_k0-nQz00L0XjU0bd_Fc"
       short-id: "7f1e29593aa94ad1"
-  - name: "🇫🇮 [BL] Сервер 8"
+  - name: "🇫🇮 [BL/CF] Сервер 8"
+    type: vless
+    server: 138.124.124.157
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/fp=chrome"
+      headers:
+        Host: "fs.qicai99.com"
+  - name: "🇫🇮 [BL/CF] Сервер 9"
+    type: vless
+    server: 109.120.134.181
+    port: 443
+    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
+    network: "ws"
+    servername: "fs.qicai99.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+  - name: "🇫🇮 [BL] Сервер 10"
     type: vless
     server: 200.102.182.11
     port: 8443
@@ -104,15 +134,29 @@ proxies:
     tls: true
     reality-opts:
       public-key: "PTIRbxzUvuwon8uDA2LjTtIJc9nItRvnGqQxS4K9pgg"
-  - name: "🇫🇮 [BL/CF] Сервер 9"
+  - name: "🇫🇮 [BL] Сервер 11"
     type: vless
-    server: 138.124.124.157
+    server: 94.182.136.173
     port: 443
-    uuid: "99c5b713-dedf-4a10-8070-916ff3f49b0e"
-    network: "ws"
-    servername: "fs.qicai99.com"
-    client-fingerprint: "chrome"
+    uuid: "ed8dda30-5751-4655-acca-4a4066c46e41"
+    network: "tcp"
+    servername: "ns2.irts.lol"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
+  - name: "🇫🇮 [BL] Сервер 12"
+    type: vless
+    server: 31.76.31.240
+    port: 4443
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "gallery.kristinadmitriywedding.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NORtYfSTVbYq7r3qD1p8f7GWN8lCapPxqQTzGE7-3WQ"
+      short-id: "69e9f04fdfe55673"
+    xhttp-opts:
+      path: "/astral-edge-fi"
+      host: "gallery.kristinadmitriywedding.ru"
