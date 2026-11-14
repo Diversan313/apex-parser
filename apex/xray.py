@@ -1209,7 +1209,9 @@ def get_xray_cmd() -> list:
 
 
 def get_hy2_executable() -> str:
-    return cfg.HY2_CORE_FILE
+    # Без ./ на POSIX имя ищется только в PATH: файл из текущей папки не запустится.
+    name = cfg.HY2_CORE_FILE
+    return f"./{name}" if os.path.exists(name) else name
 
 
 def hy2_core_ready() -> bool:

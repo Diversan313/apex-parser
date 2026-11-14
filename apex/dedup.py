@@ -38,6 +38,14 @@ def _norm_net(net: str) -> str:
     return "raw" if net in ("tcp", "raw") else net
 
 
+def _norm_mode(net: str, mode: str) -> str:
+    """
+    gun — дефолтный режим grpc: ссылки с ним и без него описывают
+    один туннель, иначе близнецы grpc остаются разными ключами.
+    """
+    return "" if mode == "gun" and net == "grpc" else mode
+
+
 def get_config_dedup_key(
     link: str,
 ):
@@ -469,6 +477,8 @@ def get_final_dedup_key(
 
     except Exception:
         pass
+
+    mode = _norm_mode(net, mode)
 
     path = (
         urllib.parse.unquote(

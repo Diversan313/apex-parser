@@ -365,7 +365,7 @@ _AD_PARAM_KEYS = frozenset({
 
 
 def _is_repeated_junk(val: str) -> bool:
-    """v2rayNplus--v2rayNplus--v2rayNplus / Cfox_Server---Cfox_Server---…"""
+    """Один токен, повторённый 3+ раза через --/@/запятые."""
     tokens = [t for t in re.split(r"-{2,}|,+|@+", val) if t]
     return len(tokens) >= 3 and len(set(tokens)) == 1
 
