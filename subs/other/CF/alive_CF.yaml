@@ -1,5 +1,17 @@
 proxies:
-  - name: "🇺🇸 [CF] Сервер 1"
+  - name: "🇩🇪 [CF] Сервер 1"
+    type: vless
+    server: 185.129.100.252
+    port: 443
+    uuid: "fe1988d0-077c-4865-8b03-ffde242a109f"
+    network: "ws"
+    servername: "my.nehtar.ru"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/gateway/v1/ws/a10af91503cf8cbe55f42a7e5264c498"
+  - name: "🇺🇸 [CF] Сервер 2"
     type: vless
     server: 217.217.47.140
     port: 50769
@@ -12,7 +24,7 @@ proxies:
     reality-opts:
       public-key: "7Q09Z_KU9vXvif4-pLfVc_Zwil-X4k41Iesv-HCk4wI"
       short-id: "7f3d68ed44"
-  - name: "🇩🇪 [CF] Сервер 2"
+  - name: "🇩🇪 [CF] Сервер 3"
     type: vless
     server: 2.26.251.236
     port: 443
@@ -26,21 +38,3 @@ proxies:
     reality-opts:
       public-key: "1iVMMhJZgXHRY7tRlR-1kypF0YeaBcB7EjcfHRsYZX4"
       short-id: "4ff31b18d1bd8227"
-  - name: "🇸🇪 [CF] Сервер 3"
-    type: vless
-    server: 13.48.229.253
-    port: 48731
-    uuid: "3c793660-e6a6-436a-bf25-3a878ec5ac9f"
-    network: "xhttp"
-    flow: "xtls-rprx-vision"
-    servername: "gateway-sandbox.icloud.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "20p73Fwq6eyQUCOmG5vLYgQW7jrtsUvisuthd10sZGk"
-      short-id: "124d9057ff426e67"
-    xhttp-opts:
-      path: "/t.me-SubGift"
-      host: "sky.subgift.cyou"
-      mode: "auto"
