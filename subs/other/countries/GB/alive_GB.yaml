@@ -1,19 +1,33 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 213.165.39.134
-    port: 443
-    uuid: "6a251a93-8eee-43b5-92ed-ecadedcfd0a8"
+    server: 193.188.21.253
+    port: 10444
+    uuid: "57f7772d-f5d6-4d8f-992d-5fa5e0d6da55"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "platform-api.max.ru"
+    servername: "video.yandex.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [WL] Сервер 2"
+    type: vless
+    server: 213.176.92.168
+    port: 10444
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "Gtz3xOdQdWSocdx4NNie6s-bsa9VDiG6thqanJ4h31s"
-      short-id: "6f3332a09b0ab6d1"
-  - name: "🇬🇧 [BL] Сервер 2"
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -27,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 185.122.167.103
     port: 59130
@@ -35,13 +49,13 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "nvplm.stg.nvidia.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "6Lh48ni3w8oe9QW3xVzNMIE5LU-p5VPHPMCUtVMOmgo"
       short-id: "14"
-  - name: "🇬🇧 [BL] Сервер 4"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 79.98.38.24
     port: 443
@@ -56,37 +70,7 @@ proxies:
       short-id: "203242200f9d16be"
     grpc-opts:
       grpc-service-name: "shop.v1.Catalog"
-  - name: "🇬🇧 [BL] Сервер 5"
-    type: vless
-    server: api.alder.lalibobi.online
-    port: 443
-    uuid: "7d718630-7a1a-4af8-9332-aa0610634e8a"
-    network: "grpc"
-    servername: "api.alder.lalibobi.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tKzo0qk-NJCNnmxmSgP7uGmd9VHKiTG2L-YqXYGj4Dc"
-      short-id: "203242200f9d16be"
-    grpc-opts:
-      grpc-service-name: "shop.v1.Catalog"
-      grpc-mode: "gun"
   - name: "🇬🇧 [BL] Сервер 6"
-    type: vless
-    server: 50.7.154.76
-    port: 443
-    uuid: "89975d90-b31a-4219-8f07-6e4f1c14b211"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "api.mediasvyaz.cc"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
-      short-id: "a8"
-  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 95.163.153.141
     port: 8443
@@ -101,7 +85,7 @@ proxies:
       short-id: "c9ea2355ddeab39b"
     xhttp-opts:
       path: "/"
-  - name: "🇬🇧 [BL] Сервер 8"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 136.176.68.34
     port: 443
@@ -115,9 +99,15 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 9"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: ss
     server: 185.176.206.9
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 9"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
     cipher: "aes-256-gcm"
