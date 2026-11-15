@@ -1,18 +1,5 @@
 proxies:
-  - name: "🇯🇵 [WL] Сервер 1"
-    type: vless
-    server: 185.222.43.175
-    port: 443
-    uuid: "4e4f1f70-5e56-4a76-bb9d-db087f4690c4"
-    network: "ws"
-    servername: "jp3.yohototo.top"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/tyxyws"
-      headers:
-        Host: "jp3.yohototo.top"
-  - name: "🇯🇵 [BL] Сервер 2"
+  - name: "🇯🇵 [BL] Сервер 1"
     type: vless
     server: 62.106.75.37
     port: 443
@@ -26,14 +13,28 @@ proxies:
       path: "/tyxyws"
       headers:
         Host: "jp3.yohototo.top"
-  - name: "🇯🇵 [BL] Сервер 3"
+  - name: "🇯🇵 [BL] Сервер 2"
     type: vless
-    server: 103.201.131.202
-    port: 2053
+    server: 154.31.114.162
+    port: 8443
     uuid: "4e4f1f70-5e56-4a76-bb9d-db087f4690c4"
     network: "ws"
     servername: "jp3.yohototo.top"
-    client-fingerprint: "android"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/tyxyws"
+      headers:
+        Host: "jp3.yohototo.top"
+  - name: "🇯🇵 [BL] Сервер 3"
+    type: vless
+    server: 38.207.178.173
+    port: 2087
+    uuid: "4e4f1f70-5e56-4a76-bb9d-db087f4690c4"
+    network: "ws"
+    servername: "jp3.yohototo.top"
+    client-fingerprint: "unsafe"
     udp: true
     tls: true
     ws-opts:
@@ -54,7 +55,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.microsoft.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:

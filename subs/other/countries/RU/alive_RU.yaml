@@ -15,25 +15,25 @@ proxies:
       mode: "auto"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
-    server: windytrout.net
-    port: 2053
-    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
-    network: "xhttp"
-    servername: "windytrout.net"
-    client-fingerprint: "chrome"
+    server: 185.178.208.167
+    port: 443
+    uuid: "3f6aa623-5db2-0001-aba3-29d85cf3a5d8"
+    network: "ws"
+    servername: "api.14887277.xyz"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v1/upload"
-      host: "windytrout.net"
-      mode: "auto"
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "api.14887277.xyz"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 185.178.208.167
     port: 443
-    uuid: "a026e2a4-d9a8-0001-9978-575deda2aa3d"
+    uuid: "fa5aa882-6edf-0001-baa0-add2cbc01e23"
     network: "ws"
     servername: "api.14887277.xyz"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     ws-opts:
@@ -66,6 +66,18 @@ proxies:
     grpc-opts:
       grpc-service-name: "vlgrpc"
   - name: "🇷🇺 [WL] Сервер 6"
+    type: vless
+    server: 200.169.179.233
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 7"
     type: vless
     server: 213.171.31.83
     port: 443
