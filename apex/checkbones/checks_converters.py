@@ -128,3 +128,18 @@ def check_unsupported_skipped():
         "transport": {"type": "quic"},
     })
     assert link is None
+
+
+def check_extract_clean_flag():
+    from apex.utils.base import extract_clean_flag
+    # флаг реальной страны проходит
+    assert extract_clean_flag("🇩🇪 сервер") == "🇩🇪"
+    # флаг не-страны (Европа) -> нейтральный
+    assert extract_clean_flag("🇪🇺 сервер") == "🌐"
+    # невалидный флаг пропускается, берётся первый валидный дальше
+    assert extract_clean_flag("🇪🇺 сервер 🇩🇪") == "🇩🇪"
+    # пары индикаторов вне ISO не страны
+    assert extract_clean_flag("\U0001F1FD\U0001F1FE сервер") == "🌐"
+    # без флага
+    assert extract_clean_flag("просто имя") == "🌐"
+    assert extract_clean_flag("") == "🌐"

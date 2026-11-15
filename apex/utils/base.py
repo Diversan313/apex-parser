@@ -7,6 +7,11 @@ import re
 import urllib.parse
 
 from ..config import FLAG_REGEX
+from .geo_data import CONTINENTS
+
+# Все известные ISO-коды из справочника континентов;
+# пары индикаторов вне этого набора — не страны.
+_KNOWN_CC = frozenset().union(*CONTINENTS.values())
 
 def safe_b64decode(s: str) -> str:
     s = s.strip()
@@ -64,13 +69,15 @@ def extract_clean_flag(text: str) -> str:
     if not text:
         return "🌐"
 
-    flags = FLAG_REGEX.findall(text)
+    # Флаги не-стран (Европа и прочие выдуманные пары индикаторов)
+    # пропускаем: на этапе имени страна выхода ещё неизвестна,
+    # врать флагом источника нельзя.
+    for flag in FLAG_REGEX.findall(text):
+        cc = "".join(chr(ord(c) - 127397) for c in flag)
+        if cc in _KNOWN_CC:
+            return flag
 
-    return (
-        flags[0]
-        if flags
-        else "🌐"
-    )
+    return "🌐"
 
 
 def sanitize_v2rayng_link(link: str) -> str:
