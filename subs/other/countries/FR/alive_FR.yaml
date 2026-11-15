@@ -142,25 +142,22 @@ proxies:
     reality-opts:
       public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
       short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL/AI] Сервер 11"
     type: vless
-    server: cdn.snyalby.ru
-    port: 17014
-    uuid: "25567295-9b9b-4aed-aa0b-ce9c562c74ef"
-    network: "xhttp"
-    servername: "www.inria.fr"
+    server: 153.80.179.111
+    port: 443
+    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "france.freegate.win"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "mqFYVFk9FKZBDy2qjiWJR8Gy8FAxOAkBBMTdPF6avX0"
-      short-id: "b9eb4a95b4828b86"
-    xhttp-opts:
-      path: "/api/v2/feed.json"
-      host: "mail.infrawire.fr"
-      mode: "packet-up"
+      public-key: "B97Gg7DpnBdFsHiCdOIQ6CGx17hcZYj2gEGNxnJ730c"
   - name: "🇫🇷 [BL/AI] Сервер 12"
     type: vless
-    server: 153.80.179.111
+    server: france.freegate.win
     port: 443
     uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
     network: "tcp"
@@ -192,7 +189,6 @@ proxies:
     uuid: "ad9a885d-93bb-48e3-9937-57f1116b64e3"
     network: "ws"
     servername: "d1aedflfr97jes.cloudfront.net"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
@@ -227,7 +223,21 @@ proxies:
       path: "/"
       host: "oh6.global.ssl.fastly.net"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 17"
+  - name: "🇫🇷 [BL/CF] Сервер 17"
+    type: vless
+    server: 92.53.190.167
+    port: 443
+    uuid: "50414e45-4c5f-5a45-5553-ccc0e8cd3a83"
+    network: "ws"
+    servername: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/stream/PANEL_ZEUS/ccc0e8cd3a83fp=unsafe"
+      headers:
+        Host: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -243,19 +253,6 @@ proxies:
     xhttp-opts:
       path: "/ae1b809ceb77"
       mode: "auto"
-  - name: "🇫🇷 [BL/CF] Сервер 18"
-    type: vless
-    server: 178.105.133.160
-    port: 4443
-    uuid: "298f220e-4cb6-4c13-8f20-c3b338bd923a"
-    network: "ws"
-    servername: "3tmj2egtm-fno.49bnithzk8vphybv36d1z1xkzfvogt2m6.workers.dev"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "3tmj2egtm-fno.49bnithzk8vphybv36d1z1xkzfvogt2m6.workers.dev"
   - name: "🇫🇷 [BL/CF] Сервер 19"
     type: vless
     server: 104.239.72.227
@@ -270,21 +267,7 @@ proxies:
       path: "/stream/PANEL_ZEUS/ccc0e8cd3a83"
       headers:
         Host: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
-  - name: "🇫🇷 [BL/CF] Сервер 20"
-    type: vless
-    server: 92.53.190.167
-    port: 443
-    uuid: "50414e45-4c5f-5a45-5553-ccc0e8cd3a83"
-    network: "ws"
-    servername: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
-    client-fingerprint: "unsafe"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/stream/PANEL_ZEUS/ccc0e8cd3a83"
-      headers:
-        Host: "fgzb39ezu86s.ycz7syeeu3is.workers.dev"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -297,6 +280,22 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
+  - name: "🇫🇷 [BL] Сервер 21"
+    type: vless
+    server: fr.abbaas.net
+    port: 8443
+    uuid: "SoonTeam "
+    network: "xhttp"
+    servername: "wunderstation.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GgO_laVIFUL5JOZrIesfGewuZSXQMLhC-ASCW76ziSk"
+      short-id: "f4eaffbb"
+    xhttp-opts:
+      path: "/soon"
+      mode: "auto"
   - name: "🇫🇷 [BL] Сервер 22"
     type: vless
     server: 20.19.83.143
