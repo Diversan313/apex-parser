@@ -1090,9 +1090,8 @@ def link_to_xray_outbound(
 
 
 def xray_core_ready() -> bool:
-    """Бинарь Xray есть рядом с проектом?"""
-    name = "xray.exe" if os.name == "nt" else "xray"
-    return os.path.exists(name)
+    """Бинарь Xray есть в bin/ или (legacy) в корне?"""
+    return os.path.exists(get_xray_executable())
 
 
 def ensure_xray_core() -> bool:
@@ -1115,6 +1114,8 @@ def ensure_xray_core() -> bool:
         else cfg.XRAY_CORE_URL_LINUX
     )
     member = "xray.exe" if os.name == "nt" else "xray"
+    target = os.path.join("bin", member)
+    os.makedirs("bin", exist_ok=True)
 
     for attempt in range(3):
         try:
@@ -1129,11 +1130,11 @@ def ensure_xray_core() -> bool:
 
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as zf:
-            target = next(n for n in zf.namelist() if n.split("/")[-1] == member)
-            with open(member, "wb") as f:
-                f.write(zf.read(target))
+            zip_member = next(n for n in zf.namelist() if n.split("/")[-1] == member)
+            with open(target, "wb") as f:
+                f.write(zf.read(zip_member))
         if os.name != "nt":
-            os.chmod(member, 0o755)
+            os.chmod(target, 0o755)
         return True
     except Exception as e:
         print(f"warn: ядро Xray не распаковано: {e}")
@@ -1141,33 +1142,17 @@ def ensure_xray_core() -> bool:
 
 
 def get_xray_executable():
-    if os.name == "nt":
-        candidates = [
-            "./xray.exe",
-            "xray.exe",
-            "xray",
-        ]
-    else:
-        candidates = [
-            "./xray",
-            "xray",
-        ]
+    """bin/ — основное расположение ядра, корень оставлен как legacy."""
+    exe = os.path.join("bin", "xray.exe" if os.name == "nt" else "xray")
+    if os.path.exists(exe):
+        return exe
 
-    for exe in candidates:
+    legacy = "xray.exe" if os.name == "nt" else "xray"
+    if os.path.exists(legacy):
+        # на POSIX имя без ./ ищется только в PATH — текущая папка не ищется
+        return f"./{legacy}"
 
-        if "/" in exe or "\\" in exe:
-
-            if os.path.exists(exe):
-                return exe
-
-        else:
-            return exe
-
-    return (
-        "xray.exe"
-        if os.name == "nt"
-        else "xray"
-    )
+    return exe
 
 
 def print_xray_version():
@@ -1251,6 +1236,10 @@ def download_hy2_core() -> bool:
         if os.name == "nt"
         else cfg.HY2_CORE_URL_LINUX
     )
+
+    exe_dir = os.path.dirname(exe)
+    if exe_dir:
+        os.makedirs(exe_dir, exist_ok=True)
 
     for attempt in range(3):
         try:

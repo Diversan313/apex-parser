@@ -15,8 +15,17 @@ def check_classification_order():
     # 3. BL-keywords сильнее WL-keywords
     link = "vless://u@1.2.3.4:443?type=tcp#блэклист обход"
     assert classify_config(link, empty, 0.0) == "BL"
-    # 4. WL-keywords -> WL
-    assert classify_config("vless://u@1.2.3.4:443?type=tcp#белый список lte", empty, 0.0) == "WL"
+    # 4. WL-keywords без белого входа: гейт даёт BL, без гейта — WL
+    from apex import config as cfg
+    link_wl = "vless://u@1.2.3.4:443?type=tcp#белый список lte"
+    saved = cfg.WL_ONLY_WHITE_IP
+    try:
+        cfg.WL_ONLY_WHITE_IP = 1
+        assert classify_config(link_wl, empty, 0.0) == "BL"
+        cfg.WL_ONLY_WHITE_IP = 0
+        assert classify_config(link_wl, empty, 0.0) == "WL"
+    finally:
+        cfg.WL_ONLY_WHITE_IP = saved
     # 8. ничего не подошло -> BL
     assert classify_config("vless://u@1.2.3.4:443?type=tcp", empty, 0.0) == "BL"
 

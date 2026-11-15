@@ -41,6 +41,7 @@ def download_geoip_db():
         ) as response:
             data = response.read()
 
+        os.makedirs(os.path.dirname(MMDB_PATH), exist_ok=True)
         with open(MMDB_PATH, "wb") as f:
             f.write(data)
 

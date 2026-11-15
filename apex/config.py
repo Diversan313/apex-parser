@@ -6,16 +6,16 @@ import threading
 import ipaddress
 
 # Пути и файлы
-WHITE_IP_FILE = "white_ip.txt"
+WHITE_IP_FILE = os.path.join("arch", "lists", "white_ip.txt")
 WHITE_IP_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/refs/heads/main/cidrwhitelist.txt"  # пусто = локал white_ip.txt
-MMDB_PATH = "GeoLite2-Country.mmdb"
+MMDB_PATH = os.path.join("arch", "data", "GeoLite2-Country.mmdb")
 MMDB_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb"
 SNI_WHITELIST_PATH = os.path.join("arch", "lists", "whitelist.txt")
 SNI_WHITELIST_URL = "https://raw.githubusercontent.com/hxehex/russia-mobile-internet-whitelist/main/whitelist.txt"
 
 # Hysteria2 (ядро для теста только hy2)
 HYSTERIA2_CORE = True
-HY2_CORE_FILE = "hysteria2.exe" if os.name == "nt" else "hysteria2"
+HY2_CORE_FILE = os.path.join("bin", "hysteria2.exe" if os.name == "nt" else "hysteria2")
 HY2_CORE_URL_WINDOWS = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-windows-amd64.exe"
 HY2_CORE_URL_LINUX = "https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64"
 
@@ -76,6 +76,16 @@ EXOTIC_MAX_NODES = 5                # страна «экзотическая»,
 
 # WL / SNI
 RU_SNI_RATIO = 0.0                  # доля прочих .ru/.su SNI → WL (0.0–1.0)
+
+# Белые источники входа (поверх white_ip.txt)
+WL_ONLY_WHITE_IP = 1                # 1 = в WL только конфиги с белым входом; по словам/SNI — BL
+TWL_WHITE_ENABLED = 1               # 1 = второй источник белых IP: измеренный список пропускаемых через БС адресов
+TWL_WHITE_URL = "https://raw.githubusercontent.com/openlibrecommunity/twl/main/code/subnet/out/subnets.c.json"
+TWL_WHITE_FILE = os.path.join("arch", "lists", "twl_white.json")
+ASN_WHITE_ENABLED = 1               # 1 = владелец сети белый, если в twl есть >=K его CIDR
+ASN_WHITE_MIN_SUBNETS = 3           # K: сколько CIDR владельца должно быть в twl
+MMDB_ASN_PATH = os.path.join("arch", "data", "GeoLite2-ASN.mmdb")
+MMDB_ASN_URL = "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-ASN.mmdb"
 
 # BL
 BL_RU_TO_WL = True                  # живые BL с RU-выходом перекидывать в WL

@@ -57,14 +57,14 @@ jobs:
           # при сбое curl не затираем white_ip.txt из checkout, иначе
           # пустая база уезжает в коммит и WL-классификация остаётся без базы.
           if curl --retry 5 --retry-delay 3 --retry-all-errors -L \
-               -o white_ip.txt.tmp \
+               -o arch/lists/white_ip.txt.tmp \
                "https://raw.githubusercontent.com/Diversan313/apex-white-ip/main/white_ip.txt"; then
-            mv white_ip.txt.tmp white_ip.txt
+            mv arch/lists/white_ip.txt.tmp arch/lists/white_ip.txt
           else
-            rm -f white_ip.txt.tmp
+            rm -f arch/lists/white_ip.txt.tmp
             echo "White IP fetch failed — используем white_ip.txt из checkout"
           fi
-          echo "White IP lines: $(grep -cve '^\s*$' white_ip.txt 2>/dev/null || echo 0)"
+          echo "White IP lines: $(grep -cve '^\s*$' arch/lists/white_ip.txt 2>/dev/null || echo 0)"
 
       - name: Fetch Sources (private)
         env:
@@ -114,14 +114,15 @@ jobs:
             touch sources_wl.txt sources_bl.txt sources_tg.txt
           fi
 
+          mkdir -p arch/data
           curl --retry 8 --retry-delay 5 --retry-all-errors --retry-connrefused -L \
-               -o GeoLite2-Country.mmdb \
+               -o arch/data/GeoLite2-Country.mmdb \
                https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
 
       - name: Ensure Base Files Exist
         run: |
-          touch white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt
-          mkdir -p arch/lists stats subs/main \
+          touch arch/lists/white_ip.txt sources_wl.txt sources_bl.txt sources_tg.txt
+          mkdir -p arch/lists arch/data bin stats subs/main \
                    subs/other/AI subs/other/torrent subs/other/countries \
                    apex/sources
 
@@ -149,7 +150,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sources-report
-          path: stats/sources_report*.txt
+          path: stats/sources*_report.txt
           if-no-files-found: ignore
 
       - name: Sync apex-sources
@@ -212,7 +213,7 @@ jobs:
           cp -f subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
                 subs/main/alive_plain_bs.txt subs/main/alive_plain_bl.txt subs/main/alive_plain_full.txt \
                 subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \
-                white_ip.txt /tmp/apex-out/ 2>/dev/null || true
+                arch/lists/white_ip.txt /tmp/apex-out/ 2>/dev/null || true
 
           # other: AI / torrent / countries
           if [ -d subs/other ]; then
@@ -222,7 +223,8 @@ jobs:
           cp -f arch/lists/whitelist.txt /tmp/apex-out/whitelist.txt 2>/dev/null || true
           cp -f stats/latest.json /tmp/apex-out/latest.json 2>/dev/null || true
 
-          rm -f xray xray.zip GeoLite2-Country.mmdb \
+          rm -f bin/xray bin/xray.zip bin/hysteria2 bin/hysteria2.exe \
+                arch/data/GeoLite2-Country.mmdb \
                 sources_wl.txt sources_bl.txt sources_tg.txt
 
           git fetch origin main
@@ -251,10 +253,10 @@ jobs:
 
           # white_ip: берём свежий из /tmp (уже скачан/обновлён парсером)
           if [ -f /tmp/apex-out/white_ip.txt ]; then
-            cp -f /tmp/apex-out/white_ip.txt white_ip.txt
+            cp -f /tmp/apex-out/white_ip.txt arch/lists/white_ip.txt
           fi
 
-          git add white_ip.txt \
+          git add arch/lists/white_ip.txt \
                   subs/main/alive_bs.txt subs/main/alive_bl.txt subs/main/alive_full.txt \
                   subs/main/alive_plain_bs.txt subs/main/alive_plain_bl.txt subs/main/alive_plain_full.txt \
                   subs/main/alive_bs.yaml subs/main/alive_bl.yaml subs/main/alive_full.yaml \

@@ -103,6 +103,7 @@ def download_white_ip() -> None:
         if not valid:
             print("warn: white_ip remote без валидных строк, локальный файл не тронут")
             return
+        os.makedirs(os.path.dirname(WHITE_IP_FILE), exist_ok=True)
         with open(WHITE_IP_FILE, "w", encoding="utf-8") as f:
             f.write(data)
             if not data.endswith("\n"):
@@ -168,6 +169,7 @@ def save_white_ips(white_ips: Set[str], white_networks: List[str] = None) -> Non
         except ValueError:
             return (1, ip)
 
+    os.makedirs(os.path.dirname(WHITE_IP_FILE), exist_ok=True)
     with open(WHITE_IP_FILE, "w", encoding="utf-8") as f:
         for net in sorted(set(white_networks), key=net_sort_key):
             f.write(net + "\n")

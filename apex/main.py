@@ -59,6 +59,7 @@ from .incoming import (
     load_white_ips,
     save_white_ips,
 )
+from .white_extra import init_white_extra
 from .dedup import (
     get_config_dedup_key,
     get_final_dedup_key,
@@ -238,6 +239,7 @@ def main():
     white_ips, white_networks = load_white_ips()
     save_white_ips(white_ips, white_networks)
     print(f"white_ip: {len(white_ips)} IP, {len(white_networks)} подсетей")
+    init_white_extra(white_networks)
 
     wl_file, bl_file = resolve_source_files()
 

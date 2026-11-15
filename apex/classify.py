@@ -26,6 +26,8 @@ from .parse import (
 from .geoip import (
     is_valid_public_host,
 )
+from . import config as cfg
+from . import white_extra
 
 def _prepare_text(link: str, orig_name: str = "") -> str:
     full_text = f"{link} {orig_name}"
@@ -189,6 +191,24 @@ def host_in_white_ips(link: str, white_ips: set, white_net_index: tuple = None) 
     return False
 
 
+def _host_in_white_extra(link: str) -> bool:
+    """Вход конфига в twl-списке или за доверенным ASN.
+
+    Только литеральный IP-вход: домен через резолв не проверяем —
+    ASN-доверие чужому домену (CDN, сайт) даёт ложные WL. Домены
+    отдельно проверяет host_in_white_ips по нашей базе.
+    """
+    host, _, _ = parse_host_port_and_name(link)
+    if not host:
+        return False
+    cand = host.strip('[] \t\r\n\'"').lower()
+    try:
+        ipaddress.ip_address(cand)
+    except ValueError:
+        return False
+    return white_extra.ip_in_twl(cand) or white_extra.is_asn_white(cand)
+
+
 def classify_config(
     link: str,
     white_ips: set,
@@ -196,9 +216,11 @@ def classify_config(
     white_net_index: tuple = None,
 ) -> str:
 
-    # 1. IP/подсеть из white_ip.txt: строка хоста/SNI, резолв домена
-    #    из DNS-кэша или вхождение в CIDR-подсеть базы
+    # 1. Белый вход: white_ip.txt (хост/SNI/подсеть) или расширенные
+    #    источники (twl-снапшот, доверенный ASN) → WL
     if host_in_white_ips(link, white_ips, white_net_index):
+        return "WL"
+    if _host_in_white_extra(link):
         return "WL"
 
     host, _, orig_name = parse_host_port_and_name(link)
@@ -208,6 +230,11 @@ def classify_config(
 
     # 2. Ключевые слова ЧС / Blacklist → принудительно BL
     if is_bl_by_keywords(link, orig_name):
+        return "BL"
+
+    # Кандидаты WL без белого входа. WL_ONLY_WHITE_IP гейтит их в BL:
+    # слово «бс» в имени источника — не доказательство белого входа.
+    if cfg.WL_ONLY_WHITE_IP:
         return "BL"
 
     # 3. Ключевые слова БС / Белый → WL
