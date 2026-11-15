@@ -1,32 +1,6 @@
 proxies:
   - name: "🇸🇪 [WL] Сервер 1"
     type: vless
-    server: 185.178.208.167
-    port: 443
-    uuid: "777e22fe-1cc0-0001-805e-b7efd683b309"
-    network: "ws"
-    servername: "api.14887277.xyz"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/session"
-      headers:
-        Host: "api.14887277.xyz"
-  - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 185.178.208.167
-    port: 443
-    uuid: "faa4f375-a18e-0001-9f1b-d5d583cfd9cf"
-    network: "ws"
-    servername: "api.14887277.xyz"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/session"
-      headers:
-        Host: "api.14887277.xyz"
-  - name: "🇸🇪 [WL] Сервер 3"
-    type: vless
     server: 193.163.203.170
     port: 443
     uuid: "11aabba0-5fd1-4f15-8068-74c1a466cefc"
@@ -39,7 +13,20 @@ proxies:
     reality-opts:
       public-key: "GCCZ1ZZjB_nj7yxqFi22bIIWWr_G6rnWUzDcssN_40o"
       short-id: "b28db60d77c50b4f"
-  - name: "🇸🇪 [BL] Сервер 4"
+  - name: "🇸🇪 [BL/AI] Сервер 2"
+    type: vless
+    server: 91.196.35.252
+    port: 443
+    uuid: "8f9c04c9-5c94-495e-9452-ab8b7a8af1bc"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "msk-02.freegate.win"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "z1Z2yIWBdFlCT3ofwGNntS63c9VYZLrqTVTeURq7r2U"
+  - name: "🇸🇪 [BL] Сервер 3"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -51,16 +38,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
-  - name: "🇸🇪 [BL] Сервер 5"
-    type: vless
-    server: 82.202.138.240
-    port: 443
-    uuid: "b076877c-0485-0001-b8da-3e58b09b7961"
-    network: "tcp"
-    servername: "etqtd-ru-41sb.fade.mom"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [BL] Сервер 6"
+  - name: "🇸🇪 [BL] Сервер 4"
     type: vless
     server: 45.133.151.169
     port: 443
@@ -74,7 +52,49 @@ proxies:
     reality-opts:
       public-key: "YF_PHWsm2ayKInkh93yNHc5BB8QqIyZfx2ZCIY3qgiI"
       short-id: "d50dc85d07857a88"
+  - name: "🇸🇪 [BL] Сервер 5"
+    type: vless
+    server: 201.8.64.238
+    port: 443
+    uuid: "632cd343-1e8f-4bf6-a9a2-20ada1f6970f"
+    network: "grpc"
+    servername: "362c1eg.se1.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BLhS7fE4Yh6kAADw7yRIn2PzKun-JDagJHJNOePYRSY"
+      short-id: "bee802ae4ab66496"
+  - name: "🇸🇪 [BL] Сервер 6"
+    type: vless
+    server: 138.124.244.105
+    port: 443
+    uuid: "632cd343-1e8f-4bf6-a9a2-20ada1f6970f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "3fb2b6t.se1.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "XQWaIMBPo0mpWs3MooxxkjWNSgxnkIESd_2PnR8_2HA"
+      short-id: "1061f1b1cdaad3ad"
   - name: "🇸🇪 [BL] Сервер 7"
+    type: vless
+    server: 132.243.163.114
+    port: 25191
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "a8687er.se2.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
+      short-id: "55328e423218ee9b"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+  - name: "🇸🇪 [BL] Сервер 8"
     type: vless
     server: 31.77.18.220
     port: 443
@@ -87,7 +107,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
-  - name: "🇸🇪 [BL] Сервер 8"
+  - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 141.227.160.61
     port: 8443
@@ -101,7 +121,22 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇸🇪 [BL] Сервер 9"
+  - name: "🇸🇪 [BL/AI] Сервер 10"
+    type: vless
+    server: 177.202.72.194
+    port: 443
+    uuid: "882b1d03-f43c-4adf-abe7-4ace93d7e37b"
+    network: "grpc"
+    servername: "node3.vazza.ratcraft.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "y1NwkiZbkuLrK01wV9IAJf4u8aBjgM5MqHCJXl9gczA"
+      short-id: "3a638ab980701d96"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇸🇪 [BL] Сервер 11"
     type: vless
     server: 136.148.213.96
     port: 443
@@ -112,7 +147,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇸🇪 [BL] Сервер 10"
+  - name: "🇸🇪 [BL] Сервер 12"
     type: vless
     server: 150.241.75.103
     port: 443

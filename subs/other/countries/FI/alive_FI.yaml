@@ -1,18 +1,17 @@
 proxies:
   - name: "🇫🇮 [WL] Сервер 1"
     type: vless
-    server: 213.176.92.168
-    port: 10444
-    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "video.yandex.ru"
-    client-fingerprint: "chrome"
+    server: 185.178.208.167
+    port: 443
+    uuid: "b525921f-1902-0001-9b18-34aa847f5b57"
+    network: "ws"
+    servername: "api.14887277.xyz"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "api.14887277.xyz"
   - name: "🇫🇮 [WL] Сервер 2"
     type: vless
     server: 109.71.245.99
@@ -84,18 +83,15 @@ proxies:
     tls: true
   - name: "🇫🇮 [BL] Сервер 7"
     type: vless
-    server: 151.101.3.6
+    server: 104.171.133.213
     port: 443
-    uuid: "a0144f3b-b7d4-47c3-b0bc-413194f001a8"
-    network: "xhttp"
-    servername: "apps.apple.com"
+    uuid: "7ad63b26-bf70-4872-8fab-ebaf73a1e19d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "mirror-75.topp-con.xyz"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/"
-      host: "razor1.global.ssl.fastly.net"
-      mode: "packet-up"
   - name: "🇫🇮 [BL] Сервер 8"
     type: vless
     server: 108.156.65.62
@@ -133,20 +129,21 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mDDDyruO33nuqcTS7pZOjd9oOpDHUf0aEv2TQ1DFGV4"
-  - name: "🇫🇮 [BL] Сервер 11"
+  - name: "🇫🇮 [BL/AI] Сервер 11"
     type: vless
-    server: 107.181.151.128
+    server: 177.202.65.6
     port: 443
-    uuid: "88742d38-3f5c-4b9c-b256-7df5db8257ec"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.mozilla.org"
+    uuid: "882b1d03-f43c-4adf-abe7-4ace93d7e37b"
+    network: "grpc"
+    servername: "node2.vazza.ratcraft.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s"
-      short-id: "8f79726c5002"
+      public-key: "X2fkuOI3cZDh01wLmptTBal3xrNo2RuJZ4udE-u50yw"
+      short-id: "b04dd3564373ba03"
+    grpc-opts:
+      grpc-service-name: "grpc"
   - name: "🇫🇮 [BL] Сервер 12"
     type: vless
     server: 93.183.127.54
