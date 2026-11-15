@@ -1,10 +1,10 @@
 proxies:
-  - name: "🇪🇪 [BL] Сервер 1"
+  - name: "🇪🇪 [BL/AI] Сервер 1"
     type: vless
     server: 185.155.55.11
     port: 8443
     uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ee-nf.reddotcorp.org"
     client-fingerprint: "firefox"
@@ -14,6 +14,20 @@ proxies:
       public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
       short-id: "661766b2bcef440a"
   - name: "🇪🇪 [BL] Сервер 2"
+    type: vless
+    server: 185.155.55.2
+    port: 8443
+    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ee-nf.reddotcorp.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
+      short-id: "661766b2bcef440a"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 201.8.71.252
     port: 443
@@ -27,17 +41,6 @@ proxies:
     reality-opts:
       public-key: "pteJNuYbBCnVSyhYPlDbR9UZHIrnFzgAlsZGDNbwSD0"
       short-id: "d61fdf9e283664b8"
-  - name: "🇪🇪 [BL] Сервер 3"
-    type: vless
-    server: 179.254.70.101
-    port: 52006
-    uuid: "6fb89451-b573-4391-b046-d45ab9a6db49"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "bm-e.armuz-trans.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
   - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 141.0.187.239
@@ -52,20 +55,20 @@ proxies:
     reality-opts:
       public-key: "4Zzm9Ac34AEy-3PcT_T6UWvRJLnZvmEnvwmRLRc0328"
       short-id: "e5d7a4874e7e74d4"
-  - name: "🇪🇪 [BL] Сервер 5"
+  - name: "🇪🇪 [BL/AI] Сервер 5"
     type: vless
-    server: 141.0.187.238
+    server: 141.0.187.235
     port: 11443
     uuid: "4d24fdd2-4960-469c-90bd-716ae5023451"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "141.0.187.21"
+    servername: "141.0.187.36"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "eBBNC4t8ADucjz55knBasAldY6k3R8TVo2rKM6ADyWA"
-      short-id: "7564a95d066eab7e"
+      public-key: "FqqvK5x0xETsRENCdZKAeNDGAd2JzH5GfBgR-5y2fHQ"
+      short-id: "6c9cd16c7412e11f"
   - name: "🇪🇪 [BL] Сервер 6"
     type: vless
     server: ee.puflino.com
@@ -80,31 +83,3 @@ proxies:
     reality-opts:
       public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
       short-id: "661766b2bcef440a"
-  - name: "🇪🇪 [BL] Сервер 7"
-    type: vless
-    server: 185.155.55.2
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
-  - name: "🇪🇪 [BL/AI] Сервер 8"
-    type: vless
-    server: 141.0.187.235
-    port: 11443
-    uuid: "4d24fdd2-4960-469c-90bd-716ae5023451"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "141.0.187.36"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FqqvK5x0xETsRENCdZKAeNDGAd2JzH5GfBgR-5y2fHQ"
-      short-id: "6c9cd16c7412e11f"
