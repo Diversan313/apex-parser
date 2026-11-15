@@ -1,18 +1,18 @@
 proxies:
   - name: "🇪🇪 [BL] Сервер 1"
     type: vless
-    server: ee.puflino.com
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
+    server: eecdn.fius.dev
+    port: 443
+    uuid: "00018846-513b-6e3b-5301-9c9ff2d375a3"
+    network: "xhttp"
+    servername: "eecdn.fius.dev"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
+    xhttp-opts:
+      path: "/api-test"
+      host: "eecdn.fius.dev"
+      mode: "packet-up"
   - name: "🇪🇪 [BL] Сервер 2"
     type: vless
     server: 13.143.176.250
@@ -43,19 +43,18 @@ proxies:
       short-id: "661766b2bcef440a"
   - name: "🇪🇪 [BL] Сервер 4"
     type: vless
-    server: 94.183.239.64
-    port: 443
-    uuid: "5f1c2e83-d4aa-4f10-81e9-e0ccc018974c"
-    network: "grpc"
-    servername: "94.183.239.64"
-    client-fingerprint: "qq"
+    server: 185.155.55.2
+    port: 8443
+    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ee-nf.reddotcorp.org"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "CEPjmMZbtepvPjcZmM8sBeyw8-IoCF71lBR2msK_2zY"
-      short-id: "6705f73a5a1e0aca"
-    grpc-opts:
-      grpc-service-name: "cdn.v2.AssetSync"
+      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
+      short-id: "661766b2bcef440a"
   - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 31.56.187.235
@@ -70,32 +69,3 @@ proxies:
     reality-opts:
       public-key: "XmvhirU6V5lOl__xGziMlYSTmYef6cY52xNM8_N-Dns"
       short-id: "b9d8c8addd2e5f70"
-  - name: "🇪🇪 [BL] Сервер 6"
-    type: vless
-    server: 79.98.37.146
-    port: 443
-    uuid: "5f1c2e83-d4aa-4f10-81e9-e0ccc018974c"
-    network: "grpc"
-    servername: "79.98.37.146"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "CEPjmMZbtepvPjcZmM8sBeyw8-IoCF71lBR2msK_2zY"
-      short-id: "6705f73a5a1e0aca"
-    grpc-opts:
-      grpc-service-name: "cdn.v2.AssetSync"
-  - name: "🇪🇪 [BL] Сервер 7"
-    type: vless
-    server: 185.155.55.2
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
