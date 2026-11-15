@@ -1,7 +1,7 @@
 proxies:
   - name: "🇪🇪 [BL] Сервер 1"
     type: vless
-    server: 185.155.55.11
+    server: 185.155.55.2
     port: 8443
     uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
     network: "tcp"
@@ -29,6 +29,34 @@ proxies:
       short-id: "e5d7a4874e7e74d4"
   - name: "🇪🇪 [BL] Сервер 3"
     type: vless
+    server: 31.77.236.131
+    port: 443
+    uuid: "02655447-4659-41df-8d0e-d23a3035b7cb"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ee.nebulaguard.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "OjB-nOB0_ebRS3ZUo8RS68vzup_1OKjpjIZimXaRvXU"
+      short-id: "d3c6409a7b0dae17"
+  - name: "🇪🇪 [BL] Сервер 4"
+    type: vless
+    server: 141.0.187.237
+    port: 11443
+    uuid: "d5651570-bfab-44d8-abd0-60496f548e2a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "141.0.187.20"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "hEf0Dx035SZMYkAAst1XKk-a2qNeCx78HKoKHvvEiHE"
+      short-id: "fac7f49ce084bb51"
+  - name: "🇪🇪 [BL] Сервер 5"
+    type: vless
     server: 201.8.71.252
     port: 443
     uuid: "a88d4614-2134-404c-9479-6aba1ca9cdfd"
@@ -41,59 +69,53 @@ proxies:
     reality-opts:
       public-key: "pteJNuYbBCnVSyhYPlDbR9UZHIrnFzgAlsZGDNbwSD0"
       short-id: "d61fdf9e283664b8"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: hysteria2
-    server: hy2-eee-1.aloranode.top
-    port: 443
-    password: "b36a14f8-fc3f-4142-968f-48031cf5f330"
-    sni: "hy2-eee-1.aloranode.top"
-  - name: "🇪🇪 [BL] Сервер 5"
+  - name: "🇪🇪 [BL] Сервер 6"
     type: vless
-    server: eee-1.aloranode.top
-    port: 10443
-    uuid: "b36a14f8-fc3f-4142-968f-48031cf5f330"
-    network: "xhttp"
-    servername: "eee-1.aloranode.top"
+    server: 89.106.88.30
+    port: 443
+    uuid: "0ed9418b-e687-4c2d-8869-7e368c44887e"
+    network: "grpc"
+    servername: "ee30.own-homelab.cloud"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4XnNIGFrNW2uKqvNJly-X_J52O_SDOdWwejuGQU_IAs"
+      short-id: "05c0787b9357f4a8"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇪🇪 [BL] Сервер 7"
+    type: vless
+    server: 89.106.88.25
+    port: 443
+    uuid: "0ed9418b-e687-4c2d-8869-7e368c44887e"
+    network: "grpc"
+    servername: "ee25.own-homelab.cloud"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4XnNIGFrNW2uKqvNJly-X_J52O_SDOdWwejuGQU_IAs"
+      short-id: "05c0787b9357f4a8"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇪🇪 [BL] Сервер 8"
+    type: vless
+    server: 185.155.55.11
+    port: 8443
+    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ee-nf.reddotcorp.org"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "_8OfJZ6O4a1K7A0i7F7UQOwxm7GOv-nBSJCcU80Pc1A"
-      short-id: "21d6ff06b0c966a2"
-    xhttp-opts:
-      path: "/rcAkNmACuH0V/"
-      mode: "auto"
-  - name: "🇪🇪 [BL] Сервер 6"
+      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
+      short-id: "661766b2bcef440a"
+  - name: "🇪🇪 [BL] Сервер 9"
     type: hysteria2
     server: 217.60.182.154
     port: 443
     password: "b36a14f8-fc3f-4142-968f-48031cf5f330"
     sni: "hy2-eee-1.aloranode.top"
-  - name: "🇪🇪 [BL] Сервер 7"
-    type: vless
-    server: ee.puflino.com
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
-  - name: "🇪🇪 [BL] Сервер 8"
-    type: vless
-    server: 185.155.55.2
-    port: 8443
-    uuid: "5c09e56b-f97f-4360-8f01-eb4d39202095"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee-nf.reddotcorp.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE"
-      short-id: "661766b2bcef440a"
