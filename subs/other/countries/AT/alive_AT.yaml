@@ -1,6 +1,20 @@
 proxies:
   - name: "🇦🇹 [BL] Сервер 1"
     type: vless
+    server: 189.74.115.25
+    port: 443
+    uuid: "239b816e-2095-46fb-a33b-1f565b6ed3ac"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediaroshcha.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇦🇹 [BL] Сервер 2"
+    type: vless
     server: 50.7.115.244
     port: 443
     uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
@@ -14,7 +28,23 @@ proxies:
       short-id: "00defa20"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇦🇹 [BL] Сервер 2"
+      grpc-mode: "gun"
+  - name: "🇦🇹 [BL] Сервер 3"
+    type: vless
+    server: 50.7.115.243
+    port: 443
+    uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
+    network: "grpc"
+    servername: "scree.rowanmere.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Mwczt2QjgQo3q8N10PVx8bWNubwiNhgka5GvxUy-GHQ"
+      short-id: "139a95f1"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇦🇹 [BL] Сервер 4"
     type: vless
     server: 50.7.115.245
     port: 443
@@ -29,17 +59,3 @@ proxies:
       short-id: "53df2804"
     xhttp-opts:
       path: "/"
-  - name: "🇦🇹 [BL] Сервер 3"
-    type: vless
-    server: 50.7.115.242
-    port: 443
-    uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tarn.hazelmoor.top"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Mwczt2QjgQo3q8N10PVx8bWNubwiNhgka5GvxUy-GHQ"
-      short-id: "7d1c7473"
