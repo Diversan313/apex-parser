@@ -1,18 +1,45 @@
 proxies:
   - name: "🇮🇹 [BL] Сервер 1"
     type: vless
-    server: 82.118.16.187
+    server: 82.118.16.189
     port: 443
-    uuid: "dc2259c4-388e-4285-ba18-df619b6672b6"
-    network: "raw"
+    uuid: "29f178f7-f96f-46ba-8fc0-bbcd690ba788"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     udp: true
     tls: true
     reality-opts:
+      public-key: "zmo2VkZkfjh2kWjaRghXUs39ImQo87LmPhjvzbX3yB4"
+      short-id: "1e9a49dd374c1191"
+  - name: "🇮🇹 [BL] Сервер 2"
+    type: vless
+    server: 82.118.16.187
+    port: 443
+    uuid: "dc2259c4-388e-4285-ba18-df619b6672b6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
       public-key: "R5ycsjJ-v024902dMSqTsSdqxUwCFEXMebdBEWFt9VU"
       short-id: "cd6065902eea7a02"
-  - name: "🇮🇹 [BL] Сервер 2"
+  - name: "🇮🇹 [BL] Сервер 3"
+    type: vless
+    server: 48.103.120.3
+    port: 443
+    uuid: "a30903dc-1bf0-0002-8b1b-603a3a56211c"
+    network: "tcp"
+    servername: "de1b.galioncc.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
+      short-id: "868419504747f6de"
+  - name: "🇮🇹 [BL] Сервер 4"
     type: vless
     server: 3.174.189.0
     port: 443
@@ -25,7 +52,7 @@ proxies:
     xhttp-opts:
       path: "/cf"
       host: "d3bufpfi7s84bl.cloudfront.net"
-  - name: "🇮🇹 [BL] Сервер 3"
+  - name: "🇮🇹 [BL] Сервер 5"
     type: vless
     server: 152.89.168.55
     port: 443
@@ -39,20 +66,7 @@ proxies:
     reality-opts:
       public-key: "KawjxoeWPWzD1GPZhwdiTje1gZIUiLzHUS7uqCiEtHE"
       short-id: "22750eb5ffb0"
-  - name: "🇮🇹 [BL] Сервер 4"
-    type: vless
-    server: 82.118.16.189
-    port: 443
-    uuid: "29f178f7-f96f-46ba-8fc0-bbcd690ba788"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zmo2VkZkfjh2kWjaRghXUs39ImQo87LmPhjvzbX3yB4"
-      short-id: "1e9a49dd374c1191"
-  - name: "🇮🇹 [BL] Сервер 5"
+  - name: "🇮🇹 [BL] Сервер 6"
     type: vless
     server: 172.213.24.16
     port: 2083
@@ -66,39 +80,61 @@ proxies:
     reality-opts:
       public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
       short-id: "0123456789abcdef"
-  - name: "🇮🇹 [BL] Сервер 6"
-    type: ss
-    server: 202.50.253.90
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
   - name: "🇮🇹 [BL] Сервер 7"
-    type: ss
-    server: 202.50.253.18
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
+    type: vless
+    server: 57.131.38.163
+    port: 2087
+    uuid: "29f67eb8-76b3-440e-8172-2a16ba02e10e"
+    network: "tcp"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "E-SNtwPY86UF4so3rxtfxOFHu0fpHkEERVs47bUNoTo"
+      short-id: "e8075ce5926c4183"
   - name: "🇮🇹 [BL] Сервер 8"
-    type: ss
-    server: 202.50.253.99
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
+    type: vless
+    server: 172.232.193.55
+    port: 443
+    uuid: "878ac990-650e-402f-910b-7859c35c1f50"
+    network: "grpc"
+    servername: "dl.google.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "cAFMol_SqbGzF6IZSHdOS8taChr8dRe9n3RdxJp0QEQ"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇮🇹 [BL] Сервер 9"
     type: ss
-    server: 202.50.253.36
+    server: 202.50.253.63
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
   - name: "🇮🇹 [BL] Сервер 10"
     type: ss
-    server: 202.50.253.27
+    server: 202.50.253.36
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
   - name: "🇮🇹 [BL] Сервер 11"
     type: ss
-    server: 185.164.175.81
+    server: 202.50.253.81
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇮🇹 [BL] Сервер 12"
+    type: ss
+    server: 202.50.253.99
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇮🇹 [BL] Сервер 13"
+    type: ss
+    server: 202.50.253.27
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
