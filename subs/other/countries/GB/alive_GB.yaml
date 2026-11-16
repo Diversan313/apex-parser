@@ -1,20 +1,6 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 188.124.54.30
-    port: 26461
-    uuid: "dcf2b1c4-f99f-4319-b917-37af1e7233c8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "github.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "A4QCDy3wYj97TWce3coZVfEnfcq2uNiG9RGJc1UMJ3o"
-      short-id: "16d73aa276c14c08"
-  - name: "🇬🇧 [WL] Сервер 2"
-    type: vless
     server: 185.90.62.112
     port: 10000
     uuid: "49fe1f7b-e6f6-43dc-a67d-caade85128ba"
@@ -26,34 +12,20 @@ proxies:
     reality-opts:
       public-key: "Du5pk4KuMNA1sRcSpmuoLuC0HmxDBmFljFNfUzqxKiM"
       short-id: "cd0a1986719e44c8"
-  - name: "🇬🇧 [BL] Сервер 3"
+  - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 203.57.82.106
     port: 443
     uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
     network: "tcp"
     servername: "api-gw-net.galioncc.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "9a3f6c21d8e047b5"
-  - name: "🇬🇧 [BL] Сервер 4"
-    type: vless
-    server: 45.144.214.102
-    port: 443
-    uuid: "128ce9ab-63bc-48dc-92ca-1b5426a9eb46"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tr.trustsvpn.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "W_6kEDko_-O5JHaIigz6YqXJTm4SLrS0_3lCp5B4CWE"
-      short-id: "aa2cd28cccee4f45"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 45.91.93.47
     port: 443
@@ -67,6 +39,34 @@ proxies:
     reality-opts:
       public-key: "WgTZR-o6VbFYeqb7iZNBh-izcWAQlpotOyxibJnAXVc"
       short-id: "f51489cb3d7e8be2"
+  - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: 94.183.179.212
+    port: 443
+    uuid: "372931d3-91c5-4564-b79c-041302de9a17"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "gb1.soshelper.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE"
+      short-id: "e06e30590f288e0f"
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: 94.183.179.64
+    port: 443
+    uuid: "372931d3-91c5-4564-b79c-041302de9a17"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gb2.soshelper.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE"
+      short-id: "e06e30590f288e0f"
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 51.89.194.151
@@ -87,7 +87,7 @@ proxies:
     uuid: "948df76f-505d-4608-9c76-a933ee3ccc76"
     network: "tcp"
     servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -135,24 +135,20 @@ proxies:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
   - name: "🇬🇧 [BL] Сервер 11"
-    type: hysteria2
-    server: 50.7.193.146
-    port: 443
-    password: "2bc6428196efb899f544d750bea0c06d"
-    sni: "promo2.betust.net"
-  - name: "🇬🇧 [BL] Сервер 12"
     type: vless
-    server: uk1.connectsuite.org
+    server: 45.144.214.102
     port: 443
-    uuid: "fda89998-7e9a-4494-857a-cd0d00661b58"
-    network: "ws"
-    servername: "uk1.connectsuite.org"
+    uuid: "128ce9ab-63bc-48dc-92ca-1b5426a9eb46"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tr.trustsvpn.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/cdn-cgi/ws"
-  - name: "🇬🇧 [BL] Сервер 13"
+    reality-opts:
+      public-key: "W_6kEDko_-O5JHaIigz6YqXJTm4SLrS0_3lCp5B4CWE"
+      short-id: "aa2cd28cccee4f45"
+  - name: "🇬🇧 [BL] Сервер 12"
     type: vless
     server: 95.163.153.141
     port: 8443
@@ -167,7 +163,24 @@ proxies:
       short-id: "c9ea2355ddeab39b"
     xhttp-opts:
       path: "/"
+  - name: "🇬🇧 [BL] Сервер 13"
+    type: vless
+    server: 84.54.48.198
+    port: 8443
+    uuid: "595a6246-d7b0-48bc-a5f0-17068aec2e88"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "alb1.keepverify.net"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
   - name: "🇬🇧 [BL] Сервер 14"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 15"
     type: ss
     server: 141.98.101.178
     port: 443

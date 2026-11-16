@@ -1,26 +1,43 @@
 proxies:
   - name: "🇨🇭 [BL] Сервер 1"
     type: vless
-    server: 45.90.59.15
-    port: 443
-    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "random"
+    server: 132.243.67.239
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
-      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
-      short-id: "19253fae84102271"
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+      host: "96f799r.ch5.h1clayd.click"
   - name: "🇨🇭 [BL] Сервер 2"
+    type: vless
+    server: 179.43.170.72
+    port: 443
+    uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
+    network: "grpc"
+    servername: "dell.pinewharf.top"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "oI8uBtOZSUZ6paMGUrKhdMOuvQ08EyPfWpCfnveBjV8"
+      short-id: "1a56811c"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: vless
     server: 179.43.170.67
     port: 443
     uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
     network: "grpc"
     servername: "crag.quaystone.top"
-    client-fingerprint: "firefox"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
@@ -28,7 +45,7 @@ proxies:
       short-id: "a16cb62c"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇨🇭 [BL] Сервер 3"
+  - name: "🇨🇭 [BL] Сервер 4"
     type: vless
     server: 179.43.170.73
     port: 443
@@ -44,38 +61,7 @@ proxies:
     xhttp-opts:
       path: "/"
       mode: "auto"
-  - name: "🇨🇭 [BL] Сервер 4"
-    type: vless
-    server: 179.43.170.72
-    port: 443
-    uuid: "49db4ce7-ad48-41a3-9b6f-4c6dabd94504"
-    network: "grpc"
-    servername: "dell.pinewharf.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "oI8uBtOZSUZ6paMGUrKhdMOuvQ08EyPfWpCfnveBjV8"
-      short-id: "1a56811c"
-    grpc-opts:
-      grpc-service-name: "grpc"
   - name: "🇨🇭 [BL] Сервер 5"
-    type: vless
-    server: 132.243.67.239
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-      host: "96f799r.ch5.h1clayd.click"
-  - name: "🇨🇭 [BL] Сервер 6"
     type: vless
     server: 91.214.190.127
     port: 443
@@ -89,3 +75,31 @@ proxies:
     reality-opts:
       public-key: "3fcmILwQG2sbwo58XW9Z1lziNQXmAFwUglFuXQFePRI"
       short-id: "95da6299f1"
+  - name: "🇨🇭 [BL] Сервер 6"
+    type: vless
+    server: 45.90.59.15
+    port: 443
+    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
+      short-id: "19253fae84102271"
+  - name: "🇨🇭 [BL/AI] Сервер 7"
+    type: vless
+    server: 193.233.89.130
+    port: 8443
+    uuid: "7bd7c4aa-52c4-482c-bdcc-e7380fa6b5fe"
+    network: "grpc"
+    servername: "g.play2go.gay"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
+    grpc-opts:
+      grpc-service-name: "grpc"
