@@ -16,9 +16,9 @@ proxies:
   - name: "🇹🇷 [BL] Сервер 2"
     type: vless
     server: 45.92.219.227
-    port: 8443
+    port: 443
     uuid: "1e6bb05f-2d45-4f88-ae4d-4baa2763e4cf"
-    network: "grpc"
+    network: "xhttp"
     servername: "pics.ds-cdn.online"
     client-fingerprint: "firefox"
     udp: true
@@ -26,9 +26,24 @@ proxies:
     reality-opts:
       public-key: "83hcEckhKi2A2BxkgMa01143dR-lEnduh2qU5sHm-WY"
       short-id: "427dd79b7dd67972"
-    grpc-opts:
-      grpc-service-name: "grpc-tro"
+    xhttp-opts:
+      path: "/internal/tunnel"
+      mode: "auto"
   - name: "🇹🇷 [BL] Сервер 3"
+    type: vless
+    server: 212.98.224.35
+    port: 443
+    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "tr1.gofizzin.com"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9_UhwEt_9pf8WahM1K9O6-_0vAK6q0uiNGFoHBO7s3A"
+      short-id: "0e3e4d96"
+  - name: "🇹🇷 [BL] Сервер 4"
     type: vless
     server: 188.132.176.153
     port: 443
@@ -42,20 +57,6 @@ proxies:
     reality-opts:
       public-key: "0dZQFilWbZVW8qj2DqVgiXZndL20ZuxmSuS4KyGRbQc"
       short-id: "fa273564"
-  - name: "🇹🇷 [BL] Сервер 4"
-    type: vless
-    server: 212.98.224.35
-    port: 443
-    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tr1.gofizzin.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "9_UhwEt_9pf8WahM1K9O6-_0vAK6q0uiNGFoHBO7s3A"
-      short-id: "0e3e4d96"
   - name: "🇹🇷 [BL] Сервер 5"
     type: hysteria2
     server: 188.132.174.69
@@ -109,6 +110,21 @@ proxies:
       grpc-mode: "gun"
   - name: "🇹🇷 [BL] Сервер 9"
     type: vless
+    server: 171.22.27.161
+    port: 2083
+    uuid: "ca39b355-b488-9297-918f-9d011d075ba2"
+    network: "xhttp"
+    servername: "www.aparat.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "yeEgcP0ehhicUQZdFGJBhLuU3wsEMSRyg8l2voakZBs"
+      short-id: "2f567c6d"
+    xhttp-opts:
+      path: "/"
+  - name: "🇹🇷 [BL] Сервер 10"
+    type: vless
     server: 45.92.219.47
     port: 443
     uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
@@ -120,29 +136,3 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
-  - name: "🇹🇷 [BL] Сервер 10"
-    type: vless
-    server: 185.39.204.117
-    port: 10002
-    uuid: "facb802c-de2e-11f1-9a22-a3404e852f3b"
-    network: "ws"
-    servername: "tr2.vpnjantit.com"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/vpnjantit"
-  - name: "🇹🇷 [BL] Сервер 11"
-    type: vless
-    server: 171.22.27.161
-    port: 2083
-    uuid: "ca39b355-b488-9297-918f-9d011d075ba2"
-    network: "xhttp"
-    servername: "www.aparat.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yeEgcP0ehhicUQZdFGJBhLuU3wsEMSRyg8l2voakZBs"
-      short-id: "2f567c6d"
-    xhttp-opts:
-      path: "/"
