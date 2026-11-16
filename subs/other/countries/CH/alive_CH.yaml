@@ -1,5 +1,49 @@
 proxies:
-  - name: "🇨🇭 [BL] Сервер 1"
+  - name: "🇨🇭 [WL/CF] Сервер 1"
+    type: vless
+    server: 185.234.213.169
+    port: 443
+    uuid: "5d7b401c-78fa-4254-872e-6d42bf7e75ec"
+    network: "ws"
+    servername: "vp4.1145678.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/wenku/comics"
+      headers:
+        Host: "vp4.1145678.xyz"
+  - name: "🇨🇭 [BL/AI] Сервер 2"
+    type: vless
+    server: 179.43.187.19
+    port: 443
+    uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
+    network: "grpc"
+    servername: "claude.ai"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "8DvFATJSO5Rp-CglhKDOFKR8Mt4TGI2cMFyZIn5XtGM"
+      short-id: "19ab12d0f0ce5167"
+    grpc-opts:
+      grpc-service-name: "s488b2d205d9be425583f"
+  - name: "🇨🇭 [BL/AI] Сервер 3"
+    type: vless
+    server: 179.43.187.18
+    port: 443
+    uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
+    network: "grpc"
+    servername: "api.openai.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "659Fu5_n4Vq58ZBdLCGbZqFRjhznGRonhTqN-ctC9i0"
+      short-id: "7f34211a1db26412"
+    grpc-opts:
+      grpc-service-name: "s9d8c0a4b24dfc7d63774"
+  - name: "🇨🇭 [BL] Сервер 4"
     type: vless
     server: 132.243.67.239
     port: 25035
@@ -16,9 +60,9 @@ proxies:
       path: "/astral-edge-h1"
       host: "ch5.h1cloud.net"
       mode: "stream-one"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [BL] Сервер 5"
     type: vless
-    server: a813d5t.ch5.h1clayd.click
+    server: 153.52.85.187
     port: 443
     uuid: "963f72cf-8465-46f5-996c-df45500b57a3"
     network: "raw"
@@ -29,21 +73,7 @@ proxies:
     reality-opts:
       public-key: "syYaWsZJOf114XAoEcIQodriOW8pyCjP5x_KEq38ozs"
       short-id: "7ded0da1ef58b7e2"
-  - name: "🇨🇭 [BL] Сервер 3"
-    type: vless
-    server: 193.233.219.98
-    port: 443
-    uuid: "265ecca2-4733-49de-b2c9-ed7f0e999655"
-    network: "ws"
-    servername: "daily-author.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/api/vless"
-      headers:
-        Host: "vpn-rating.space"
-  - name: "🇨🇭 [BL] Сервер 4"
+  - name: "🇨🇭 [BL] Сервер 6"
     type: vless
     server: 91.214.190.127
     port: 443
@@ -57,50 +87,35 @@ proxies:
     reality-opts:
       public-key: "3fcmILwQG2sbwo58XW9Z1lziNQXmAFwUglFuXQFePRI"
       short-id: "95da6299f1"
-  - name: "🇨🇭 [BL/AI] Сервер 5"
+  - name: "🇨🇭 [BL/AI] Сервер 7"
     type: vless
-    server: 179.43.187.19
+    server: 179.43.138.144
     port: 443
     uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
-    network: "grpc"
-    servername: "claude.ai"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.perplexity.ai"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "8DvFATJSO5Rp-CglhKDOFKR8Mt4TGI2cMFyZIn5XtGM"
-      short-id: "19ab12d0f0ce5167"
-    grpc-opts:
-      grpc-service-name: "s488b2d205d9be425583f"
-  - name: "🇨🇭 [BL] Сервер 6"
+      public-key: "wl1ARE6kNcaMafWfjS5Wb7X8gr0vuVDtwdTfqKtrZnI"
+      short-id: "6f132a95d2842aa0"
+  - name: "🇨🇭 [BL] Сервер 8"
     type: vless
-    server: 45.90.59.15
+    server: 193.233.219.98
     port: 443
-    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    uuid: "265ecca2-4733-49de-b2c9-ed7f0e999655"
+    network: "ws"
+    servername: "daily-author.ru"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
-      short-id: "19253fae84102271"
-  - name: "🇨🇭 [BL] Сервер 7"
-    type: vless
-    server: 74.161.152.237
-    port: 2083
-    uuid: "52a5a29f-c162-411a-8a37-a3f11b0dc537"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
-      short-id: "0123456789abcdef"
-  - name: "🇨🇭 [BL/AI] Сервер 8"
+    ws-opts:
+      path: "/api/vless"
+      headers:
+        Host: "vpn-rating.space"
+  - name: "🇨🇭 [BL/AI] Сервер 9"
     type: vless
     server: 179.43.138.147
     port: 443
@@ -115,26 +130,86 @@ proxies:
       short-id: "8eaf2e317d86a0a6"
     grpc-opts:
       grpc-service-name: "s764bdc2f3a313a1806ce"
-      grpc-mode: "gun"
-  - name: "🇨🇭 [BL/CF] Сервер 9"
+  - name: "🇨🇭 [BL] Сервер 10"
     type: vless
-    server: 194.147.173.117
+    server: 45.90.59.15
     port: 443
-    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
-    network: "ws"
-    servername: "vp58.cc.cd"
+    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    ws-opts:
-      path: "/"
-  - name: "🇨🇭 [BL] Сервер 10"
+    reality-opts:
+      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
+      short-id: "19253fae84102271"
+  - name: "🇨🇭 [BL] Сервер 11"
+    type: vless
+    server: 74.161.152.237
+    port: 2083
+    uuid: "52a5a29f-c162-411a-8a37-a3f11b0dc537"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "WbgtxLlo2gmTzB4Wzxgh_U7G97d4ENTS10fYIoujET4"
+      short-id: "0123456789abcdef"
+  - name: "🇨🇭 [BL/AI] Сервер 12"
+    type: vless
+    server: 179.43.138.146
+    port: 443
+    uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
+    network: "grpc"
+    servername: "chat.deepseek.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "NHkASezjpfX7xOQ1hBJzrziILeW8Tbi7Y49072LPunw"
+      short-id: "d897d06cd65ef494"
+    grpc-opts:
+      grpc-service-name: "s6c67504ac5acd8919e0c"
+  - name: "🇨🇭 [BL/AI] Сервер 13"
+    type: vless
+    server: 179.43.187.16
+    port: 443
+    uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
+    network: "grpc"
+    servername: "chat.deepseek.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "-xRQ097EP_10oRhOU6tuwRwRBBiDqRsPjB0IHIW0xhI"
+      short-id: "1aea40c56a2b92b2"
+    grpc-opts:
+      grpc-service-name: "s3b8c5f214f5cf1ba482e"
+  - name: "🇨🇭 [BL/AI] Сервер 14"
+    type: vless
+    server: 179.43.187.17
+    port: 443
+    uuid: "e3453410-191b-48b5-b37f-aac745bbfa6b"
+    network: "grpc"
+    servername: "chat.deepseek.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xsNWxje0_1edRJQrX74RdIuxgeFIW2bh9CsbGjihexE"
+      short-id: "46cd0658d9dc70ba"
+    grpc-opts:
+      grpc-service-name: "s3df015a48a64b37019c5"
+  - name: "🇨🇭 [BL] Сервер 15"
     type: ss
     server: 23.166.88.127
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 11"
+  - name: "🇨🇭 [BL] Сервер 16"
     type: ss
     server: 186.190.215.251
     port: 19999

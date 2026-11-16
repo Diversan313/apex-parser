@@ -16,17 +16,17 @@ proxies:
   - name: "🇰🇿 [BL] Сервер 2"
     type: vless
     server: 48.102.216.65
-    port: 8443
+    port: 443
     uuid: "3fc29b36-3ec4-4b77-b8e8-ff0dbf7d3530"
-    network: "xhttp"
-    servername: "ed-ru48.edgehubnet.com"
-    client-fingerprint: "chrome"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ed-ru1.dotinfo.cfd"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/stream"
-      host: "ed-ru48.edgehubnet.com"
-      mode: "auto"
+    reality-opts:
+      public-key: "E8gtZB7-juQ3AZAivptjwUqQZYTdGV3kfZgPwoEVkQE"
+      short-id: "69d2bbb45d2895d8"
   - name: "🇰🇿 [BL] Сервер 3"
     type: vless
     server: 179.254.175.165
@@ -66,3 +66,18 @@ proxies:
     reality-opts:
       public-key: "_0wM2ep44eAcrgf5PflKaBivknCWT6kMvQBQUoScCkE"
       short-id: "83"
+  - name: "🇰🇿 [BL] Сервер 6"
+    type: vless
+    server: 38.180.206.44
+    port: 48982
+    uuid: "a80acd3a-3df5-40b5-a54a-29bb18056115"
+    network: "xhttp"
+    servername: "cdn3-88.yahoo.com"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "A1ygNS8bIvKp7ZlUnjjHX_Z2AS_e4suvSs_IkWICvGE"
+    xhttp-opts:
+      path: "/"
+      mode: "auto"
