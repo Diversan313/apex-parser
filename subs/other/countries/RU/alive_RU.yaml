@@ -1,6 +1,20 @@
 proxies:
   - name: "🇷🇺 [WL] Сервер 1"
     type: vless
+    server: 94.228.117.93
+    port: 443
+    uuid: "ceab5251-eaa3-4a2f-bdd4-ce9df24d9edd"
+    network: "xhttp"
+    servername: "login.alfatrud.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/stream/"
+      host: "login.alfatrud.ru"
+      mode: "packet-up"
+  - name: "🇷🇺 [WL] Сервер 2"
+    type: vless
     server: 200.169.179.233
     port: 443
     uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
@@ -11,20 +25,6 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 2"
-    type: vless
-    server: 87.228.56.39
-    port: 443
-    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru4.gofizzin.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "e39H8hQXcwfiUnkUOmG0JkBTX5VCxaBQ3_EWEj9PZRc"
-      short-id: "e938e26c4425"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 201.24.121.243
@@ -68,7 +68,7 @@ proxies:
     uuid: "a628c583-24a8-4ce5-98ad-c6458abf1cc4"
     network: "grpc"
     servername: "s3.storage.selcloud.ru"
-    client-fingerprint: "ios"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -76,17 +76,35 @@ proxies:
       short-id: "9de815e2"
     grpc-opts:
       grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇷🇺 [WL] Сервер 7"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
+    type: vless
+    server: 95.129.236.216
+    port: 443
+    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
+    network: "ws"
+    servername: "crm.hourtley.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/stream/video/ffmpeg"
+      headers:
+        Host: "crm.hourtley.com"
   - name: "🇷🇺 [WL] Сервер 8"
-    type: hysteria2
-    server: srv-17e124.21freedom.net
-    port: 11592
-    password: "41edb44c8e"
+    type: vless
+    server: 212.233.90.78
+    port: 443
+    uuid: "9548ef84-b54d-41dc-b17c-9da21d52ba82"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "birch-ledger.justext.space"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
+      short-id: "2c6df23e"
   - name: "🇷🇺 [WL] Сервер 9"
     type: hysteria2
     server: 103.88.243.142
@@ -94,6 +112,12 @@ proxies:
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 10"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 11"
     type: vless
     server: 129.101.98.60
     port: 443
@@ -107,7 +131,21 @@ proxies:
     reality-opts:
       public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
       short-id: "3992cc7fb9fcbe58"
-  - name: "🇷🇺 [WL] Сервер 11"
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: vless
+    server: 37.235.247.81
+    port: 8443
+    uuid: "2ae0670d-0bdf-409e-9a55-4e970252d378"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+      short-id: "6ba85179e30d4fc2"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 185.231.204.244
     port: 443
@@ -120,7 +158,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇷🇺 [WL] Сервер 12"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 147.45.47.101
     port: 8443
@@ -134,18 +172,23 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 15"
+    type: ss
+    server: 192.144.59.146
+    port: 29348
+    password: "por7Eu0qqxHmGMA9mRXys9kR7u8g7KGyNIxUNT"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
-    server: 195.208.121.45
+    server: rus-04.samigo.cc
     port: 443
-    uuid: "8d44611d-e9ca-4939-a9a1-ff9b4b9d3f08"
-    network: "grpc"
-    servername: "ru.whotellme.com"
-    client-fingerprint: "edge"
+    uuid: "01a1e565-380d-7802-8137-2fcfc5d3e1e9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rus-04.samigo.cc"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "tu5lj8_l0P0pC9BBgvdaQJ23l38WnfgugPq0iPxYznY"
-      short-id: "b11dedbb394e91e1"
-    grpc-opts:
-      grpc-service-name: "grp"
+      public-key: "5gxxf-4Em4l620r7KaDipVm1A5d2fs2mI8lVJTczfSY"
+      short-id: "af08286bddca467f"
