@@ -1,18 +1,16 @@
 proxies:
   - name: "🇷🇺 [WL] Сервер 1"
     type: vless
-    server: 185.86.147.15
+    server: 200.169.179.233
     port: 443
-    uuid: "1b7b37e0-d8bc-4feb-9e82-f81dea94cb51"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "joinerylane.net"
-    client-fingerprint: "firefox"
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "RwtMzZtTCmy9WRq3_27xeGF8-1l_qPXRVG3yIFp-6Go"
-      short-id: "c0d1d1776fed0f6d"
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
     server: 201.24.121.243
@@ -25,45 +23,70 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "vlgrpc"
-  - name: "🇷🇺 [WL/AI] Сервер 3"
+  - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: 212.41.8.76
-    port: 13443
-    uuid: "a628c583-24a8-4ce5-98ad-c6458abf1cc4"
+    server: 201.24.116.192
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
     network: "grpc"
-    servername: "s3.storage.selcloud.ru"
-    client-fingerprint: "safari"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 4"
+    type: vless
+    server: 201.51.12.98
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 5"
+    type: vless
+    server: 176.57.215.54
+    port: 37508
+    uuid: "ef02c262-77a0-429f-8b8f-9eb6ad18f8c0"
+    network: "grpc"
+    servername: "www.oracle.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "d2B_vurRVKXLrK0ib-0sTtQuI3VDdaj8ZKTXgEPwAlc"
-      short-id: "9de815e2"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇷🇺 [WL] Сервер 4"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
+      public-key: "_Iqh4SUi85b59zoNhLWVZrSGMNa45OTgK3fWrjZI0l8"
+      short-id: "d3"
   - name: "🇷🇺 [WL] Сервер 6"
     type: vless
-    server: 213.171.31.83
+    server: 129.101.98.60
     port: 443
-    uuid: "77146066-6f06-0001-bced-d2b73668de07"
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
     network: "tcp"
-    servername: "cffhi-ru-46sb.fade.mom"
-    client-fingerprint: "safari"
+    flow: "xtls-rprx-vision"
+    servername: "ru7e2bab87cc39.eu-cdn539.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
+    reality-opts:
+      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
+      short-id: "3992cc7fb9fcbe58"
   - name: "🇷🇺 [WL] Сервер 7"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 8"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 9"
     type: vless
     server: 37.235.247.81
     port: 8443
@@ -77,7 +100,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 8"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 147.45.47.101
     port: 8443
@@ -91,18 +114,3 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 9"
-    type: vless
-    server: 195.208.121.45
-    port: 443
-    uuid: "8d44611d-e9ca-4939-a9a1-ff9b4b9d3f08"
-    network: "grpc"
-    servername: "ru.whotellme.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tu5lj8_l0P0pC9BBgvdaQJ23l38WnfgugPq0iPxYznY"
-      short-id: "b11dedbb394e91e1"
-    grpc-opts:
-      grpc-service-name: "grp"

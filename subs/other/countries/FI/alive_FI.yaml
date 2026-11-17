@@ -2,6 +2,20 @@ proxies:
   - name: "🇫🇮 [WL] Сервер 1"
     type: vless
     server: 109.71.245.99
+    port: 443
+    uuid: "f09ca6e3-c547-4f91-95f5-77f34c4282ac"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.yandex.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "zICjcFkqI720WzWpHXRLjSFYmcu4Hd0jk1iDEo1nUAU"
+      short-id: "c27a26812e5d2208"
+  - name: "🇫🇮 [WL] Сервер 2"
+    type: vless
+    server: 109.71.245.99
     port: 8443
     uuid: "f09ca6e3-c547-4f91-95f5-77f34c4282ac"
     network: "xhttp"
@@ -14,20 +28,6 @@ proxies:
     xhttp-opts:
       path: "/029d7a23f5ba"
       mode: "auto"
-  - name: "🇫🇮 [BL] Сервер 2"
-    type: vless
-    server: 2.27.203.162
-    port: 443
-    uuid: "3de54b98-fdfe-4a8d-ae72-f2458dd5e5f4"
-    network: "xhttp"
-    servername: "frankfurt.gosgenarchive.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "4ltYIatUJFFjrW8ZBDGLJaun0BnYIgxn-jmpmTEDGyc"
-    xhttp-opts:
-      path: "/"
   - name: "🇫🇮 [BL] Сервер 3"
     type: vless
     server: 45.38.143.210
@@ -43,20 +43,6 @@ proxies:
       short-id: "67ece882d65d0f1a"
   - name: "🇫🇮 [BL] Сервер 4"
     type: vless
-    server: 85.192.49.126
-    port: 443
-    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fi3.gofizzin.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ATdIZVxBUo5bVQJtcoWBU1k8qlHdNniJ2gF1iDc8rEQ"
-      short-id: "76efb045"
-  - name: "🇫🇮 [BL] Сервер 5"
-    type: vless
     server: 157.180.98.124
     port: 49659
     uuid: "88a558b1-9645-42f3-89e5-341570d8486d"
@@ -69,7 +55,7 @@ proxies:
     reality-opts:
       public-key: "bBVqro8tG6swTNoAkjwUzcu4Ew4N4VcyDHzADcGviCs"
       short-id: "81959fce"
-  - name: "🇫🇮 [BL] Сервер 6"
+  - name: "🇫🇮 [BL] Сервер 5"
     type: vless
     server: 141.227.170.220
     port: 8443
@@ -83,21 +69,19 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇫🇮 [BL] Сервер 7"
+  - name: "🇫🇮 [BL] Сервер 6"
     type: vless
     server: 108.156.65.62
     port: 443
     uuid: "2e69b088-6ef3-417f-8247-125cf257fafd"
     network: "xhttp"
     servername: "d1ivx1xk58pr8u.cloudfront.net"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     xhttp-opts:
       path: "/cf"
-      host: "d1ivx1xk58pr8u.cloudfront.net"
-      mode: "auto"
-  - name: "🇫🇮 [BL] Сервер 8"
+  - name: "🇫🇮 [BL] Сервер 7"
     type: vless
     server: 3.174.189.5
     port: 443
@@ -110,7 +94,7 @@ proxies:
     xhttp-opts:
       path: "/cf"
       host: "d1ivx1xk58pr8u.cloudfront.net"
-  - name: "🇫🇮 [BL] Сервер 9"
+  - name: "🇫🇮 [BL] Сервер 8"
     type: vless
     server: 31.76.31.240
     port: 4443
@@ -126,19 +110,7 @@ proxies:
     xhttp-opts:
       path: "/astral-edge-fi"
       host: "gallery.kristinadmitriywedding.ru"
-  - name: "🇫🇮 [BL] Сервер 10"
-    type: vless
-    server: 209.94.90.47
-    port: 2083
-    uuid: "a6ad7987-f17e-41fa-a752-72db9a725eb2"
-    network: "ws"
-    servername: "vipfree.dr-ping.ir"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-  - name: "🇫🇮 [BL/AI] Сервер 11"
+  - name: "🇫🇮 [BL] Сервер 9"
     type: vless
     server: 198.202.24.142
     port: 2083
@@ -152,7 +124,19 @@ proxies:
       path: "/"
       headers:
         Host: "vipfree.dr-ping.ir"
-  - name: "🇫🇮 [BL] Сервер 12"
+  - name: "🇫🇮 [BL] Сервер 10"
+    type: vless
+    server: 209.94.90.47
+    port: 2083
+    uuid: "a6ad7987-f17e-41fa-a752-72db9a725eb2"
+    network: "ws"
+    servername: "vipfree.dr-ping.ir"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+  - name: "🇫🇮 [BL] Сервер 11"
     type: vless
     server: 206.238.239.20
     port: 2083
@@ -164,16 +148,3 @@ proxies:
     tls: true
     ws-opts:
       path: "/"
-  - name: "🇫🇮 [BL] Сервер 13"
-    type: vless
-    server: 196.240.181.30
-    port: 443
-    uuid: "537d8ade-134d-4ec2-905c-0187e7e1e22e"
-    network: "grpc"
-    servername: "f0f0bet.fi2.h1clayd.click"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_oCg5rCW6XTxriBPzbd_AX0os6QhenVYO9cbrsDSyRY"
-      short-id: "cf2a731a5f2dc451"
