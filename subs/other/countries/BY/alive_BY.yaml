@@ -1,11 +1,27 @@
 proxies:
-  - name: "🇧🇾 [BL] Сервер 1"
+  - name: "🇧🇾 [WL] Сервер 1"
+    type: vless
+    server: 84.23.52.104
+    port: 9079
+    uuid: "6a5b48fe-9a99-4509-9bad-8ad9b44bd56e"
+    network: "grpc"
+    servername: "by.84-23-52-104.sslip.io"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "V1ifE7iJ4ITZfA10PNaR7fF7Lz1E_9v7a9S4jPOY-A8"
+      short-id: "069074d6fbb09e56"
+    grpc-opts:
+      grpc-service-name: "inetgrpc"
+      grpc-mode: "gun"
+  - name: "🇧🇾 [BL] Сервер 2"
     type: hysteria2
     server: 179.254.191.251
     port: 4444
     password: "a35c508f-4d5d-4531-842e-6e9d43c762c0"
     sni: "bl1.nexfile.net"
-  - name: "🇧🇾 [BL] Сервер 2"
+  - name: "🇧🇾 [BL] Сервер 3"
     type: vless
     server: 178.172.227.124
     port: 10444
@@ -19,25 +35,11 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇧🇾 [BL] Сервер 3"
+  - name: "🇧🇾 [BL] Сервер 4"
     type: vless
     server: 95.128.71.79
     port: 10444
     uuid: "8cef7621-c6f0-486e-b51d-59c30c5b0b25"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ads.x5.ru"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
-  - name: "🇧🇾 [BL] Сервер 4"
-    type: vless
-    server: 178.172.227.228
-    port: 10444
-    uuid: "b6e5dc56-836f-48c1-9163-b0b0b43b647d"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ads.x5.ru"
