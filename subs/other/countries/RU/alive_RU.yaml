@@ -6,13 +6,27 @@ proxies:
     uuid: "ceab5251-eaa3-4a2f-bdd4-ce9df24d9edd"
     network: "xhttp"
     servername: "login.alfatrud.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/stream/"
+      host: "login.alfatrud.ru"
+      mode: "packet-up"
+  - name: "🇷🇺 [WL] Сервер 2"
+    type: vless
+    server: 94.228.117.93
+    port: 443
+    uuid: "ceab5251-eaa3-4a2f-bdd4-ce9df24d9edd"
+    network: "xhttp"
+    servername: "login.alfatrud.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     xhttp-opts:
       path: "/api/stream/"
       host: "login.alfatrud.ru"
-  - name: "🇷🇺 [WL] Сервер 2"
+  - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 200.169.179.233
     port: 443
@@ -24,7 +38,57 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 3"
+  - name: "🇷🇺 [WL] Сервер 4"
+    type: vless
+    server: 201.24.121.243
+    port: 443
+    uuid: "32b5ca9b-3f81-4031-965d-e8b074216e8d"
+    network: "grpc"
+    servername: "kk-ru24a1.testkknegr.online"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "vlgrpc"
+  - name: "🇷🇺 [WL] Сервер 5"
+    type: vless
+    server: 201.24.116.192
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 6"
+    type: vless
+    server: 201.51.12.98
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 7"
+    type: vless
+    server: 87.228.56.39
+    port: 443
+    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ru4.gofizzin.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "e39H8hQXcwfiUnkUOmG0JkBTX5VCxaBQ3_EWEj9PZRc"
+      short-id: "e938e26c4425"
+  - name: "🇷🇺 [WL] Сервер 8"
     type: vless
     server: 129.101.98.60
     port: 443
@@ -38,57 +102,7 @@ proxies:
     reality-opts:
       public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
       short-id: "3992cc7fb9fcbe58"
-  - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: 87.228.56.39
-    port: 443
-    uuid: "8197b9b9-8945-460f-99c9-325ef8a8a7c3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru4.gofizzin.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "e39H8hQXcwfiUnkUOmG0JkBTX5VCxaBQ3_EWEj9PZRc"
-      short-id: "e938e26c4425"
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
-    server: 201.24.121.243
-    port: 443
-    uuid: "32b5ca9b-3f81-4031-965d-e8b074216e8d"
-    network: "grpc"
-    servername: "kk-ru24a1.testkknegr.online"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "vlgrpc"
-  - name: "🇷🇺 [WL] Сервер 6"
-    type: vless
-    server: 201.24.116.192
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 7"
-    type: vless
-    server: 201.51.12.98
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL/AI] Сервер 8"
+  - name: "🇷🇺 [WL/AI] Сервер 9"
     type: vless
     server: 212.41.8.76
     port: 13443
@@ -103,20 +117,6 @@ proxies:
       short-id: "9de815e2"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇷🇺 [WL] Сервер 9"
-    type: vless
-    server: 95.129.236.117
-    port: 443
-    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
-    network: "ws"
-    servername: "cdn.dash.gearmonster.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/edge/node8/push"
-      headers:
-        Host: "cdn.dash.gearmonster.org"
   - name: "🇷🇺 [WL] Сервер 10"
     type: hysteria2
     server: 103.88.243.142
@@ -145,59 +145,19 @@ proxies:
         Host: "joeypg.ezbiz.dynv6.net"
   - name: "🇷🇺 [WL] Сервер 13"
     type: vless
-    server: 37.235.247.81
-    port: 8443
-    uuid: "2ae0670d-0bdf-409e-9a55-4e970252d378"
+    server: rus-04.samigo.cc
+    port: 443
+    uuid: "01a1e565-380d-7802-8137-2fcfc5d3e1e9"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "apple.com"
+    servername: "rus-04.samigo.cc"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-      short-id: "6ba85179e30d4fc2"
+      public-key: "5gxxf-4Em4l620r7KaDipVm1A5d2fs2mI8lVJTczfSY"
+      short-id: "af08286bddca467f"
   - name: "🇷🇺 [WL] Сервер 14"
-    type: vless
-    server: 185.231.204.244
-    port: 443
-    uuid: "42a64b9a-ab79-4094-8656-30366a7c2ea3"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nl-balancer.peregrine-sub.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇷🇺 [WL] Сервер 15"
-    type: vless
-    server: 147.45.47.101
-    port: 8443
-    uuid: "27f26dee-9cf1-4cca-93f8-9ac23d311408"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-      short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 16"
-    type: vless
-    server: 94.139.250.226
-    port: 443
-    uuid: "a30903dc-1bf0-0001-8b1b-603a3a56211c"
-    network: "tcp"
-    servername: "net-api-ctl.galioncc.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
-      short-id: "6d2f8a41c9e705b3"
-  - name: "🇷🇺 [WL] Сервер 17"
     type: vless
     server: 193.124.33.149
     port: 443
@@ -211,3 +171,57 @@ proxies:
     reality-opts:
       public-key: "5gxxf-4Em4l620r7KaDipVm1A5d2fs2mI8lVJTczfSY"
       short-id: "af08286bddca467f"
+  - name: "🇷🇺 [WL] Сервер 15"
+    type: vless
+    server: 37.235.247.81
+    port: 8443
+    uuid: "2ae0670d-0bdf-409e-9a55-4e970252d378"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+      short-id: "6ba85179e30d4fc2"
+  - name: "🇷🇺 [WL] Сервер 16"
+    type: vless
+    server: 147.45.47.101
+    port: 8443
+    uuid: "27f26dee-9cf1-4cca-93f8-9ac23d311408"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+      short-id: "6ba85179e30d4fc2"
+  - name: "🇷🇺 [WL] Сервер 17"
+    type: vless
+    server: 94.139.250.226
+    port: 443
+    uuid: "a30903dc-1bf0-0001-8b1b-603a3a56211c"
+    network: "tcp"
+    servername: "net-api-ctl.galioncc.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
+      short-id: "6d2f8a41c9e705b3"
+  - name: "🇷🇺 [WL] Сервер 18"
+    type: vless
+    server: 185.231.204.244
+    port: 443
+    uuid: "42a64b9a-ab79-4094-8656-30366a7c2ea3"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "nl-balancer.peregrine-sub.net"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
