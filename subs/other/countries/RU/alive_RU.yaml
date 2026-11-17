@@ -6,14 +6,25 @@ proxies:
     uuid: "ceab5251-eaa3-4a2f-bdd4-ce9df24d9edd"
     network: "xhttp"
     servername: "login.alfatrud.ru"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     xhttp-opts:
       path: "/api/stream/"
       host: "login.alfatrud.ru"
-      mode: "packet-up"
   - name: "🇷🇺 [WL] Сервер 2"
+    type: vless
+    server: 200.169.179.233
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 129.101.98.60
     port: 443
@@ -27,33 +38,7 @@ proxies:
     reality-opts:
       public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
       short-id: "3992cc7fb9fcbe58"
-  - name: "🇷🇺 [WL] Сервер 3"
-    type: vless
-    server: 85.208.87.222
-    port: 443
-    uuid: "e72f9cd6-9bd2-4aa4-bf99-be60d3dd4ad2"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "expressplitka.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "CYbTcIOofFh-MndCO9czg_mUjmS7x7wUCvUsg4GToTk"
-      short-id: "5a531684"
   - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: 200.169.179.233
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 87.228.56.39
     port: 443
@@ -67,7 +52,7 @@ proxies:
     reality-opts:
       public-key: "e39H8hQXcwfiUnkUOmG0JkBTX5VCxaBQ3_EWEj9PZRc"
       short-id: "e938e26c4425"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 201.24.121.243
     port: 443
@@ -79,7 +64,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "vlgrpc"
-  - name: "🇷🇺 [WL] Сервер 7"
+  - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -91,7 +76,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 8"
+  - name: "🇷🇺 [WL] Сервер 7"
     type: vless
     server: 201.51.12.98
     port: 443
@@ -103,21 +88,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 9"
-    type: vless
-    server: 212.233.90.78
-    port: 443
-    uuid: "9548ef84-b54d-41dc-b17c-9da21d52ba82"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "birch-ledger.justext.space"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
-      short-id: "2c6df23e"
-  - name: "🇷🇺 [WL/AI] Сервер 10"
+  - name: "🇷🇺 [WL/AI] Сервер 8"
     type: vless
     server: 212.41.8.76
     port: 13443
@@ -132,38 +103,47 @@ proxies:
       short-id: "9de815e2"
     grpc-opts:
       grpc-service-name: "grpc"
+  - name: "🇷🇺 [WL] Сервер 9"
+    type: vless
+    server: 95.129.236.117
+    port: 443
+    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
+    network: "ws"
+    servername: "cdn.dash.gearmonster.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/edge/node8/push"
+      headers:
+        Host: "cdn.dash.gearmonster.org"
+  - name: "🇷🇺 [WL] Сервер 10"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 11"
     type: hysteria2
     server: 103.88.243.142
     port: 11592
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 12"
-    type: hysteria2
-    server: srv-17e124.21freedom.net
-    port: 11592
-    password: "41edb44c8e"
-  - name: "🇷🇺 [WL] Сервер 13"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 14"
+  - name: "🇷🇺 [WL/CF] Сервер 12"
     type: vless
-    server: 188.72.112.1
+    server: 31.129.49.103
     port: 443
-    uuid: "29777784-b5ad-4e2a-be7b-335f033ab97c"
-    network: "xhttp"
-    servername: "cdn.oldertown.ru"
-    client-fingerprint: "firefox"
+    uuid: "cd3d8e5c-794f-4c34-8222-59d3e99e35fe"
+    network: "ws"
+    servername: "joeypg.ezbiz.dynv6.net"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v4/media/session/poll"
-      host: "cdn.oldertown.ru"
-      mode: "packet-up"
-  - name: "🇷🇺 [WL] Сервер 15"
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: "joeypg.ezbiz.dynv6.net"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 37.235.247.81
     port: 8443
@@ -177,7 +157,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 16"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 185.231.204.244
     port: 443
@@ -190,7 +170,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Y2uyTCt5ofoFht6Xl-55dBPCBUiYi1fFTVcmZtoiqFw"
-  - name: "🇷🇺 [WL] Сервер 17"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 147.45.47.101
     port: 8443
@@ -204,3 +184,30 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
+  - name: "🇷🇺 [WL] Сервер 16"
+    type: vless
+    server: 94.139.250.226
+    port: 443
+    uuid: "a30903dc-1bf0-0001-8b1b-603a3a56211c"
+    network: "tcp"
+    servername: "net-api-ctl.galioncc.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
+      short-id: "6d2f8a41c9e705b3"
+  - name: "🇷🇺 [WL] Сервер 17"
+    type: vless
+    server: 193.124.33.149
+    port: 443
+    uuid: "01a1e565-380d-7802-8137-2fcfc5d3e1e9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rus-04.samigo.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "5gxxf-4Em4l620r7KaDipVm1A5d2fs2mI8lVJTczfSY"
+      short-id: "af08286bddca467f"
