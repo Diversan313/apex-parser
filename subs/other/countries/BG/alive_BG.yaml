@@ -28,6 +28,20 @@ proxies:
       host: "plaindune.com"
   - name: "🇧🇬 [BL] Сервер 3"
     type: vless
+    server: plaindune.com
+    port: 8443
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "xhttp"
+    servername: "plaindune.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "plaindune.com"
+      mode: "auto"
+  - name: "🇧🇬 [BL] Сервер 4"
+    type: vless
     server: 195.123.226.21
     port: 443
     uuid: "6589c320-db68-43cd-a273-b46299bab355"
@@ -40,17 +54,3 @@ proxies:
     reality-opts:
       public-key: "rabtI-ymNXBUvYYRwAw8DiR-1pdP7U0WPIaCBHEkgzo"
       short-id: "77bb0d07bddbc832"
-  - name: "🇧🇬 [BL/CF] Сервер 4"
-    type: vless
-    server: 185.200.36.36
-    port: 443
-    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
-    network: "ws"
-    servername: "vp58.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "vp58.cc.cd"
