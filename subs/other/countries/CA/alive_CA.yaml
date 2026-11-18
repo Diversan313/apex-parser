@@ -1,29 +1,5 @@
 proxies:
-  - name: "🇨🇦 [WL] Сервер 1"
-    type: vless
-    server: 5.202.75.72
-    port: 8443
-    uuid: "bc984021-669f-4be8-82f1-07dbc9f59c82"
-    network: "tcp"
-    servername: "ca.pvmsolutions.ir"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇨🇦 [BL] Сервер 2"
-    type: vless
-    server: 185.71.216.94
-    port: 2093
-    uuid: "8b7a8f61-74c0-491f-bbba-ea153edb1a4b"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
-      short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇨🇦 [BL] Сервер 1"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -37,19 +13,15 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL/AI] Сервер 4"
-    type: ss
-    server: 15.235.57.6
-    port: 8080
-    password: "kxhnt5jtykd328cg"
-    cipher: "chacha20-ietf-poly1305"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: ss
-    server: 184.107.106.78
-    port: 8388
-    password: "itzvpn@321"
-    cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 6"
+  - name: "🇨🇦 [BL] Сервер 2"
+    type: vmess
+    server: 134.195.196.211
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+  - name: "🇨🇦 [BL] Сервер 3"
     type: vmess
     server: 23.162.200.198
     port: 18000
