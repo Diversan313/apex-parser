@@ -1,20 +1,20 @@
 proxies:
   - name: "🇫🇮 [WL] Сервер 1"
     type: vless
-    server: 85.92.157.67
-    port: 9443
-    uuid: "fad48ef5-444c-4035-bbbc-afbc141bb6ba"
-    network: "xhttp"
-    servername: "fin.krabvpn.pro"
+    server: 90.156.217.101
+    port: 11443
+    uuid: "7bc67c7c-38e6-460f-8a50-bde4cf87cc96"
+    network: "grpc"
+    servername: "nexyonn.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "zd4L59ejBo94N8N9GQtZMox2eBBF9TQf2TLyIgpwlCg"
-      short-id: "fd7624659f1e7d66"
-    xhttp-opts:
-      path: "/assets/246a109dceaa6b7832a98d17"
-      mode: "auto"
+      public-key: "Ju_5v-rynUwHXyMxi6hW_mYtS6VhKVKXIS_hETsVVE4"
+      short-id: "1a90ff47cb2e6d08"
+    grpc-opts:
+      grpc-service-name: "/v1/segment/9f3c1a7be04d2856/Tun|Fetch"
+      grpc-mode: "multi"
   - name: "🇫🇮 [WL/AI] Сервер 2"
     type: vless
     server: 109.71.245.99
@@ -45,13 +45,20 @@ proxies:
     xhttp-opts:
       path: "/029d7a23f5ba"
       mode: "auto"
-  - name: "🇫🇮 [WL] Сервер 4"
-    type: hysteria2
-    server: 176.108.240.182
-    port: 443
-    password: "5760fb84-06f8-0001-890a-3d66044897ce"
-    sni: "mwtjc-ru-73sb.my-fade.cloud"
-    fingerprint: "b8414477e40fefd0518261802aeeec0251134eeeb5fb0cda665889061482bc99"
+  - name: "🇫🇮 [BL] Сервер 4"
+    type: vless
+    server: 141.227.170.220
+    port: 8443
+    uuid: "6c077993-952c-4318-9e93-89056a207a9b"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+      short-id: "6ba85179e30d4fc2"
   - name: "🇫🇮 [BL] Сервер 5"
     type: vless
     server: 45.38.143.210
@@ -67,18 +74,18 @@ proxies:
       short-id: "67ece882d65d0f1a"
   - name: "🇫🇮 [BL] Сервер 6"
     type: vless
-    server: 141.227.170.220
-    port: 8443
-    uuid: "6c077993-952c-4318-9e93-89056a207a9b"
+    server: 107.181.151.128
+    port: 443
+    uuid: "8cc7d0fc-1b83-4ee3-b51d-8a03a9b19435"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "apple.com"
-    client-fingerprint: "chrome"
+    servername: "www.microsoft.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-      short-id: "6ba85179e30d4fc2"
+      public-key: "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s"
+      short-id: "87174b37ce3b"
   - name: "🇫🇮 [BL] Сервер 7"
     type: vless
     server: 138.124.80.29
@@ -168,3 +175,18 @@ proxies:
     tls: true
     reality-opts:
       public-key: "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"
+  - name: "🇫🇮 [BL] Сервер 14"
+    type: vless
+    server: 178.17.53.154
+    port: 48982
+    uuid: "ea1bee20-9217-42c0-acee-d12bf0c42602"
+    network: "xhttp"
+    servername: "cdn6-91.yahoo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "A1ygNS8bIvKp7ZlUnjjHX_Z2AS_e4suvSs_IkWICvGE"
+    xhttp-opts:
+      path: "/"
+      mode: "auto"
