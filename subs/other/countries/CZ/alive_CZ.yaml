@@ -15,20 +15,6 @@ proxies:
       short-id: "23d0950d60bc0d5b"
   - name: "🇨🇿 [BL] Сервер 2"
     type: vless
-    server: 83.141.92.168
-    port: 443
-    uuid: "a7595994-695d-484e-bfcb-e9fbb73cfa39"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "sladovna.russianpiwo.fun"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
-      short-id: "7a7d19880a9ee786"
-  - name: "🇨🇿 [BL] Сервер 3"
-    type: vless
     server: 189.74.118.4
     port: 443
     uuid: "5d89e94f-9de8-43d8-83c8-ae09a2495bdd"
@@ -39,6 +25,20 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "r7Kp4mN9tQ2v"
+  - name: "🇨🇿 [BL] Сервер 3"
+    type: vless
+    server: 83.141.92.168
+    port: 443
+    uuid: "a7595994-695d-484e-bfcb-e9fbb73cfa39"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sladovna.russianpiwo.fun"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
+      short-id: "7a7d19880a9ee786"
   - name: "🇨🇿 [BL] Сервер 4"
     type: vless
     server: 212.102.38.25
@@ -53,3 +53,29 @@ proxies:
     reality-opts:
       public-key: "23cb4W9THzBKsrECsLh-A_FcKZfkAtUONoDze8-GnQE"
       short-id: "e90360ec7cc61b20"
+  - name: "🇨🇿 [BL] Сервер 5"
+    type: vless
+    server: 13.143.183.129
+    port: 8443
+    uuid: "12910384-1ef8-40a3-818a-57277063ea66"
+    network: "grpc"
+    servername: "kk-58418b.testkknegr.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "vlgrpc"
+      grpc-mode: "gun"
+  - name: "🇨🇿 [BL/CF] Сервер 6"
+    type: vless
+    server: 91.199.147.41
+    port: 443
+    uuid: "4d945644-69ab-47e0-98b3-d43a6313135d"
+    network: "ws"
+    servername: "mhoX6Xz96zGe3qv5HISuFj9B.paGeS.DEV"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/vl/SaXqikbSPA3ImtmZKAFin?ed=2560fp=chrome"
+      headers:
+        Host: "mhoX6Xz96zGe3qv5HISuFj9B.paGeS.DEV"
