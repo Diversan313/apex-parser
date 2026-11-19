@@ -18,12 +18,12 @@ proxies:
       mode: "packet-up"
   - name: "🇱🇹 [BL] Сервер 2"
     type: vless
-    server: 84.32.83.197
+    server: 84.32.51.135
     port: 443
     uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
-    network: "raw"
-    servername: "api-dns-gw.galioncc.com"
-    client-fingerprint: "firefox"
+    network: "tcp"
+    servername: "svc-io-mgr.galioncc.com"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
@@ -44,12 +44,12 @@ proxies:
       short-id: "a7d309e4c16b825f"
   - name: "🇱🇹 [BL] Сервер 4"
     type: vless
-    server: 84.32.51.135
+    server: 84.32.83.197
     port: 443
     uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
-    network: "tcp"
-    servername: "svc-io-mgr.galioncc.com"
-    client-fingerprint: "edge"
+    network: "raw"
+    servername: "api-dns-gw.galioncc.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -72,3 +72,31 @@ proxies:
       path: "/edge/60c2864a48bb/"
       host: "cdn-edge-07.strixedge.cc"
       mode: "packet-up"
+  - name: "🇱🇹 [BL] Сервер 6"
+    type: vless
+    server: 188.214.129.133
+    port: 443
+    uuid: "fd90e601-a56c-42b8-aab7-aa02d26fcb04"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "app.streamru15.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "bkKOiMl4vnU10lZSEEL0Uj5dqKKNXW8I2t86Fo9sVmw"
+      short-id: "7594d4e0"
+  - name: "🇱🇹 [BL] Сервер 7"
+    type: vless
+    server: app.streamru15.net
+    port: 443
+    uuid: "fd90e601-a56c-42b8-aab7-aa02d26fcb04"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "app.streamru15.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "bkKOiMl4vnU10lZSEEL0Uj5dqKKNXW8I2t86Fo9sVmw"
+      short-id: "7594d4e0"
