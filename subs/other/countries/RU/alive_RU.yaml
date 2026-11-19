@@ -1,43 +1,45 @@
 proxies:
   - name: "🇷🇺 [WL] Сервер 1"
     type: vless
-    server: 89.208.228.81
-    port: 7443
-    uuid: "7bc67c7c-38e6-460f-8a50-bde4cf87cc96"
-    network: "grpc"
-    servername: "nexyonn.com"
-    client-fingerprint: "firefox"
+    server: 185.86.145.173
+    port: 443
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "xhttp"
+    servername: "wholebeam.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "Ju_5v-rynUwHXyMxi6hW_mYtS6VhKVKXIS_hETsVVE4"
-      short-id: "1a90ff47cb2e6d08"
-    grpc-opts:
-      grpc-service-name: "/v1/segment/9f3c1a7be04d2856/Tun|Fetch"
-      grpc-mode: "multi"
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "wholebeam.com"
+      mode: "auto"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
-    server: 109.120.180.158
-    port: 7443
-    uuid: "7bc67c7c-38e6-460f-8a50-bde4cf87cc96"
+    server: 185.86.145.173
+    port: 443
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "xhttp"
+    servername: "wholebeam.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/upload"
+      host: "wholebeam.com"
+  - name: "🇷🇺 [WL] Сервер 3"
+    type: vless
+    server: 78.159.245.147
+    port: 445
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
     network: "grpc"
-    servername: "nexyonn.com"
+    servername: "passport.yandex.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "Ju_5v-rynUwHXyMxi6hW_mYtS6VhKVKXIS_hETsVVE4"
-      short-id: "1a90ff47cb2e6d08"
+      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
     grpc-opts:
-      grpc-service-name: "/v1/segment/9f3c1a7be04d2856/Tun|Fetch"
-      grpc-mode: "multi"
-  - name: "🇷🇺 [WL] Сервер 3"
-    type: hysteria2
-    server: 168.113.254.247
-    port: 443
-    password: "00717a40-f058-0001-bd8b-946b3d578273"
-    sni: "vcerx-ru-67sb.my-fade.cloud"
-    fingerprint: "c95e0c5630fadff7db0b6954ca210b104a9ea5a913e960a3ccb6d821664968e6"
+      grpc-service-name: "grpc"
   - name: "🇷🇺 [WL] Сервер 4"
     type: vless
     server: 200.169.179.233
@@ -52,7 +54,7 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 5"
     type: vless
-    server: 129.101.98.60
+    server: ru7e2bab87cc39.eu-cdn539.com
     port: 443
     uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
     network: "tcp"
@@ -66,6 +68,64 @@ proxies:
       short-id: "3992cc7fb9fcbe58"
   - name: "🇷🇺 [WL] Сервер 6"
     type: vless
+    server: 129.101.98.60
+    port: 443
+    uuid: "e75ad2eb-6c1f-45ce-8023-f5f10875df66"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ru7e2bab87cc39.eu-cdn539.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lews1n_fypGexd_dMofEO4Vy1ULsFeVIFa90MMY3pm4"
+      short-id: "3992cc7fb9fcbe58"
+  - name: "🇷🇺 [WL] Сервер 7"
+    type: vless
+    server: 168.113.254.183
+    port: 443
+    uuid: "1fdf4166-499a-0001-af1d-5bb01e5805fb"
+    network: "tcp"
+    servername: "xykmh-ru-70sb.my-fade.cloud"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 8"
+    type: vless
+    server: 168.113.254.183
+    port: 443
+    uuid: "d55c6261-bc30-0001-8cae-fe82530e4c34"
+    network: "tcp"
+    servername: "xykmh-ru-70sb.my-fade.cloud"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 9"
+    type: hysteria2
+    server: 168.113.254.183
+    port: 443
+    password: "274cf8bb-ff99-0001-81b0-17273a3b7692"
+    sni: "xykmh-ru-70sb.my-fade.cloud"
+    fingerprint: "e53ee5f3142e0ce20b4b9d7041dd54c9921b4e215a9eae54440236affe7bb4a2"
+  - name: "🇷🇺 [WL] Сервер 10"
+    type: hysteria2
+    server: 168.113.254.183
+    port: 443
+    password: "3098af7f-dd3e-0001-b8e5-05a194206ac0"
+    sni: "xykmh-ru-70sb.my-fade.cloud"
+    fingerprint: "e53ee5f3142e0ce20b4b9d7041dd54c9921b4e215a9eae54440236affe7bb4a2"
+  - name: "🇷🇺 [WL] Сервер 11"
+    type: vless
+    server: 176.108.240.182
+    port: 443
+    uuid: "3d18d21d-3d23-0001-85f1-cdac7190753f"
+    network: "tcp"
+    servername: "mwtjc-ru-73sb.my-fade.cloud"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: vless
     server: 201.24.121.243
     port: 443
     uuid: "32b5ca9b-3f81-4031-965d-e8b074216e8d"
@@ -76,7 +136,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "vlgrpc"
-  - name: "🇷🇺 [WL] Сервер 7"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -88,7 +148,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 8"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 201.51.12.98
     port: 443
@@ -100,53 +160,13 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 9"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: hysteria2
     server: 103.88.243.142
     port: 11592
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: vless
-    server: 176.57.215.54
-    port: 37508
-    uuid: "ef02c262-77a0-429f-8b8f-9eb6ad18f8c0"
-    network: "grpc"
-    servername: "www.oracle.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_Iqh4SUi85b59zoNhLWVZrSGMNa45OTgK3fWrjZI0l8"
-      short-id: "d3"
-  - name: "🇷🇺 [WL] Сервер 11"
-    type: vless
-    server: 78.159.245.147
-    port: 445
-    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
-    network: "grpc"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
-    grpc-opts:
-      grpc-service-name: "grpc"
-  - name: "🇷🇺 [WL] Сервер 12"
-    type: vless
-    server: 185.86.145.173
-    port: 443
-    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
-    network: "xhttp"
-    servername: "wholebeam.com"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/upload"
-      host: "wholebeam.com"
-      mode: "auto"
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
     server: 147.45.47.101
     port: 8443
@@ -160,7 +180,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 14"
+  - name: "🇷🇺 [WL] Сервер 17"
     type: vless
     server: 37.235.247.81
     port: 8443
@@ -174,3 +194,9 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
+  - name: "🇷🇺 [WL] Сервер 18"
+    type: ss
+    server: 45.135.134.68
+    port: 18443
+    password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
+    cipher: "aes-256-gcm"

@@ -1,33 +1,38 @@
 proxies:
   - name: "🇱🇹 [WL] Сервер 1"
     type: vless
+    server: 81.163.22.109
+    port: 443
+    uuid: "aae24578-9f15-0001-a5b1-4f46630e5ef8"
+    network: "tcp"
+    servername: "jissa-ru-wl-47sel.my-fade.cloud"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+  - name: "🇱🇹 [WL] Сервер 2"
+    type: vless
     server: 168.113.254.247
     port: 443
     uuid: "3150a468-88fd-0001-af91-4aef86004812"
     network: "tcp"
     servername: "vcerx-ru-67sb.my-fade.cloud"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇱🇹 [WL] Сервер 2"
-    type: hysteria2
-    server: 168.113.254.183
-    port: 443
-    password: "274cf8bb-ff99-0001-81b0-17273a3b7692"
-    sni: "xykmh-ru-70sb.my-fade.cloud"
-    fingerprint: "e53ee5f3142e0ce20b4b9d7041dd54c9921b4e215a9eae54440236affe7bb4a2"
-  - name: "🇱🇹 [BL] Сервер 3"
+  - name: "🇱🇹 [BL/AI] Сервер 3"
     type: vless
-    server: 84.32.51.135
-    port: 443
-    uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
+    server: 138.124.9.201
+    port: 8443
+    uuid: "74af70c0-bea7-4412-9a1a-f7eab9c91ef8"
     network: "tcp"
-    servername: "svc-io-mgr.galioncc.com"
-    client-fingerprint: "edge"
+    flow: "xtls-rprx-vision"
+    servername: "admin.mistral.ai"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
-      short-id: "a7d309e4c16b825f"
+      public-key: "-rXSc4xMnB2OEs-Z628O2u3OPdMDL1h5mQvSZf5Nt1Q"
+      short-id: "4d3affb557796d1c"
   - name: "🇱🇹 [BL] Сервер 4"
     type: vless
     server: 84.32.209.118
@@ -54,17 +59,3 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "a7d309e4c16b825f"
-  - name: "🇱🇹 [BL/AI] Сервер 6"
-    type: vless
-    server: 138.124.9.201
-    port: 8443
-    uuid: "74af70c0-bea7-4412-9a1a-f7eab9c91ef8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "admin.mistral.ai"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "-rXSc4xMnB2OEs-Z628O2u3OPdMDL1h5mQvSZf5Nt1Q"
-      short-id: "4d3affb557796d1c"
