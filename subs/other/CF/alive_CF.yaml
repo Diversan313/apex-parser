@@ -1,26 +1,29 @@
 proxies:
-  - name: "🇩🇪 [CF] Сервер 1"
+  - name: "🇸🇪 [CF] Сервер 1"
     type: vless
-    server: 2.26.251.236
+    server: 92.223.84.254
     port: 443
-    uuid: "c16e8cdb-65dd-4049-bc65-14c051b8a6c6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "mental-deprivation.ru"
+    uuid: "740b2630-b42d-425c-bacd-37e7e30d78f1"
+    network: "ws"
+    servername: "subgift.gcorecdn.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1iVMMhJZgXHRY7tRlR-1kypF0YeaBcB7EjcfHRsYZX4"
-      short-id: "4ff31b18d1bd8227"
-  - name: "🇩🇪 [CF] Сервер 2"
+    ws-opts:
+      path: "/t.me-SubGift"
+      headers:
+        Host: "subgift.gcorecdn.com"
+  - name: "🇨🇭 [CF] Сервер 2"
     type: vless
-    server: 31.59.179.215
+    server: 87.120.222.199
     port: 443
-    uuid: "83d8aaef-2f30-4e10-b338-6c77d19633f1"
-    network: "tcp"
-    servername: "dl-cdn.alpinelinux.org"
-    client-fingerprint: "firefox"
+    uuid: "3bbc98cb-46b1-4441-9d55-02a100000020"
+    network: "ws"
+    servername: "cf-smart-354.pnihastam7021.workers.dev"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "wfp4jyEksrozyS739zqIsNXySoqeEVtaQlVmeNeLp28"
+    ws-opts:
+      path: "/sync"
+      headers:
+        Host: "cf-smart-354.pnihastam7021.workers.dev"
