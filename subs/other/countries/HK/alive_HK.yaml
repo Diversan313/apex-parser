@@ -1,6 +1,31 @@
 proxies:
   - name: "🇭🇰 [BL] Сервер 1"
     type: vless
+    server: 31.58.213.201
+    port: 443
+    uuid: "fd90e601-a56c-42b8-aab7-aa02d26fcb04"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "app.streamru1.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+  - name: "🇭🇰 [BL] Сервер 2"
+    type: vless
+    server: 8.217.1.203
+    port: 8443
+    uuid: "8b17beac-b143-447d-aa68-14cbb121a602"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "74P0QFvaK6B13rHsxR_t0lqRlg4YLuORD4VaHr5Jd38"
+      short-id: "0bf55f64"
+  - name: "🇭🇰 [BL] Сервер 3"
+    type: vless
     server: 2.26.204.46
     port: 31001
     uuid: "12a4f736-2238-49ee-831f-5516f15cc951"
@@ -13,7 +38,7 @@ proxies:
     reality-opts:
       public-key: "lzpIiMqHXas_qayw-HvrySb78FNkVroBOqniwqPXPzY"
       short-id: "39793bc4708abbbb"
-  - name: "🇭🇰 [BL] Сервер 2"
+  - name: "🇭🇰 [BL] Сервер 4"
     type: vless
     server: 45.192.193.54
     port: 35600
@@ -26,60 +51,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fJwbUNPAxu-CcoWnzWrvtDkX7QMDvJwFGWzJ3lDcFC4"
-  - name: "🇭🇰 [BL] Сервер 3"
-    type: vless
-    server: free.fugui.lol
-    port: 47396
-    uuid: "ead3595f-4020-4e76-a3ec-c248e1a2f2f7"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "swdist.apple.com"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IjWYbHNrZb3UCQxsTJyekEOA3tHq42L6Jw3O8MmLYVQ"
-      short-id: "fa514b83"
-  - name: "🇭🇰 [BL] Сервер 4"
-    type: vless
-    server: 1.160.1.6
-    port: 47396
-    uuid: "ead3595f-4020-4e76-a3ec-c248e1a2f2f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "swdist.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IjWYbHNrZb3UCQxsTJyekEOA3tHq42L6Jw3O8MmLYVQ"
-      short-id: "fa514b83"
   - name: "🇭🇰 [BL] Сервер 5"
-    type: vless
-    server: 31.58.213.201
-    port: 443
-    uuid: "fd90e601-a56c-42b8-aab7-aa02d26fcb04"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "app.streamru1.com"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-  - name: "🇭🇰 [BL] Сервер 6"
-    type: vless
-    server: 43.162.217.104
-    port: 443
-    uuid: "9195e0f1-f466-4e69-838f-a95519b5d45e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dl.google.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qzoG-cG8dG_C1T2tsWnWgooE9eekntARY0fVGIyg4Fg"
-      short-id: "c11a9913"
-  - name: "🇭🇰 [BL] Сервер 7"
     type: hysteria2
     server: 152.32.254.68
     port: 5010
@@ -87,24 +59,10 @@ proxies:
     sni: "nas.aizhzo.com"
     obfs: "salamander"
     obfs-password: "7M4RXPFcQyQEGbkxBPfXo4bilMhCW2U9"
-  - name: "🇭🇰 [BL] Сервер 8"
+  - name: "🇭🇰 [BL] Сервер 6"
     type: hysteria2
     server: 82.152.161.146
     port: 10086
     password: "VR7zICGZd3cB34G0FxSYQra3"
     sni: "pic.bstarstatic.com"
     fingerprint: "384dfd7165377a28b00c8feefed52b59abd376248b99d06495349c2ab24586bc"
-  - name: "🇭🇰 [BL/CF] Сервер 9"
-    type: vless
-    server: 140.235.98.183
-    port: 443
-    uuid: "0bb8b560-b056-4245-8b9d-231a0a78c54b"
-    network: "ws"
-    servername: "vip.freevpn.cloudns.biz"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/0bb8b560-b056-4245-8b9d-231a0a78c54b?ed=2048"
-      headers:
-        Host: "vip.freevpn.cloudns.biz"
