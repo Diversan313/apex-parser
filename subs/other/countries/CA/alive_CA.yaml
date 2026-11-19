@@ -1,5 +1,32 @@
 proxies:
-  - name: "🇨🇦 [BL] Сервер 1"
+  - name: "🇨🇦 [WL/CF] Сервер 1"
+    type: vless
+    server: 185.241.7.178
+    port: 443
+    uuid: "0c492b73-98de-4ad2-bbe9-eb25661d17ac"
+    network: "ws"
+    servername: "byyzz.pages.dev"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/?proxyip=proxyip.oracle.cmliussss.net"
+      headers:
+        Host: "byyzz.pages.dev"
+  - name: "🇨🇦 [BL] Сервер 2"
+    type: vless
+    server: 209.200.246.148
+    port: 443
+    uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
+      short-id: "f98843107912e782"
+  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 185.71.216.95
     port: 2093
@@ -13,7 +40,7 @@ proxies:
     reality-opts:
       public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
       short-id: "8a9725533854a7e8"
-  - name: "🇨🇦 [BL] Сервер 2"
+  - name: "🇨🇦 [BL] Сервер 4"
     type: ss
     server: 149.22.95.183
     port: 443

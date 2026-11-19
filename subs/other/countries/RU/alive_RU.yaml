@@ -15,19 +15,6 @@ proxies:
       short-id: "3992cc7fb9fcbe58"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
-    server: 81.200.152.153
-    port: 443
-    uuid: "955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "gmbasdasd.wey-land.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "t2iopaZn9-fADmIi4taXbGUV6wFTFku4eGi8KISuZAM"
-  - name: "🇷🇺 [WL] Сервер 3"
-    type: vless
     server: 89.223.124.93
     port: 443
     uuid: "955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6"
@@ -39,6 +26,19 @@ proxies:
     tls: true
     reality-opts:
       public-key: "rLkjhzhSAJrey5Qv3624_5B-MpViafV2dDdDCnqn_l4"
+  - name: "🇷🇺 [WL] Сервер 3"
+    type: vless
+    server: 81.200.152.153
+    port: 443
+    uuid: "955d8dc7-5e3b-40ac-b2bb-bd8aa20fc7e6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gmbasdasd.wey-land.net"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "t2iopaZn9-fADmIi4taXbGUV6wFTFku4eGi8KISuZAM"
   - name: "🇷🇺 [WL] Сервер 4"
     type: vless
     server: 200.169.179.233
@@ -101,12 +101,6 @@ proxies:
     reality-opts:
       public-key: "cYVz2YZI-PELLGGm38rrGcipPvnWcSMswOh4j536bmg"
   - name: "🇷🇺 [WL] Сервер 9"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 212.233.90.78
     port: 443
@@ -114,25 +108,19 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "birch-ledger.justext.space"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
       short-id: "2c6df23e"
+  - name: "🇷🇺 [WL] Сервер 10"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 11"
-    type: vless
-    server: 147.45.175.81
-    port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "grpc"
-    servername: "xsru1.ddnsfree.com"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "grpc-ru"
-  - name: "🇷🇺 [WL] Сервер 12"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -146,6 +134,20 @@ proxies:
       path: "/wsru"
       headers:
         Host: "xsru2.freeddns.org"
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: vless
+    server: 147.45.175.81
+    port: 443
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
+    network: "ws"
+    servername: "xsru1.ddnsfree.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/wsru"
+      headers:
+        Host: "xsru1.ddnsfree.com"
   - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 147.45.47.101
@@ -179,10 +181,4 @@ proxies:
     server: 45.147.200.232
     port: 18443
     password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
-    cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL/AI] Сервер 16"
-    type: ss
-    server: 48.103.218.241
-    port: 18443
-    password: "Lpq5UPVHtQYiuB9jEUNc2WkeIYCUH9DE"
     cipher: "aes-256-gcm"

@@ -6,10 +6,11 @@ proxies:
     uuid: "64726966-0000-4000-8000-740000000000"
     network: "ws"
     servername: "parsa-panel-dy55x.railway1385-2a46.workers.dev"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/fp=firefox"
+      path: "/"
       headers:
         Host: "parsa-panel-dy55x.railway1385-2a46.workers.dev"
   - name: "🇫🇷 [WL/CF] Сервер 2"
@@ -19,11 +20,10 @@ proxies:
     uuid: "64726966-0000-4000-8000-740000000000"
     network: "ws"
     servername: "parsa-panel-dy55x.railway1385-2a46.workers.dev"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/fp=firefox"
       headers:
         Host: "parsa-panel-dy55x.railway1385-2a46.workers.dev"
   - name: "🇫🇷 [BL] Сервер 3"
@@ -42,6 +42,20 @@ proxies:
       short-id: "e6"
   - name: "🇫🇷 [BL] Сервер 4"
     type: vless
+    server: 160.123.255.172
+    port: 443
+    uuid: "d890b69b-049a-4a3f-b429-eacec51644d6"
+    network: "xhttp"
+    servername: "mama147.baklajann.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/"
+      host: "mama147.baklajann.ru"
+      mode: "auto"
+  - name: "🇫🇷 [BL] Сервер 5"
+    type: vless
     server: 152.228.139.33
     port: 35108
     uuid: "81dc0b61-f9fe-4ad6-8b4e-b8c067b73712"
@@ -56,7 +70,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc-common3"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 6"
     type: vless
     server: 31.97.199.38
     port: 8443
@@ -70,32 +84,20 @@ proxies:
     reality-opts:
       public-key: "GcraWawjMdjBJLD_HvSZ3BQuHvFnSWjbesCkMeCaITY"
       short-id: "5b4a12ef7e1694dd"
-  - name: "🇫🇷 [BL] Сервер 6"
-    type: vless
-    server: fr.abbaas.net
-    port: 443
-    uuid: "6962c372-27da-56d6-9d1f-8041abb7538e"
-    network: "raw"
-    servername: "wxug.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "wBh3jtk45kBonp2-uVqsx71F4ziNH7vZcU6DAC6t2xs"
-      short-id: "0ccc9342fa5e7f"
   - name: "🇫🇷 [BL] Сервер 7"
     type: vless
-    server: 83.136.210.129
+    server: 145.223.68.58
     port: 443
-    uuid: "6962c372-27da-56d6-9d1f-8041abb7538e"
-    network: "tcp"
-    servername: "wxug.com"
+    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "wBh3jtk45kBonp2-uVqsx71F4ziNH7vZcU6DAC6t2xs"
-      short-id: "0ccc9342fa5e7f"
+      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
+      short-id: "a44ff7d2e80213c2"
   - name: "🇫🇷 [BL] Сервер 8"
     type: vless
     server: 144.31.214.68
@@ -150,20 +152,19 @@ proxies:
     reality-opts:
       public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
       short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL/AI] Сервер 12"
     type: vless
-    server: 138.124.251.98
+    server: ai.smrtai.top
     port: 443
-    uuid: "1d1eda2e-0bd7-4478-877b-1c5425c6c4dd"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tradingview.com"
+    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
+    network: "raw"
+    servername: "www.cloudflare.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "yr_opKG6DGTppNDXkk-DhGSYJZXbb9o-caexk2FZO38"
-      short-id: "8f3c6e2a1b5d4f09"
+      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
+      short-id: "086bf957"
   - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 62.210.91.10
@@ -226,22 +227,6 @@ proxies:
       path: "/OCrp5Ajs"
   - name: "🇫🇷 [BL] Сервер 17"
     type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 18"
-    type: vless
     server: 178.214.116.21
     port: 8443
     uuid: "2cbba076-cadf-4f45-9335-ab1dc46c8d04"
@@ -257,7 +242,7 @@ proxies:
       path: "/edge/249b429b4b65/"
       host: "stream-fr1.deployr.cc"
       mode: "packet-up"
-  - name: "🇫🇷 [BL] Сервер 19"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: vless
     server: 178.214.116.7
     port: 8443
