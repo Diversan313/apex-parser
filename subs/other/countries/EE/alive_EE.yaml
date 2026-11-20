@@ -1,24 +1,28 @@
 proxies:
   - name: "🇪🇪 [WL] Сервер 1"
-    type: hysteria2
+    type: vless
     server: 84.38.189.122
     port: 443
-    password: "b280a29b-a3d9-0001-8a81-198855a17d57"
-    sni: "shyrc-ru-75sel.my-fade.cloud"
-  - name: "🇪🇪 [WL] Сервер 2"
-    type: vless
-    server: 185.178.208.167
-    port: 443
-    uuid: "c2b17066-5386-0001-803b-5e652c0528f9"
-    network: "ws"
-    servername: "trx.tools"
-    client-fingerprint: "chrome"
+    uuid: "240fb69e-a0c3-0001-825d-cfc876846ea4"
+    network: "tcp"
+    servername: "shyrc-ru-75sel.my-fade.cloud"
+    client-fingerprint: "qq"
     udp: true
     tls: true
-    ws-opts:
-      path: "/session"
-      headers:
-        Host: "api.14887277.xyz"
+  - name: "🇪🇪 [BL] Сервер 2"
+    type: vless
+    server: 80.79.121.156
+    port: 443
+    uuid: "6ab79fec-ca02-447b-b7be-5945f6e6ea8f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "archive-eu-west.livemusic.ac"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "x9HClr5eRPhMPuBIndkjqFU_0D0M-p4sJVAxuTP68kM"
+      short-id: "dcfad1cc10d0d15b"
   - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 95.85.243.72
@@ -32,27 +36,3 @@ proxies:
     reality-opts:
       public-key: "m3opvubdy_gjBiBkXnAw3eDUP4alVeVWxKkvZHIINjs"
       short-id: "426165a0badade80"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: vless
-    server: 136.148.83.69
-    port: 443
-    uuid: "666821a2-5c3d-0001-a56f-5a3a562d7324"
-    network: "tcp"
-    servername: "szqbx-ru-77dc.my-fade.cloud"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-  - name: "🇪🇪 [BL] Сервер 5"
-    type: vless
-    server: 80.79.121.156
-    port: 443
-    uuid: "6ab79fec-ca02-447b-b7be-5945f6e6ea8f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "archive-eu-west.livemusic.ac"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "x9HClr5eRPhMPuBIndkjqFU_0D0M-p4sJVAxuTP68kM"
-      short-id: "dcfad1cc10d0d15b"
