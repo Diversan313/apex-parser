@@ -1,11 +1,36 @@
 proxies:
   - name: "🇭🇰 [BL] Сервер 1"
+    type: vless
+    server: 156.245.234.97
+    port: 2096
+    uuid: "93c0244e-6eb2-41bc-ad9c-1a7606747e13"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "lyhk.mihoyo.site"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇭🇰 [BL] Сервер 2"
+    type: vless
+    server: 2.26.204.46
+    port: 31001
+    uuid: "12a4f736-2238-49ee-831f-5516f15cc951"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "mensura.cdn-apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lzpIiMqHXas_qayw-HvrySb78FNkVroBOqniwqPXPzY"
+      short-id: "39793bc4708abbbb"
+  - name: "🇭🇰 [BL] Сервер 3"
     type: hysteria2
     server: 31.59.169.225
     port: 443
     password: "ca60984f-b1f0-4073-bd33-4c75168f749a"
     sni: "ge-beer-1.fantoff.online"
-  - name: "🇭🇰 [BL] Сервер 2"
+  - name: "🇭🇰 [BL] Сервер 4"
     type: vless
     server: 45.192.193.54
     port: 35600
@@ -18,17 +43,3 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fJwbUNPAxu-CcoWnzWrvtDkX7QMDvJwFGWzJ3lDcFC4"
-  - name: "🇭🇰 [BL] Сервер 3"
-    type: vless
-    server: 156.226.168.221
-    port: 35193
-    uuid: "35cbae61-ee10-4cb9-abb8-4950b35e9851"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "d_pn_DMaIxhCkNh80h0Mc7nP94hrlN--I8liOIREDxE"
-      short-id: "e8daed2d"
