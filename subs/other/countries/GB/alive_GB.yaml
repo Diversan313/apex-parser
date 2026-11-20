@@ -1,31 +1,19 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 185.151.243.186
+    server: 194.156.26.125
     port: 443
-    uuid: "45b5fdbe-c799-0001-8c64-2ad6bf39bb18"
-    network: "tcp"
-    servername: "piodr-ru-74sel.my-fade.cloud"
+    uuid: "cc99c57d-6c93-4031-9153-73f510636533"
+    network: "xhttp"
+    servername: "mama120.baklajann.ru"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇬🇧 [WL] Сервер 2"
-    type: vless
-    server: 37.18.14.246
-    port: 1505
-    uuid: "05f6e764-adf3-4c9d-81e7-099a9ce027df"
-    network: "grpc"
-    servername: "iv.kommersant.ru"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "5nRL3eh_pQWHdej0It-V9mOapVLSi4PgkgjG9iqhpSw"
-      short-id: "a5bd715862513387"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇬🇧 [BL] Сервер 3"
+    xhttp-opts:
+      path: "/"
+      host: "mama120.baklajann.ru"
+      mode: "auto"
+  - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 193.163.203.170
     port: 443
@@ -39,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "GCCZ1ZZjB_nj7yxqFi22bIIWWr_G6rnWUzDcssN_40o"
       short-id: "b28db60d77c50b4f"
-  - name: "🇬🇧 [BL] Сервер 4"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 193.188.21.253
     port: 10444
@@ -53,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 213.176.92.168
     port: 10444
@@ -67,7 +55,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -81,20 +69,33 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 7"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
-    server: 83.147.18.3
+    server: 13.143.187.220
     port: 443
-    uuid: "9f61cdf4-810d-4052-bbc7-2da0c8e20104"
+    uuid: "66c78912-4e2d-41dc-8742-aaae2590804e"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    servername: "fi-s1.kadrhub.tech"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "eDzVz3bxkv3IoN3BUCa_aA-RicoeG7ACylYSnmS2Pgg"
+  - name: "🇬🇧 [BL] Сервер 7"
+    type: vless
+    server: 144.48.11.146
+    port: 43000
+    uuid: "4a923161-156f-4914-8cac-762fb2433bfb"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "144.48.11.146"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
-      short-id: "fd8cf7e1173f0edb"
+      public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
+      short-id: "ee4ea980"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 104.222.183.180
@@ -131,13 +132,27 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "212.192.156.15"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "a9O5evb8g385KJm77j9SKlB7MvHzUBGes6c8BAxyO1U"
       short-id: "5fd3245e96291c37"
   - name: "🇬🇧 [BL] Сервер 11"
+    type: vless
+    server: uk1.connectsuite.org
+    port: 443
+    uuid: "fda89998-7e9a-4494-857a-cd0d00661b58"
+    network: "ws"
+    servername: "uk1.connectsuite.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/cdn-cgi/ws"
+      headers:
+        Host: "uk1.connectsuite.org"
+  - name: "🇬🇧 [BL] Сервер 12"
     type: vless
     server: 95.163.153.141
     port: 8443
@@ -152,26 +167,53 @@ proxies:
       short-id: "c9ea2355ddeab39b"
     xhttp-opts:
       path: "/"
-  - name: "🇬🇧 [BL] Сервер 12"
+  - name: "🇬🇧 [BL] Сервер 13"
     type: vless
-    server: 13.143.187.220
-    port: 443
-    uuid: "66c78912-4e2d-41dc-8742-aaae2590804e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fi-s1.kadrhub.tech"
+    server: at-40-xckh.wave-inside.online
+    port: 8444
+    uuid: "0f2dc4af-951f-4690-922e-07c6e8bab26a"
+    network: "xhttp"
+    servername: "at-40-xckh.wave-inside.online"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "eDzVz3bxkv3IoN3BUCa_aA-RicoeG7ACylYSnmS2Pgg"
-  - name: "🇬🇧 [BL] Сервер 13"
+    xhttp-opts:
+      path: "/xh"
+      host: "at-40-xckh.wave-inside.online"
+      mode: "auto"
+  - name: "🇬🇧 [BL] Сервер 14"
+    type: vless
+    server: fr-41-tapy.wave-inside.online
+    port: 8444
+    uuid: "0f2dc4af-951f-4690-922e-07c6e8bab26a"
+    network: "xhttp"
+    servername: "fr-41-tapy.wave-inside.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/xh"
+      host: "fr-41-tapy.wave-inside.online"
+      mode: "auto"
+  - name: "🇬🇧 [BL] Сервер 15"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 16"
     type: ss
     server: 141.98.101.181
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
-  - name: "🇬🇧 [BL] Сервер 14"
+  - name: "🇬🇧 [BL] Сервер 17"
+    type: ss
+    server: 141.98.101.179
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 18"
     type: ss
     server: 141.98.101.178
     port: 443

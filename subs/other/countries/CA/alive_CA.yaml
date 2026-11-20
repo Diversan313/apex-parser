@@ -7,15 +7,51 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.kpn.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     reality-opts:
       public-key: "FZvOenkKu_0DspnZA7Nc7xgWhR0_Z0MvqhntPqPchV4"
       short-id: "40a4615253b8f75d"
   - name: "🇨🇦 [BL] Сервер 2"
+    type: vless
+    server: 209.200.246.148
+    port: 443
+    uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
+      short-id: "f98843107912e782"
+  - name: "🇨🇦 [BL/CF] Сервер 3"
+    type: vless
+    server: 40.233.116.225
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
+  - name: "🇨🇦 [BL] Сервер 4"
     type: ss
     server: 149.22.95.183
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
+  - name: "🇨🇦 [BL] Сервер 5"
+    type: vmess
+    server: 134.195.196.211
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
