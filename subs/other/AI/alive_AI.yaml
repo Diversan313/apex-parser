@@ -15,23 +15,10 @@ proxies:
       short-id: "c27a26812e5d2208"
   - name: "🇫🇷 [AI] Сервер 2"
     type: vless
-    server: ai.smrtai.top
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "raw"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [AI] Сервер 3"
-    type: vless
     server: 138.124.9.201
     port: 8443
     uuid: "74af70c0-bea7-4412-9a1a-f7eab9c91ef8"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "codestral.mistral.ai"
     client-fingerprint: "firefox"
@@ -40,3 +27,9 @@ proxies:
     reality-opts:
       public-key: "-93ZD_5l99Hu0HDdHsPWrjV07UCNQiQ2PRAGqIC4Xgg"
       short-id: "5b3ef653ee33b49a"
+  - name: "🇨🇦 [AI] Сервер 3"
+    type: ss
+    server: 51.79.64.198
+    port: 8119
+    password: "cdBIDV42DCwnfIN"
+    cipher: "aes-256-gcm"
