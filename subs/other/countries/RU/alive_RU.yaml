@@ -28,27 +28,17 @@ proxies:
       host: "wholebeam.com"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: 78.159.245.147
-    port: 445
-    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    server: 200.169.179.233
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
     network: "grpc"
-    servername: "passport.yandex.ru"
+    servername: "vps3.nemnogogo.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
     grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
+      grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 4"
-    type: hysteria2
-    server: 168.113.254.183
-    port: 443
-    password: "274cf8bb-ff99-0001-81b0-17273a3b7692"
-    sni: "xykmh-ru-70sb.my-fade.cloud"
-    fingerprint: "e53ee5f3142e0ce20b4b9d7041dd54c9921b4e215a9eae54440236affe7bb4a2"
-  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 201.24.121.243
     port: 443
@@ -60,7 +50,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "vlgrpc"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 201.51.12.98
     port: 443
@@ -72,17 +62,76 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 6"
+    type: vless
+    server: vps3.nemnogogo.com
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 7"
     type: vless
-    server: 176.108.244.162
+    server: 185.178.208.167
     port: 443
-    uuid: "70b6689a-6f1e-0001-9611-ff6fe6912ba1"
+    uuid: "c2b17066-5386-0001-803b-5e652c0528f9"
+    network: "ws"
+    servername: "trx.tools"
+    client-fingerprint: "android"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "api.14887277.xyz"
+  - name: "🇷🇺 [WL/CF] Сервер 8"
+    type: vless
+    server: 185.178.208.167
+    port: 443
+    uuid: "ffb2c504-2c6c-49f3-b4bd-9fd3ff6ce454"
+    network: "ws"
+    servername: "unlik.club"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/static/telemetry/3c9aaef00005/"
+      headers:
+        Host: "tochkacdn.top"
+  - name: "🇷🇺 [WL] Сервер 9"
+    type: vless
+    server: 185.178.208.167
+    port: 443
+    uuid: "faa4f375-a18e-0001-9f1b-d5d583cfd9cf"
+    network: "ws"
+    servername: "api.14887277.xyz"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/session"
+      headers:
+        Host: "api.14887277.xyz"
+  - name: "🇷🇺 [WL] Сервер 10"
+    type: vless
+    server: 185.151.243.186
+    port: 443
+    uuid: "cf4d2594-77a8-0001-b99e-73ae8fb954eb"
     network: "tcp"
-    servername: "ohyjf-ru-65sb.my-fade.cloud"
+    servername: "piodr-ru-74sel.my-fade.cloud"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 8"
+  - name: "🇷🇺 [WL] Сервер 11"
+    type: hysteria2
+    server: 188.68.216.27
+    port: 443
+    password: "49b5c86a-fbfc-0001-82af-171a932d04e7"
+    sni: "qtuod-ru-56sel.fade.mom"
+    fingerprint: "3bb90b7916051275cfc66e6e489a0f2094a823ca081c2041380fca2762df1412"
+  - name: "🇷🇺 [WL] Сервер 12"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -94,34 +143,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 9"
-    type: hysteria2
-    server: 84.38.189.122
-    port: 443
-    password: "f883afa8-2af7-0001-a896-dcc345e89da0"
-    sni: "shyrc-ru-75sel.my-fade.cloud"
-    fingerprint: "054951b598c2cf32f735103ede0a03e64fb05cbe1cf5cdc6d4a3a0ac9f42142c"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 11"
-    type: vless
-    server: 212.233.90.78
-    port: 443
-    uuid: "9548ef84-b54d-41dc-b17c-9da21d52ba82"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "birch-ledger.justext.space"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
-      short-id: "2c6df23e"
-  - name: "🇷🇺 [WL] Сервер 12"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 147.45.47.101
     port: 8443
@@ -135,7 +157,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 37.235.247.81
     port: 8443
@@ -149,7 +171,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 14"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 48.103.133.47
     port: 8443
