@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇳🇱 [CF] Сервер 1"
+  - name: "🇸🇪 [CF] Сервер 1"
+    type: vless
+    server: 92.223.84.254
+    port: 443
+    uuid: "740b2630-b42d-425c-bacd-37e7e30d78f1"
+    network: "ws"
+    servername: "subgift.gcorecdn.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/t.me-SubGift"
+      headers:
+        Host: "subgift.gcorecdn.com"
+  - name: "🇳🇱 [CF] Сервер 2"
     type: vless
     server: 185.243.112.197
     port: 443
@@ -11,7 +25,7 @@ proxies:
     tls: true
     ws-opts:
       path: "/stream/PANEL_ZEUS/c1fdcffbbe65"
-  - name: "🇩🇪 [CF] Сервер 2"
+  - name: "🇩🇪 [CF] Сервер 3"
     type: vless
     server: 2.26.251.236
     port: 443
@@ -24,3 +38,21 @@ proxies:
     reality-opts:
       public-key: "1iVMMhJZgXHRY7tRlR-1kypF0YeaBcB7EjcfHRsYZX4"
       short-id: "4ff31b18d1bd8227"
+  - name: "🇺🇸 [CF] Сервер 4"
+    type: vless
+    server: 18.227.151.228
+    port: 34675
+    uuid: "fcce8873-b8e0-46c0-826d-9a02f4015cf6"
+    network: "xhttp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway-sr-china.icloud.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "VU8wv-7mhCzYJEPgEnDwZJM8ilnWtXR0nYOpdk7qn3g"
+      short-id: "a81454"
+    xhttp-opts:
+      path: "/t.me-SubGift"
+      host: "2.moltafet.bond"
+      mode: "auto"

@@ -1,19 +1,6 @@
 proxies:
   - name: "🇸🇪 [WL] Сервер 2"
     type: vless
-    server: 88.216.214.159
-    port: 443
-    uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
-    network: "tcp"
-    servername: "api-svc-mgr.galioncc.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
-      short-id: "a7c92e4b10d6f835"
-  - name: "🇸🇪 [WL] Сервер 3"
-    type: vless
     server: 89.169.2.136
     port: 443
     uuid: "1547ed3d-3bb7-4153-afdc-8eb3e9373c84"
@@ -26,20 +13,59 @@ proxies:
     reality-opts:
       public-key: "cn6JqI1RByDql_wSwDjMQP7B3vXcnM1Q52yGPhvLwh0"
       short-id: "e4272d5b51ac255e"
-  - name: "🇸🇪 [BL] Сервер 4"
+  - name: "🇸🇪 [WL/CF] Сервер 3"
+    type: vless
+    server: 92.223.84.254
+    port: 443
+    uuid: "740b2630-b42d-425c-bacd-37e7e30d78f1"
+    network: "ws"
+    servername: "subgift.gcorecdn.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/t.me-SubGift"
+      headers:
+        Host: "subgift.gcorecdn.com"
+  - name: "🇸🇪 [WL] Сервер 4"
+    type: vless
+    server: 88.216.214.159
+    port: 443
+    uuid: "a30903dc-1bf0-4be5-8b1b-603a3a56211c"
+    network: "tcp"
+    servername: "api-svc-mgr.galioncc.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
+      short-id: "a7c92e4b10d6f835"
+  - name: "🇸🇪 [WL] Сервер 5"
+    type: vless
+    server: 87.228.32.97
+    port: 443
+    uuid: "b73b2ee3-5bb3-44d4-808f-0891a408a9bd"
+    network: "raw"
+    servername: "city.lostpool.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4DcpJKG3IJEXsldz6uNof1o4V3SZ1MD3r_TiDthZEzw"
+  - name: "🇸🇪 [BL] Сервер 7"
     type: vless
     server: 138.124.86.230
     port: 48115
     uuid: "b2fe1fa4-6a79-4938-a3f4-63b54ae7f16b"
     network: "grpc"
     servername: "138-124-86-230.sslip.io"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
       grpc-mode: "gun"
-  - name: "🇸🇪 [BL] Сервер 5"
+  - name: "🇸🇪 [BL] Сервер 8"
     type: vless
     server: 81.90.21.163
     port: 2053
@@ -50,7 +76,21 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇸🇪 [BL] Сервер 6"
+  - name: "🇸🇪 [BL] Сервер 9"
+    type: vless
+    server: 81.90.21.200
+    port: 2096
+    uuid: "fbe22815-0718-4eae-816f-e91c67d15b54"
+    network: "ws"
+    servername: "stadc07.rumedia-cdn.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/cdn/v3/live"
+      headers:
+        Host: "stadc07.rumedia-cdn.com"
+  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 31.77.144.255
     port: 8444
