@@ -1,19 +1,29 @@
 proxies:
   - name: "🇨🇦 [BL] Сервер 1"
     type: vless
-    server: 209.200.246.148
-    port: 443
-    uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "tcp"
+    server: 185.71.216.95
+    port: 2093
+    uuid: "8b7a8f61-74c0-491f-bbba-ea153edb1a4b"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "random"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
-      short-id: "f98843107912e782"
+      public-key: "C_GA8wVjeLmyqLK6em5OHn4WPlsbndA-RyvyNU1aGFM"
+      short-id: "8a9725533854a7e8"
   - name: "🇨🇦 [BL] Сервер 2"
+    type: vless
+    server: kuruish.org
+    port: 443
+    uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
+    network: "tcp"
+    servername: "kuruish.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇨🇦 [BL] Сервер 3"
     type: vless
     server: 184.107.179.150
     port: 8443
@@ -27,7 +37,7 @@ proxies:
     reality-opts:
       public-key: "FZvOenkKu_0DspnZA7Nc7xgWhR0_Z0MvqhntPqPchV4"
       short-id: "40a4615253b8f75d"
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇨🇦 [BL] Сервер 4"
     type: vless
     server: 38.102.125.3
     port: 443
@@ -41,17 +51,9 @@ proxies:
     reality-opts:
       public-key: "aifpr5vxx0eaPohSBVZrC5yUFtaK6Sqa8mGwjOxZ1Sc"
       short-id: "f05d81d32f5e4b94"
-  - name: "🇨🇦 [BL] Сервер 4"
+  - name: "🇨🇦 [BL] Сервер 5"
     type: ss
     server: 149.22.95.183
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
