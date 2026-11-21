@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇫🇷 [WL/CF] Сервер 1"
+  - name: "🇫🇷 [WL] Сервер 1"
+    type: vless
+    server: 194.156.26.125
+    port: 443
+    uuid: "e4f98a88-bc34-491d-a614-fb5acd593598"
+    network: "xhttp"
+    servername: "mama1472.baklajann.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/"
+      host: "mama1472.baklajann.ru"
+      mode: "auto"
+  - name: "🇫🇷 [WL/CF] Сервер 2"
     type: vless
     server: api.floweroom.vip
     port: 443
@@ -11,20 +25,6 @@ proxies:
     tls: true
     ws-opts:
       path: "/cart/sync/g-jSjxyhq24P"
-  - name: "🇫🇷 [BL] Сервер 2"
-    type: vless
-    server: 136.176.67.229
-    port: 8443
-    uuid: "b8318808-1193-4879-b2c2-6fc638e4101d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fr.nuvio.ink"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "pSlXYWDvQT1dDeMU4dOTUWw3DSvm6Lkdhfz1x5ODByw"
-      short-id: "a2d1bec41de2c149"
   - name: "🇫🇷 [BL] Сервер 3"
     type: vless
     server: 145.223.68.58
@@ -33,7 +33,7 @@ proxies:
     network: "raw"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -41,34 +41,43 @@ proxies:
       short-id: "a44ff7d2e80213c2"
   - name: "🇫🇷 [BL] Сервер 4"
     type: vless
-    server: 62.210.91.10
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "raw"
+    server: 146.19.254.171
+    port: 8443
+    uuid: "24fb9b5b-43b7-4058-a7e5-a0499ada1fda"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
-    client-fingerprint: "chrome"
+    servername: "146.19.254.171"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-      short-id: "01"
   - name: "🇫🇷 [BL] Сервер 5"
     type: vless
-    server: 152.228.139.33
-    port: 51671
-    uuid: "75cc7568-abb0-46a8-88be-8137d3c647d4"
+    server: 2.56.127.202
+    port: 17101
+    uuid: "7d77e8fc-07d9-46e3-bf70-66531011fed3"
     network: "grpc"
-    servername: "www.sony.com"
+    servername: "it.nvidia.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "-5PowNUY37Pi01YKO9fjRTrum1m_9n6XauaPDpmOJzU"
-      short-id: "2fed44d8c59f7e71"
-    grpc-opts:
-      grpc-service-name: "grpc_common3"
+      public-key: "td00T39muH83FZFqpyfgfYYQLjT860DLdrCcnKr2_FE"
+      short-id: "b08ccd"
   - name: "🇫🇷 [BL] Сервер 6"
+    type: vless
+    server: 185.71.216.177
+    port: 2092
+    uuid: "ca21222b-caf1-4418-b404-345ea713daa4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "zeyIqmHylDrPbbtdG9BleBt0-fqKCHpZ0OZ9OY2_WUI"
+      short-id: "716b7eba38125f3a"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -76,66 +85,12 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "blog.api.www.cloudflare.com"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 7"
-    type: vless
-    server: 62.210.91.2
-    port: 23576
-    uuid: "48ff2b70-e180-582f-8866-d9a2edeed5f5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "fuck.rkn"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-      short-id: "01"
   - name: "🇫🇷 [BL] Сервер 8"
-    type: vless
-    server: 2.56.127.202
-    port: 17101
-    uuid: "7d77e8fc-07d9-46e3-bf70-66531011fed3"
-    network: "grpc"
-    servername: "it.nvidia.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "td00T39muH83FZFqpyfgfYYQLjT860DLdrCcnKr2_FE"
-      short-id: "b08ccd"
-  - name: "🇫🇷 [BL] Сервер 9"
-    type: vless
-    server: 161.97.66.16
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [BL/AI] Сервер 10"
-    type: vless
-    server: ai.smrtai.top
-    port: 443
-    uuid: "086bf957-9cd0-4e55-8280-bbef10435b41"
-    network: "tcp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "R-w7BpNgtryZRBMyRoHx81OnjzAwrKhVtV1EUKLFJzc"
-      short-id: "086bf957"
-  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -147,10 +102,10 @@ proxies:
     tls: true
     reality-opts:
       public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
+      short-id: "3242cfd7"
     xhttp-opts:
       path: "/ae1b809ceb77"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -165,18 +120,23 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
+    server: 3.169.218.2
+    port: 443
+    uuid: "e4f98a88-bc34-491d-a614-fb5acd593598"
+    network: "ws"
+    servername: "d1aedflfr97jes.cloudfront.net"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
+    ws-opts:
       path: "/"
+      headers:
+        Host: "d1aedflfr97jes.cloudfront.net"
+  - name: "🇫🇷 [BL] Сервер 11"
+    type: ss
+    server: 23.162.152.22
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"

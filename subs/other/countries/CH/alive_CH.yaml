@@ -15,35 +15,35 @@ proxies:
       short-id: "19253fae84102271"
   - name: "🇨🇭 [BL] Сервер 2"
     type: vless
-    server: chcdn.fius.dev
+    server: 77.232.40.206
     port: 443
-    uuid: "00018846-513b-6e3b-5301-9c9ff2d375a3"
-    network: "xhttp"
-    servername: "chcdn.fius.dev"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api-test"
-      host: "chcdn.fius.dev"
-      mode: "packet-up"
-  - name: "🇨🇭 [BL] Сервер 3"
-    type: vless
-    server: 136.176.75.174
-    port: 53443
-    uuid: "b8318808-1193-4879-b2c2-6fc638e4101d"
+    uuid: "c50eae6b-18de-4bdc-a22f-9edda40a57ed"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "ch.nuvio.ink"
+    servername: "ch02.tunnely.space"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
+      short-id: "2e40144ddc07e8e1"
+  - name: "🇨🇭 [BL] Сервер 3"
+    type: vless
+    server: 193.233.89.130
+    port: 8443
+    uuid: "7bd7c4aa-52c4-482c-bdcc-e7380fa6b5fe"
+    network: "grpc"
+    servername: "g.play2go.gay"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "YvlWGguQktrE_wPwSX81SVj9CBaCEe38PlcJLm1q0jc"
-      short-id: "f30d7b13beb4fda3"
+      public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇨🇭 [BL] Сервер 4"
     type: vless
-    server: 94.26.35.241
+    server: 132.243.67.210
     port: 25035
     uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
     network: "xhttp"
@@ -56,8 +56,21 @@ proxies:
       short-id: "eb63581de991f8c8"
     xhttp-opts:
       path: "/astral-edge-h1"
-      mode: "stream-one"
   - name: "🇨🇭 [BL] Сервер 5"
+    type: vless
+    server: ch5.h1cloud.net
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+  - name: "🇨🇭 [BL] Сервер 6"
     type: vless
     server: 94.26.35.240
     port: 25035
@@ -73,42 +86,13 @@ proxies:
     xhttp-opts:
       path: "/astral-edge-h1"
       host: "ch5.h1cloud.net"
-  - name: "🇨🇭 [BL] Сервер 6"
-    type: vless
-    server: 132.243.67.210
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
+      mode: "auto"
   - name: "🇨🇭 [BL] Сервер 7"
-    type: vless
-    server: 193.233.89.130
-    port: 8443
-    uuid: "7bd7c4aa-52c4-482c-bdcc-e7380fa6b5fe"
-    network: "grpc"
-    servername: "g.play2go.gay"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇨🇭 [BL] Сервер 8"
     type: vless
     server: 195.15.207.252
     port: 443
     uuid: "65b6bc06-44c9-4b21-8dc0-bdf1d688c0e6"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "ch.mntw.lol"
     client-fingerprint: "firefox"
@@ -117,17 +101,21 @@ proxies:
     reality-opts:
       public-key: "dqhYuWM5WUOgUYe4FmvLZS-Nb4tY9qZ7_WffpePl6lQ"
       short-id: "76d0389e457fcba0"
+  - name: "🇨🇭 [BL] Сервер 8"
+    type: ss
+    server: 23.166.88.127
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
   - name: "🇨🇭 [BL] Сервер 9"
-    type: vless
-    server: 77.232.40.206
-    port: 443
-    uuid: "c50eae6b-18de-4bdc-a22f-9edda40a57ed"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ch02.tunnely.space"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
-      short-id: "2e40144ddc07e8e1"
+    type: ss
+    server: 186.190.215.251
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇨🇭 [BL] Сервер 10"
+    type: ss
+    server: 79.127.184.104
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
