@@ -15,24 +15,10 @@ proxies:
       short-id: "6859f5b59e55aa30"
   - name: "🇰🇿 [BL] Сервер 2"
     type: vless
-    server: 38.180.206.44
-    port: 48982
-    uuid: "a80acd3a-3df5-40b5-a54a-29bb18056115"
-    network: "xhttp"
-    servername: "cdn3-88.yahoo.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "A1ygNS8bIvKp7ZlUnjjHX_Z2AS_e4suvSs_IkWICvGE"
-    xhttp-opts:
-      path: "/"
-  - name: "🇰🇿 [BL] Сервер 3"
-    type: vless
     server: blog-asia.livemusic.ac
     port: 8445
     uuid: "cac10246-5b76-4809-9fd0-417c58a3ca90"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "portal.gifmems.com"
     client-fingerprint: "firefox"
@@ -41,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "32eua16pKE179lLHv-VNZGrX287qQFMXA3n0VgEzNTQ"
       short-id: "b3a633bc754b648d"
-  - name: "🇰🇿 [BL] Сервер 4"
+  - name: "🇰🇿 [BL] Сервер 3"
     type: vless
     server: 144.31.90.237
     port: 8445
@@ -55,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "32eua16pKE179lLHv-VNZGrX287qQFMXA3n0VgEzNTQ"
       short-id: "b3a633bc754b648d"
-  - name: "🇰🇿 [BL] Сервер 5"
+  - name: "🇰🇿 [BL] Сервер 4"
     type: vless
     server: 185.36.144.228
     port: 443
@@ -71,12 +57,23 @@ proxies:
     xhttp-opts:
       path: "/api/v1/data"
       mode: "auto"
-  - name: "🇰🇿 [BL/AI] Сервер 6"
+  - name: "🇰🇿 [BL] Сервер 5"
+    type: vless
+    server: 38.107.234.57
+    port: 8443
+    uuid: "2424febb-43cb-488d-bdd1-401e923c8e48"
+    network: "ws"
+    servername: "3h-kazakhstan1.09vpn.com"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/vless/"
+  - name: "🇰🇿 [BL] Сервер 6"
     type: vless
     server: 5.180.27.134
     port: 443
     uuid: "fa906181-5d9b-4ff6-8a81-e6148ce4ece7"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "kz.koteika3528.dev"
     client-fingerprint: "firefox"
