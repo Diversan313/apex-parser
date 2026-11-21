@@ -15,6 +15,20 @@ proxies:
       mode: "auto"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
+    server: 83.147.18.3
+    port: 443
+    uuid: "9f61cdf4-810d-4052-bbc7-2da0c8e20104"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
+      short-id: "fd8cf7e1173f0edb"
+  - name: "🇬🇧 [BL] Сервер 3"
+    type: vless
     server: 138.124.125.193
     port: 10444
     uuid: "e57ce64d-5a1a-4a90-96df-9e1bd3ad26e4"
@@ -27,20 +41,6 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 3"
-    type: vless
-    server: 51.38.71.147
-    port: 443
-    uuid: "fda89998-7e9a-4494-857a-cd0d00661b58"
-    network: "ws"
-    servername: "uk1.connectsuite.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/cdn-cgi/ws"
-      headers:
-        Host: "uk1.connectsuite.org"
   - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: uk1.connectsuite.org
@@ -96,20 +96,6 @@ proxies:
     xhttp-opts:
       path: "/"
   - name: "🇬🇧 [BL] Сервер 8"
-    type: vless
-    server: 144.48.11.146
-    port: 43000
-    uuid: "4a923161-156f-4914-8cac-762fb2433bfb"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "144.48.11.146"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
-      short-id: "ee4ea980"
-  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: 138.249.14.235
     port: 443
