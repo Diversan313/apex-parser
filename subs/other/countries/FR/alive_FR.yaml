@@ -14,7 +14,20 @@ proxies:
       short-id: "16ee3a5f0387c553"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇫🇷 [WL] Сервер 2"
+      grpc-mode: "gun"
+  - name: "🇫🇷 [WL/CF] Сервер 2"
+    type: vless
+    server: api.floweroom.vip
+    port: 443
+    uuid: "d8275e29-e946-4a48-bec6-4402bea6c399"
+    network: "ws"
+    servername: "api.floweroom.vip"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/cart/sync/g-jSjxyhq24P"
+  - name: "🇫🇷 [WL] Сервер 3"
     type: vless
     server: 194.156.26.125
     port: 443
@@ -28,33 +41,7 @@ proxies:
       path: "/"
       host: "mama1472.baklajann.ru"
       mode: "auto"
-  - name: "🇫🇷 [WL/CF] Сервер 3"
-    type: vless
-    server: api.floweroom.vip
-    port: 443
-    uuid: "d8275e29-e946-4a48-bec6-4402bea6c399"
-    network: "ws"
-    servername: "api.floweroom.vip"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/cart/sync/g-jSjxyhq24P"
   - name: "🇫🇷 [BL] Сервер 4"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 161.97.160.224
     port: 443
@@ -68,37 +55,7 @@ proxies:
     reality-opts:
       public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
       short-id: "e6"
-  - name: "🇫🇷 [BL] Сервер 6"
-    type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 7"
-    type: vless
-    server: 185.71.216.177
-    port: 2092
-    uuid: "ca21222b-caf1-4418-b404-345ea713daa4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.apple.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zeyIqmHylDrPbbtdG9BleBt0-fqKCHpZ0OZ9OY2_WUI"
-      short-id: "716b7eba38125f3a"
-  - name: "🇫🇷 [BL] Сервер 8"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -111,7 +68,7 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 9"
+  - name: "🇫🇷 [BL] Сервер 6"
     type: vless
     server: 143.246.211.240
     port: 443
@@ -126,7 +83,7 @@ proxies:
       short-id: "3242cfd7"
     xhttp-opts:
       path: "/ae1b809ceb77"
-  - name: "🇫🇷 [BL] Сервер 10"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -141,7 +98,7 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL] Сервер 8"
     type: vless
     server: 3.169.218.2
     port: 443
@@ -155,27 +112,3 @@ proxies:
       path: "/"
       headers:
         Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 12"
-    type: ss
-    server: 23.162.152.22
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 13"
-    type: ss
-    server: 38.109.228.110
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 14"
-    type: ss
-    server: 167.17.64.27
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 15"
-    type: ss
-    server: 172.99.189.142
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
