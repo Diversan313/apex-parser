@@ -15,20 +15,6 @@ proxies:
       mode: "packet-up"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
-    server: 45.43.153.33
-    port: 443
-    uuid: "d6752c6b-80ae-4a91-b446-bb330f7f8177"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.foxsports.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_0fpFqEEuCso3B8K7AAcMjctwG_xfCxO2PdKzGd_-hg"
-      short-id: "88a13cf2655c"
-  - name: "🇬🇧 [BL] Сервер 3"
-    type: vless
     server: 136.176.68.34
     port: 443
     uuid: "dbf3f074-3b18-43f3-b82a-debd8c879c69"
@@ -41,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 4"
+  - name: "🇬🇧 [BL] Сервер 3"
     type: vless
     server: 193.188.21.253
     port: 10444
@@ -55,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 4"
     type: vless
     server: 138.124.125.193
     port: 10444
@@ -69,7 +55,7 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL] Сервер 5"
     type: vless
     server: 144.48.11.146
     port: 43000
@@ -83,7 +69,7 @@ proxies:
     reality-opts:
       public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
       short-id: "ee4ea980"
-  - name: "🇬🇧 [BL] Сервер 7"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 91.192.158.251
     port: 2066
@@ -97,6 +83,20 @@ proxies:
     reality-opts:
       public-key: "84GM9QUTdTfTrhR-8loDOu7VA0LFW8X02vSvBQdsLAg"
       short-id: "1b2a3f"
+  - name: "🇬🇧 [BL] Сервер 7"
+    type: vless
+    server: 116.206.95.231
+    port: 43000
+    uuid: "4a923161-156f-4914-8cac-762fb2433bfb"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "116.206.95.231"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
+      short-id: "ee4ea980"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 193.233.210.125
@@ -113,20 +113,6 @@ proxies:
       short-id: "a8f4c19e72b305d6"
   - name: "🇬🇧 [BL] Сервер 9"
     type: vless
-    server: 50.7.154.78
-    port: 443
-    uuid: "6b28d6c5-00ba-4d39-b2cb-3720ca2e50e2"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "api.mediasvyaz.cc"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
-      short-id: "a8"
-  - name: "🇬🇧 [BL] Сервер 10"
-    type: vless
     server: 45.80.230.231
     port: 443
     uuid: "1011b03e-b5e7-4f7f-af17-1d8f9e727700"
@@ -139,6 +125,20 @@ proxies:
     reality-opts:
       public-key: "wD713tU37fU02OUusCfKXQ5nDsfjjgWIB6ArIO8sjCc"
       short-id: "a928e81b"
+  - name: "🇬🇧 [BL] Сервер 10"
+    type: vless
+    server: cdn3.aleqseivpn.site
+    port: 443
+    uuid: "e2a1c9f4-3b7d-4e6a-9c2f-8a1d5f6b7c9e"
+    network: "xhttp"
+    servername: "cdn3.aleqseivpn.site"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/update"
+      host: "cdn3.aleqseivpn.site"
+      mode: "packet-up"
   - name: "🇬🇧 [BL] Сервер 11"
     type: vless
     server: 95.163.153.141
@@ -168,3 +168,15 @@ proxies:
       path: "/cdn-cgi/ws"
       headers:
         Host: "uk1.connectsuite.org"
+  - name: "🇬🇧 [BL] Сервер 13"
+    type: ss
+    server: 198.244.201.129
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 14"
+    type: ss
+    server: 198.244.202.215
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
