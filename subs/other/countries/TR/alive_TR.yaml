@@ -1,22 +1,6 @@
 proxies:
   - name: "🇹🇷 [WL] Сервер 1"
     type: vless
-    server: 84.23.52.104
-    port: 9125
-    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
-    network: "grpc"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "4q4qXs-E4wzxXyV4TrOC-mEzx2S6h_LjQ_t_gc4wQEs"
-      short-id: "6ba85179e30d4fc2"
-    grpc-opts:
-      grpc-service-name: "inetgrpc"
-      grpc-mode: "gun"
-  - name: "🇹🇷 [WL] Сервер 2"
-    type: vless
     server: 185.246.155.91
     port: 10103
     uuid: "dbf3f074-3b18-43f3-b82a-debd8c879c69"
@@ -29,19 +13,33 @@ proxies:
     reality-opts:
       public-key: "obQkp5VlQpnlt1hRLQ3VfHISYiiISZJyJZAMaIdjCko"
       short-id: "6859f5b59e55aa30"
-  - name: "🇹🇷 [BL] Сервер 3"
+  - name: "🇹🇷 [BL] Сервер 2"
     type: vless
-    server: 212.108.97.14
-    port: 8443
-    uuid: "cad844e8-8307-55d8-b75c-5f923376fff7"
+    server: 213.156.152.19
+    port: 443
+    uuid: "e34e3a48-bdde-4fd0-ac17-c60c00d7000b"
     network: "tcp"
-    servername: "tesla.com"
+    flow: "xtls-rprx-vision"
+    servername: "delivery.mp.microsoft.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "-p7b4PhnlkadwUd-79Ycl2_TF5LN3_pLD0M6uokA4gg"
-      short-id: "5ce70ea6"
+      public-key: "PjR-SM4fOm2fY4mTqWoqZDRyxontvpailM0gBqUxlUQ"
+      short-id: "377d"
+  - name: "🇹🇷 [BL] Сервер 3"
+    type: vless
+    server: yt.vmagnum.win
+    port: 443
+    uuid: "52d0c9b1-80aa-4b20-bcb1-849991560498"
+    network: "xhttp"
+    servername: "52d0c9b1.ferrin.uk"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/tr"
+      mode: "stream-one"
   - name: "🇹🇷 [BL] Сервер 4"
     type: vless
     server: 5.59.205.184
@@ -69,3 +67,15 @@ proxies:
     reality-opts:
       public-key: "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"
       short-id: "457fab2ac885dbe0"
+  - name: "🇹🇷 [BL] Сервер 6"
+    type: vless
+    server: 5.175.136.4
+    port: 443
+    uuid: "f63206a4-c04a-47a8-bb8e-d218515d7982"
+    network: "ws"
+    servername: "bundlecharge.ratethatrestaurant.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
