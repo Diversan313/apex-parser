@@ -11,7 +11,21 @@ proxies:
     tls: true
     ws-opts:
       path: "/stream/PANEL_ZEUS/442eb64cf8be"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [WL] Сервер 2"
+    type: vless
+    server: 46.243.205.219
+    port: 443
+    uuid: "9e9d12c4-9836-4714-9948-e99fd8944283"
+    network: "ws"
+    servername: "teplomontag.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/catalog/feed/BNw3tweKSH1B"
+      headers:
+        Host: "teplomontag.xyz"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: vless
     server: 45.90.59.15
     port: 443
@@ -25,36 +39,7 @@ proxies:
     reality-opts:
       public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
       short-id: "19253fae84102271"
-  - name: "🇨🇭 [BL] Сервер 3"
-    type: vless
-    server: 195.15.207.252
-    port: 443
-    uuid: "65b6bc06-44c9-4b21-8dc0-bdf1d688c0e6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ch.mntw.lol"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "dqhYuWM5WUOgUYe4FmvLZS-Nb4tY9qZ7_WffpePl6lQ"
-      short-id: "76d0389e457fcba0"
   - name: "🇨🇭 [BL] Сервер 4"
-    type: vless
-    server: 132.243.67.210
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-  - name: "🇨🇭 [BL] Сервер 5"
     type: vless
     server: 94.26.35.240
     port: 25035
@@ -70,7 +55,21 @@ proxies:
     xhttp-opts:
       path: "/astral-edge-h1"
       host: "ch5.h1cloud.net"
-      mode: "auto"
+  - name: "🇨🇭 [BL] Сервер 5"
+    type: vless
+    server: 132.243.67.210
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
   - name: "🇨🇭 [BL] Сервер 6"
     type: vless
     server: 201.10.91.216
@@ -89,19 +88,18 @@ proxies:
       host: "ch5.h1cloud.net"
   - name: "🇨🇭 [BL] Сервер 7"
     type: vless
-    server: 193.233.89.130
-    port: 8443
-    uuid: "7bd7c4aa-52c4-482c-bdcc-e7380fa6b5fe"
-    network: "grpc"
-    servername: "g.play2go.gay"
-    client-fingerprint: "firefox"
+    server: 195.15.207.252
+    port: 443
+    uuid: "65b6bc06-44c9-4b21-8dc0-bdf1d688c0e6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ch.mntw.lol"
+    client-fingerprint: "safari"
     udp: true
     tls: true
     reality-opts:
-      public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
+      public-key: "dqhYuWM5WUOgUYe4FmvLZS-Nb4tY9qZ7_WffpePl6lQ"
+      short-id: "76d0389e457fcba0"
   - name: "🇨🇭 [BL] Сервер 8"
     type: vless
     server: 77.232.40.206
@@ -116,3 +114,18 @@ proxies:
     reality-opts:
       public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
       short-id: "2e40144ddc07e8e1"
+  - name: "🇨🇭 [BL] Сервер 9"
+    type: vless
+    server: 193.233.89.130
+    port: 8443
+    uuid: "7bd7c4aa-52c4-482c-bdcc-e7380fa6b5fe"
+    network: "grpc"
+    servername: "g.play2go.gay"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"

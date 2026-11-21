@@ -13,19 +13,6 @@ proxies:
       path: "/api-test"
       host: "secdn.fius.dev"
       mode: "packet-up"
-  - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 185.86.145.78
-    port: 443
-    uuid: "88e79aa6-f431-4453-8dcc-652a0c747198"
-    network: "grpc"
-    servername: "emberworks.cloud"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2l0y-Mp5wtklY4jS6KOee3eq2XdWiXYqOxzrOi_CeB4"
-      short-id: "ea322b8b5b015812"
   - name: "🇸🇪 [WL] Сервер 3"
     type: vless
     server: 88.216.214.159
@@ -41,30 +28,20 @@ proxies:
       short-id: "a7c92e4b10d6f835"
   - name: "🇸🇪 [WL] Сервер 4"
     type: vless
-    server: 89.169.2.136
+    server: 91.142.85.137
     port: 443
-    uuid: "1547ed3d-3bb7-4153-afdc-8eb3e9373c84"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "node-se-1.nztpro.com"
+    uuid: "e6de7541-742b-4270-a5e9-563789af9789"
+    network: "xhttp"
+    servername: "severlogistika.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "cn6JqI1RByDql_wSwDjMQP7B3vXcnM1Q52yGPhvLwh0"
-      short-id: "e4272d5b51ac255e"
+      public-key: "K6b37rU8H4vD0ZZ6VIev76buBdXUcDOfGcnX6pDUFhM"
+      short-id: "ee121cbbceec1e58"
+    xhttp-opts:
+      path: "/5252bcd688a6"
   - name: "🇸🇪 [WL] Сервер 5"
-    type: vless
-    server: 88.216.129.132
-    port: 443
-    uuid: "07011275-4633-40ab-9e00-e005a3dc22ff"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "tn6z7hx.mintharbor.net"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL] Сервер 6"
     type: vless
     server: 91.142.85.137
     port: 8443
@@ -78,7 +55,7 @@ proxies:
     reality-opts:
       public-key: "asCNXKLJAiol1YHfWrLY5OCgg-HS1vRhtgUk2OZ6RFU"
       short-id: "27689a74e36e6360"
-  - name: "🇸🇪 [WL] Сервер 7"
+  - name: "🇸🇪 [WL] Сервер 6"
     type: vless
     server: 91.142.85.137
     port: 443
@@ -94,35 +71,87 @@ proxies:
     xhttp-opts:
       path: "/5252bcd688a6"
       mode: "auto"
-  - name: "🇸🇪 [WL] Сервер 8"
+  - name: "🇸🇪 [WL] Сервер 7"
     type: vless
-    server: 91.142.85.137
+    server: 89.169.2.136
     port: 443
-    uuid: "e6de7541-742b-4270-a5e9-563789af9789"
-    network: "xhttp"
-    servername: "severlogistika.ru"
+    uuid: "1547ed3d-3bb7-4153-afdc-8eb3e9373c84"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "node-se-1.nztpro.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "K6b37rU8H4vD0ZZ6VIev76buBdXUcDOfGcnX6pDUFhM"
-      short-id: "ee121cbbceec1e58"
-    xhttp-opts:
-      path: "/5252bcd688a6"
-  - name: "🇸🇪 [WL] Сервер 10"
+      public-key: "cn6JqI1RByDql_wSwDjMQP7B3vXcnM1Q52yGPhvLwh0"
+      short-id: "e4272d5b51ac255e"
+  - name: "🇸🇪 [WL/CF] Сервер 8"
     type: vless
-    server: 139.100.213.31
+    server: 92.223.84.254
     port: 443
-    uuid: "bb2a35d4-8cd2-001e-81e4-02de5b2daec2"
+    uuid: "740b2630-b42d-425c-bacd-37e7e30d78f1"
     network: "ws"
-    servername: "shmyak-game.com"
+    servername: "subgift.gcorecdn.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/ws-d3dce97ffc67ffae781a6122"
+      path: "/t.me-SubGift"
       headers:
-        Host: "shmyak-game.com"
+        Host: "subgift.gcorecdn.com"
+  - name: "🇸🇪 [WL] Сервер 9"
+    type: vless
+    server: 188.225.57.185
+    port: 443
+    uuid: "88e79aa6-f431-4453-8dcc-652a0c747198"
+    network: "grpc"
+    servername: "flintstack.dev"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4JggwEKhrkrIjQjO8kRX6iGvHQJixIFkiDOnE7zd3xE"
+  - name: "🇸🇪 [BL] Сервер 10"
+    type: vless
+    server: 2.26.93.106
+    port: 443
+    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
+    network: "ws"
+    servername: "depotchannel.lucheeebezlimitnoekino.stream"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
   - name: "🇸🇪 [BL] Сервер 11"
+    type: vless
+    server: 87.121.105.208
+    port: 443
+    uuid: "191cd0ee-7267-4ff5-a064-4fdaa24b2cbf"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sweden-01.shtormovoy.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Aqozg7SuheGLClMCYsM__qlfiV_K7QFRiP-fRqSUeyA"
+      short-id: "974e51a5814f4220"
+  - name: "🇸🇪 [BL] Сервер 12"
+    type: vless
+    server: sweden-01.shtormovoy.online
+    port: 443
+    uuid: "191cd0ee-7267-4ff5-a064-4fdaa24b2cbf"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sweden-01.shtormovoy.online"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Aqozg7SuheGLClMCYsM__qlfiV_K7QFRiP-fRqSUeyA"
+      short-id: "974e51a5814f4220"
+  - name: "🇸🇪 [BL] Сервер 13"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -135,7 +164,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
       grpc-mode: "gun"
-  - name: "🇸🇪 [BL] Сервер 12"
+  - name: "🇸🇪 [BL] Сервер 14"
     type: vless
     server: 150.241.87.52
     port: 443
@@ -148,19 +177,23 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
-  - name: "🇸🇪 [BL] Сервер 13"
-    type: hysteria2
-    server: 95.143.196.97
-    port: 443
-    password: "769f34f0-1500-488f-b414-03bc90666502"
-    sni: "se.mimowhat.online"
-  - name: "🇸🇪 [BL] Сервер 14"
-    type: hysteria2
-    server: 150.241.74.160
-    port: 30443
-    password: "917f4b0a-8b3b-404c-aa60-b47e83a33e8f"
-    sni: "tll.nikomy.uk"
   - name: "🇸🇪 [BL] Сервер 15"
+    type: vless
+    server: 132.243.163.114
+    port: 25191
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "a8687er.se2.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
+      short-id: "55328e423218ee9b"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+      mode: "auto"
+  - name: "🇸🇪 [BL] Сервер 16"
     type: vless
     server: 136.148.221.222
     port: 25191
@@ -175,16 +208,38 @@ proxies:
       short-id: "55328e423218ee9b"
     xhttp-opts:
       path: "/astral-edge-h1"
-  - name: "🇸🇪 [BL] Сервер 16"
+  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
-    server: 64.188.81.66
-    port: 443
-    uuid: "f75582ca-0d06-4269-9f7a-9b32c7fc9563"
+    server: 81.90.21.163
+    port: 2053
+    uuid: "fbe22815-0718-4eae-816f-e91c67d15b54"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "sw1111.sonicservice.digital"
+    servername: "81.90.21.163"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "z-TKWOWgZLfzQ-wNdwXQqVwaUgCmbchM2Xtrk1NGynU"
+  - name: "🇸🇪 [BL] Сервер 18"
+    type: hysteria2
+    server: 95.143.196.97
+    port: 443
+    password: "769f34f0-1500-488f-b414-03bc90666502"
+    sni: "se.mimowhat.online"
+  - name: "🇸🇪 [BL] Сервер 19"
+    type: hysteria2
+    server: 150.241.74.160
+    port: 30443
+    password: "917f4b0a-8b3b-404c-aa60-b47e83a33e8f"
+    sni: "tll.nikomy.uk"
+  - name: "🇸🇪 [BL] Сервер 20"
+    type: vless
+    server: volumestyle.komediyatorg.net
+    port: 443
+    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
+    network: "ws"
+    servername: "volumestyle.komediyatorg.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
