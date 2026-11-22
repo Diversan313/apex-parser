@@ -1,16 +1,18 @@
 proxies:
-  - name: "🇨🇭 [WL/CF] Сервер 1"
+  - name: "🇨🇭 [BL] Сервер 1"
     type: vless
-    server: 194.154.29.245
+    server: 45.90.59.15
     port: 443
-    uuid: "50414e45-4c5f-5a45-5553-442eb64cf8be"
-    network: "ws"
-    servername: "2gz7b3ebutms.ergte1098ewtg.workers.dev"
-    client-fingerprint: "firefox"
+    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "random"
     udp: true
     tls: true
-    ws-opts:
-      path: "/stream/PANEL_ZEUS/442eb64cf8be"
+    reality-opts:
+      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
+      short-id: "19253fae84102271"
   - name: "🇨🇭 [BL] Сервер 2"
     type: vless
     server: 77.232.40.206
@@ -19,6 +21,7 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "ch02.tunnely.space"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -73,12 +76,11 @@ proxies:
       host: "ch5.h1cloud.net"
   - name: "🇨🇭 [BL] Сервер 6"
     type: vless
-    server: 94.26.35.240
+    server: ch5.h1cloud.net
     port: 25035
     uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
     network: "xhttp"
     servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -86,8 +88,6 @@ proxies:
       short-id: "eb63581de991f8c8"
     xhttp-opts:
       path: "/astral-edge-h1"
-      host: "ch5.h1cloud.net"
-      mode: "auto"
   - name: "🇨🇭 [BL] Сервер 7"
     type: vless
     server: 195.15.207.252
