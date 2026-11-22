@@ -15,32 +15,60 @@ proxies:
       mode: "auto"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
-    server: 91.192.158.251
-    port: 2066
-    uuid: "4bec3709-0954-4173-ae59-3dee6cb8b961"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "google.com"
+    server: 51.38.71.147
+    port: 443
+    uuid: "fda89998-7e9a-4494-857a-cd0d00661b58"
+    network: "ws"
+    servername: "uk1.connectsuite.org"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "84GM9QUTdTfTrhR-8loDOu7VA0LFW8X02vSvBQdsLAg"
-      short-id: "1b2a3f"
+    ws-opts:
+      path: "/cdn-cgi/ws"
+      headers:
+        Host: "uk1.connectsuite.org"
   - name: "🇬🇧 [BL] Сервер 3"
     type: vless
-    server: 138.124.125.193
-    port: 10444
-    uuid: "e57ce64d-5a1a-4a90-96df-9e1bd3ad26e4"
+    server: 158.220.95.242
+    port: 443
+    uuid: "5980f1e1-970c-43b9-b3e8-a8ddd70ceadc"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "ads.x5.ru"
-    client-fingerprint: "random"
+    servername: "www.samsung.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
-      short-id: "8debcf36f1cc69ff"
+      public-key: "PCm0k-SvNd00cgNuqqnbCzmwVZd5vkgX2ZLk2_qngRs"
+      short-id: "b60a93"
   - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: 13.143.187.220
+    port: 443
+    uuid: "66c78912-4e2d-41dc-8742-aaae2590804e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fi-s1.kadrhub.tech"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "eDzVz3bxkv3IoN3BUCa_aA-RicoeG7ACylYSnmS2Pgg"
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: cdn3.aleqseivpn.site
+    port: 443
+    uuid: "e2a1c9f4-3b7d-4e6a-9c2f-8a1d5f6b7c9e"
+    network: "xhttp"
+    servername: "cdn3.aleqseivpn.site"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/update"
+      host: "cdn3.aleqseivpn.site"
+      mode: "packet-up"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 144.48.11.146
     port: 43000
@@ -54,21 +82,7 @@ proxies:
     reality-opts:
       public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
       short-id: "ee4ea980"
-  - name: "🇬🇧 [BL/AI] Сервер 5"
-    type: vless
-    server: 62.233.39.5
-    port: 8443
-    uuid: "3dcf80c9-4e6d-0fc7-1112-126507d3ee3f"
-    network: "grpc"
-    servername: "download.nvidia.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lDi6FDdd5qUFMjjR1JDidfUU2qE_U1L90VjNTzPyQhs"
-    grpc-opts:
-      grpc-service-name: "TunService"
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 8.208.101.215
     port: 443
@@ -82,35 +96,7 @@ proxies:
     reality-opts:
       public-key: "U6FtussjhSb81ka0z9IDf1n80syjsczIDrRTdmzyeGM"
       short-id: "5a6f99962a27cdbc"
-  - name: "🇬🇧 [BL] Сервер 7"
-    type: vless
-    server: 51.38.71.147
-    port: 443
-    uuid: "fda89998-7e9a-4494-857a-cd0d00661b58"
-    network: "ws"
-    servername: "uk1.connectsuite.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/cdn-cgi/ws"
-      headers:
-        Host: "uk1.connectsuite.org"
   - name: "🇬🇧 [BL] Сервер 8"
-    type: vless
-    server: 193.233.210.125
-    port: 443
-    uuid: "0259e5aa-c188-4334-b204-32cd5ea859f6"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "nl-forum-keno-drunov-prxv.keno.su"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0HbEvKirH3zX6SuURbw9gA9v3Zl6BpIX4VLAPTA_qQ4"
-      short-id: "a8f4c19e72b305d6"
-  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
     server: 114.129.43.105
     port: 443
@@ -124,20 +110,34 @@ proxies:
       path: "/"
       host: "mama120.baklajann.ru"
       mode: "auto"
-  - name: "🇬🇧 [BL] Сервер 11"
+  - name: "🇬🇧 [BL] Сервер 9"
     type: vless
-    server: 45.43.153.33
+    server: 193.233.210.125
     port: 443
-    uuid: "d6752c6b-80ae-4a91-b446-bb330f7f8177"
-    network: "tcp"
+    uuid: "0259e5aa-c188-4334-b204-32cd5ea859f6"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "www.foxsports.com"
+    servername: "nl-forum-keno-drunov-prxv.keno.su"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "_0fpFqEEuCso3B8K7AAcMjctwG_xfCxO2PdKzGd_-hg"
-      short-id: "88a13cf2655c"
+      public-key: "0HbEvKirH3zX6SuURbw9gA9v3Zl6BpIX4VLAPTA_qQ4"
+      short-id: "a8f4c19e72b305d6"
+  - name: "🇬🇧 [BL] Сервер 10"
+    type: vless
+    server: 89.125.212.212
+    port: 443
+    uuid: "0259e5aa-c188-4334-b204-32cd5ea859f6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "prsx-forum-reserv.keno.su"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "rRWAX9DDp7KrhqH73UUKML3PUSADSq6ANziJSsuqD38"
+      short-id: "ff05cfd2ebf63628"
   - name: "🇬🇧 [BL] Сервер 12"
     type: ss
     server: 198.244.201.129
@@ -171,6 +171,24 @@ proxies:
   - name: "🇬🇧 [BL] Сервер 17"
     type: ss
     server: 158.173.24.73
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 18"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 19"
+    type: ss
+    server: 141.98.101.181
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 20"
+    type: ss
+    server: 141.98.101.178
     port: 443
     password: "shadowsocks"
     cipher: "aes-128-gcm"
