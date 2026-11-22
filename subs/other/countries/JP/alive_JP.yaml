@@ -1,20 +1,6 @@
 proxies:
   - name: "🇯🇵 [BL] Сервер 1"
     type: vless
-    server: 151.241.128.146
-    port: 4430
-    uuid: "57beeeb0-03fc-4fc9-94da-7604488a7134"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "psstatic.cdn.bcebos.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "iE3EoCDzsS7tTRt7icQDxGYbDd_j_4TDk00y6Nd5Lhs"
-      short-id: "ade96cf50b4b"
-  - name: "🇯🇵 [BL] Сервер 2"
-    type: vless
     server: 156.243.244.19
     port: 443
     uuid: "e062e0eb-6c21-47e3-8300-7eece5f8941d"
@@ -24,7 +10,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇯🇵 [BL] Сервер 3"
+  - name: "🇯🇵 [BL] Сервер 2"
     type: vless
     server: 154.36.152.216
     port: 443
@@ -38,21 +24,21 @@ proxies:
     reality-opts:
       public-key: "dv37ircK63KvcVZwv3XJiUXvOsiP-dEsZQ3gXDdPmRs"
       short-id: "a3f7c2e1b9d4"
-  - name: "🇯🇵 [BL] Сервер 4"
+  - name: "🇯🇵 [BL] Сервер 3"
     type: vless
-    server: 96.44.177.34
-    port: 2305
-    uuid: "4ada6098-6b38-4b82-8ee1-b029898b7246"
-    network: "tcp"
+    server: 151.241.128.146
+    port: 4430
+    uuid: "57beeeb0-03fc-4fc9-94da-7604488a7134"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "www.microsoft.com"
+    servername: "psstatic.cdn.bcebos.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "9S_C2iPVkWxxGjYN5xUZ7tzbD7vl18mLg9j7qsC_DzY"
-      short-id: "cdba94063c08331c"
-  - name: "🇯🇵 [BL] Сервер 5"
+      public-key: "iE3EoCDzsS7tTRt7icQDxGYbDd_j_4TDk00y6Nd5Lhs"
+      short-id: "ade96cf50b4b"
+  - name: "🇯🇵 [BL] Сервер 4"
     type: vless
     server: 94.177.131.113
     port: 443
@@ -61,7 +47,34 @@ proxies:
     servername: "kuruish.org"
     udp: true
     tls: true
+  - name: "🇯🇵 [BL] Сервер 5"
+    type: vless
+    server: 31.77.29.40
+    port: 443
+    uuid: "156a1997-4e92-4559-85c0-e1bb04fb0a43"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fexulian.anicore.live"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "prAxtojquL32MYNOEjgy2gk3B3woW8RHbR2yJpO7rWs"
   - name: "🇯🇵 [BL] Сервер 6"
+    type: hysteria2
+    server: 209.33.171.73
+    port: 443
+    password: "d283bbfe-d5cd-4576-bc1a-630a7a5ad829"
+    sni: "counterorder.newbuzideas.org"
+  - name: "🇯🇵 [BL] Сервер 7"
+    type: hysteria2
+    server: 64.118.146.147
+    port: 443
+    password: "57beeeb0-03fc-4fc9-94da-7604488a7134"
+    sni: "nb5rb.hikigo.com"
+    obfs: "salamander"
+    obfs-password: "yhlbhcysaba0wtn1"
+  - name: "🇯🇵 [BL] Сервер 8"
     type: vless
     server: 31.76.91.98
     port: 443
@@ -75,34 +88,7 @@ proxies:
     reality-opts:
       public-key: "ejx56dFtS4LK_Th6HSLFFdm7v7zqRpv8KfjrWAw4Sjg"
       short-id: "bd6f67b6b2152b45"
-  - name: "🇯🇵 [BL] Сервер 7"
-    type: vless
-    server: 158.101.151.157
-    port: 443
-    uuid: "66171cbe-0b4b-4b24-99f6-d5a822f4dc9a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.microsoft.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "99eQkMBHqOEKororOWKFlmH8M0o9VaVpV9w1vQIxhz8"
-      short-id: "684c7531e599dec0"
-  - name: "🇯🇵 [BL] Сервер 8"
-    type: vless
-    server: jpg1api.jumpernode.site
-    port: 443
-    uuid: "d508df52-3acb-483f-85d2-3fd5f6a76808"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "buybox.amazon.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "dtNeCNIcRgs8_EKIJg_oTJEsiA8KBU-QaE1yVpkoX0I"
-      short-id: "2c92d6"
-  - name: "🇯🇵 [BL/AI] Сервер 9"
+  - name: "🇯🇵 [BL] Сервер 9"
     type: vless
     server: 109.61.109.209
     port: 9096
@@ -118,6 +104,34 @@ proxies:
     grpc-opts:
       grpc-service-name: "inetgrpc"
   - name: "🇯🇵 [BL] Сервер 10"
+    type: vless
+    server: jpg1api.jumpernode.site
+    port: 443
+    uuid: "d508df52-3acb-483f-85d2-3fd5f6a76808"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "buybox.amazon.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "dtNeCNIcRgs8_EKIJg_oTJEsiA8KBU-QaE1yVpkoX0I"
+      short-id: "2c92d6"
+  - name: "🇯🇵 [BL] Сервер 11"
+    type: vless
+    server: 158.101.151.157
+    port: 443
+    uuid: "66171cbe-0b4b-4b24-99f6-d5a822f4dc9a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.microsoft.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "99eQkMBHqOEKororOWKFlmH8M0o9VaVpV9w1vQIxhz8"
+      short-id: "684c7531e599dec0"
+  - name: "🇯🇵 [BL] Сервер 12"
     type: vmess
     server: 168.110.63.247
     port: 8081

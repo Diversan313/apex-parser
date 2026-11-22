@@ -15,24 +15,10 @@ proxies:
       mode: "packet-up"
   - name: "🇪🇪 [BL] Сервер 2"
     type: vless
-    server: 191.217.238.38
-    port: 443
-    uuid: "097eae28-f0e7-4b18-bce2-16cf7d9deb05"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.bmw.de"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "vq0Fi871QaDVmxY7F0XWByt9muX3-16E31XfHWZj9D8"
-      short-id: "28138197d12e8e38"
-  - name: "🇪🇪 [BL] Сервер 3"
-    type: vless
     server: 217.60.182.96
     port: 443
     uuid: "dc91568b-4f12-4ce1-a483-f04dd4913ab9"
-    network: "tcp"
+    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "edge.mult-universe.ru"
     client-fingerprint: "firefox"
@@ -41,7 +27,7 @@ proxies:
     reality-opts:
       public-key: "5qVucogFLYlZOsG8DdX3dZRTr_2llj6_1OtZ9YfoilM"
       short-id: "b12ebda62333a16a"
-  - name: "🇪🇪 [BL] Сервер 4"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 82.148.243.135
     port: 2054
@@ -54,6 +40,12 @@ proxies:
     tls: true
     reality-opts:
       public-key: "bpjz9eEpLD2aAXnIW_zeSyUiKErPZVdRy_H-gA-LRhE"
+  - name: "🇪🇪 [BL] Сервер 4"
+    type: hysteria2
+    server: 31.56.187.36
+    port: 443
+    password: "963799b5-f711-4a7d-85a8-da58b170a66f"
+    sni: "ee.lockaway.top"
   - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 77.83.198.104
