@@ -1,12 +1,18 @@
 proxies:
-  - name: "🇫🇷 [WL] Сервер 1"
-    type: trojan
-    server: 37.233.80.144
-    port: 8443
-    password: "UyJoqPqycR"
-    sni: "37.233.80.144"
-    client-fingerprint: "ios"
+  - name: "🇫🇷 [BL] Сервер 1"
+    type: vless
+    server: 145.223.68.58
+    port: 443
+    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
     udp: true
+    tls: true
+    reality-opts:
+      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
+      short-id: "a44ff7d2e80213c2"
   - name: "🇫🇷 [BL] Сервер 2"
     type: vless
     server: 195.216.169.229
@@ -67,6 +73,17 @@ proxies:
       grpc-mode: "gun"
   - name: "🇫🇷 [BL] Сервер 6"
     type: vless
+    server: 31.77.227.156
+    port: 52006
+    uuid: "cde5d3ef-7d14-4fed-a74d-ac98e39bf9ec"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fr.buyclicks.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇫🇷 [BL] Сервер 7"
+    type: vless
     server: 77.73.20.134
     port: 2100
     uuid: "43add026-128a-47d3-a403-b3875b4638db"
@@ -81,12 +98,12 @@ proxies:
     xhttp-opts:
       path: "/somonxh"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 7"
+  - name: "🇫🇷 [BL] Сервер 8"
     type: vless
     server: media.fernstatic.com
-    port: 2099
+    port: 2100
     uuid: "43add026-128a-47d3-a403-b3875b4638db"
-    network: "grpc"
+    network: "xhttp"
     servername: "yastatic.net"
     client-fingerprint: "firefox"
     udp: true
@@ -94,49 +111,10 @@ proxies:
     reality-opts:
       public-key: "Tij8e75rOzDtbTSciMvmEqE26h78VEIt7B_NK4QumCk"
       short-id: "10806885b6614f73"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 8"
-    type: vless
-    server: 31.77.227.156
-    port: 52006
-    uuid: "cde5d3ef-7d14-4fed-a74d-ac98e39bf9ec"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fr.buyclicks.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇫🇷 [BL] Сервер 9"
-    type: vless
-    server: 213.199.57.127
-    port: 2087
-    uuid: "0f82d566-1273-43c5-a73c-229997b3b4b0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "blog.api.www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
-      short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 10"
-    type: vless
-    server: 143.246.211.240
-    port: 443
-    uuid: "11512726-b692-406f-ab49-7b28f44a8294"
-    network: "xhttp"
-    servername: "fr.gorobsub.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
-      short-id: "3242cfd7"
     xhttp-opts:
-      path: "/ae1b809ceb77"
-  - name: "🇫🇷 [BL] Сервер 11"
+      path: "/somonxh"
+      mode: "auto"
+  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -151,21 +129,95 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
+  - name: "🇫🇷 [BL] Сервер 10"
+    type: vless
+    server: api.videodolina.cc
+    port: 443
+    uuid: "5cb1094a-4c3f-4cef-a4f0-bc00214022ce"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.videodolina.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇫🇷 [BL] Сервер 11"
+    type: vless
+    server: 213.199.57.127
+    port: 2087
+    uuid: "0f82d566-1273-43c5-a73c-229997b3b4b0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "blog.api.www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
+      short-id: "42"
   - name: "🇫🇷 [BL] Сервер 12"
+    type: vless
+    server: 143.246.211.240
+    port: 443
+    uuid: "11512726-b692-406f-ab49-7b28f44a8294"
+    network: "xhttp"
+    servername: "fr.gorobsub.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_LNT4Kf7pPmeEBAnmJ7xsBu3y6Kih0Ew9AFVoDa3QSg"
+      short-id: "3242cfd7"
+    xhttp-opts:
+      path: "/ae1b809ceb77"
+  - name: "🇫🇷 [BL] Сервер 13"
+    type: vless
+    server: 130.110.249.115
+    port: 58002
+    uuid: "4a74777f-d84c-47f9-808a-9957c5720e91"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "U7t4RFE9MSMtC-o1DoJ8pYzKMfgVpTg6ZhTTknBrVkU"
+      short-id: "1f2519bb96e5589c"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: ss
     server: 23.162.152.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: ss
     server: 38.109.228.110
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: ss
     server: 167.17.64.27
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 17"
+    type: ss
+    server: 172.99.189.142
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 18"
+    type: ss
+    server: 167.17.64.175
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 19"
+    type: ss
+    server: 167.17.64.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
