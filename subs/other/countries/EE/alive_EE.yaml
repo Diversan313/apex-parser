@@ -1,5 +1,33 @@
 proxies:
-  - name: "🇪🇪 [BL] Сервер 1"
+  - name: "🇪🇪 [WL/CF] Сервер 1"
+    type: vless
+    server: 5.101.114.177
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
+  - name: "🇪🇪 [BL/CF] Сервер 2"
+    type: vless
+    server: 109.107.171.204
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 217.60.182.96
     port: 443
@@ -13,7 +41,7 @@ proxies:
     reality-opts:
       public-key: "5qVucogFLYlZOsG8DdX3dZRTr_2llj6_1OtZ9YfoilM"
       short-id: "b12ebda62333a16a"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 191.217.238.38
     port: 443
@@ -27,15 +55,3 @@ proxies:
     reality-opts:
       public-key: "vq0Fi871QaDVmxY7F0XWByt9muX3-16E31XfHWZj9D8"
       short-id: "28138197d12e8e38"
-  - name: "🇪🇪 [BL] Сервер 3"
-    type: vless
-    server: 87.232.116.22
-    port: 443
-    uuid: "d86e6fda-e519-46ab-98eb-9ff9a9da5984"
-    network: "grpc"
-    servername: "fafeqdhlett2p5la6d.cdn.cachefleet.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "67h2o3erm0t9imsj"

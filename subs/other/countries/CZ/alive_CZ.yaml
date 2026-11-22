@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇨🇿 [WL] Сервер 1"
-    type: vless
-    server: 176.108.245.73
-    port: 443
-    uuid: "1b7ee703-fa08-4305-8469-ae3e30e61e44"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pawuk.belka.tv"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_qSbW4JL4Ffqvj25vX-6a2ul9Qlj6PBdlF0ghsf_0RQ"
-      short-id: "a9dc98a7dc87a7dc"
-  - name: "🇨🇿 [BL] Сервер 2"
+  - name: "🇨🇿 [BL] Сервер 1"
     type: vless
     server: 189.74.118.4
     port: 443
@@ -26,7 +12,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "r7Kp4mN9tQ2v"
       grpc-mode: "gun"
-  - name: "🇨🇿 [BL] Сервер 3"
+  - name: "🇨🇿 [BL] Сервер 2"
     type: vless
     server: 83.141.92.168
     port: 443
@@ -40,6 +26,20 @@ proxies:
     reality-opts:
       public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
       short-id: "7a7d19880a9ee786"
+  - name: "🇨🇿 [BL/CF] Сервер 3"
+    type: vless
+    server: 195.123.244.230
+    port: 443
+    uuid: "7b102311-43fd-4e8f-877e-8090623c101d"
+    network: "ws"
+    servername: "vp58.cc.cd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "vp58.cc.cd"
   - name: "🇨🇿 [BL] Сервер 4"
     type: ss
     server: 194.87.233.93

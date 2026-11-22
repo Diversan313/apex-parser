@@ -1,18 +1,18 @@
 proxies:
-  - name: "🇸🇬 [BL] Сервер 1"
+  - name: "🇸🇬 [WL/CF] Сервер 1"
     type: vless
-    server: 47.84.226.221
-    port: 443
-    uuid: "49b91402-f8e3-4390-9d7b-b7eddc2684a4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
+    server: 185.220.68.226
+    port: 20205
+    uuid: "f8a72094-baba-443c-883c-0955af2a15e2"
+    network: "ws"
+    servername: "ruu2rx-oycdrnsrzc.9uokolpk04vmg2ecqb8oys7.workers.dev"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "gVQsvRtzd77zlvKW4Gk0dAOJNPRa7cfN1-jVe_AJ8Bo"
-      short-id: "e1c483f9d4437d42"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "ruu2rx-oycdrnsrzc.9uokolpk04vmg2ecqb8oys7.workers.dev"
   - name: "🇸🇬 [BL] Сервер 2"
     type: vless
     server: 103.106.229.37
@@ -53,6 +53,20 @@ proxies:
       short-id: "f3602a3a1cf928b7"
   - name: "🇸🇬 [BL] Сервер 5"
     type: vless
+    server: 47.84.226.221
+    port: 443
+    uuid: "49b91402-f8e3-4390-9d7b-b7eddc2684a4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.samsung.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "gVQsvRtzd77zlvKW4Gk0dAOJNPRa7cfN1-jVe_AJ8Bo"
+      short-id: "e1c483f9d4437d42"
+  - name: "🇸🇬 [BL] Сервер 6"
+    type: vless
     server: 178.94.25.73
     port: 10444
     uuid: "2dacc738-5720-4824-b8bc-e3db57596ba7"
@@ -65,35 +79,35 @@ proxies:
     reality-opts:
       public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
       short-id: "8debcf36f1cc69ff"
-  - name: "🇸🇬 [BL/CF] Сервер 6"
-    type: vless
-    server: 45.77.241.190
-    port: 8441
-    uuid: "7e622534-4a90-40ba-bb30-5cb5403be121"
-    network: "ws"
-    servername: "d-l28t5-65-b.pbe40wmcujaw726h7cpqernzmawz4stwtrnqve0n1s5reht.workers.dev"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d-l28t5-65-b.pbe40wmcujaw726h7cpqernzmawz4stwtrnqve0n1s5reht.workers.dev"
   - name: "🇸🇬 [BL] Сервер 7"
     type: vless
-    server: news.zoom.us
+    server: 188.166.182.158
     port: 8443
-    uuid: "4d8d9640-7cc7-4c55-ba54-6ce0d1709541"
+    uuid: "ec88e991-7f74-4615-a488-c3a91cc6f362"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.bing.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "PQ8fVzaFrD3ANIzDmgE67H6FhCkQUbNymBkqe35fPjw"
+      short-id: "6f903d8e630fc0aa"
+  - name: "🇸🇬 [BL/CF] Сервер 8"
+    type: vless
+    server: 142.91.101.39
+    port: 627
+    uuid: "50f7f0fe-32be-4d5a-9432-095160ff7775"
     network: "ws"
-    servername: "matrix.learnpodedu.com"
+    servername: "7nnoiou0z.3xn99hzq2sh7iekktpkeq7rofs3qc8iohrqs4pb9p.workers.dev"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
       path: "/"
       headers:
-        Host: "matrix.learnpodedu.com"
-  - name: "🇸🇬 [BL] Сервер 8"
+        Host: "7nnoiou0z.3xn99hzq2sh7iekktpkeq7rofs3qc8iohrqs4pb9p.workers.dev"
+  - name: "🇸🇬 [BL] Сервер 9"
     type: vless
     server: 141.193.213.21
     port: 8443
@@ -107,7 +121,21 @@ proxies:
       path: "/"
       headers:
         Host: "matrix.learnpodedu.com"
-  - name: "🇸🇬 [BL] Сервер 9"
+  - name: "🇸🇬 [BL] Сервер 10"
+    type: vless
+    server: news.zoom.us
+    port: 8443
+    uuid: "4d8d9640-7cc7-4c55-ba54-6ce0d1709541"
+    network: "ws"
+    servername: "matrix.learnpodedu.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "matrix.learnpodedu.com"
+  - name: "🇸🇬 [BL] Сервер 11"
     type: vless
     server: 141.193.213.20
     port: 8443
@@ -121,62 +149,7 @@ proxies:
       path: "/"
       headers:
         Host: "matrix.learnpodedu.com"
-  - name: "🇸🇬 [BL] Сервер 10"
-    type: vless
-    server: 194.233.67.103
-    port: 2053
-    uuid: "100cfbe2-afd5-40cf-84df-063b010ee759"
-    network: "tcp"
-    servername: "www.apple.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "un_9X4oh5ODWIcXl_jiuUaox4XOJE7oZpSPWGb46tRI"
-      short-id: "07a66150eac3db28"
-  - name: "🇸🇬 [BL] Сервер 11"
-    type: vless
-    server: 188.166.182.158
-    port: 443
-    uuid: "1ab92b9c-9a46-4a06-9a12-1c118fd138f6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.bing.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "8aRRz5a2rhOHIRjE3o3qckxmQNWh-IVGTv16Snyze2M"
-      short-id: "c44f5e04e67b2c74"
   - name: "🇸🇬 [BL] Сервер 12"
-    type: vless
-    server: 67.159.52.81
-    port: 443
-    uuid: "a16bd0e2-ff2e-4e4c-a955-0c684255a065"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "sg.fasti.win"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "-YTGWg5DjsLDyaDfr1D83kiUK22LVcrK3yC53lqqigs"
-      short-id: "feedbacc"
-  - name: "🇸🇬 [BL] Сервер 13"
-    type: vless
-    server: 140.245.113.33
-    port: 443
-    uuid: "f4ca59b2-767d-3425-8dfc-95a96a0e6802"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "learn.microsoft.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tF9nKF6amexok5wKbieQ2QRKQI5_ZTFE6MUj1hUBBkY"
-      short-id: "c940a3b6d60b8611"
-  - name: "🇸🇬 [BL] Сервер 14"
     type: vless
     server: 206.206.78.36
     port: 443
@@ -190,3 +163,100 @@ proxies:
     reality-opts:
       public-key: "UOLfRKeEoVxkp-APTF2OlvFkKSoiR2mWzUuhSWxcVmQ"
       short-id: "133a3f10a1581047"
+  - name: "🇸🇬 [BL] Сервер 13"
+    type: vless
+    server: 194.233.67.103
+    port: 2053
+    uuid: "100cfbe2-afd5-40cf-84df-063b010ee759"
+    network: "tcp"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "un_9X4oh5ODWIcXl_jiuUaox4XOJE7oZpSPWGb46tRI"
+      short-id: "07a66150eac3db28"
+  - name: "🇸🇬 [BL] Сервер 14"
+    type: vless
+    server: xjpp.zjlo.top
+    port: 36442
+    uuid: "2633cbab-e901-4f5a-9a0f-18ff319d0d70"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "xjpp.zjlo.top"
+    udp: true
+    tls: true
+  - name: "🇸🇬 [BL/CF] Сервер 15"
+    type: vless
+    server: 103.232.94.154
+    port: 443
+    uuid: "20e565e1-3858-40bf-94e8-4ec9624fc985"
+    network: "ws"
+    servername: "wallweb8.pages.dev"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "wallweb8.pages.dev"
+  - name: "🇸🇬 [BL/CF] Сервер 16"
+    type: vless
+    server: 129.121.129.25
+    port: 443
+    uuid: "20e565e1-3858-40bf-94e8-4ec9624fc985"
+    network: "ws"
+    servername: "wallweb8.pages.dev"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "wallweb8.pages.dev"
+  - name: "🇸🇬 [BL] Сервер 17"
+    type: vless
+    server: 67.159.52.81
+    port: 443
+    uuid: "a16bd0e2-ff2e-4e4c-a955-0c684255a065"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sg.fasti.win"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "-YTGWg5DjsLDyaDfr1D83kiUK22LVcrK3yC53lqqigs"
+      short-id: "feedbacc"
+  - name: "🇸🇬 [BL] Сервер 18"
+    type: vless
+    server: 140.245.113.33
+    port: 443
+    uuid: "f4ca59b2-767d-3425-8dfc-95a96a0e6802"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "learn.microsoft.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "tF9nKF6amexok5wKbieQ2QRKQI5_ZTFE6MUj1hUBBkY"
+      short-id: "c940a3b6d60b8611"
+  - name: "🇸🇬 [BL] Сервер 19"
+    type: vmess
+    server: 149.88.23.207
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    ws-opts:
+      path: "/"
+  - name: "🇸🇬 [BL] Сервер 20"
+    type: vmess
+    server: 149.88.23.202
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
