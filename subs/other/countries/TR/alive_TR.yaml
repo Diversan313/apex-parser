@@ -29,21 +29,35 @@ proxies:
     reality-opts:
       public-key: "obQkp5VlQpnlt1hRLQ3VfHISYiiISZJyJZAMaIdjCko"
       short-id: "6859f5b59e55aa30"
-  - name: "🇹🇷 [BL] Сервер 3"
+  - name: "🇹🇷 [WL] Сервер 3"
     type: vless
-    server: de-p2.h1cloud.net
-    port: 25204
-    uuid: "ecc51bfb-6ec2-4716-b743-b6272534e910"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "1a1eb7r.de-p2.h1clayd.click"
-    client-fingerprint: "chrome"
+    server: 188.72.112.1
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "6zIN7TrkFJnrRr0qBW1fBeKPZmAN3CENE-F0PR4iuho"
-      short-id: "cd82baa390ac8ef1"
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
   - name: "🇹🇷 [BL] Сервер 4"
+    type: vless
+    server: cdnstream.win
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
+  - name: "🇹🇷 [BL] Сервер 5"
     type: vless
     server: iran.crackerbinam.org
     port: 54005
