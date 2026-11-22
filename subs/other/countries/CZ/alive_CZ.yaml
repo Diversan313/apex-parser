@@ -1,5 +1,32 @@
 proxies:
-  - name: "🇨🇿 [BL] Сервер 1"
+  - name: "🇨🇿 [WL] Сервер 1"
+    type: vless
+    server: 176.108.245.73
+    port: 443
+    uuid: "1b7ee703-fa08-4305-8469-ae3e30e61e44"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "pawuk.belka.tv"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_qSbW4JL4Ffqvj25vX-6a2ul9Qlj6PBdlF0ghsf_0RQ"
+      short-id: "a9dc98a7dc87a7dc"
+  - name: "🇨🇿 [BL] Сервер 2"
+    type: vless
+    server: 189.74.118.4
+    port: 443
+    uuid: "de4729d8-4b52-4cac-b796-4ae1bb723631"
+    network: "grpc"
+    servername: "cz-next.mediastvor.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "r7Kp4mN9tQ2v"
+      grpc-mode: "gun"
+  - name: "🇨🇿 [BL] Сервер 3"
     type: vless
     server: 83.141.92.168
     port: 443
