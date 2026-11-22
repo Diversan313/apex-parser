@@ -12,6 +12,7 @@ proxies:
     xhttp-opts:
       path: "/api/v1/upload"
       host: "wholebeam.com"
+      mode: "auto"
   - name: "🇷🇺 [WL] Сервер 2"
     type: vless
     server: 185.86.145.173
@@ -25,13 +26,18 @@ proxies:
     xhttp-opts:
       path: "/api/v1/upload"
       host: "wholebeam.com"
-      mode: "auto"
   - name: "🇷🇺 [WL] Сервер 3"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
+    type: vless
+    server: 147.45.175.81
+    port: 443
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
+    network: "grpc"
+    servername: "xsru1.ddnsfree.com"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "grpc-ru"
   - name: "🇷🇺 [WL] Сервер 4"
     type: hysteria2
     server: 103.88.243.142
@@ -39,20 +45,14 @@ proxies:
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
-    server: vps3.nemnogogo.com
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 6"
     type: vless
-    server: 201.51.12.98
+    server: 200.169.179.233
     port: 443
     uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
     network: "grpc"
@@ -76,7 +76,7 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 8"
     type: vless
-    server: 200.169.179.233
+    server: 201.51.12.98
     port: 443
     uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
     network: "grpc"
@@ -88,27 +88,10 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 9"
     type: vless
-    server: 48.103.133.47
-    port: 8443
-    uuid: "2ed34e7c-45c5-4e0e-bcab-42fe99a7bd25"
+    server: 136.148.83.69
+    port: 443
+    uuid: "7dff1be7-b930-0001-a8ad-dc7850168215"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "apple.com"
-    client-fingerprint: "firefox"
+    servername: "szqbx-ru-77dc.my-fade.cloud"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-      short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: ss
-    server: 48.103.218.77
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 11"
-    type: hysteria2
-    server: 193.233.248.38
-    port: 443
-    password: "d283bbfe-d5cd-4576-bc1a-630a7a5ad829"
-    sni: "replicaruntime.lucheeebezlimitnoekino.stream"

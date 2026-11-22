@@ -1,52 +1,25 @@
 proxies:
-  - name: "🇪🇪 [WL] Сервер 1"
-    type: vless
-    server: 188.72.112.1
+  - name: "🇪🇪 [BL] Сервер 1"
+    type: hysteria2
+    server: 31.56.187.36
     port: 443
-    uuid: "273a36a8-8885-44cd-b7b0-77735b68facd"
-    network: "xhttp"
-    servername: "cdn.stream-media-cdn.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/media/live/stream/"
-      host: "cdn.stream-media-cdn.ru"
-      mode: "packet-up"
+    password: "963799b5-f711-4a7d-85a8-da58b170a66f"
+    sni: "ee.lockaway.top"
   - name: "🇪🇪 [BL] Сервер 2"
     type: vless
     server: 217.60.182.96
     port: 443
     uuid: "dc91568b-4f12-4ce1-a483-f04dd4913ab9"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "edge.mult-universe.ru"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "5qVucogFLYlZOsG8DdX3dZRTr_2llj6_1OtZ9YfoilM"
       short-id: "b12ebda62333a16a"
   - name: "🇪🇪 [BL] Сервер 3"
-    type: vless
-    server: 82.148.243.135
-    port: 2054
-    uuid: "6cadcb5b-610d-48b8-b833-4c243219ef0c"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "thst-ee1.mercedes-fan.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "bpjz9eEpLD2aAXnIW_zeSyUiKErPZVdRy_H-gA-LRhE"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: hysteria2
-    server: 31.56.187.36
-    port: 443
-    password: "963799b5-f711-4a7d-85a8-da58b170a66f"
-    sni: "ee.lockaway.top"
-  - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 77.83.198.104
     port: 8443
