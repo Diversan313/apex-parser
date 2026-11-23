@@ -37,22 +37,9 @@ proxies:
     tls: true
     xhttp-opts:
       path: "/api/v1/upload"
+      host: "wholebeam.com"
       mode: "auto"
   - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: 95.129.236.117
-    port: 443
-    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
-    network: "ws"
-    servername: "cdn.dash.gearmonster.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/edge/node8/push"
-      headers:
-        Host: "cdn.dash.gearmonster.org"
-  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 95.129.236.216
     port: 443
@@ -66,6 +53,18 @@ proxies:
       path: "/stream/video/ffmpeg"
       headers:
         Host: "crm.hourtley.com"
+  - name: "🇷🇺 [WL] Сервер 5"
+    type: vless
+    server: vps3.nemnogogo.com
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 201.51.12.98
@@ -94,7 +93,7 @@ proxies:
     type: vless
     server: 168.113.254.3
     port: 443
-    uuid: "d0cd1ad9-ee11-0001-8c96-ff9981022fcd"
+    uuid: "6b58e234-9907-0001-9e32-01bc90599182"
     network: "tcp"
     servername: "rbzummkhxtmdipkpij.fcloudservices.site"
     client-fingerprint: "chrome"
@@ -102,37 +101,43 @@ proxies:
     tls: true
   - name: "🇷🇺 [WL] Сервер 9"
     type: vless
-    server: 212.233.90.78
+    server: 168.113.254.3
     port: 443
-    uuid: "9548ef84-b54d-41dc-b17c-9da21d52ba82"
+    uuid: "d0cd1ad9-ee11-0001-8c96-ff9981022fcd"
+    network: "tcp"
+    servername: "rbzummkhxtmdipkpij.fcloudservices.site"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 10"
+    type: vless
+    server: 95.129.236.239
+    port: 443
+    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
+    network: "ws"
+    servername: "content-iv1k.login.opendns.stream"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/sock/relay/007f9c12e265"
+      headers:
+        Host: "content-iv1k.login.opendns.stream"
+  - name: "🇷🇺 [WL/AI] Сервер 11"
+    type: vless
+    server: 147.45.97.130
+    port: 2066
+    uuid: "4bec3709-0954-4173-ae59-3dee6cb8b961"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "birch-ledger.justext.space"
-    client-fingerprint: "firefox"
+    servername: "google.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     reality-opts:
-      public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
-      short-id: "2c6df23e"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: hysteria2
-    server: srv-17e124.21freedom.net
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 11"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
+      public-key: "kLCwYNBhCg68BQah9El1lNg6GQ7-7Y7xfTtIs6MiTEg"
+      short-id: "1b2a3f"
   - name: "🇷🇺 [WL] Сервер 12"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -144,7 +149,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "grpc-ru"
-  - name: "🇷🇺 [WL] Сервер 14"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -158,6 +163,16 @@ proxies:
       path: "wsru"
       headers:
         Host: "xsru2.freeddns.org"
+  - name: "🇷🇺 [WL] Сервер 14"
+    type: vless
+    server: 188.68.216.33
+    port: 443
+    uuid: "8596813c-6a35-0001-819d-2de72201a856"
+    network: "tcp"
+    servername: "pmdhivnevikmltdhqp.fcloudservices.site"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
   - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 185.151.241.22
@@ -182,6 +197,50 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 17"
     type: vless
+    server: 95.129.236.117
+    port: 443
+    uuid: "77998cc6-8a4d-4251-b974-ebff48a84c4d"
+    network: "ws"
+    servername: "cdn.dash.gearmonster.org"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/edge/node8/push"
+      headers:
+        Host: "cdn.dash.gearmonster.org"
+  - name: "🇷🇺 [WL] Сервер 18"
+    type: vless
+    server: 176.109.108.17
+    port: 443
+    uuid: "440c34ed-de29-0001-a467-153c5816a42b"
+    network: "tcp"
+    servername: "wrdgkmglxsfcfazlsf.fcloudservices.site"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 19"
+    type: vless
+    server: 176.109.108.17
+    port: 443
+    uuid: "da8157fa-d57d-0001-9332-22a0b1b35a18"
+    network: "tcp"
+    servername: "wrdgkmglxsfcfazlsf.fcloudservices.site"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 20"
+    type: vless
+    server: 168.113.253.164
+    port: 443
+    uuid: "00000000-0000-0001-0000-000000000000"
+    network: "raw"
+    servername: "thnaiybzvhiuedgvme.fcloudservices.site"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+  - name: "🇷🇺 [WL] Сервер 21"
+    type: vless
     server: 45.132.176.150
     port: 443
     uuid: "00000000-0000-0001-0000-000000000000"
@@ -190,7 +249,25 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 18"
+  - name: "🇷🇺 [WL] Сервер 22"
+    type: hysteria2
+    server: srv-17e124.21freedom.net
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 23"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 24"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 25"
     type: vless
     server: 136.148.83.69
     port: 443
@@ -200,7 +277,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 19"
+  - name: "🇷🇺 [WL] Сервер 26"
     type: vless
     server: 48.103.133.47
     port: 8443
@@ -214,7 +291,7 @@ proxies:
     reality-opts:
       public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
       short-id: "6ba85179e30d4fc2"
-  - name: "🇷🇺 [WL] Сервер 20"
+  - name: "🇷🇺 [WL] Сервер 27"
     type: vless
     server: 136.148.83.70
     port: 443
@@ -224,7 +301,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 21"
+  - name: "🇷🇺 [WL] Сервер 28"
     type: vless
     server: 136.148.83.71
     port: 443
@@ -234,3 +311,19 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
+  - name: "🇷🇺 [WL] Сервер 29"
+    type: vless
+    server: msk.substituteme.space
+    port: 8843
+    uuid: "ae8df31c-3420-44a4-aa18-c34e2b5717d9"
+    network: "xhttp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BxyJp0UU90qi-HeYuanJB9IR8HbNABusQvPNaUfYQCU"
+      short-id: "2b608412739b5087"
+    xhttp-opts:
+      path: "/e47f0add4324743e"
+      mode: "auto"
