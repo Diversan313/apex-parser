@@ -1,18 +1,5 @@
 proxies:
-  - name: "🇱🇻 [BL] Сервер 1"
-    type: vless
-    server: 45.38.143.210
-    port: 30584
-    uuid: "cebc5f19-18d9-48e6-9029-fb4b04caf393"
-    network: "tcp"
-    servername: "m.vk.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2hV4TY2ygvQ7ISa5o4u_FUKXzlIhLgbsScE8M1h0m3Y"
-      short-id: "67ece882d65d0f1a"
-  - name: "🇱🇻 [BL/AI] Сервер 2"
+  - name: "🇱🇻 [BL/AI] Сервер 1"
     type: vless
     server: 178.130.133.24
     port: 443
@@ -25,7 +12,48 @@ proxies:
     tls: true
     reality-opts:
       public-key: "BIeplEH7MyksxHu-ut3eoBj8UUNeEsybJZrRmppwQnc"
-  - name: "🇱🇻 [BL/AI] Сервер 3"
+  - name: "🇱🇻 [BL] Сервер 2"
+    type: vless
+    server: 62.60.148.146
+    port: 443
+    uuid: "81c91c05-179f-4b87-95ca-3306677fb310"
+    network: "ws"
+    servername: "g-it-2.r3vgawew123fg.pics"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "g-it-2.r3vgawew123fg.pics"
+  - name: "🇱🇻 [BL] Сервер 3"
+    type: vless
+    server: 95.85.248.196
+    port: 443
+    uuid: "81c91c05-179f-4b87-95ca-3306677fb310"
+    network: "ws"
+    servername: "g-it-3.newdomainreska.beer"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "g-it-3.newdomainreska.beer"
+  - name: "🇱🇻 [BL] Сервер 4"
+    type: vless
+    server: 46.247.41.18
+    port: 443
+    uuid: "81c91c05-179f-4b87-95ca-3306677fb310"
+    network: "grpc"
+    servername: "g-it-3.newdomainreska.beer"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "g3x"
+      grpc-mode: "multi"
+  - name: "🇱🇻 [BL/AI] Сервер 5"
     type: vless
     server: 195.123.209.159
     port: 8443
