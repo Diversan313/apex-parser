@@ -1,6 +1,20 @@
 proxies:
   - name: "🇫🇮 [BL] Сервер 1"
     type: vless
+    server: 213.176.92.168
+    port: 10444
+    uuid: "ba52cc43-700d-4040-9444-29214c98e6e0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "video.yandex.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇫🇮 [BL] Сервер 2"
+    type: vless
     server: 83.171.241.136
     port: 443
     uuid: "2ccb06b6-9eac-44eb-ade7-c1e5afb8e7df"
@@ -12,7 +26,7 @@ proxies:
     reality-opts:
       public-key: "PslSaSQWP4BZZmkL7irab4FMti8sW6BvoC7ytFjJFyc"
       short-id: "cc678f10161992a9"
-  - name: "🇫🇮 [BL] Сервер 2"
+  - name: "🇫🇮 [BL] Сервер 3"
     type: vless
     server: 144.31.150.6
     port: 52006
@@ -23,26 +37,12 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇫🇮 [BL] Сервер 3"
+  - name: "🇫🇮 [BL] Сервер 4"
     type: vless
     server: 144.31.249.184
     port: 443
     uuid: "9192ae0a-8a0f-47ac-950b-de7410f2fdf0"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "rusea1.riseservice.me"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "CycyTZTNdYiHpn7IBAr-jiNZ5F-NtiHccwbRef9opGY"
-      short-id: "3e73d18b32b6052c"
-  - name: "🇫🇮 [BL] Сервер 4"
-    type: vless
-    server: rusea1.riseservice.me
-    port: 443
-    uuid: "9192ae0a-8a0f-47ac-950b-de7410f2fdf0"
-    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "rusea1.riseservice.me"
     client-fingerprint: "qq"
@@ -112,6 +112,25 @@ proxies:
       path: "/58c492097df6ed08"
       mode: "auto"
   - name: "🇫🇮 [BL] Сервер 9"
+    type: hysteria2
+    server: 212.102.227.131
+    port: 12443
+    password: "lvu_fb79ddb9bbda86f657cf34ee5dbe40bd_cf1aff9abf2b3945664fd63a07229839:np2.1.Q6bg95HDIqzwSQwdlbeS4-tGJpT8yFUcNQd7KGxqbXU"
+    sni: "n33.neproxy.net"
+  - name: "🇫🇮 [BL] Сервер 10"
+    type: vless
+    server: cdn.weloverkn.ru
+    port: 443
+    uuid: "64e0e993-d662-43ee-aee2-ff1cedc2d862"
+    network: "xhttp"
+    servername: "cdn.weloverkn.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/content/media/stream"
+      mode: "packet-up"
+  - name: "🇫🇮 [BL] Сервер 11"
     type: vless
     server: 144.31.156.42
     port: 443
@@ -125,7 +144,7 @@ proxies:
       path: "/content/sec.mp4/"
       host: "ndc-finar.askme.ooo"
       mode: "packet-up"
-  - name: "🇫🇮 [BL/CF] Сервер 10"
+  - name: "🇫🇮 [BL/CF] Сервер 12"
     type: vless
     server: 77.232.140.7
     port: 443
@@ -138,7 +157,7 @@ proxies:
       path: "/stream/PANEL_ZEUS/5a447647929f"
       headers:
         Host: "bbz1x6eau6gs.88bahpu62r.workers.dev"
-  - name: "🇫🇮 [BL] Сервер 11"
+  - name: "🇫🇮 [BL] Сервер 13"
     type: vless
     server: 157.180.98.124
     port: 49659
@@ -152,7 +171,7 @@ proxies:
     reality-opts:
       public-key: "bBVqro8tG6swTNoAkjwUzcu4Ew4N4VcyDHzADcGviCs"
       short-id: "81959fce"
-  - name: "🇫🇮 [BL/AI] Сервер 12"
+  - name: "🇫🇮 [BL/AI] Сервер 14"
     type: vless
     server: 107.181.151.128
     port: 443
@@ -166,7 +185,7 @@ proxies:
     reality-opts:
       public-key: "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s"
       short-id: "611ceeb0ae78"
-  - name: "🇫🇮 [BL/AI] Сервер 13"
+  - name: "🇫🇮 [BL/AI] Сервер 15"
     type: vless
     server: webdisk.jaggyslawa.org
     port: 443
@@ -180,25 +199,36 @@ proxies:
     reality-opts:
       public-key: "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s"
       short-id: "611ceeb0ae78"
-  - name: "🇫🇮 [BL] Сервер 14"
+  - name: "🇫🇮 [BL] Сервер 16"
     type: hysteria2
     server: 144.31.7.199
     port: 443
     password: "d283bbfe-d5cd-4576-bc1a-630a7a5ad829"
     sni: "scorebucket.nemoi-self.co.uk"
-  - name: "🇫🇮 [BL] Сервер 15"
+  - name: "🇫🇮 [BL] Сервер 17"
+    type: vless
+    server: 64.49.13.153
+    port: 8443
+    uuid: "d8375ca2-0a1d-4f11-b787-42c4daf93890"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "er.zxnetworkstatus.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇫🇮 [BL] Сервер 18"
     type: hysteria2
     server: 85.192.48.190
     port: 443
     password: "d283bbfe-d5cd-4576-bc1a-630a7a5ad829"
     sni: "circuitsilver.dost-self.co.uk"
-  - name: "🇫🇮 [BL] Сервер 16"
+  - name: "🇫🇮 [BL] Сервер 19"
     type: ss
     server: static.28.210.29.2.clients.your-server.de
     port: 25565
     password: "C8ZJ7R4p_HHJ32cst7ilT-0Zi2F22hAc"
     cipher: "chacha20-ietf-poly1305"
-  - name: "🇫🇮 [BL] Сервер 17"
+  - name: "🇫🇮 [BL] Сервер 20"
     type: ss
     server: 213.176.92.148
     port: 40647
