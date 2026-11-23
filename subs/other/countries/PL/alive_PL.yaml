@@ -1,17 +1,18 @@
 proxies:
-  - name: "🇵🇱 [BL] Сервер 1"
+  - name: "🇵🇱 [WL] Сервер 1"
     type: vless
-    server: poland.biznes.lol
+    server: 188.72.112.1
     port: 443
-    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "poland.biznes.lol"
-    client-fingerprint: "chrome"
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "xhttp"
+    servername: "cdnpl.worldfly.io"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
+    xhttp-opts:
+      path: "/api/v1/assets/"
+      host: "cdnpl.worldfly.io"
+      mode: "packet-up"
   - name: "🇵🇱 [BL] Сервер 2"
     type: vless
     server: 82.118.22.161
@@ -27,11 +28,57 @@ proxies:
       short-id: "fa3ea655619a3e78"
   - name: "🇵🇱 [BL] Сервер 3"
     type: hysteria2
+    server: 2.26.187.116
+    port: 443
+    password: "302fa49c-7d08-4600-8bc3-a3e21baebdd1"
+    sni: "kraw-pl-1.fantoff.online"
+  - name: "🇵🇱 [BL/AI] Сервер 4"
+    type: vless
+    server: 80.47.7.216
+    port: 443
+    uuid: "e0643422-1e6e-4182-993e-de9b4c78e736"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fedtuna.ai"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
+      short-id: "6f0091ebe3029ebb"
+  - name: "🇵🇱 [BL] Сервер 5"
+    type: vless
+    server: af48d6t.pl10.h1clayd.shop
+    port: 443
+    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
+    network: "tcp"
+    servername: "af48d6t.pl10.h1clayd.shop"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "yELja29OBDJ2V0qacVXg_5NDN7uNk1YQVMgGKN9Kc2g"
+      short-id: "f36b61d044905efb"
+  - name: "🇵🇱 [BL] Сервер 6"
+    type: vless
+    server: 89.125.234.20
+    port: 443
+    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
+    network: "tcp"
+    servername: "af48d6t.pl10.h1clayd.shop"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "yELja29OBDJ2V0qacVXg_5NDN7uNk1YQVMgGKN9Kc2g"
+      short-id: "f36b61d044905efb"
+  - name: "🇵🇱 [BL] Сервер 7"
+    type: hysteria2
     server: 82.40.37.115
     port: 443
     password: "lvu_fb79ddb9bbda86f657cf34ee5dbe40bd_cf1aff9abf2b3945664fd63a07229839:np2.1.Q6bg95HDIqzwSQwdlbeS4-tGJpT8yFUcNQd7KGxqbXU"
     sni: "n34.neproxy.net"
-  - name: "🇵🇱 [BL] Сервер 4"
+  - name: "🇵🇱 [BL] Сервер 8"
     type: vless
     server: 2.26.5.208
     port: 9443
@@ -45,7 +92,7 @@ proxies:
     reality-opts:
       public-key: "V-cWjK_GZ0PTJ3wnUHgwey_dNWI6_QNXsC9CdmA0mVI"
       short-id: "408c85938839e89f"
-  - name: "🇵🇱 [BL] Сервер 5"
+  - name: "🇵🇱 [BL] Сервер 9"
     type: vless
     server: 45.88.176.101
     port: 24443
@@ -60,49 +107,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc"
       grpc-mode: "gun"
-  - name: "🇵🇱 [BL] Сервер 6"
-    type: vless
-    server: af48d6t.pl10.h1clayd.shop
-    port: 443
-    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
-    network: "tcp"
-    servername: "af48d6t.pl10.h1clayd.shop"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yELja29OBDJ2V0qacVXg_5NDN7uNk1YQVMgGKN9Kc2g"
-      short-id: "f36b61d044905efb"
-  - name: "🇵🇱 [BL] Сервер 7"
-    type: vless
-    server: 9030b9g.pl10.h1clayd.shop
-    port: 443
-    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
-    network: "grpc"
-    servername: "9030b9g.pl10.h1clayd.shop"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "oE6MuoxfZqB5fkSnx_XWL28kNoBGODAQk58pRNS3qXY"
-      short-id: "d28c89350a91e479"
-    grpc-opts:
-      grpc-service-name: "8b45c3fd2e05"
-  - name: "🇵🇱 [BL/AI] Сервер 8"
-    type: vless
-    server: 80.47.7.216
-    port: 443
-    uuid: "e0643422-1e6e-4182-993e-de9b4c78e736"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fedtuna.ai"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
-      short-id: "6f0091ebe3029ebb"
-  - name: "🇵🇱 [BL] Сервер 9"
+  - name: "🇵🇱 [BL] Сервер 10"
     type: vless
     server: 217.60.25.207
     port: 443
@@ -116,7 +121,7 @@ proxies:
     reality-opts:
       public-key: "gas4N7hhyZ98hLF7vA5VvHD6GcnKuTI0ngKJtoS1BXg"
       short-id: "242cbf3ac942c4fd"
-  - name: "🇵🇱 [BL] Сервер 10"
+  - name: "🇵🇱 [BL] Сервер 11"
     type: vless
     server: 45.194.66.177
     port: 443
@@ -126,7 +131,7 @@ proxies:
     servername: "31tawwo0.virtual-network.lol"
     udp: true
     tls: true
-  - name: "🇵🇱 [BL] Сервер 11"
+  - name: "🇵🇱 [BL] Сервер 12"
     type: vless
     server: 191.217.253.12
     port: 443
@@ -140,7 +145,33 @@ proxies:
     reality-opts:
       public-key: "fNfokzklCF4l_c8k8PciOCjm5ecNoF_sNLjEtaO-xzI"
       short-id: "db04ce8bdb8900f1"
-  - name: "🇵🇱 [BL/AI] Сервер 12"
+  - name: "🇵🇱 [BL] Сервер 13"
+    type: vless
+    server: poland.biznes.lol
+    port: 443
+    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "poland.biznes.lol"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
+  - name: "🇵🇱 [BL/AI] Сервер 14"
+    type: vless
+    server: 222.167.245.16
+    port: 443
+    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "poland.biznes.lol"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
+  - name: "🇵🇱 [BL/AI] Сервер 15"
     type: vless
     server: 144.31.171.37
     port: 443
@@ -154,17 +185,3 @@ proxies:
     reality-opts:
       public-key: "Z-v1tBIQpFBfedRUOeHovEVL6Y22KmrBrDWY23cgtAI"
       short-id: "4bd5aa582ceabfdd"
-  - name: "🇵🇱 [BL] Сервер 14"
-    type: vless
-    server: 31.76.32.122
-    port: 443
-    uuid: "71b566cb-78c4-48e4-af5b-720e4f7884f2"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "p1.xvanta.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "O35Np_ugrc3mUDIEO4UnViEwRobM2r9kqQCdcdCHjEI"
-      short-id: "cb33163cf9c03ab1"
