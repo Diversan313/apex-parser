@@ -1,5 +1,36 @@
 proxies:
-  - name: "🇨🇭 [BL] Сервер 1"
+  - name: "🇨🇭 [WL/AI] Сервер 1"
+    type: vless
+    server: 138.16.206.147
+    port: 9096
+    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
+    network: "grpc"
+    servername: "p2g.138-16-206-147.sslip.io"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "JASBooze12B0nAaLU2QMWkeAqXwh4GmhfPD_O9YteT0"
+      short-id: "6ba85179e30d4fc2"
+    grpc-opts:
+      grpc-service-name: "inetgrpc"
+  - name: "🇨🇭 [WL] Сервер 2"
+    type: vless
+    server: 138.16.202.121
+    port: 9096
+    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
+    network: "grpc"
+    servername: "p2g.138-16-202-121.sslip.io"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "JASBooze12B0nAaLU2QMWkeAqXwh4GmhfPD_O9YteT0"
+      short-id: "6ba85179e30d4fc2"
+    grpc-opts:
+      grpc-service-name: "inetgrpc"
+      grpc-mode: "gun"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: vless
     server: 45.90.59.15
     port: 443
@@ -13,7 +44,7 @@ proxies:
     reality-opts:
       public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
       short-id: "19253fae84102271"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [BL/AI] Сервер 4"
     type: vless
     server: 193.233.89.130
     port: 8443
@@ -27,7 +58,13 @@ proxies:
       public-key: "xx8KWdR4HbVmvqPb0wRPAstBHGN2Uk99m7AF794_E3c"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇨🇭 [BL] Сервер 3"
+  - name: "🇨🇭 [BL] Сервер 5"
+    type: hysteria2
+    server: 212.102.227.131
+    port: 10443
+    password: "lvu_fb79ddb9bbda86f657cf34ee5dbe40bd_cf1aff9abf2b3945664fd63a07229839:np2.1.Q6bg95HDIqzwSQwdlbeS4-tGJpT8yFUcNQd7KGxqbXU"
+    sni: "n32.neproxy.net"
+  - name: "🇨🇭 [BL] Сервер 6"
     type: vless
     server: 201.10.91.216
     port: 25035
@@ -42,8 +79,8 @@ proxies:
       short-id: "eb63581de991f8c8"
     xhttp-opts:
       path: "/astral-edge-h1"
-      host: "201.10.91.216"
-  - name: "🇨🇭 [BL] Сервер 4"
+      host: "ch5.h1cloud.net"
+  - name: "🇨🇭 [BL] Сервер 7"
     type: vless
     server: 132.243.67.210
     port: 25035
@@ -58,19 +95,19 @@ proxies:
       short-id: "eb63581de991f8c8"
     xhttp-opts:
       path: "/astral-edge-h1"
-  - name: "🇨🇭 [BL] Сервер 5"
+  - name: "🇨🇭 [BL] Сервер 8"
     type: ss
     server: 23.166.88.127
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 6"
+  - name: "🇨🇭 [BL] Сервер 9"
     type: ss
     server: 186.190.215.251
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 7"
+  - name: "🇨🇭 [BL] Сервер 10"
     type: ss
     server: 79.127.184.104
     port: 19999
