@@ -1,5 +1,30 @@
 proxies:
-  - name: "🇪🇪 [BL] Сервер 1"
+  - name: "🇪🇪 [WL] Сервер 1"
+    type: vless
+    server: 136.234.10.226
+    port: 52006
+    uuid: "cde5d3ef-7d14-2328-a74d-ac98e39bf9ec"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "st.sdohnite.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇪🇪 [WL] Сервер 2"
+    type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "273a36a8-8885-44cd-b7b0-77735b68facd"
+    network: "xhttp"
+    servername: "cdn.stream-media-cdn.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/media/live/stream/"
+      host: "cdn.stream-media-cdn.ru"
+      mode: "packet-up"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 179.254.70.51
     port: 52006
@@ -10,7 +35,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 13.141.36.127
     port: 443
@@ -23,7 +48,20 @@ proxies:
     reality-opts:
       public-key: "NMS-P97L7IrYGl7mQv1j2K_EBX6G57fu6DvREZYl01U"
       short-id: "35a329a23bb50d2b"
-  - name: "🇪🇪 [BL] Сервер 3"
+  - name: "🇪🇪 [BL] Сервер 5"
+    type: vless
+    server: 31.56.187.171
+    port: 443
+    uuid: "0259e5aa-c188-4334-b204-32cd5ea859f6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "maps-carts-world.keno.su"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_MeP-WwmolUvi6wMXNoSs_zo6miG_OW7xk4ibzADiHY"
+  - name: "🇪🇪 [BL] Сервер 6"
     type: vless
     server: 217.60.182.96
     port: 443
