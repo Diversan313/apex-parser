@@ -1,5 +1,18 @@
 proxies:
-  - name: "🌐 [AI] Сервер 1"
+  - name: "🇵🇱 [AI] Сервер 1"
+    type: vless
+    server: 66.90.91.130
+    port: 443
+    uuid: "52d0c9b1-80aa-4b20-bcb1-849991560498"
+    network: "xhttp"
+    servername: "52d0c9b1.ferrin.uk"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/ai"
+      mode: "stream-one"
+  - name: "🇵🇱 [AI] Сервер 2"
     type: vless
     server: 66.90.91.139
     port: 443
@@ -12,7 +25,7 @@ proxies:
     xhttp-opts:
       path: "/ai"
       mode: "stream-one"
-  - name: "🌐 [AI] Сервер 2"
+  - name: "🌐 [AI] Сервер 3"
     type: vless
     server: 83.217.201.82
     port: 443
@@ -26,7 +39,7 @@ proxies:
     reality-opts:
       public-key: "mza5Hn1aolSz65qu-UwvBP3oesxMe25r11o4nxvikF0"
       short-id: "d1579a8745398e34"
-  - name: "🌐 [AI] Сервер 3"
+  - name: "🌐 [AI] Сервер 4"
     type: vless
     server: 83.217.201.82
     port: 443
@@ -40,7 +53,21 @@ proxies:
     reality-opts:
       public-key: "mza5Hn1aolSz65qu-UwvBP3oesxMe25r11o4nxvikF0"
       short-id: "64c1fe36c7846400"
-  - name: "🇳🇱 [AI] Сервер 4"
+  - name: "🌐 [AI] Сервер 5"
+    type: vless
+    server: 83.217.201.82
+    port: 443
+    uuid: "ebd1c0d6-7ff4-4b9f-8692-237517a27a64"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "skvoz-dpi.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "mza5Hn1aolSz65qu-UwvBP3oesxMe25r11o4nxvikF0"
+      short-id: "93ae75024604f796"
+  - name: "🇳🇱 [AI] Сервер 6"
     type: vless
     server: 201.51.11.65
     port: 443
@@ -53,46 +80,18 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GiDgVRVYrTkv1mZJeFVWkr736Iey2kqLM6L0eUbffV8"
-  - name: "🇳🇱 [AI] Сервер 5"
+  - name: "🇨🇭 [AI] Сервер 7"
     type: vless
-    server: 147.45.108.45
-    port: 443
-    uuid: "1e2b9c0c-4f9b-56f5-a062-1c4f2d2aa200"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "absolute-disaster.org"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "IuzAWh6UM62Txrnh_No9y5n6wmZecyR1ki8z5xor-0g"
-  - name: "🇺🇸 [AI] Сервер 6"
-    type: vless
-    server: 138.16.206.147
-    port: 2096
+    server: 138.16.202.121
+    port: 9096
     uuid: "d81db550-4787-467e-b98a-579ee9d41999"
     network: "grpc"
-    servername: "www.cloudflare.com"
+    servername: "p2g.138-16-202-121.sslip.io"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "4q4qXs-E4wzxXyV4TrOC-mEzx2S6h_LjQ_t_gc4wQEs"
-      short-id: "6ba85179e30d4fc2"
-    grpc-opts:
-      grpc-service-name: "inetgrpc"
-      grpc-mode: "gun"
-  - name: "🌐 [AI] Сервер 7"
-    type: vless
-    server: 138.16.206.147
-    port: 443
-    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
-    network: "grpc"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "4q4qXs-E4wzxXyV4TrOC-mEzx2S6h_LjQ_t_gc4wQEs"
+      public-key: "JASBooze12B0nAaLU2QMWkeAqXwh4GmhfPD_O9YteT0"
       short-id: "6ba85179e30d4fc2"
     grpc-opts:
       grpc-service-name: "inetgrpc"
@@ -112,7 +111,37 @@ proxies:
       short-id: "6ba85179e30d4fc2"
     grpc-opts:
       grpc-service-name: "inetgrpc"
-  - name: "🇳🇱 [AI] Сервер 9"
+  - name: "🇹🇷 [AI] Сервер 9"
+    type: vless
+    server: 138.16.206.147
+    port: 9125
+    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
+    network: "grpc"
+    servername: "tr.138-16-206-147.sslip.io"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4q4qXs-E4wzxXyV4TrOC-mEzx2S6h_LjQ_t_gc4wQEs"
+      short-id: "6ba85179e30d4fc2"
+    grpc-opts:
+      grpc-service-name: "inetgrpc"
+      grpc-mode: "gun"
+  - name: "🌐 [AI] Сервер 10"
+    type: vless
+    server: 45.132.179.90
+    port: 443
+    uuid: "ef5a57c7-84d5-4f86-b99c-875a16da485f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sbmicro683.gangplatform.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Ldrfdkq0bJrZWCS0p1u6Z2tPPal0LzRm4cgEYF_2KH8"
+      short-id: "cda7e8556ea56616"
+  - name: "🇳🇱 [AI] Сервер 11"
     type: vless
     server: 84.54.58.149
     port: 443
@@ -126,43 +155,54 @@ proxies:
     reality-opts:
       public-key: "t_PE4flX4qNVn1leXcJX_YWgDw9YZxsrCQAPEHYConc"
       short-id: "f21696d23293b39f"
-  - name: "🇵🇱 [AI] Сервер 10"
+  - name: "🇸🇪 [AI] Сервер 12"
     type: vless
-    server: 168.113.142.70
-    port: 9071
-    uuid: "d81db550-4787-467e-b98a-579ee9d41999"
-    network: "grpc"
-    servername: "fi.168-113-142-70.sslip.io"
+    server: 136.234.20.130
+    port: 443
+    uuid: "f15a2e25-6859-4bcc-b4c4-a14bb8ae0fbb"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "9ed8a8t.se4.h1clayd.click"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "XKFUTW9ZAlaaeuUGiKKx9FgLjdQch7pCiR1GC1xMcjk"
-      short-id: "aab4c8abf7a4c4e4"
-    grpc-opts:
-      grpc-service-name: "grpc"
-      grpc-mode: "gun"
-  - name: "🇷🇺 [AI] Сервер 11"
+      public-key: "aJ_qFu55iLaiUWJ157VIAfAf7Cc6PKbZhFIvE03nNDc"
+      short-id: "1cc8aab4a9fa9280"
+  - name: "🇺🇸 [AI] Сервер 13"
     type: ss
-    server: 48.103.218.77
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
+    server: 185.215.132.18
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🌐 [AI] Сервер 12"
+  - name: "🇳🇱 [AI] Сервер 14"
     type: vless
-    server: tg.skvoz-dpi.com
+    server: 195.209.222.4
     port: 443
-    uuid: "ebd1c0d6-7ff4-4b9f-8692-237517a27a64"
+    uuid: "ef5a57c7-84d5-4f86-b99c-875a16da485f"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "skvoz-dpi.com"
-    client-fingerprint: "qq"
+    servername: "ruhsds738.gangtype.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "mza5Hn1aolSz65qu-UwvBP3oesxMe25r11o4nxvikF0"
-      short-id: "93ae75024604f796"
-  - name: "🌐 [AI] Сервер 13"
+      public-key: "DHNvz0B_jGSTq2uK8Sehqo1u6Vv-fSSvk6-cRQJUKHM"
+      short-id: "8aaef249c24f2be7"
+  - name: "🇳🇱 [AI] Сервер 15"
+    type: vless
+    server: 196.245.217.58
+    port: 443
+    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
+    network: "tcp"
+    servername: "8ba6c3t.nl24.h1clayd.shop"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "43bHrvqzL5Sw8lvtDSE3LAlp_0WbixVc7nYcAf17bhg"
+      short-id: "16b6715de8577aaa"
+  - name: "🌐 [AI] Сервер 16"
     type: vless
     server: 217.60.179.166
     port: 443
@@ -176,7 +216,7 @@ proxies:
     reality-opts:
       public-key: "jbiddtGRgeBvlkjbuA3aU-WPjKgEX87tOVh1mFfvOUI"
       short-id: "16e0f049"
-  - name: "🇩🇪 [AI] Сервер 14"
+  - name: "🇩🇪 [AI] Сервер 17"
     type: vless
     server: 193.233.198.117
     port: 443
@@ -189,7 +229,7 @@ proxies:
     reality-opts:
       public-key: "zT-G11tZiOO7DFJD23MCeZC3TwaUJr6NMDHW4CLif1Y"
       short-id: "5eebb4b74e873b14"
-  - name: "🇩🇪 [AI] Сервер 15"
+  - name: "🇩🇪 [AI] Сервер 18"
     type: vless
     server: de-03.neverspy.tech
     port: 443
@@ -203,7 +243,7 @@ proxies:
     reality-opts:
       public-key: "zT-G11tZiOO7DFJD23MCeZC3TwaUJr6NMDHW4CLif1Y"
       short-id: "5eebb4b74e873b14"
-  - name: "🇬🇧 [AI] Сервер 16"
+  - name: "🇬🇧 [AI] Сервер 19"
     type: vless
     server: 83.171.241.136
     port: 443
@@ -216,7 +256,7 @@ proxies:
     reality-opts:
       public-key: "PslSaSQWP4BZZmkL7irab4FMti8sW6BvoC7ytFjJFyc"
       short-id: "cc678f10161992a9"
-  - name: "🇩🇪 [AI] Сервер 17"
+  - name: "🇩🇪 [AI] Сервер 20"
     type: vless
     server: 194.26.229.163
     port: 25443
@@ -231,7 +271,21 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc"
       grpc-mode: "gun"
-  - name: "🇵🇱 [AI] Сервер 18"
+  - name: "🇺🇸 [AI] Сервер 21"
+    type: vless
+    server: 169.40.42.168
+    port: 443
+    uuid: "d65cc14c-f53f-4fe2-b262-97856601319c"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "yahoo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
+      short-id: "c39cc7310a"
+  - name: "🇵🇱 [AI] Сервер 22"
     type: vless
     server: 222.167.245.16
     port: 443
@@ -244,7 +298,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
-  - name: "🇵🇱 [AI] Сервер 19"
+  - name: "🇵🇱 [AI] Сервер 23"
     type: vless
     server: 144.31.171.37
     port: 443
@@ -258,78 +312,63 @@ proxies:
     reality-opts:
       public-key: "Z-v1tBIQpFBfedRUOeHovEVL6Y22KmrBrDWY23cgtAI"
       short-id: "4bd5aa582ceabfdd"
-  - name: "🇩🇪 [AI] Сервер 20"
+  - name: "🇫🇷 [AI] Сервер 24"
     type: vless
-    server: 48.103.231.2
-    port: 443
-    uuid: "a346c521-7a7f-452b-9356-a4893feb5982"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee1-r.bankai.party"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"
-  - name: "🇩🇪 [AI] Сервер 21"
-    type: vless
-    server: 51.195.91.135
-    port: 8443
-    uuid: "a688bbe2-e455-11f1-a2d1-0f56c102b673"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GbzSIW3yd11r22Twahtyz4CMDxUj_QQe5RKvZukxDUw"
-      short-id: "992f9f92ddfa5056"
-  - name: "🇳🇱 [AI] Сервер 22"
-    type: vless
-    server: 50.7.122.243
-    port: 443
-    uuid: "be139ef0-3768-409c-82d9-d759dbcb4458"
+    server: 191.101.189.138
+    port: 52104
+    uuid: "894022a2-9bb7-4a3b-9d32-9d0922901ee6"
     network: "grpc"
-    servername: "xn--e1afgzg.xn----9sbekcigdcaa6cd7cafr7e.xn--p1ai"
+    servername: "www.nvidia.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "8ENbaQRCWZk-wewSrdHq1_rVjJY4CrxqXUo_5vZNdi4"
-      short-id: "b2b44805"
-    grpc-opts:
-      grpc-service-name: "cdnsync.v2.Transfer"
-  - name: "🇺🇸 [AI] Сервер 23"
+      public-key: "_Rab11RrGPieWCWiQogxLveCXsEa7iSSoT6m8y7MXhc"
+      short-id: "6b675719"
+  - name: "🇭🇰 [AI] Сервер 25"
     type: vless
-    server: 169.40.42.202
-    port: 443
-    uuid: "d65cc14c-f53f-4fe2-b262-97856601319c"
+    server: 38.180.95.176
+    port: 20086
+    uuid: "8d5b4bc5-2355-4a43-a386-ea8d20f6c3b8"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "yahoo.com"
-    client-fingerprint: "ios"
+    servername: "www.ebay.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
-      short-id: "c39cc7310a"
-  - name: "🇺🇸 [AI] Сервер 24"
+      public-key: "TpDfpHz7Lj4-Itv0ShybMhUrPChNXoexCGaOHtRjoD8"
+  - name: "🇩🇪 [AI] Сервер 26"
     type: vless
-    server: 169.40.42.229
+    server: 87.120.92.68
     port: 443
-    uuid: "d65cc14c-f53f-4fe2-b262-97856601319c"
+    uuid: "d596f92b-a7ce-47d2-8392-a274d9f57bec"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "yahoo.com"
-    client-fingerprint: "random"
+    servername: "cloudiva.abrdns.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
-      short-id: "c39cc7310a"
-  - name: "🇺🇸 [AI] Сервер 25"
+      public-key: "XLAE_KCFdlZkGcFndCnzEqsNHX1FByaGihkyEyrmDlo"
+      short-id: "c1440935cc28"
+  - name: "🇵🇱 [AI] Сервер 27"
     type: vless
-    server: 169.40.42.89
+    server: 129.101.111.37
+    port: 443
+    uuid: "d651c9ab-b844-4420-b3d0-20d201ef5f55"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "node-pl-2.nztpro.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "HyPCaHlGMjE2h7D4F6dtyFHeXDEAHIUg9fXJgADc5H0"
+      short-id: "134a7678ec2a3285"
+  - name: "🇺🇸 [AI] Сервер 28"
+    type: vless
+    server: 169.40.42.163
     port: 443
     uuid: "d65cc14c-f53f-4fe2-b262-97856601319c"
     network: "tcp"
@@ -341,7 +380,7 @@ proxies:
     reality-opts:
       public-key: "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg"
       short-id: "c39cc7310a"
-  - name: "🇵🇱 [AI] Сервер 26"
+  - name: "🇵🇱 [AI] Сервер 29"
     type: vless
     server: 177.1.192.89
     port: 443
@@ -356,7 +395,21 @@ proxies:
       short-id: "aab4c8abf7a4c4e4"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇲🇰 [AI] Сервер 27"
+  - name: "🇦🇿 [AI] Сервер 30"
+    type: vless
+    server: 187.55.160.2
+    port: 443
+    uuid: "e0f67e0a-6323-4ecb-9c1c-ca9ee4e48cf9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "88evieqs50.cdn.cachefleet.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "q_DfQMBNrcvoptJHMYGyjj76Tpb8ircnm5dIRnjYtx0"
+      short-id: "84d35337f990929d"
+  - name: "🇲🇰 [AI] Сервер 31"
     type: vless
     server: 217.60.55.103
     port: 443
@@ -370,7 +423,7 @@ proxies:
     reality-opts:
       public-key: "m904i3ti1GCWnFAkmb67LqEktV0dOZtkkmaG3I14djU"
       short-id: "c2b6208fdd8c783d"
-  - name: "🇺🇸 [AI] Сервер 28"
+  - name: "🇺🇸 [AI] Сервер 32"
     type: vless
     server: 166.0.25.92
     port: 443
@@ -384,21 +437,7 @@ proxies:
     reality-opts:
       public-key: "sM_GJx22-fLTXSSyhHKWZGwUUlRajZLXgg7JXo8l0gs"
       short-id: "f616956add605348"
-  - name: "🇩🇪 [AI] Сервер 29"
-    type: vless
-    server: jdvymxi.cvewfjg.shop
-    port: 443
-    uuid: "711c018e-2692-4aa8-93f3-544d83fcd16c"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "HyVSZ2OyySwXT-xRhTAqoiuYflIaj_b0Jxm7S1Iq9hs"
-      short-id: "7a76f3c4b9dd"
-  - name: "🇺🇸 [AI] Сервер 30"
+  - name: "🇺🇸 [AI] Сервер 33"
     type: vless
     server: 48.102.54.139
     port: 8443
@@ -414,7 +453,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "vless-grpc-reality"
       grpc-mode: "gun"
-  - name: "🇳🇱 [AI] Сервер 31"
+  - name: "🇳🇱 [AI] Сервер 34"
     type: vless
     server: 190.2.147.119
     port: 8443
@@ -428,7 +467,7 @@ proxies:
     reality-opts:
       public-key: "6FI4VM9WlQEGVjyCvLDQLz1jOkrzzhtfGl9eQTBn6HU"
       short-id: "f8d0271b4b5f9efc"
-  - name: "🇸🇰 [AI] Сервер 32"
+  - name: "🇸🇰 [AI] Сервер 35"
     type: vless
     server: 156.146.40.84
     port: 8443
@@ -442,9 +481,9 @@ proxies:
     reality-opts:
       public-key: "6FI4VM9WlQEGVjyCvLDQLz1jOkrzzhtfGl9eQTBn6HU"
       short-id: "f8d0271b4b5f9efc"
-  - name: "🇺🇸 [AI] Сервер 33"
+  - name: "🇺🇸 [AI] Сервер 36"
     type: ss
-    server: 37.19.198.236
-    port: 443
-    password: "shadowsocks"
-    cipher: "aes-128-gcm"
+    server: 135.148.42.13
+    port: 8388
+    password: "itzvpn@321"
+    cipher: "aes-256-gcm"

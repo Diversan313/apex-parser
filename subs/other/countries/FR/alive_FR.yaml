@@ -2,47 +2,20 @@ proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: trojan
     server: 5.53.124.50
-    port: 8443
-    password: "UyJoqPqycR"
-    sni: "5.53.124.50"
-    client-fingerprint: "firefox"
-    udp: true
-  - name: "🇫🇷 [WL] Сервер 2"
-    type: trojan
-    server: 5.53.124.50
     port: 443
     password: "UyJoqPqycR"
     sni: "5.53.124.50"
     client-fingerprint: "edge"
     udp: true
-  - name: "🇫🇷 [BL] Сервер 3"
-    type: vless
-    server: 195.216.169.229
-    port: 9543
-    uuid: "920b3cd9-4f82-4669-bbd2-d4a28b9052c6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "storage.yandexcloud.net"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
-      short-id: "123abcdf"
-  - name: "🇫🇷 [BL] Сервер 4"
-    type: vless
-    server: 85.202.206.244
+  - name: "🇫🇷 [WL] Сервер 2"
+    type: trojan
+    server: 5.53.124.50
     port: 8443
-    uuid: "6ba5ec30-3331-4258-aa80-e1e7abdbb0d4"
-    network: "tcp"
-    servername: "www.microsoft.com"
-    client-fingerprint: "chrome"
+    password: "UyJoqPqycR"
+    sni: "5.53.124.50"
+    client-fingerprint: "firefox"
     udp: true
-    tls: true
-    reality-opts:
-      public-key: "UgB6kJyM6sKFdSHtFtS4pd0TPYF4j17aoWsxGjg8LTU"
-      short-id: "1db05bcce95482"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 3"
     type: vless
     server: 145.223.68.58
     port: 443
@@ -56,20 +29,47 @@ proxies:
     reality-opts:
       public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
       short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
-    server: 45.67.215.21
-    port: 443
-    uuid: "73748416-fb0c-442c-adcf-7c06c4315431"
-    network: "xhttp"
-    servername: "mama147.baklajann.ru"
+    server: 195.216.169.229
+    port: 9543
+    uuid: "920b3cd9-4f82-4669-bbd2-d4a28b9052c6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "storage.yandexcloud.net"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
+      short-id: "123abcdf"
+  - name: "🇫🇷 [BL] Сервер 5"
+    type: vless
+    server: 195.216.169.182
+    port: 9543
+    uuid: "920b3cd9-4f82-4669-bbd2-d4a28b9052c6"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "storage.yandexcloud.net"
     client-fingerprint: "chrome"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/"
-      host: "mama147.baklajann.ru"
-      mode: "auto"
+    reality-opts:
+      public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
+      short-id: "123abcdf"
+  - name: "🇫🇷 [BL] Сервер 6"
+    type: vless
+    server: 161.97.160.224
+    port: 443
+    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "passport.yandex.ru"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
+      short-id: "e6"
   - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 85.208.69.43
@@ -135,37 +135,50 @@ proxies:
       short-id: "3242cfd7"
     xhttp-opts:
       path: "/ae1b809ceb77"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL/AI] Сервер 12"
+    type: vless
+    server: 191.101.189.138
+    port: 52104
+    uuid: "894022a2-9bb7-4a3b-9d32-9d0922901ee6"
+    network: "grpc"
+    servername: "www.nvidia.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_Rab11RrGPieWCWiQogxLveCXsEa7iSSoT6m8y7MXhc"
+      short-id: "6b675719"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: ss
     server: 23.162.152.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: ss
     server: 38.109.228.110
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: ss
     server: 167.17.64.27
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: ss
     server: 172.99.189.142
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 16"
+  - name: "🇫🇷 [BL] Сервер 17"
     type: ss
     server: 167.17.64.175
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 17"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: ss
     server: 167.17.64.22
     port: 19999
