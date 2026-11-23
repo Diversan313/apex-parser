@@ -1,6 +1,28 @@
 proxies:
   - name: "🇸🇪 [WL] Сервер 3"
     type: vless
+    server: 188.225.46.6
+    port: 443
+    uuid: "a077dc9a-712f-48ea-b75c-d94af64011ec"
+    network: "raw"
+    flow: "xtls-rprx-vision-udp443"
+    servername: "spb.b2ai.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [WL] Сервер 4"
+    type: vless
+    server: 188.225.46.6
+    port: 443
+    uuid: "a077dc9a-712f-48ea-b75c-d94af64011ec"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "spb.b2ai.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [WL] Сервер 5"
+    type: vless
     server: 168.113.132.167
     port: 52006
     uuid: "cde5d3ef-7d14-32c8-a74d-ac98e39bf9ec"
@@ -10,21 +32,7 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇸🇪 [WL] Сервер 4"
-    type: vless
-    server: lukafajooponi.begetcdn.cloud
-    port: 443
-    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
-    network: "xhttp"
-    servername: "lukafajooponi.begetcdn.cloud"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/user"
-      host: "lukafajooponi.begetcdn.cloud"
-      mode: "packet-up"
-  - name: "🇸🇪 [WL] Сервер 5"
+  - name: "🇸🇪 [WL] Сервер 6"
     type: vless
     server: 185.31.114.251
     port: 443
@@ -38,7 +46,7 @@ proxies:
       path: "/api/v1/user"
       host: "lukafajooponi.begetcdn.cloud"
       mode: "packet-up"
-  - name: "🇸🇪 [BL] Сервер 6"
+  - name: "🇸🇪 [BL] Сервер 7"
     type: vless
     server: 185.117.88.9
     port: 8443
@@ -51,7 +59,7 @@ proxies:
     reality-opts:
       public-key: "6FI4VM9WlQEGVjyCvLDQLz1jOkrzzhtfGl9eQTBn6HU"
       short-id: "f8d0271b4b5f9efc"
-  - name: "🇸🇪 [BL] Сервер 7"
+  - name: "🇸🇪 [BL] Сервер 8"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -63,20 +71,6 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
-  - name: "🇸🇪 [BL] Сервер 8"
-    type: vless
-    server: cdn3.aleqseivpn.site
-    port: 443
-    uuid: "e2a1c9f4-3b7d-4e6a-9c2f-8a1d5f6b7c9e"
-    network: "xhttp"
-    servername: "cdn3.aleqseivpn.site"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/update"
-      host: "cdn3.aleqseivpn.site"
-      mode: "packet-up"
   - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 195.206.235.12
@@ -94,7 +88,7 @@ proxies:
       path: "/astral-edge-h1"
   - name: "🇸🇪 [BL] Сервер 10"
     type: vless
-    server: se2.h1cloud.net
+    server: 132.243.163.114
     port: 25191
     uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
     network: "xhttp"
@@ -107,9 +101,10 @@ proxies:
       short-id: "55328e423218ee9b"
     xhttp-opts:
       path: "/astral-edge-h1"
+      mode: "auto"
   - name: "🇸🇪 [BL] Сервер 11"
     type: vless
-    server: 132.243.163.114
+    server: 136.148.221.153
     port: 25191
     uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
     network: "xhttp"
@@ -149,30 +144,6 @@ proxies:
       path: "/media/ws/"
   - name: "🇸🇪 [BL] Сервер 14"
     type: vless
-    server: payablemeta.cleanfoodshop.org
-    port: 443
-    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
-    network: "ws"
-    servername: "payablemeta.cleanfoodshop.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/media/ws/"
-  - name: "🇸🇪 [BL] Сервер 15"
-    type: vless
-    server: 31.76.3.52
-    port: 443
-    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
-    network: "ws"
-    servername: "payablemeta.cleanfoodshop.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/media/ws/"
-  - name: "🇸🇪 [BL] Сервер 16"
-    type: vless
     server: 31.76.3.51
     port: 443
     uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
@@ -183,7 +154,7 @@ proxies:
     tls: true
     ws-opts:
       path: "/media/ws/"
-  - name: "🇸🇪 [BL] Сервер 17"
+  - name: "🇸🇪 [BL] Сервер 15"
     type: vless
     server: 70.34.211.236
     port: 40118
@@ -196,20 +167,7 @@ proxies:
     reality-opts:
       public-key: "NpgXDQ6jl_HGPdHAHFeiBl5Ym7bywxmw_EYovmFjVQs"
       short-id: "9e3f5e25c17d2615"
-  - name: "🇸🇪 [BL] Сервер 18"
-    type: vless
-    server: swe1.baterium.space
-    port: 443
-    uuid: "7d63243c-983e-44db-a1b8-13dc3fd6f7a2"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cdnjs.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL] Сервер 19"
+  - name: "🇸🇪 [BL] Сервер 16"
     type: vless
     server: 77.232.143.142
     port: 443
@@ -223,7 +181,7 @@ proxies:
       path: "/media/ws/"
       headers:
         Host: "volumestyle.komediyatorg.net"
-  - name: "🇸🇪 [BL] Сервер 20"
+  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
     server: volumestyle.komediyatorg.net
     port: 443
@@ -235,7 +193,7 @@ proxies:
     tls: true
     ws-opts:
       path: "/media/ws/"
-  - name: "🇸🇪 [BL] Сервер 21"
+  - name: "🇸🇪 [BL] Сервер 18"
     type: vless
     server: 150.241.87.52
     port: 443
@@ -248,7 +206,19 @@ proxies:
     tls: true
     reality-opts:
       public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
-  - name: "🇸🇪 [BL] Сервер 22"
+  - name: "🇸🇪 [BL] Сервер 19"
+    type: vless
+    server: 31.76.3.52
+    port: 443
+    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
+    network: "ws"
+    servername: "payablemeta.cleanfoodshop.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
+  - name: "🇸🇪 [BL] Сервер 20"
     type: vless
     server: 31.76.3.37
     port: 443
@@ -260,6 +230,36 @@ proxies:
     tls: true
     ws-opts:
       path: "/media/ws/"
+  - name: "🇸🇪 [BL] Сервер 21"
+    type: vless
+    server: swe.srv.hiddenmedia.pw
+    port: 443
+    uuid: "e54fc748-c657-4820-b593-87d333e8d137"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "swe.srv.hiddenmedia.pw"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "T-qDypPpfavzWteKpx1KjpW1USCjkBvNc6mzpRglw00"
+      short-id: "e496f788cd4b7402"
+  - name: "🇸🇪 [BL] Сервер 22"
+    type: vless
+    server: 89.22.234.77
+    port: 443
+    uuid: "1f2836d7-e9ef-47d7-a9c4-1037077ae8d7"
+    network: "xhttp"
+    servername: "sw2.rarebooster.tech"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "iGcMUVn0z9N7GumAhiJi-VLxZrK4FM6aPrlmA1ux_SA"
+    xhttp-opts:
+      path: "/api/v1/events"
+      host: "sw2.rarebooster.tech"
+      mode: "packet-up"
   - name: "🇸🇪 [BL] Сервер 23"
     type: vless
     server: swself2.yandex-api.com
