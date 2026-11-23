@@ -1,7 +1,7 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 194.156.26.28
+    server: 194.156.26.244
     port: 443
     uuid: "2b7a122f-f6ff-4860-a919-7bf51be03c02"
     network: "xhttp"
@@ -15,7 +15,7 @@ proxies:
       mode: "auto"
   - name: "🇬🇧 [WL] Сервер 2"
     type: vless
-    server: 194.156.26.244
+    server: 194.156.26.28
     port: 443
     uuid: "2b7a122f-f6ff-4860-a919-7bf51be03c02"
     network: "xhttp"
@@ -29,19 +29,33 @@ proxies:
       mode: "auto"
   - name: "🇬🇧 [BL] Сервер 3"
     type: vless
-    server: 83.147.18.3
-    port: 443
-    uuid: "9f61cdf4-810d-4052-bbc7-2da0c8e20104"
-    network: "raw"
+    server: 84.252.100.33
+    port: 43000
+    uuid: "4a923161-156f-4914-8cac-762fb2433bfb"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
+    servername: "84.252.100.33"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "3iVJAIGPx6JMlhlRmfpGrHkSmLpHJ4CPvBBH7KsFrFA"
-      short-id: "fd8cf7e1173f0edb"
-  - name: "🇬🇧 [BL/AI] Сервер 4"
+      public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
+      short-id: "ee4ea980"
+  - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: 138.124.125.193
+    port: 10444
+    uuid: "e57ce64d-5a1a-4a90-96df-9e1bd3ad26e4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ads.x5.ru"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0oTkcqwLTUNLnSOP-VUWErmy6usAIg-biBE6ioZO-Vo"
+      short-id: "8debcf36f1cc69ff"
+  - name: "🇬🇧 [BL/AI] Сервер 5"
     type: vless
     server: 83.171.241.136
     port: 443
@@ -54,7 +68,7 @@ proxies:
     reality-opts:
       public-key: "PslSaSQWP4BZZmkL7irab4FMti8sW6BvoC7ytFjJFyc"
       short-id: "cc678f10161992a9"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 6"
     type: vless
     server: 50.7.154.78
     port: 443
@@ -68,7 +82,7 @@ proxies:
     reality-opts:
       public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
       short-id: "a8"
-  - name: "🇬🇧 [BL] Сервер 6"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 144.48.11.146
     port: 43000
@@ -82,19 +96,6 @@ proxies:
     reality-opts:
       public-key: "CG0mVPuvPcfZjplA21zehlqoDpGHihJBK8K_u1zfhgQ"
       short-id: "ee4ea980"
-  - name: "🇬🇧 [BL] Сервер 7"
-    type: vless
-    server: 85.189.67.107
-    port: 20086
-    uuid: "01b87800-396e-4d79-8eaf-c023deeccf7c"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.paypal.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "N60X1fq3w78e_eDHwgyrbgdplTgq1oyTnICTAKy7RjY"
   - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 95.163.153.141
@@ -138,3 +139,45 @@ proxies:
     reality-opts:
       public-key: "PCm0k-SvNd00cgNuqqnbCzmwVZd5vkgX2ZLk2_qngRs"
       short-id: "b60a93"
+  - name: "🇬🇧 [BL] Сервер 11"
+    type: ss
+    server: 198.244.201.129
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 12"
+    type: ss
+    server: 198.244.202.215
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 13"
+    type: ss
+    server: 142.202.51.22
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 14"
+    type: ss
+    server: 38.114.120.221
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 15"
+    type: ss
+    server: 185.176.206.9
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇬🇧 [BL] Сервер 16"
+    type: ss
+    server: 158.173.24.73
+    port: 443
+    password: "shadowsocks"
+    cipher: "aes-128-gcm"
+  - name: "🇬🇧 [BL] Сервер 17"
+    type: ss
+    server: 94.156.250.148
+    port: 7001
+    password: "RexnBgU7EV5ADxG"
+    cipher: "aes-256-gcm"
