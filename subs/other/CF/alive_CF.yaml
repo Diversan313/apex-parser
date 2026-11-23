@@ -1,18 +1,18 @@
 proxies:
-  - name: "🇩🇪 [CF] Сервер 1"
+  - name: "🇳🇱 [CF] Сервер 1"
     type: vless
-    server: 2.26.251.236
+    server: 188.225.56.157
     port: 443
-    uuid: "c16e8cdb-65dd-4049-bc65-14c051b8a6c6"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "mental-deprivation.ru"
+    uuid: "ef5a57c7-84d5-4f86-b99c-875a16da485f"
+    network: "ws"
+    servername: "cdn.quantum.vodka"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1iVMMhJZgXHRY7tRlR-1kypF0YeaBcB7EjcfHRsYZX4"
-      short-id: "4ff31b18d1bd8227"
+    ws-opts:
+      path: "/api/v1/feed/b597b53d57"
+      headers:
+        Host: "cdn.quantum.vodka"
   - name: "🇳🇱 [CF] Сервер 2"
     type: vless
     server: 195.209.222.106
@@ -29,6 +29,20 @@ proxies:
       short-id: "bd1b77948ad14751"
   - name: "🇳🇱 [CF] Сервер 3"
     type: vless
+    server: 195.209.223.32
+    port: 443
+    uuid: "ef5a57c7-84d5-4f86-b99c-875a16da485f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ruhsds737.gangtype.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "cwP4lx0DIWttNWp4IeLj2S-e1Yo2tnBedJ5RiMLtT0E"
+      short-id: "7e49fe98f9487e19"
+  - name: "🇳🇱 [CF] Сервер 4"
+    type: vless
     server: 195.209.222.4
     port: 443
     uuid: "ef5a57c7-84d5-4f86-b99c-875a16da485f"
@@ -41,16 +55,6 @@ proxies:
     reality-opts:
       public-key: "DHNvz0B_jGSTq2uK8Sehqo1u6Vv-fSSvk6-cRQJUKHM"
       short-id: "8aaef249c24f2be7"
-  - name: "🇦🇹 [CF] Сервер 4"
-    type: vless
-    server: 152.53.1.170
-    port: 443
-    uuid: "4fddfe0e-fddc-4032-b4c8-09c6d811fed0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "node-au.neverlock.uk"
-    udp: true
-    tls: true
   - name: "🇳🇱 [CF] Сервер 5"
     type: vless
     server: 153.80.22.106
