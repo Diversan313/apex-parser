@@ -1,6 +1,32 @@
 proxies:
   - name: "🇭🇰 [BL] Сервер 1"
     type: vless
+    server: 45.144.136.202
+    port: 20086
+    uuid: "16eb939a-75c3-4b59-bfc3-ff07316c7a80"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.paypal.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ZMKSZGONIVWum7Ut-O7JIKJ6gUBfURgrNOiMrblUBxk"
+  - name: "🇭🇰 [BL] Сервер 2"
+    type: vless
+    server: 38.244.198.105
+    port: 20086
+    uuid: "f261bc8c-d2f2-43da-83e7-06ef41ef8aa5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "aws.amazon.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "-cQ8O3f7-PUJ_RGl_QM106ivhH_ClMUMxZtnVczV0Vs"
+  - name: "🇭🇰 [BL] Сервер 3"
+    type: vless
     server: 8.217.1.203
     port: 8443
     uuid: "8b17beac-b143-447d-aa68-14cbb121a602"
@@ -13,37 +39,11 @@ proxies:
     reality-opts:
       public-key: "74P0QFvaK6B13rHsxR_t0lqRlg4YLuORD4VaHr5Jd38"
       short-id: "0bf55f64"
-  - name: "🇭🇰 [BL] Сервер 2"
-    type: vless
-    server: 38.207.178.137
-    port: 20086
-    uuid: "e4e11486-cef7-488a-8b4c-ac51f106383f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "t7qRcxR85PGhMJngfejgN01UsAmFZHxgIUVU36cCUhk"
-  - name: "🇭🇰 [BL] Сервер 3"
-    type: vless
-    server: 45.136.14.140
-    port: 20086
-    uuid: "367e69b0-5781-45ad-83bc-94013729532d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "hfJpGSf-nFizW5PjVNk0W5ZoTc81diTMjurFm3FT9j4"
   - name: "🇭🇰 [BL] Сервер 4"
     type: vless
-    server: 45.136.15.212
+    server: 103.143.81.24
     port: 20086
-    uuid: "5a66e6cf-ba9f-41c5-8590-036890654e58"
+    uuid: "4125878c-8cd5-4e2e-8e07-eca469c03e85"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.amazon.com"
@@ -51,7 +51,7 @@ proxies:
     udp: true
     tls: true
     reality-opts:
-      public-key: "z_EU3XzU2TmXkInPLf0GWdFEfx6ZcpVSxnS9BFJ1hGE"
+      public-key: "lT0Tq10qFAJItnnPw9RjOizcHeAA0JZl_wC1DsqEKj0"
   - name: "🇭🇰 [BL] Сервер 5"
     type: vless
     server: 38.180.95.95
@@ -67,9 +67,9 @@ proxies:
       public-key: "18kWhBUWGBC9R9_535uTkJWXyC79QrA4fqJgKa4tBQ0"
   - name: "🇭🇰 [BL] Сервер 6"
     type: vless
-    server: 103.143.81.24
+    server: 45.136.15.212
     port: 20086
-    uuid: "4125878c-8cd5-4e2e-8e07-eca469c03e85"
+    uuid: "5a66e6cf-ba9f-41c5-8590-036890654e58"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.amazon.com"
@@ -77,8 +77,34 @@ proxies:
     udp: true
     tls: true
     reality-opts:
-      public-key: "lT0Tq10qFAJItnnPw9RjOizcHeAA0JZl_wC1DsqEKj0"
+      public-key: "z_EU3XzU2TmXkInPLf0GWdFEfx6ZcpVSxnS9BFJ1hGE"
   - name: "🇭🇰 [BL] Сервер 7"
+    type: vless
+    server: 38.207.178.137
+    port: 20086
+    uuid: "e4e11486-cef7-488a-8b4c-ac51f106383f"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.amazon.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "t7qRcxR85PGhMJngfejgN01UsAmFZHxgIUVU36cCUhk"
+  - name: "🇭🇰 [BL] Сервер 8"
+    type: vless
+    server: 45.136.14.140
+    port: 20086
+    uuid: "367e69b0-5781-45ad-83bc-94013729532d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.amazon.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "hfJpGSf-nFizW5PjVNk0W5ZoTc81diTMjurFm3FT9j4"
+  - name: "🇭🇰 [BL] Сервер 9"
     type: vless
     server: 116.213.43.43
     port: 11106
@@ -92,7 +118,7 @@ proxies:
     reality-opts:
       public-key: "-13uTSuqk44pCU0x6yvldaskzyRIlO2ihmDvM0FsBns"
       short-id: "da12e31124830d42"
-  - name: "🇭🇰 [BL] Сервер 8"
+  - name: "🇭🇰 [BL] Сервер 10"
     type: hysteria2
     server: 152.32.254.68
     port: 5010
@@ -100,20 +126,18 @@ proxies:
     sni: "nas.aizhzo.com"
     obfs: "salamander"
     obfs-password: "7M4RXPFcQyQEGbkxBPfXo4bilMhCW2U9"
-  - name: "🇭🇰 [BL] Сервер 9"
+  - name: "🇭🇰 [BL] Сервер 11"
     type: vless
-    server: 45.144.136.202
-    port: 20086
-    uuid: "16eb939a-75c3-4b59-bfc3-ff07316c7a80"
+    server: 156.245.234.97
+    port: 2096
+    uuid: "93c0244e-6eb2-41bc-ad9c-1a7606747e13"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.paypal.com"
-    client-fingerprint: "chrome"
+    servername: "lyhk.mihoyo.site"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "ZMKSZGONIVWum7Ut-O7JIKJ6gUBfURgrNOiMrblUBxk"
-  - name: "🇭🇰 [BL] Сервер 10"
+  - name: "🇭🇰 [BL] Сервер 12"
     type: vless
     server: 38.180.95.2
     port: 20086
@@ -126,7 +150,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "MyWImK76KPf3T75mEf5vIA8eNQR_7mKEK_mOP0HlclI"
-  - name: "🇭🇰 [BL] Сервер 11"
+  - name: "🇭🇰 [BL] Сервер 13"
     type: vless
     server: 38.180.95.96
     port: 20086
@@ -139,7 +163,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "gMbm2Kom7Njm5Vh1Eycw7s9hH0x84csLzC21eYEI9QY"
-  - name: "🇭🇰 [BL] Сервер 12"
+  - name: "🇭🇰 [BL] Сервер 14"
     type: vless
     server: 45.192.193.54
     port: 35600
@@ -152,7 +176,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fJwbUNPAxu-CcoWnzWrvtDkX7QMDvJwFGWzJ3lDcFC4"
-  - name: "🇭🇰 [BL] Сервер 13"
+  - name: "🇭🇰 [BL] Сервер 15"
     type: vless
     server: 38.180.150.151
     port: 20086
@@ -165,7 +189,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "2hwx5m-M7_gZcJgWzpH8Dbae9xQ-IQWdCcs2HREkfko"
-  - name: "🇭🇰 [BL] Сервер 14"
+  - name: "🇭🇰 [BL] Сервер 16"
     type: vless
     server: 38.180.149.71
     port: 20086
@@ -178,7 +202,20 @@ proxies:
     tls: true
     reality-opts:
       public-key: "7RIUTTFMeW_Jag3aT-XmbJipce7w3COFC0CQ1qiIZmk"
-  - name: "🇭🇰 [BL] Сервер 15"
+  - name: "🇭🇰 [BL] Сервер 17"
+    type: vless
+    server: 85.189.89.170
+    port: 20086
+    uuid: "b5e8a15a-e134-4493-9073-be79eab9cda8"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.paypal.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "MqEVrXrgUtPf9WYkZyUfVtJQDAssCV79bad4F4LlWGA"
+  - name: "🇭🇰 [BL] Сервер 18"
     type: vless
     server: 38.180.95.176
     port: 20086
@@ -191,7 +228,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "TpDfpHz7Lj4-Itv0ShybMhUrPChNXoexCGaOHtRjoD8"
-  - name: "🇭🇰 [BL] Сервер 16"
+  - name: "🇭🇰 [BL] Сервер 19"
     type: vless
     server: 38.180.149.224
     port: 20086
@@ -204,20 +241,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "q7cUSh9cmnxEDBTz2eQQF7b3luX0YZi9jp7CHgOVFS0"
-  - name: "🇭🇰 [BL] Сервер 17"
-    type: vless
-    server: 38.244.198.105
-    port: 20086
-    uuid: "f261bc8c-d2f2-43da-83e7-06ef41ef8aa5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "aws.amazon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "-cQ8O3f7-PUJ_RGl_QM106ivhH_ClMUMxZtnVczV0Vs"
-  - name: "🇭🇰 [BL] Сервер 18"
+  - name: "🇭🇰 [BL] Сервер 20"
     type: vless
     server: 38.207.178.113
     port: 20086
@@ -230,7 +254,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "IdYIcbajO4njkNrsWpYriaYW9fF0YQAKjICgl0ynWDs"
-  - name: "🇭🇰 [BL] Сервер 19"
+  - name: "🇭🇰 [BL] Сервер 21"
     type: vless
     server: 83.229.127.243
     port: 20086
@@ -243,7 +267,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "i3TyUPQs67R7GH0UnLegIvefbV_At0GsPEkDqA4TwWw"
-  - name: "🇭🇰 [BL] Сервер 20"
+  - name: "🇭🇰 [BL] Сервер 22"
     type: vless
     server: 38.207.178.28
     port: 20086
@@ -256,7 +280,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fSVnXtIce23KOtqQjDuwRkNCM3mvWlva7bPNMfODv04"
-  - name: "🇭🇰 [BL] Сервер 21"
+  - name: "🇭🇰 [BL] Сервер 23"
     type: vless
     server: 62.60.232.226
     port: 2096
@@ -267,7 +291,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇭🇰 [BL] Сервер 22"
+  - name: "🇭🇰 [BL] Сервер 24"
     type: vless
     server: 2.26.204.46
     port: 31001
@@ -275,13 +299,13 @@ proxies:
     network: "raw"
     flow: "xtls-rprx-vision"
     servername: "mensura.cdn-apple.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "lzpIiMqHXas_qayw-HvrySb78FNkVroBOqniwqPXPzY"
       short-id: "39793bc4708abbbb"
-  - name: "🇭🇰 [BL/AI] Сервер 23"
+  - name: "🇭🇰 [BL] Сервер 25"
     type: vless
     server: 85.189.67.107
     port: 20086
@@ -294,7 +318,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "N60X1fq3w78e_eDHwgyrbgdplTgq1oyTnICTAKy7RjY"
-  - name: "🇭🇰 [BL] Сервер 24"
+  - name: "🇭🇰 [BL] Сервер 26"
     type: vless
     server: 85.189.89.182
     port: 20086
@@ -307,7 +331,35 @@ proxies:
     tls: true
     reality-opts:
       public-key: "p6xwBXTFkq8nzeO8zjPTSHANvS2DfstuG-Vp134hBGs"
-  - name: "🇭🇰 [BL] Сервер 25"
+  - name: "🇭🇰 [BL] Сервер 27"
+    type: vless
+    server: 156.226.168.221
+    port: 35193
+    uuid: "35cbae61-ee10-4cb9-abb8-4950b35e9851"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "d_pn_DMaIxhCkNh80h0Mc7nP94hrlN--I8liOIREDxE"
+      short-id: "e8daed2d"
+  - name: "🇭🇰 [BL] Сервер 28"
+    type: vless
+    server: hk3n.wxgqlfx.vip
+    port: 35193
+    uuid: "35cbae61-ee10-4cb9-abb8-4950b35e9851"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "d_pn_DMaIxhCkNh80h0Mc7nP94hrlN--I8liOIREDxE"
+      short-id: "e8daed2d"
+  - name: "🇭🇰 [BL] Сервер 29"
     type: vless
     server: 85.189.89.172
     port: 20086
@@ -320,20 +372,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "n1_yHUrlljxT_VL8HX0ALz8JKAYHJb5e2sQ8tMdBp2A"
-  - name: "🇭🇰 [BL] Сервер 26"
-    type: vless
-    server: 85.189.89.169
-    port: 20086
-    uuid: "6618c37f-edd7-4ff0-b9d6-26f1cc4945ab"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "aws.amazon.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "H3CK3gN9HfMONI7aYoSxOUqc5EYPgOVWfLOU3ygaIjw"
-  - name: "🇭🇰 [BL] Сервер 27"
+  - name: "🇭🇰 [BL] Сервер 30"
     type: vless
     server: 68.64.181.197
     port: 20086

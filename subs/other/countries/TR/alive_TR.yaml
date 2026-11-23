@@ -1,5 +1,13 @@
 proxies:
   - name: "🇹🇷 [WL] Сервер 1"
+    type: trojan
+    server: 5.53.124.50
+    port: 2087
+    password: "UyJoqPqycR"
+    sni: "5.53.124.50"
+    client-fingerprint: "android"
+    udp: true
+  - name: "🇹🇷 [WL] Сервер 2"
     type: vless
     server: 188.72.112.1
     port: 443
@@ -13,7 +21,7 @@ proxies:
       path: "/api/v1/user"
       host: "cdnstream.win"
       mode: "packet-up"
-  - name: "🇹🇷 [WL] Сервер 2"
+  - name: "🇹🇷 [WL] Сервер 3"
     type: vless
     server: 138.16.206.147
     port: 9125
@@ -29,35 +37,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "inetgrpc"
       grpc-mode: "gun"
-  - name: "🇹🇷 [BL] Сервер 3"
-    type: vless
-    server: 147.45.66.208
-    port: 43000
-    uuid: "01e61db7-9e0b-4431-a995-a5288a01b951"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "147.45.66.208"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "DbL9RJFvJrnxBu6fFhWkHF8nsD6cK_DKMuMV00RmlWg"
-      short-id: "4d3d8e15"
   - name: "🇹🇷 [BL] Сервер 4"
-    type: vless
-    server: cdnstream.win
-    port: 443
-    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
-    network: "xhttp"
-    servername: "cdnstream.win"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/user"
-      host: "cdnstream.win"
-      mode: "packet-up"
-  - name: "🇹🇷 [BL] Сервер 5"
     type: vless
     server: 185.158.151.235
     port: 54005
