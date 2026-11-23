@@ -1,20 +1,6 @@
 proxies:
   - name: "🇹🇷 [WL] Сервер 1"
     type: vless
-    server: 188.72.112.1
-    port: 443
-    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
-    network: "xhttp"
-    servername: "cdnstream.win"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/user"
-      host: "cdnstream.win"
-      mode: "packet-up"
-  - name: "🇹🇷 [WL/AI] Сервер 2"
-    type: vless
     server: 138.16.206.147
     port: 9125
     uuid: "d81db550-4787-467e-b98a-579ee9d41999"
@@ -29,6 +15,20 @@ proxies:
     grpc-opts:
       grpc-service-name: "inetgrpc"
       grpc-mode: "gun"
+  - name: "🇹🇷 [BL] Сервер 2"
+    type: vless
+    server: cdnstream.win
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
   - name: "🇹🇷 [BL] Сервер 3"
     type: vless
     server: iran.crackerbinam.org
