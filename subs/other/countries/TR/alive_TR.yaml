@@ -1,5 +1,34 @@
 proxies:
-  - name: "🇹🇷 [BL] Сервер 1"
+  - name: "🇹🇷 [WL] Сервер 1"
+    type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
+  - name: "🇹🇷 [WL] Сервер 2"
+    type: vless
+    server: 91.232.103.42
+    port: 6443
+    uuid: "391a32c6-084c-4d61-8e8d-472678021dac"
+    network: "grpc"
+    servername: "download.amd.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BrBQVb1nC7aHUPm3pSYHYQ4N60y2XrhwXznWys87Vyc"
+      short-id: "b96ac15d1f46e05a"
+    grpc-opts:
+      grpc-service-name: "/api/v1/update"
+  - name: "🇹🇷 [BL] Сервер 3"
     type: vless
     server: 5.175.236.86
     port: 443
@@ -12,7 +41,7 @@ proxies:
     xhttp-opts:
       path: "/api/m1pzgb/sync"
       mode: "auto"
-  - name: "🇹🇷 [BL] Сервер 2"
+  - name: "🇹🇷 [BL] Сервер 4"
     type: vless
     server: 185.158.151.235
     port: 54005
@@ -25,7 +54,7 @@ proxies:
     reality-opts:
       public-key: "k62XkGNgUzt6z6NjQrM-zjpuUei3G62_AAIzlgxHaEA"
       short-id: "ed69a523b5ab3e"
-  - name: "🇹🇷 [BL] Сервер 3"
+  - name: "🇹🇷 [BL] Сервер 5"
     type: hysteria2
     server: 5.175.136.152
     port: 443
