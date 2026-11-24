@@ -40,6 +40,12 @@ proxies:
       path: "/api/v1/upload"
       host: "wholebeam.com"
   - name: "🇷🇺 [WL] Сервер 4"
+    type: ss
+    server: 90.156.203.62
+    port: 5112
+    password: "VVlAff77CnAU43Aoc5j15Y"
+    cipher: "chacha20-ietf-poly1305"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: vps3.nemnogogo.com
     port: 443
@@ -51,7 +57,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 5"
+  - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 201.51.12.98
     port: 443
@@ -63,7 +69,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL] Сервер 7"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -75,9 +81,9 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 7"
+  - name: "🇷🇺 [WL] Сервер 8"
     type: vless
-    server: 188.72.112.1
+    server: cdn.oldertown.ru
     port: 443
     uuid: "29777784-b5ad-4e2a-be7b-335f033ab97c"
     network: "xhttp"
@@ -89,32 +95,20 @@ proxies:
       path: "/api/v4/media/session/poll"
       host: "cdn.oldertown.ru"
       mode: "packet-up"
-  - name: "🇷🇺 [WL] Сервер 8"
-    type: vless
-    server: xsru2.freeddns.org
-    port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "ws"
-    servername: "xsru2.freeddns.org"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/wsru"
-      headers:
-        Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 9"
     type: vless
-    server: 147.45.175.81
+    server: 188.72.112.1
     port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "grpc"
-    servername: "xsru1.ddnsfree.com"
-    client-fingerprint: "random"
+    uuid: "7ae5205f-e6c2-45bd-b393-b42c4e1d54f6"
+    network: "xhttp"
+    servername: "audio.pranker.cc"
+    client-fingerprint: "qq"
     udp: true
     tls: true
-    grpc-opts:
-      grpc-service-name: "grpc-ru"
+    xhttp-opts:
+      path: "/api/v3/sync/88be1f21/"
+      host: "audio.pranker.cc"
+      mode: "packet-up"
   - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 147.45.175.81
@@ -122,11 +116,11 @@ proxies:
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
     servername: "xsru2.freeddns.org"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     ws-opts:
-      path: "/wsru"
+      path: "wsru"
       headers:
         Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 11"
@@ -180,11 +174,21 @@ proxies:
       path: "/58c492097df6ed08"
       mode: "auto"
   - name: "🇷🇺 [WL] Сервер 16"
-    type: ss
-    server: 46.17.42.129
-    port: 18443
-    password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
-    cipher: "aes-256-gcm"
+    type: vless
+    server: msk.substituteme.space
+    port: 8843
+    uuid: "ae8df31c-3420-44a4-aa18-c34e2b5717d9"
+    network: "xhttp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BxyJp0UU90qi-HeYuanJB9IR8HbNABusQvPNaUfYQCU"
+      short-id: "2b608412739b5087"
+    xhttp-opts:
+      path: "/e47f0add4324743e"
+      mode: "auto"
   - name: "🇷🇺 [WL] Сервер 17"
     type: vless
     server: 136.148.83.71
@@ -197,6 +201,23 @@ proxies:
     tls: true
   - name: "🇷🇺 [WL] Сервер 18"
     type: vless
+    server: 2.26.104.37
+    port: 8443
+    uuid: "60a40448-adab-484b-bfc8-be577985a686"
+    network: "xhttp"
+    servername: "gw-fe72.strixedge.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ssTK2ZGSzOApCNRmshpuOprEnZ49PEO3aEZrnFnucms"
+      short-id: "a2fbd78225b1d008"
+    xhttp-opts:
+      path: "/edge/fbaf5b1811e6/"
+      host: "gw-fe72.strixedge.cc"
+      mode: "packet-up"
+  - name: "🇷🇺 [WL] Сервер 19"
+    type: vless
     server: 136.148.83.70
     port: 443
     uuid: "00000000-0000-0001-0000-000000000000"
@@ -205,3 +226,9 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
+  - name: "🇷🇺 [WL] Сервер 20"
+    type: hysteria2
+    server: 95.182.123.106
+    port: 443
+    password: "7316d881-eeec-429b-94f1-07585747f7c8"
+    sni: "channelru.belka.tv"
