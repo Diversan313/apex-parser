@@ -1,62 +1,18 @@
 proxies:
-  - name: "🇵🇱 [WL] Сервер 1"
+  - name: "🇵🇱 [BL] Сервер 1"
     type: vless
-    server: 168.113.187.116
+    server: 82.118.22.161
     port: 443
-    uuid: "ecf65acd-ea72-0002-be5f-cd23afb2722f"
-    network: "tcp"
+    uuid: "05488656-d4bf-4634-8b2e-e4ff5a56c7e2"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "files.vpvi.store"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-  - name: "🇵🇱 [WL] Сервер 2"
-    type: vless
-    server: 188.72.112.1
-    port: 443
-    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "xhttp"
-    servername: "cdnpl.worldfly.io"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v1/assets/"
-      host: "cdnpl.worldfly.io"
-      mode: "packet-up"
-  - name: "🇵🇱 [WL] Сервер 3"
-    type: vless
-    server: 37.9.4.77
-    port: 485
-    uuid: "ff655ea0-edf3-4acf-a09b-676b752530a0"
-    network: "grpc"
-    servername: "x5media.ru"
-    client-fingerprint: "firefox"
+    servername: "www.cloudflare.com"
     udp: true
     tls: true
     reality-opts:
-      public-key: "q0RTp7_uPlYSYreBXPmXcS8BOmbRAA2J1-3qGFn4e1g"
-      short-id: "33ecfbdea7be54ba"
-    grpc-opts:
-      grpc-service-name: "Gun"
-      grpc-mode: "multi"
-  - name: "🇵🇱 [WL] Сервер 4"
-    type: vless
-    server: 37.9.4.77
-    port: 486
-    uuid: "ff655ea0-edf3-4acf-a09b-676b752530a0"
-    network: "grpc"
-    servername: "max.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "3OaPrMOJLvE3uMFJffbpKZZVfR_lx3-O3Sir3CXVmWY"
-      short-id: "1e4d8a54db5d9709"
-    grpc-opts:
-      grpc-service-name: "Gun"
-      grpc-mode: "multi"
-  - name: "🇵🇱 [BL] Сервер 5"
+      public-key: "xY1KpNxaIGmi6jfeudYQ_aaLGQqWK_uHStnwUFd2_2E"
+      short-id: "fa3ea655619a3e78"
+  - name: "🇵🇱 [BL] Сервер 2"
     type: vless
     server: pl.extremumnews.com
     port: 6443
@@ -71,7 +27,7 @@ proxies:
       short-id: "ffd956560a594225"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇵🇱 [BL] Сервер 6"
+  - name: "🇵🇱 [BL] Сервер 3"
     type: vless
     server: 85.234.86.178
     port: 6443
@@ -86,7 +42,7 @@ proxies:
       short-id: "ffd956560a594225"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇵🇱 [BL] Сервер 7"
+  - name: "🇵🇱 [BL] Сервер 4"
     type: vless
     server: 171.22.129.227
     port: 443
@@ -99,7 +55,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
-  - name: "🇵🇱 [BL] Сервер 8"
+  - name: "🇵🇱 [BL] Сервер 5"
     type: vless
     server: 31.77.56.68
     port: 2052
@@ -115,90 +71,21 @@ proxies:
     grpc-opts:
       grpc-service-name: "plogrpc"
       grpc-mode: "gun"
-  - name: "🇵🇱 [BL/AI] Сервер 9"
+  - name: "🇵🇱 [BL] Сервер 6"
     type: vless
-    server: 80.47.7.216
+    server: 189.74.116.30
     port: 443
-    uuid: "e0643422-1e6e-4182-993e-de9b4c78e736"
+    uuid: "13e217b6-cf58-4e5a-b9bd-1d546232d02a"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "fedtuna.ai"
+    servername: "api.mediatropa.cc"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
-      short-id: "6f0091ebe3029ebb"
-  - name: "🇵🇱 [BL/AI] Сервер 10"
-    type: vless
-    server: 80.47.18.60
-    port: 443
-    uuid: "e0643422-1e6e-4182-993e-de9b4c78e736"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "fedtuna.ai"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
-      short-id: "6f0091ebe3029ebb"
-  - name: "🇵🇱 [BL] Сервер 11"
-    type: vless
-    server: 135.126.12.8
-    port: 443
-    uuid: "3267ad95-f505-4f08-a852-6febd5af09ff"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "cvetidamam.growmart.site"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "LW0B4oSrkCd3atsq6Lr3M2dDReW8dVtodLsau4qlxWM"
-      short-id: "05a874ff16cfe500"
-  - name: "🇵🇱 [BL] Сервер 12"
-    type: vless
-    server: cvetidamam.growmart.site
-    port: 443
-    uuid: "3267ad95-f505-4f08-a852-6febd5af09ff"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "cvetidamam.growmart.site"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "LW0B4oSrkCd3atsq6Lr3M2dDReW8dVtodLsau4qlxWM"
-      short-id: "05a874ff16cfe500"
-  - name: "🇵🇱 [BL] Сервер 13"
-    type: vless
-    server: 89.125.234.20
-    port: 443
-    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
-    network: "tcp"
-    servername: "af48d6t.pl10.h1clayd.shop"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yELja29OBDJ2V0qacVXg_5NDN7uNk1YQVMgGKN9Kc2g"
-      short-id: "f36b61d044905efb"
-  - name: "🇵🇱 [BL] Сервер 14"
-    type: vless
-    server: p2.sklserv.com
-    port: 443
-    uuid: "b7791707-83d9-444b-9d05-f5c99e90acd4"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "p1.sklserv.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "D_jwAtRb0diil6EAGA6BpNtCZE9FsvzjFZtcdRQggUQ"
-      short-id: "4c68bb9c4f73dcb8"
-  - name: "🇵🇱 [BL] Сервер 15"
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇵🇱 [BL] Сервер 7"
     type: vless
     server: zorvik.klyck.online
     port: 443
@@ -212,7 +99,51 @@ proxies:
     reality-opts:
       public-key: "qTwivTdhfTMDVJPsPrpx833IyxQM1DZqxnCby0VF5XE"
       short-id: "cfe386d1e27b6085"
-  - name: "🇵🇱 [BL] Сервер 16"
+  - name: "🇵🇱 [BL] Сервер 8"
+    type: vless
+    server: 191.217.255.242
+    port: 443
+    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "zorvik.klyck.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qTwivTdhfTMDVJPsPrpx833IyxQM1DZqxnCby0VF5XE"
+      short-id: "cfe386d1e27b6085"
+  - name: "🇵🇱 [BL] Сервер 9"
+    type: hysteria2
+    server: 177.3.252.187
+    port: 443
+    password: "00094b43-04c7-464b-a3d0-72da5fe0e68b"
+    sni: "quattro-vpn-zalupa.cxhub.su"
+  - name: "🇵🇱 [BL] Сервер 10"
+    type: vless
+    server: p2.sklserv.com
+    port: 443
+    uuid: "b7791707-83d9-444b-9d05-f5c99e90acd4"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "p1.sklserv.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "D_jwAtRb0diil6EAGA6BpNtCZE9FsvzjFZtcdRQggUQ"
+      short-id: "4c68bb9c4f73dcb8"
+  - name: "🇵🇱 [BL] Сервер 11"
+    type: vless
+    server: 45.194.66.177
+    port: 443
+    uuid: "352a250d-080b-47b5-b7db-f9f8fa31c551"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "31tawwo0.virtual-network.lol"
+    udp: true
+    tls: true
+  - name: "🇵🇱 [BL] Сервер 12"
     type: vless
     server: 13.143.189.174
     port: 6443
@@ -227,7 +158,16 @@ proxies:
       short-id: "50831b4958b2643a"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇵🇱 [BL/AI] Сервер 17"
+  - name: "🇵🇱 [BL] Сервер 13"
+    type: vless
+    server: 94.183.167.172
+    port: 443
+    uuid: "d7121b33-e335-4921-bb00-4c0b157e7fc1"
+    network: "tcp"
+    servername: "s8k4.scan-cdn.com"
+    udp: true
+    tls: true
+  - name: "🇵🇱 [BL/AI] Сервер 14"
     type: vless
     server: 144.31.171.37
     port: 443
@@ -241,3 +181,17 @@ proxies:
     reality-opts:
       public-key: "Z-v1tBIQpFBfedRUOeHovEVL6Y22KmrBrDWY23cgtAI"
       short-id: "4bd5aa582ceabfdd"
+  - name: "🇵🇱 [BL] Сервер 15"
+    type: vless
+    server: 135.126.12.8
+    port: 443
+    uuid: "3267ad95-f505-4f08-a852-6febd5af09ff"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cvetidamam.growmart.site"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "LW0B4oSrkCd3atsq6Lr3M2dDReW8dVtodLsau4qlxWM"
+      short-id: "05a874ff16cfe500"
