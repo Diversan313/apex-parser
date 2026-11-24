@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇸🇪 [WL] Сервер 2"
+  - name: "🇸🇪 [WL] Сервер 1"
     type: vless
     server: 188.225.46.6
     port: 443
@@ -10,7 +10,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇸🇪 [WL] Сервер 3"
+  - name: "🇸🇪 [WL] Сервер 2"
     type: vless
     server: 188.225.46.6
     port: 443
@@ -19,6 +19,17 @@ proxies:
     flow: "xtls-rprx-vision"
     servername: "spb.b2ai.top"
     client-fingerprint: "firefox"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [WL] Сервер 3"
+    type: vless
+    server: 188.225.36.19
+    port: 443
+    uuid: "a077dc9a-712f-48ea-b75c-d94af64011ec"
+    network: "tcp"
+    flow: "xtls-rprx-vision-udp443"
+    servername: "spb.b2ai.top"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 4"
@@ -36,21 +47,6 @@ proxies:
       short-id: "a7c92e4b10d6f835"
   - name: "🇸🇪 [BL] Сервер 5"
     type: vless
-    server: 31.77.144.255
-    port: 8444
-    uuid: "95580a09-cce7-4b62-af74-a514083ba9e4"
-    network: "xhttp"
-    servername: "www.amd.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "jgf0wWpgkEJZzu9wu45Ms33SNZpibtx507rpvzfz3mQ"
-      short-id: "635a76c25a4b1820"
-    xhttp-opts:
-      path: "/xh"
-      mode: "stream-one"
-  - name: "🇸🇪 [BL] Сервер 6"
-    type: vless
     server: 138.124.86.230
     port: 48115
     uuid: "b2fe1fa4-6a79-4938-a3f4-63b54ae7f16b"
@@ -61,7 +57,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
-  - name: "🇸🇪 [BL] Сервер 7"
+  - name: "🇸🇪 [BL] Сервер 6"
     type: vless
     server: 85.234.86.20
     port: 6443
@@ -76,22 +72,7 @@ proxies:
       short-id: "885781b112c298a5"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇸🇪 [BL] Сервер 8"
-    type: vless
-    server: se.extremumnews.com
-    port: 6443
-    uuid: "391a32c6-084c-4d61-8e8d-472678021dac"
-    network: "grpc"
-    servername: "download.virtualbox.org"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "sadyaFeM276vgv_wdE1g6DDMgKZfKR_fr9DhTyCp9zM"
-      short-id: "885781b112c298a5"
-    grpc-opts:
-      grpc-service-name: "/api/v1/update"
-  - name: "🇸🇪 [BL] Сервер 9"
+  - name: "🇸🇪 [BL] Сервер 7"
     type: vless
     server: 136.148.221.153
     port: 25191
@@ -107,7 +88,22 @@ proxies:
     xhttp-opts:
       path: "/astral-edge-h1"
       mode: "auto"
-  - name: "🇸🇪 [BL] Сервер 10"
+  - name: "🇸🇪 [BL] Сервер 8"
+    type: vless
+    server: se2.h1cloud.net
+    port: 25191
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "a8687er.se2.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
+      short-id: "55328e423218ee9b"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+  - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 195.206.235.210
     port: 25191
@@ -122,41 +118,3 @@ proxies:
       short-id: "55328e423218ee9b"
     xhttp-opts:
       path: "/astral-edge-h1"
-  - name: "🇸🇪 [BL] Сервер 11"
-    type: vless
-    server: 153.56.231.202
-    port: 25191
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "a8687er.se2.h1clayd.click"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
-      short-id: "55328e423218ee9b"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-      mode: "auto"
-  - name: "🇸🇪 [BL] Сервер 12"
-    type: hysteria2
-    server: 185.42.212.207
-    port: 26206
-    password: "Telegram--CONFIG7X--CONFIG7X--CONFIG7X--CONFIG7X--CONFIG7X--CONFIG7X--CONFIG7X--CONFIG7X-"
-    sni: "config7x.de5.net"
-    obfs: "salamander"
-    obfs-password: "vxvnmus9agdzduvz"
-  - name: "🇸🇪 [BL] Сервер 13"
-    type: vless
-    server: 64.112.125.183
-    port: 443
-    uuid: "911acdf2-3968-4d3e-be41-e62e2592e422"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nechunaev.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "7pr2qWG1_3TjBDCidQWJ2lnbEf72lOcse4Gca8anwEo"
-      short-id: "57f0eca7ae6be8"
