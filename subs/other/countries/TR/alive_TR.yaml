@@ -7,12 +7,26 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "zkgbzlv5d42.vortenix-data59.cfd"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
   - name: "🇹🇷 [WL] Сервер 2"
+    type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
+  - name: "🇹🇷 [WL] Сервер 3"
     type: vless
     server: 91.232.103.42
     port: 6443
@@ -27,7 +41,7 @@ proxies:
       short-id: "b96ac15d1f46e05a"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇹🇷 [BL] Сервер 3"
+  - name: "🇹🇷 [BL] Сервер 4"
     type: vless
     server: 185.158.151.235
     port: 54005
