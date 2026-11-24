@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇰🇿 [WL/AI] Сервер 1"
+  - name: "🇰🇿 [WL] Сервер 1"
     type: vless
     server: 201.34.136.78
     port: 443
@@ -14,17 +14,6 @@ proxies:
       public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
   - name: "🇰🇿 [BL] Сервер 2"
     type: vless
-    server: 38.107.234.57
-    port: 8443
-    uuid: "2424febb-43cb-488d-bdd1-401e923c8e48"
-    network: "ws"
-    servername: "3h-kazakhstan1.09vpn.com"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/vless/"
-  - name: "🇰🇿 [BL] Сервер 3"
-    type: vless
     server: 3h-kazakhstan1.09vpn.com
     port: 8443
     uuid: "2424febb-43cb-488d-bdd1-401e923c8e48"
@@ -37,6 +26,20 @@ proxies:
       path: "/vless/"
       headers:
         Host: "3h-kazakhstan1.09vpn.com"
+  - name: "🇰🇿 [BL] Сервер 3"
+    type: vless
+    server: 38.180.206.44
+    port: 48982
+    uuid: "a80acd3a-3df5-40b5-a54a-29bb18056115"
+    network: "xhttp"
+    servername: "cdn3-88.yahoo.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "A1ygNS8bIvKp7ZlUnjjHX_Z2AS_e4suvSs_IkWICvGE"
+    xhttp-opts:
+      path: "/"
+      mode: "auto"
   - name: "🇰🇿 [BL] Сервер 4"
     type: vless
     server: 5.180.27.134
