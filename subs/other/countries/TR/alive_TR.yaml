@@ -1,6 +1,20 @@
 proxies:
   - name: "🇹🇷 [WL] Сервер 1"
     type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "17b0043a-d58c-4906-aefa-cb344e7d7cc0"
+    network: "xhttp"
+    servername: "cdnstream.win"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v1/user"
+      host: "cdnstream.win"
+      mode: "packet-up"
+  - name: "🇹🇷 [WL/AI] Сервер 2"
+    type: vless
     server: 147.45.213.56
     port: 443
     uuid: "42c83523-9f96-41b2-82d6-2edb71a4ac19"
@@ -12,7 +26,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
-  - name: "🇹🇷 [WL] Сервер 2"
+  - name: "🇹🇷 [WL] Сервер 3"
     type: vless
     server: 91.232.103.42
     port: 6443
@@ -27,16 +41,3 @@ proxies:
       short-id: "b96ac15d1f46e05a"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇹🇷 [BL] Сервер 3"
-    type: vless
-    server: 5.175.236.86
-    port: 443
-    uuid: "9132106b-d6ce-45c7-9007-67f9981d413b"
-    network: "xhttp"
-    servername: "top8hs.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/m1pzgb/sync"
-      mode: "auto"

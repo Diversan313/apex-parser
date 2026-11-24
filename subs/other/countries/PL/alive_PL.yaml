@@ -1,15 +1,18 @@
 proxies:
   - name: "🇵🇱 [WL] Сервер 1"
     type: vless
-    server: 168.113.187.116
+    server: 188.72.112.1
     port: 443
-    uuid: "ecf65acd-ea72-0002-be5f-cd23afb2722f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "files.vpvi.store"
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "xhttp"
+    servername: "cdnpl.worldfly.io"
     client-fingerprint: "firefox"
     udp: true
     tls: true
+    xhttp-opts:
+      path: "/api/v1/assets/"
+      host: "cdnpl.worldfly.io"
+      mode: "packet-up"
   - name: "🇵🇱 [BL] Сервер 2"
     type: vless
     server: 82.118.22.161
@@ -25,6 +28,19 @@ proxies:
       short-id: "fa3ea655619a3e78"
   - name: "🇵🇱 [BL] Сервер 3"
     type: vless
+    server: poland.biznes.lol
+    port: 443
+    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "poland.biznes.lol"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
+  - name: "🇵🇱 [BL] Сервер 4"
+    type: vless
     server: af48d6t.pl10.h1clayd.shop
     port: 443
     uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
@@ -36,21 +52,6 @@ proxies:
     reality-opts:
       public-key: "yELja29OBDJ2V0qacVXg_5NDN7uNk1YQVMgGKN9Kc2g"
       short-id: "f36b61d044905efb"
-  - name: "🇵🇱 [BL] Сервер 4"
-    type: vless
-    server: 9030b9g.pl10.h1clayd.shop
-    port: 443
-    uuid: "d92038b6-b470-4267-9c69-2c649bf3f4a4"
-    network: "grpc"
-    servername: "9030b9g.pl10.h1clayd.shop"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "oE6MuoxfZqB5fkSnx_XWL28kNoBGODAQk58pRNS3qXY"
-      short-id: "d28c89350a91e479"
-    grpc-opts:
-      grpc-service-name: "8b45c3fd2e05"
   - name: "🇵🇱 [BL] Сервер 5"
     type: vless
     server: 171.22.129.227
@@ -95,7 +96,21 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc"
       grpc-mode: "gun"
-  - name: "🇵🇱 [BL] Сервер 8"
+  - name: "🇵🇱 [BL/AI] Сервер 8"
+    type: vless
+    server: 189.74.116.30
+    port: 443
+    uuid: "b8a4f1b4-9fb1-4c42-ae54-de5124de375c"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediatropa.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇵🇱 [BL] Сервер 9"
     type: vless
     server: 85.234.86.178
     port: 6443
@@ -110,7 +125,7 @@ proxies:
       short-id: "ffd956560a594225"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇵🇱 [BL] Сервер 9"
+  - name: "🇵🇱 [BL] Сервер 10"
     type: vless
     server: pl.extremumnews.com
     port: 6443
@@ -125,7 +140,7 @@ proxies:
       short-id: "ffd956560a594225"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇵🇱 [BL/AI] Сервер 10"
+  - name: "🇵🇱 [BL/AI] Сервер 11"
     type: vless
     server: 80.47.7.216
     port: 443
@@ -139,7 +154,35 @@ proxies:
     reality-opts:
       public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
       short-id: "6f0091ebe3029ebb"
-  - name: "🇵🇱 [BL] Сервер 11"
+  - name: "🇵🇱 [BL/AI] Сервер 12"
+    type: vless
+    server: 80.47.18.60
+    port: 443
+    uuid: "e0643422-1e6e-4182-993e-de9b4c78e736"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fedtuna.ai"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "0KDql59THS-DXg30wMR0QGgFB6rXARDhr8WoWyfVA2M"
+      short-id: "6f0091ebe3029ebb"
+  - name: "🇵🇱 [BL] Сервер 13"
+    type: vless
+    server: p2.sklserv.com
+    port: 443
+    uuid: "b7791707-83d9-444b-9d05-f5c99e90acd4"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "p1.sklserv.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "D_jwAtRb0diil6EAGA6BpNtCZE9FsvzjFZtcdRQggUQ"
+      short-id: "4c68bb9c4f73dcb8"
+  - name: "🇵🇱 [BL] Сервер 14"
     type: vless
     server: 45.67.215.21
     port: 443
@@ -153,33 +196,22 @@ proxies:
       path: "/"
       host: "51.baklajann.ru"
       mode: "auto"
-  - name: "🇵🇱 [BL] Сервер 12"
+  - name: "🇵🇱 [BL] Сервер 15"
     type: vless
-    server: poland.biznes.lol
-    port: 443
-    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "poland.biznes.lol"
-    client-fingerprint: "chrome"
+    server: 191.217.211.82
+    port: 2083
+    uuid: "ff13a272-dd8f-4f4c-89e0-6bfdf25c10a7"
+    network: "xhttp"
+    servername: "pl1.song69.fun"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
-  - name: "🇵🇱 [BL] Сервер 13"
-    type: vless
-    server: 222.167.245.16
-    port: 443
-    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "poland.biznes.lol"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
-  - name: "🇵🇱 [BL/AI] Сервер 14"
+      public-key: "QCFLGq4pXBNEQiCNVy5HN6IFTswY7qRmwuNetLZRZVg"
+    xhttp-opts:
+      path: "/api/media/v1"
+      host: "pl1.song69.fun"
+  - name: "🇵🇱 [BL/AI] Сервер 16"
     type: vless
     server: 2.26.5.208
     port: 9443
@@ -193,7 +225,20 @@ proxies:
     reality-opts:
       public-key: "V-cWjK_GZ0PTJ3wnUHgwey_dNWI6_QNXsC9CdmA0mVI"
       short-id: "408c85938839e89f"
-  - name: "🇵🇱 [BL/AI] Сервер 15"
+  - name: "🇵🇱 [BL/AI] Сервер 17"
+    type: vless
+    server: 222.167.245.16
+    port: 443
+    uuid: "7d43670b-6b08-45b9-8a24-8f3971abc132"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "poland.biznes.lol"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "j4Uc6ljg9by_VKYywo5h2N-eh3kpUbFL5Bsp8-AX4Qk"
+  - name: "🇵🇱 [BL/AI] Сервер 18"
     type: vless
     server: 144.31.171.37
     port: 443
