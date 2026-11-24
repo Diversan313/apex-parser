@@ -7,21 +7,10 @@ proxies:
     network: "raw"
     flow: "xtls-rprx-vision-udp443"
     servername: "spb.b2ai.top"
-    client-fingerprint: "firefox"
+    client-fingerprint: "qq"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 188.225.46.6
-    port: 443
-    uuid: "a077dc9a-712f-48ea-b75c-d94af64011ec"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "spb.b2ai.top"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL] Сервер 3"
     type: vless
     server: 88.216.60.73
     port: 443
@@ -34,6 +23,20 @@ proxies:
     reality-opts:
       public-key: "drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ"
       short-id: "a7c92e4b10d6f835"
+  - name: "🇸🇪 [WL] Сервер 3"
+    type: vless
+    server: 185.247.224.206
+    port: 443
+    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
+    network: "ws"
+    servername: "accessfooter.cleanfoodshop.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
+      headers:
+        Host: "accessfooter.cleanfoodshop.org"
   - name: "🇸🇪 [WL] Сервер 4"
     type: vless
     server: 194.163.154.147
@@ -50,6 +53,25 @@ proxies:
         Host: "accessfooter.cleanfoodshop.org"
   - name: "🇸🇪 [WL] Сервер 5"
     type: vless
+    server: 45.132.178.108
+    port: 443
+    uuid: "08a9c843-8b6c-0001-a95c-34f4e5c2642c"
+    network: "tcp"
+    servername: "ysbnggurlwwotbmkuf.fcloudservices.site"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [WL] Сервер 6"
+    type: vless
+    server: 82.202.138.238
+    port: 443
+    uuid: "5a26246a-0fcd-0001-827c-83fc8d0a4f17"
+    network: "tcp"
+    servername: "qubawzlmppvnuzsfoo.fcloudservices.site"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [WL] Сервер 7"
+    type: vless
     server: 185.232.204.31
     port: 443
     uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
@@ -62,22 +84,21 @@ proxies:
       path: "/media/ws/"
       headers:
         Host: "accessfooter.cleanfoodshop.org"
-  - name: "🇸🇪 [BL] Сервер 6"
+  - name: "🇸🇪 [WL/CF] Сервер 8"
     type: vless
-    server: 31.77.144.255
-    port: 8444
-    uuid: "95580a09-cce7-4b62-af74-a514083ba9e4"
-    network: "xhttp"
-    servername: "www.amd.com"
+    server: 88.218.170.118
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ruswedmicro2.gangplatform.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "jgf0wWpgkEJZzu9wu45Ms33SNZpibtx507rpvzfz3mQ"
-      short-id: "635a76c25a4b1820"
-    xhttp-opts:
-      path: "/xh"
-      mode: "stream-one"
-  - name: "🇸🇪 [BL] Сервер 7"
+      public-key: "Hk7E17R41exzrPKAOeETobKQ0LOAmuLSzFXdEwLSmiQ"
+      short-id: "b92d7008f05da71e"
+  - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -89,7 +110,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
-  - name: "🇸🇪 [BL] Сервер 8"
+  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 85.234.86.20
     port: 6443
@@ -104,7 +125,22 @@ proxies:
       short-id: "885781b112c298a5"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇸🇪 [BL] Сервер 9"
+  - name: "🇸🇪 [BL] Сервер 11"
+    type: vless
+    server: se.extremumnews.com
+    port: 6443
+    uuid: "391a32c6-084c-4d61-8e8d-472678021dac"
+    network: "grpc"
+    servername: "download.virtualbox.org"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "sadyaFeM276vgv_wdE1g6DDMgKZfKR_fr9DhTyCp9zM"
+      short-id: "885781b112c298a5"
+    grpc-opts:
+      grpc-service-name: "/api/v1/update"
+  - name: "🇸🇪 [BL] Сервер 12"
     type: vless
     server: 201.8.87.187
     port: 443
@@ -112,10 +148,52 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "2gcnbpjzq4go.cloud-kmt.com"
+    udp: true
+    tls: true
+  - name: "🇸🇪 [BL] Сервер 13"
+    type: vless
+    server: mxzfn.klyck.online
+    port: 443
+    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "mxzfn.klyck.online"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇸🇪 [BL] Сервер 10"
+    reality-opts:
+      public-key: "y070kpnC4ztcJp523O7L87JkxhMQhXOUYrjh-uP_PzI"
+      short-id: "ef50ff080d648308"
+  - name: "🇸🇪 [BL] Сервер 14"
+    type: vless
+    server: 46.183.21.169
+    port: 443
+    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "mxzfn.klyck.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "y070kpnC4ztcJp523O7L87JkxhMQhXOUYrjh-uP_PzI"
+      short-id: "ef50ff080d648308"
+  - name: "🇸🇪 [BL] Сервер 15"
+    type: vless
+    server: 13.141.51.188
+    port: 25191
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "a8687er.se2.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
+      short-id: "55328e423218ee9b"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+  - name: "🇸🇪 [BL] Сервер 16"
     type: vless
     server: 195.206.235.210
     port: 25191
@@ -131,22 +209,7 @@ proxies:
     xhttp-opts:
       path: "/astral-edge-h1"
       host: "se2.h1cloud.net"
-  - name: "🇸🇪 [BL] Сервер 11"
-    type: vless
-    server: 13.141.51.188
-    port: 25191
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "a8687er.se2.h1clayd.click"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA"
-      short-id: "55328e423218ee9b"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-  - name: "🇸🇪 [BL] Сервер 12"
+  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
     server: se2.h1cloud.net
     port: 25191
@@ -161,7 +224,7 @@ proxies:
       short-id: "55328e423218ee9b"
     xhttp-opts:
       path: "/astral-edge-h1"
-  - name: "🇸🇪 [BL] Сервер 13"
+  - name: "🇸🇪 [BL] Сервер 18"
     type: vless
     server: 104.168.87.186
     port: 443
@@ -175,7 +238,7 @@ proxies:
       path: "/media/ws/"
       headers:
         Host: "accessfooter.cleanfoodshop.org"
-  - name: "🇸🇪 [BL] Сервер 14"
+  - name: "🇸🇪 [BL] Сервер 19"
     type: vless
     server: 188.214.37.231
     port: 443
@@ -189,7 +252,7 @@ proxies:
       path: "/media/ws/"
       headers:
         Host: "accessfooter.cleanfoodshop.org"
-  - name: "🇸🇪 [BL] Сервер 15"
+  - name: "🇸🇪 [BL] Сервер 20"
     type: vless
     server: 202.144.195.203
     port: 443
@@ -203,31 +266,31 @@ proxies:
       path: "/media/ws/"
       headers:
         Host: "accessfooter.cleanfoodshop.org"
-  - name: "🇸🇪 [BL] Сервер 16"
+  - name: "🇸🇪 [BL] Сервер 21"
     type: vless
-    server: 187.54.12.92
+    server: 9ed8a8t.se4.h1clayd.click
     port: 443
-    uuid: "7078176e-bb3e-4dd2-aa74-b126e9d51315"
+    uuid: "082ff568-e0f1-42af-ad7c-2c46adde1273"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "se02.static-s3.org"
+    servername: "9ed8a8t.se4.h1clayd.click"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "_bMjXloQsMvKqof8q0E2HWqgkR7tV2iTM2oCXzRVow4"
-      short-id: "2c35b2d4f37bc767"
-  - name: "🇸🇪 [BL] Сервер 17"
+      public-key: "aJ_qFu55iLaiUWJ157VIAfAf7Cc6PKbZhFIvE03nNDc"
+      short-id: "1cc8aab4a9fa9280"
+  - name: "🇸🇪 [BL] Сервер 22"
     type: vless
-    server: 201.58.187.157
+    server: 31.77.18.117
     port: 443
-    uuid: "0952b345-eebe-4204-ad04-58ce76eb3a42"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "api1swe91.lakawatestop.shop"
-    client-fingerprint: "firefox"
+    uuid: "f120881b-3d5c-4583-a039-6ecd07e04c3f"
+    network: "xhttp"
+    servername: "lte2k7.syncpointbase.online"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "mhDD5Ary7hHjbcfnbQKJO3QwPnA4UlV-ITqHaU2p5Wc"
-      short-id: "4f4ac2a060d3cfa1"
+    xhttp-opts:
+      path: "/xh"
+      host: "lte2k7.syncpointbase.online"
+      mode: "packet-up"
