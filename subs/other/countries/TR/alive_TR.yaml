@@ -1,19 +1,6 @@
 proxies:
   - name: "🇹🇷 [WL] Сервер 1"
     type: vless
-    server: 147.45.213.56
-    port: 443
-    uuid: "42c83523-9f96-41b2-82d6-2edb71a4ac19"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "zkgbzlv5d42.vortenix-data59.cfd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
-  - name: "🇹🇷 [WL] Сервер 2"
-    type: vless
     server: 91.232.103.42
     port: 6443
     uuid: "391a32c6-084c-4d61-8e8d-472678021dac"
@@ -27,15 +14,31 @@ proxies:
       short-id: "b96ac15d1f46e05a"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇹🇷 [BL] Сервер 3"
+  - name: "🇹🇷 [WL] Сервер 2"
     type: vless
-    server: 5.175.236.86
-    port: 443
-    uuid: "9132106b-d6ce-45c7-9007-67f9981d413b"
-    network: "xhttp"
-    servername: "top8hs.online"
-    client-fingerprint: "firefox"
+    server: tr.extremumnews.com
+    port: 6443
+    uuid: "391a32c6-084c-4d61-8e8d-472678021dac"
+    network: "grpc"
+    servername: "download.amd.com"
+    client-fingerprint: "qq"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/m1pzgb/sync"
+    reality-opts:
+      public-key: "BrBQVb1nC7aHUPm3pSYHYQ4N60y2XrhwXznWys87Vyc"
+      short-id: "b96ac15d1f46e05a"
+    grpc-opts:
+      grpc-service-name: "/api/v1/update"
+  - name: "🇹🇷 [WL] Сервер 3"
+    type: vless
+    server: 147.45.213.56
+    port: 443
+    uuid: "42c83523-9f96-41b2-82d6-2edb71a4ac19"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "zkgbzlv5d42.vortenix-data59.cfd"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "fJnm6-PhJGSwHaAdJOzXkYOfCPPCWSlaZrtfm1XsqhA"
