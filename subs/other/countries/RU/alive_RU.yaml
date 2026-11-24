@@ -91,6 +91,20 @@ proxies:
       mode: "packet-up"
   - name: "🇷🇺 [WL] Сервер 8"
     type: vless
+    server: xsru2.freeddns.org
+    port: 443
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
+    network: "ws"
+    servername: "xsru2.freeddns.org"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/wsru"
+      headers:
+        Host: "xsru2.freeddns.org"
+  - name: "🇷🇺 [WL] Сервер 9"
+    type: vless
     server: 147.45.175.81
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
@@ -101,7 +115,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "grpc-ru"
-  - name: "🇷🇺 [WL] Сервер 9"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -113,20 +127,6 @@ proxies:
     tls: true
     ws-opts:
       path: "/wsru"
-      headers:
-        Host: "xsru2.freeddns.org"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: vless
-    server: 147.45.175.81
-    port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "ws"
-    servername: "xsru2.freeddns.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "wsru"
       headers:
         Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 11"
@@ -164,12 +164,6 @@ proxies:
     udp: true
     tls: true
   - name: "🇷🇺 [WL] Сервер 15"
-    type: ss
-    server: 48.103.218.77
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
     server: 31.76.230.58
     port: 8846
@@ -185,23 +179,13 @@ proxies:
     xhttp-opts:
       path: "/58c492097df6ed08"
       mode: "auto"
+  - name: "🇷🇺 [WL] Сервер 16"
+    type: ss
+    server: 46.17.42.129
+    port: 18443
+    password: "NTiHBg64fsY8u8DbGrtypD9gPGSL386p"
+    cipher: "aes-256-gcm"
   - name: "🇷🇺 [WL] Сервер 17"
-    type: vless
-    server: msk.substituteme.space
-    port: 8843
-    uuid: "ae8df31c-3420-44a4-aa18-c34e2b5717d9"
-    network: "xhttp"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "BxyJp0UU90qi-HeYuanJB9IR8HbNABusQvPNaUfYQCU"
-      short-id: "2b608412739b5087"
-    xhttp-opts:
-      path: "/e47f0add4324743e"
-      mode: "auto"
-  - name: "🇷🇺 [WL] Сервер 18"
     type: vless
     server: 136.148.83.71
     port: 443
@@ -211,7 +195,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 19"
+  - name: "🇷🇺 [WL] Сервер 18"
     type: vless
     server: 136.148.83.70
     port: 443
