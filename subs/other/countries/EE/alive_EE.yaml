@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇪🇪 [BL] Сервер 1"
+  - name: "🇪🇪 [WL] Сервер 1"
+    type: vless
+    server: 81.26.179.105
+    port: 42450
+    uuid: "46c37a32-df6b-4357-a6d2-28f85a3865d2"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "vk.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "sLpIIcLEMXC-8ZGzQqoOpj4uuW2YfK-CeMlWqOY0mDg"
+      short-id: "bc247d77b6b44a31"
+  - name: "🇪🇪 [BL] Сервер 2"
     type: vless
     server: 143.246.41.232
     port: 443
@@ -13,21 +27,35 @@ proxies:
     reality-opts:
       public-key: "lI2vfdzBaAKrDxAdkAW8IHp9pkpQV6INmJrYriC_lyE"
       short-id: "9ef8ebef9638b9c7"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
-    server: 95.85.249.204
+    server: 77.239.126.84
     port: 8443
     uuid: "a8d0c223-76d6-4f47-bb2f-b922003e04c8"
     network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "specimen.medic-ml.ru"
+    servername: "histo.medic-ml.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "PyuTgGxPzl6lT_oLpy_PUzBWS1n-9Xo8CYLCNPsJh3k"
       short-id: "231ba4d8826bfa81"
-  - name: "🇪🇪 [BL] Сервер 3"
+  - name: "🇪🇪 [BL] Сервер 4"
+    type: vless
+    server: vexlum.klyck.online
+    port: 443
+    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "vexlum.klyck.online"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ocBBxRqpWdvUTfd6hRdEcOq7TtiHdQi65s5thInXjkw"
+      short-id: "a503308602b56095"
+  - name: "🇪🇪 [BL] Сервер 5"
     type: vless
     server: 13.143.239.243
     port: 443
@@ -41,21 +69,22 @@ proxies:
     reality-opts:
       public-key: "ocBBxRqpWdvUTfd6hRdEcOq7TtiHdQi65s5thInXjkw"
       short-id: "a503308602b56095"
-  - name: "🇪🇪 [BL] Сервер 4"
+  - name: "🇪🇪 [BL] Сервер 6"
     type: vless
-    server: vexlum.klyck.online
+    server: 95.85.249.204
     port: 443
-    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "vexlum.klyck.online"
+    uuid: "a8d0c223-76d6-4f47-bb2f-b922003e04c8"
+    network: "xhttp"
+    servername: "vitals.medic-ml.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "ocBBxRqpWdvUTfd6hRdEcOq7TtiHdQi65s5thInXjkw"
-      short-id: "a503308602b56095"
-  - name: "🇪🇪 [BL] Сервер 5"
+      public-key: "PyuTgGxPzl6lT_oLpy_PUzBWS1n-9Xo8CYLCNPsJh3k"
+      short-id: "231ba4d8826bfa81"
+    xhttp-opts:
+      path: "/api/v2/telemetry"
+  - name: "🇪🇪 [BL] Сервер 7"
     type: vless
     server: 85.234.86.230
     port: 6443
@@ -70,7 +99,7 @@ proxies:
       short-id: "d7d3b7ffae8086ac"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇪🇪 [BL] Сервер 6"
+  - name: "🇪🇪 [BL] Сервер 8"
     type: vless
     server: ee.extremumnews.com
     port: 6443
@@ -85,17 +114,3 @@ proxies:
       short-id: "d7d3b7ffae8086ac"
     grpc-opts:
       grpc-service-name: "/api/v1/update"
-  - name: "🇪🇪 [BL] Сервер 7"
-    type: vless
-    server: 77.239.126.84
-    port: 8443
-    uuid: "a8d0c223-76d6-4f47-bb2f-b922003e04c8"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "histo.medic-ml.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "PyuTgGxPzl6lT_oLpy_PUzBWS1n-9Xo8CYLCNPsJh3k"
-      short-id: "231ba4d8826bfa81"
