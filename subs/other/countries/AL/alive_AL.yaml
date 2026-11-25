@@ -1,5 +1,29 @@
 proxies:
-  - name: "🇦🇱 [BL/AI] Сервер 1"
+  - name: "🇦🇱 [WL] Сервер 1"
+    type: vless
+    server: 93.93.207.222
+    port: 443
+    uuid: "11d14aed-3d44-4bb2-b9c0-24e661589e5a"
+    network: "xhttp"
+    servername: "ald1.tunnely.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/xhttp/"
+      mode: "packet-up"
+  - name: "🇦🇱 [BL] Сервер 2"
+    type: vless
+    server: 147.45.221.225
+    port: 443
+    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
+    network: "ws"
+    servername: "nl.lucheeebezlimitnoekino.stream"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/media/ws/"
+  - name: "🇦🇱 [BL/AI] Сервер 3"
     type: vless
     server: 194.53.175.27
     port: 443
@@ -13,20 +37,16 @@ proxies:
     reality-opts:
       public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
       short-id: "2e40144ddc07e8e1"
-  - name: "🇦🇱 [BL] Сервер 2"
+  - name: "🇦🇱 [BL] Сервер 4"
     type: vless
-    server: 147.45.221.225
+    server: edge06.tunnely.space
     port: 443
-    uuid: "58e22afd-bf74-4736-984d-63a8ca03d7f0"
-    network: "ws"
-    servername: "nl.lucheeebezlimitnoekino.stream"
+    uuid: "11d14aed-3d44-4bb2-b9c0-24e661589e5a"
+    network: "xhttp"
+    servername: "ald1.tunnely.space"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/media/ws/"
-  - name: "🇦🇱 [BL] Сервер 3"
-    type: ss
-    server: 130.49.189.158
-    port: 43558
-    password: "LNc9h/4NA9Q6ZHNeYHoT5X/fR9aoE9KQR1SWhVDHBog="
-    cipher: "chacha20-ietf-poly1305"
+    xhttp-opts:
+      path: "/xhttp/"
+      mode: "packet-up"
