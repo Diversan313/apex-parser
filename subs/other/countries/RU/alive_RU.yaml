@@ -29,6 +29,18 @@ proxies:
       mode: "auto"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
+    server: 185.22.234.129
+    port: 443
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "ws"
+    servername: "smartcdn.top"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/useraction/collect/8a64b355ef0c/"
+  - name: "🇷🇺 [WL] Сервер 4"
+    type: vless
     server: 201.51.12.98
     port: 443
     uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
@@ -39,18 +51,6 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: smartcdn.top
-    port: 443
-    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
-    network: "ws"
-    servername: "smartcdn.top"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/useraction/collect/8a64b355ef0c/"
   - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 188.72.112.1
@@ -83,15 +83,41 @@ proxies:
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
-    servername: "xsru1.ddnsfree.com"
+    servername: "xsru2.freeddns.org"
     client-fingerprint: "safari"
     udp: true
     tls: true
     ws-opts:
       path: "/wsru"
       headers:
-        Host: "xsru1.ddnsfree.com"
+        Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 8"
+    type: vless
+    server: 147.45.175.81
+    port: 443
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
+    network: "grpc"
+    servername: "xsru1.ddnsfree.com"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "grpc-ru"
+  - name: "🇷🇺 [WL] Сервер 9"
+    type: vless
+    server: 147.45.175.81
+    port: 443
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
+    network: "ws"
+    servername: "xsru2.freeddns.org"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "wsru"
+      headers:
+        Host: "xsru2.freeddns.org"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -103,19 +129,19 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 9"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 10"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 11"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 136.148.83.69
     port: 443
@@ -125,7 +151,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 12"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 136.148.83.70
     port: 443
@@ -135,7 +161,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 45.150.238.201
     port: 20443
@@ -149,27 +175,13 @@ proxies:
     reality-opts:
       public-key: "xE2CNenfDgtu28WQ23Bq2KfdkEj3XN42P_ZVou1YRC4"
       short-id: "f847646adc2b82fe"
-  - name: "🇷🇺 [WL] Сервер 14"
-    type: vless
-    server: dc.insidenet.ru
-    port: 20443
-    uuid: "67a31bdf-5846-409d-8b49-3d795e1a2a4f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dc.insidenet.ru"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xE2CNenfDgtu28WQ23Bq2KfdkEj3XN42P_ZVou1YRC4"
-      short-id: "f847646adc2b82fe"
-  - name: "🇷🇺 [WL] Сервер 15"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: ss
     server: 194.87.69.12
     port: 18443
     password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
     cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 16"
+  - name: "🇷🇺 [WL] Сервер 17"
     type: vless
     server: 136.148.83.71
     port: 443

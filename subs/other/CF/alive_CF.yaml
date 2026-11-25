@@ -1,6 +1,20 @@
 proxies:
   - name: "🇳🇱 [CF] Сервер 1"
     type: vless
+    server: 185.86.145.207
+    port: 1443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "ws"
+    servername: "cdn.quantum.vodka"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/api/v1/feed/b597b53d57"
+      headers:
+        Host: "cdn.quantum.vodka"
+  - name: "🇳🇱 [CF] Сервер 2"
+    type: vless
     server: ws.quantum.vodka
     port: 1443
     uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
@@ -13,7 +27,7 @@ proxies:
       path: "/api/v1/feed/b597b53d57"
       headers:
         Host: "cdn.quantum.vodka"
-  - name: "🇳🇱 [CF] Сервер 2"
+  - name: "🇳🇱 [CF] Сервер 3"
     type: vless
     server: 176.108.247.25
     port: 443
@@ -27,7 +41,35 @@ proxies:
     reality-opts:
       public-key: "VG7Xc_At1WydHYh8e2h4VoCODJCnmv3vnS-S7f1sVCI"
       short-id: "55dba0df21263564"
-  - name: "🇳🇱 [CF] Сервер 3"
+  - name: "🇺🇸 [CF] Сервер 4"
+    type: vless
+    server: subgift3.gcorecdn.com
+    port: 443
+    uuid: "047020df-f518-4b9b-a2d6-8e86f56f8c6e"
+    network: "ws"
+    flow: "xtls-rprx-vision"
+    servername: "subgift3.gcorecdn.com"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/t.me-SubGift"
+      headers:
+        Host: "subgift3.gcorecdn.com"
+  - name: "🇸🇪 [CF] Сервер 5"
+    type: vless
+    server: subgift2.gcorecdn.com
+    port: 443
+    uuid: "0c96aeeb-b691-48c9-91e2-8b5de4b29e01"
+    network: "ws"
+    flow: "xtls-rprx-vision"
+    servername: "subgift2.gcorecdn.com"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/t.me-SubGift"
+      headers:
+        Host: "subgift2.gcorecdn.com"
+  - name: "🇳🇱 [CF] Сервер 6"
     type: vless
     server: 45.150.37.169
     port: 443
@@ -41,48 +83,6 @@ proxies:
     reality-opts:
       public-key: "2GYWewnpSKVqp2AXm1hEZ-av8iApLPa62V7rxpxt1SE"
       short-id: "b9bb317e9c9e2627"
-  - name: "🇳🇱 [CF] Сервер 4"
-    type: vless
-    server: 138.16.183.114
-    port: 443
-    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "rumicro598.richhoodfoc.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "_47gV6n-pPkLD9-pTEHSglSwxWfUhrVj1ou4Wwc6pj0"
-      short-id: "c6a810bdcb5cf374"
-  - name: "🇳🇱 [CF] Сервер 5"
-    type: vless
-    server: 178.217.98.134
-    port: 443
-    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "rumicro748.richhoodfoc.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "HFb2ouHGn6rQqkKvHLziI4H2rp7PRUX8P50zUEtzDig"
-      short-id: "44fe90328a9b2656"
-  - name: "🇳🇱 [CF] Сервер 6"
-    type: vless
-    server: 178.217.98.60
-    port: 443
-    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "rumicro749.richhoodfoc.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "stAHGePVvyd7wH5KnYu6I73CjPd49QDnzNf-Ev-juwQ"
-      short-id: "40638902cebb6be2"
   - name: "🇳🇱 [CF] Сервер 7"
     type: vless
     server: 84.54.44.117
@@ -97,7 +97,75 @@ proxies:
     reality-opts:
       public-key: "fPvZxeP0GErdI22fbEAqbMaz-QMumNIDzBNgKZmRsWY"
       short-id: "a7b12f3265f97f4a"
-  - name: "🇰🇿 [CF] Сервер 8"
+  - name: "🇵🇱 [CF] Сервер 8"
+    type: vless
+    server: 2.56.172.199
+    port: 443
+    uuid: "c046d6a3-14c7-4297-9675-f8d101aa1979"
+    network: "tcp"
+    servername: "dl-cdn.alpinelinux.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "wfp4jyEksrozyS739zqIsNXySoqeEVtaQlVmeNeLp28"
+  - name: "🇳🇱 [CF] Сервер 9"
+    type: vless
+    server: 138.16.183.114
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rumicro598.richhoodfoc.com"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "_47gV6n-pPkLD9-pTEHSglSwxWfUhrVj1ou4Wwc6pj0"
+      short-id: "c6a810bdcb5cf374"
+  - name: "🇳🇱 [CF] Сервер 10"
+    type: vless
+    server: 178.217.98.134
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rumicro748.richhoodfoc.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "HFb2ouHGn6rQqkKvHLziI4H2rp7PRUX8P50zUEtzDig"
+      short-id: "44fe90328a9b2656"
+  - name: "🇳🇱 [CF] Сервер 11"
+    type: vless
+    server: 178.217.98.60
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rumicro749.richhoodfoc.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "stAHGePVvyd7wH5KnYu6I73CjPd49QDnzNf-Ev-juwQ"
+      short-id: "40638902cebb6be2"
+  - name: "🇦🇹 [CF] Сервер 12"
+    type: vless
+    server: 212.118.56.133
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ruastriamicro1.gangplatform.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "woALl3tJ66hfoRmufkkINfiVyiw30EGB3lBixC9axV4"
+      short-id: "b74ad1d666c50539"
+  - name: "🇰🇿 [CF] Сервер 13"
     type: hysteria2
     server: timewhite655.thebestqas.am
     port: 443
