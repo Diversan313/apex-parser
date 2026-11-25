@@ -5,14 +5,14 @@ proxies:
     port: 443
     uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
     network: "ws"
-    servername: "e3.cdnwh.icu"
-    client-fingerprint: "chrome"
+    servername: "e2.cdnwh.icu"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
-      path: "/edge/chunk/b2265efffa29/"
+      path: "/stream/segment/3078a41dd7eb/"
       headers:
-        Host: "e3.cdnwh.icu"
+        Host: "e2.cdnwh.icu"
   - name: "🇵🇱 [WL] Сервер 2"
     type: vless
     server: 46.243.232.149
@@ -29,6 +29,20 @@ proxies:
         Host: "devcdn.icu"
   - name: "🇵🇱 [WL] Сервер 3"
     type: vless
+    server: 46.243.232.78
+    port: 443
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "ws"
+    servername: "e2.cdnwh.icu"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/stream/segment/3078a41dd7eb/"
+      headers:
+        Host: "e2.cdnwh.icu"
+  - name: "🇵🇱 [WL] Сервер 4"
+    type: vless
     server: 188.225.74.6
     port: 443
     uuid: "3af3f8f0-569f-4dd3-be99-2ef4bfe7867c"
@@ -40,7 +54,21 @@ proxies:
     reality-opts:
       public-key: "fNfokzklCF4l_c8k8PciOCjm5ecNoF_sNLjEtaO-xzI"
       short-id: "db04ce8bdb8900f1"
-  - name: "🇵🇱 [WL] Сервер 4"
+  - name: "🇵🇱 [WL] Сервер 5"
+    type: vless
+    server: 188.225.56.100
+    port: 443
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "ws"
+    servername: "e2.cdnwh.icu"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/stream/segment/3078a41dd7eb/"
+      headers:
+        Host: "e2.cdnwh.icu"
+  - name: "🇵🇱 [WL] Сервер 6"
     type: vless
     server: 31.177.111.226
     port: 443
@@ -54,7 +82,7 @@ proxies:
       path: "/edge/chunk/b2265efffa29/"
       headers:
         Host: "e3.cdnwh.icu"
-  - name: "🇵🇱 [WL] Сервер 5"
+  - name: "🇵🇱 [WL] Сервер 7"
     type: vless
     server: 31.177.111.226
     port: 443
@@ -68,35 +96,21 @@ proxies:
       path: "/edge/chunk/b2265efffa29/"
       headers:
         Host: "devcdn.icu"
-  - name: "🇵🇱 [WL] Сервер 6"
+  - name: "🇵🇱 [WL] Сервер 8"
     type: vless
-    server: 188.225.56.100
+    server: 5.35.82.51
     port: 443
-    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "ws"
-    servername: "e2.cdnwh.icu"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/stream/segment/3078a41dd7eb/"
-      headers:
-        Host: "e2.cdnwh.icu"
-  - name: "🇵🇱 [WL] Сервер 7"
-    type: vless
-    server: 46.243.232.78
-    port: 443
-    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "ws"
-    servername: "e2.cdnwh.icu"
+    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "czvkg.speedtec.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/stream/segment/3078a41dd7eb/"
-      headers:
-        Host: "e2.cdnwh.icu"
-  - name: "🇵🇱 [BL] Сервер 8"
+    reality-opts:
+      public-key: "y9YvruB31Qg8f21GSH91VtYJ7KPc1EFMihuHAWKDKQY"
+      short-id: "78a6ecc36813aada"
+  - name: "🇵🇱 [BL] Сервер 9"
     type: vless
     server: 45.142.212.191
     port: 443
@@ -110,7 +124,7 @@ proxies:
     reality-opts:
       public-key: "tp7awfnKLbhIDkdYlT7Avf-SfUwt7ncX5oyWS5wQmR0"
       short-id: "24c4"
-  - name: "🇵🇱 [BL] Сервер 9"
+  - name: "🇵🇱 [BL] Сервер 10"
     type: vless
     server: 94.183.167.172
     port: 443
@@ -120,7 +134,7 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇵🇱 [BL] Сервер 10"
+  - name: "🇵🇱 [BL] Сервер 11"
     type: vless
     server: 31.77.56.68
     port: 2052
@@ -134,20 +148,59 @@ proxies:
       short-id: "24"
     grpc-opts:
       grpc-service-name: "plogrpc"
-  - name: "🇵🇱 [BL] Сервер 11"
+  - name: "🇵🇱 [BL/CF] Сервер 12"
     type: vless
-    server: 94.183.167.153
+    server: 2.56.172.199
     port: 443
-    uuid: "80b3cf20-c77c-4fb9-a69e-55c9dadd58c8"
+    uuid: "c046d6a3-14c7-4297-9675-f8d101aa1979"
     network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "play.3apes.pro"
+    servername: "dl-cdn.alpinelinux.org"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "q4_o7NvD6vQg4hYsyO29Q6PVufjTJHDUbQTqstre9EQ"
-  - name: "🇵🇱 [BL] Сервер 12"
+      public-key: "wfp4jyEksrozyS739zqIsNXySoqeEVtaQlVmeNeLp28"
+  - name: "🇵🇱 [BL] Сервер 13"
+    type: vless
+    server: devcdn.icu
+    port: 443
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "ws"
+    servername: "devcdn.icu"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/edge/chunk/b2265efffa29/"
+      headers:
+        Host: "devcdn.icu"
+  - name: "🇵🇱 [BL] Сервер 14"
+    type: vless
+    server: 31.76.87.225
+    port: 443
+    uuid: "b7791707-83d9-444b-9d05-f5c99e90acd4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "p1.sklserv.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "D_jwAtRb0diil6EAGA6BpNtCZE9FsvzjFZtcdRQggUQ"
+      short-id: "4c68bb9c4f73dcb8"
+  - name: "🇵🇱 [BL] Сервер 15"
+    type: vless
+    server: 72.56.69.70
+    port: 443
+    uuid: "00799b08-1090-4ed3-bec0-0fa26816a703"
+    network: "xhttp"
+    servername: "plaksa.bootless.ru"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v2/stream"
+      mode: "auto"
+  - name: "🇵🇱 [BL] Сервер 16"
     type: vless
     server: 144.31.112.64
     port: 443
@@ -161,59 +214,3 @@ proxies:
     reality-opts:
       public-key: "qTwivTdhfTMDVJPsPrpx833IyxQM1DZqxnCby0VF5XE"
       short-id: "cfe386d1e27b6085"
-  - name: "🇵🇱 [BL] Сервер 13"
-    type: vless
-    server: zorvik.speedtec.ru
-    port: 443
-    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "zorvik.speedtec.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qTwivTdhfTMDVJPsPrpx833IyxQM1DZqxnCby0VF5XE"
-      short-id: "cfe386d1e27b6085"
-  - name: "🇵🇱 [BL] Сервер 14"
-    type: vless
-    server: jmkvx.speedtec.ru
-    port: 443
-    uuid: "de32225b-374c-4a6a-830e-7c4e367fcfb5"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "czvkg.speedtec.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "y9YvruB31Qg8f21GSH91VtYJ7KPc1EFMihuHAWKDKQY"
-      short-id: "78a6ecc36813aada"
-  - name: "🇵🇱 [BL/AI] Сервер 15"
-    type: vless
-    server: 144.31.171.37
-    port: 443
-    uuid: "873767a0-9b4a-470c-85f8-7449cd7a561c"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "hellverser.mult-fandom.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Z-v1tBIQpFBfedRUOeHovEVL6Y22KmrBrDWY23cgtAI"
-      short-id: "4bd5aa582ceabfdd"
-  - name: "🇵🇱 [BL] Сервер 16"
-    type: vless
-    server: p2.sklserv.com
-    port: 443
-    uuid: "b7791707-83d9-444b-9d05-f5c99e90acd4"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "p1.sklserv.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "D_jwAtRb0diil6EAGA6BpNtCZE9FsvzjFZtcdRQggUQ"
-      short-id: "4c68bb9c4f73dcb8"
