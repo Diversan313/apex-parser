@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇨🇭 [WL] Сервер 1"
-    type: vless
-    server: 188.72.112.2
-    port: 443
-    uuid: "67a31bdf-5846-409d-8b49-3d795e1a2a4f"
-    network: "xhttp"
-    servername: "ch3-cdn.insidenet.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/api/v2/telemetry/"
-      host: "ch3-cdn.insidenet.ru"
-      mode: "packet-up"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [BL] Сервер 1"
     type: vless
     server: 193.233.89.130
     port: 8443
@@ -28,7 +14,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc"
       grpc-mode: "gun"
-  - name: "🇨🇭 [BL/AI] Сервер 3"
+  - name: "🇨🇭 [BL/AI] Сервер 2"
     type: vless
     server: 45.151.136.26
     port: 443
@@ -42,51 +28,21 @@ proxies:
     reality-opts:
       public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
       short-id: "2e40144ddc07e8e1"
+  - name: "🇨🇭 [BL/AI] Сервер 3"
+    type: vless
+    server: edge08.tunnely.space
+    port: 443
+    uuid: "11d14aed-3d44-4bb2-b9c0-24e661589e5a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ch09.tunnely.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM"
+      short-id: "2e40144ddc07e8e1"
   - name: "🇨🇭 [BL] Сервер 4"
-    type: vless
-    server: 201.10.91.216
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-  - name: "🇨🇭 [BL] Сервер 5"
-    type: vless
-    server: 83.141.86.250
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-  - name: "🇨🇭 [BL] Сервер 6"
-    type: vless
-    server: ch5.h1cloud.net
-    port: 25035
-    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
-    network: "xhttp"
-    servername: "96f799r.ch5.h1clayd.click"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
-      short-id: "eb63581de991f8c8"
-    xhttp-opts:
-      path: "/astral-edge-h1"
-  - name: "🇨🇭 [BL] Сервер 7"
     type: vless
     server: 45.90.59.252
     port: 443
@@ -102,6 +58,53 @@ proxies:
     grpc-opts:
       grpc-service-name: "neurex"
       grpc-mode: "gun"
+  - name: "🇨🇭 [BL] Сервер 5"
+    type: vless
+    server: 79.182.70.246
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+      host: "ch5.h1cloud.net"
+  - name: "🇨🇭 [BL] Сервер 6"
+    type: vless
+    server: ch5.h1cloud.net
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
+      mode: "stream-one"
+  - name: "🇨🇭 [BL] Сервер 7"
+    type: vless
+    server: 201.10.91.216
+    port: 25035
+    uuid: "62995b2a-8f82-41f8-ac80-dfdfc1253e76"
+    network: "xhttp"
+    servername: "96f799r.ch5.h1clayd.click"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "m7pPQqgE5q8qOjHhn9AjNA9sWhBFQ-gXzyGcZTNihUU"
+      short-id: "eb63581de991f8c8"
+    xhttp-opts:
+      path: "/astral-edge-h1"
   - name: "🇨🇭 [BL] Сервер 8"
     type: vless
     server: 195.15.207.252
