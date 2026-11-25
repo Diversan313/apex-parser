@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇭🇰 [WL/AI] Сервер 1"
+  - name: "🇭🇰 [WL/CF] Сервер 1"
     type: vless
     server: 103.88.241.220
     port: 443
@@ -14,20 +14,6 @@ proxies:
       public-key: "u9GnN8KGzfV0xQj6R8Ydp1nvY4exEWlTIcIbA27N0Wo"
       short-id: "bad10ef561d2e2a1"
   - name: "🇭🇰 [BL] Сервер 2"
-    type: vless
-    server: 138.249.210.11
-    port: 443
-    uuid: "148917bd-0b37-42b8-98f4-aa94ca73e75a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "travel.yandex.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tp7awfnKLbhIDkdYlT7Avf-SfUwt7ncX5oyWS5wQmR0"
-      short-id: "4e3f59"
-  - name: "🇭🇰 [BL] Сервер 3"
     type: hysteria2
     server: 152.32.254.68
     port: 5010
@@ -35,6 +21,19 @@ proxies:
     sni: "nas.aizhzo.com"
     obfs: "salamander"
     obfs-password: "7M4RXPFcQyQEGbkxBPfXo4bilMhCW2U9"
+  - name: "🇭🇰 [BL] Сервер 3"
+    type: vless
+    server: 38.207.178.28
+    port: 20086
+    uuid: "11a2709f-a1aa-4b97-9212-4d5cb0c83e53"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.paypal.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "fSVnXtIce23KOtqQjDuwRkNCM3mvWlva7bPNMfODv04"
   - name: "🇭🇰 [BL] Сервер 4"
     type: vless
     server: 2.26.204.46
