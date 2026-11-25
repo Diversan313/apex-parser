@@ -55,7 +55,21 @@ proxies:
       path: "/"
       host: "mamafrance.baklajann.ru"
       mode: "auto"
-  - name: "🇫🇷 [WL] Сервер 5"
+  - name: "🇫🇷 [WL/CF] Сервер 5"
+    type: vless
+    server: 178.104.77.229
+    port: 8443
+    uuid: "b69cf773-da16-486e-afce-a45b94f998b3"
+    network: "ws"
+    servername: "senflarelink-node-m3bfbn.pages.dev"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "senflarelink-node-m3bfbn.pages.dev"
+  - name: "🇫🇷 [WL] Сервер 6"
     type: vless
     server: 186.246.8.13
     port: 443
@@ -68,7 +82,7 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 145.223.68.58
     port: 443
@@ -82,7 +96,7 @@ proxies:
     reality-opts:
       public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
       short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 7"
+  - name: "🇫🇷 [BL] Сервер 8"
     type: vless
     server: 195.216.168.101
     port: 9543
@@ -96,7 +110,7 @@ proxies:
     reality-opts:
       public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
       short-id: "123abcdf"
-  - name: "🇫🇷 [BL] Сервер 8"
+  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
     server: 195.216.169.182
     port: 9543
@@ -110,7 +124,7 @@ proxies:
     reality-opts:
       public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
       short-id: "123abcdf"
-  - name: "🇫🇷 [BL] Сервер 9"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 195.216.169.229
     port: 9543
@@ -124,20 +138,6 @@ proxies:
     reality-opts:
       public-key: "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc"
       short-id: "123abcdf"
-  - name: "🇫🇷 [BL] Сервер 10"
-    type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
   - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 185.188.146.107
@@ -252,15 +252,17 @@ proxies:
       path: "/OCrp5Ajs"
   - name: "🇫🇷 [BL] Сервер 19"
     type: vless
-    server: 205.237.105.147
+    server: 5.101.67.136
     port: 443
-    uuid: "42e7accd-8b78-4265-8ad9-79e6f60e9916"
-    network: "grpc"
-    servername: "g2.cdnconnect.org"
+    uuid: "2c593ccb-0d1d-499d-9f7b-49bfa8e74cea"
+    network: "xhttp"
+    servername: "fr1.ridvpn.top"
     udp: true
     tls: true
-    grpc-opts:
-      grpc-service-name: "/grpc"
+    xhttp-opts:
+      path: "/connect"
+      host: "fr1.ridvpn.top"
+      mode: "auto"
   - name: "🇫🇷 [BL] Сервер 20"
     type: vless
     server: 213.199.57.127
@@ -305,34 +307,7 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
-  - name: "🇫🇷 [BL/CF] Сервер 23"
-    type: vless
-    server: 157.245.182.9
-    port: 2053
-    uuid: "50414e45-4c5f-5a45-5553-3a16f3365f2c"
-    network: "ws"
-    servername: "exzomne9uess.ssegfsgvfetgsvbherbsderhsbehwh.workers.dev"
-    client-fingerprint: "unsafe"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/stream/PANEL_ZEUS/3a16f3365f2c"
-      headers:
-        Host: "exzomne9uess.ssegfsgvfetgsvbherbsderhsbehwh.workers.dev"
-  - name: "🇫🇷 [BL] Сервер 24"
-    type: vless
-    server: 5.101.67.136
-    port: 443
-    uuid: "2c593ccb-0d1d-499d-9f7b-49bfa8e74cea"
-    network: "xhttp"
-    servername: "fr1.ridvpn.top"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/connect"
-      host: "fr1.ridvpn.top"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 25"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: vless
     server: 31.97.199.38
     port: 8443
@@ -346,37 +321,37 @@ proxies:
     reality-opts:
       public-key: "GcraWawjMdjBJLD_HvSZ3BQuHvFnSWjbesCkMeCaITY"
       short-id: "5b4a12ef7e1694dd"
-  - name: "🇫🇷 [BL] Сервер 26"
+  - name: "🇫🇷 [BL] Сервер 24"
     type: ss
     server: 23.162.152.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 27"
+  - name: "🇫🇷 [BL] Сервер 25"
     type: ss
     server: 38.109.228.110
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 28"
+  - name: "🇫🇷 [BL] Сервер 26"
     type: ss
     server: 167.17.64.27
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 29"
+  - name: "🇫🇷 [BL] Сервер 27"
     type: ss
     server: 172.99.189.142
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 30"
+  - name: "🇫🇷 [BL] Сервер 28"
     type: ss
     server: 167.17.64.175
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 31"
+  - name: "🇫🇷 [BL] Сервер 29"
     type: ss
     server: 167.17.64.22
     port: 19999
