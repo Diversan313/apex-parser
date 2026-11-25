@@ -1,17 +1,18 @@
 proxies:
-  - name: "🇮🇹 [BL] Сервер 1"
+  - name: "🇮🇹 [BL/AI] Сервер 1"
     type: vless
-    server: 82.118.16.187
+    server: 94.103.83.173
     port: 443
-    uuid: "dc2259c4-388e-4285-ba18-df619b6672b6"
-    network: "raw"
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    servername: "ruitaliamicro1.gangplatform.com"
+    client-fingerprint: "qq"
     udp: true
     tls: true
     reality-opts:
-      public-key: "R5ycsjJ-v024902dMSqTsSdqxUwCFEXMebdBEWFt9VU"
-      short-id: "cd6065902eea7a02"
+      public-key: "X99zq7QEhnb9l3JsdyrL8Jt6yDZTcL3QzNbTZrUmJEM"
+      short-id: "dbd5efbe0fd57f71"
   - name: "🇮🇹 [BL] Сервер 2"
     type: vless
     server: 172.235.237.9
@@ -26,20 +27,20 @@ proxies:
     reality-opts:
       public-key: "U7t4RFE9MSMtC-o1DoJ8pYzKMfgVpTg6ZhTTknBrVkU"
       short-id: "1f2519bb96e5589c"
-  - name: "🇮🇹 [BL/CF] Сервер 3"
+  - name: "🇮🇹 [BL/AI] Сервер 3"
     type: vless
-    server: 94.103.83.173
+    server: 172.232.216.17
     port: 443
-    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ruitaliamicro1.gangplatform.com"
-    client-fingerprint: "qq"
+    uuid: "0dd1e8e7-de47-4dbb-a149-6ac6f2764d28"
+    network: "grpc"
+    servername: "dl.google.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "X99zq7QEhnb9l3JsdyrL8Jt6yDZTcL3QzNbTZrUmJEM"
-      short-id: "dbd5efbe0fd57f71"
+      public-key: "cAFMol_SqbGzF6IZSHdOS8taChr8dRe9n3RdxJp0QEQ"
+    grpc-opts:
+      grpc-service-name: "grpc"
   - name: "🇮🇹 [BL/AI] Сервер 4"
     type: vless
     server: it.rawivpn.com
