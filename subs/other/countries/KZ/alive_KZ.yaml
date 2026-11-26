@@ -1,14 +1,15 @@
 proxies:
   - name: "🇰🇿 [BL] Сервер 1"
     type: vless
-    server: 3h-kazakhstan1.09vpn.com
+    server: 38.107.234.57
     port: 8443
     uuid: "2424febb-43cb-488d-bdd1-401e923c8e48"
     network: "ws"
+    servername: "3h-kazakhstan1.09vpn.com"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/vless/"
   - name: "🇰🇿 [BL] Сервер 2"
     type: vless
     server: 38.180.206.44
@@ -23,12 +24,12 @@ proxies:
     xhttp-opts:
       path: "/"
       mode: "auto"
-  - name: "🇰🇿 [BL/AI] Сервер 3"
+  - name: "🇰🇿 [BL] Сервер 3"
     type: vless
     server: 5.180.27.134
     port: 443
     uuid: "fa906181-5d9b-4ff6-8a81-e6148ce4ece7"
-    network: "raw"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "kz.koteika3528.dev"
     client-fingerprint: "firefox"

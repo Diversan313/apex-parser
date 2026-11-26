@@ -1,5 +1,21 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
+    type: trojan
+    server: ru-1.krugvpn.me
+    port: 8443
+    password: "cWM5aWtWR9"
+    sni: "ru-1.krugvpn.me"
+    client-fingerprint: "chrome"
+    udp: true
+  - name: "🇫🇷 [WL] Сервер 2"
+    type: trojan
+    server: 5.101.51.138
+    port: 8443
+    password: "cWM5aWtWR9"
+    sni: "ru-1.krugvpn.me"
+    client-fingerprint: "chrome"
+    udp: true
+  - name: "🇫🇷 [WL] Сервер 3"
     type: vless
     server: 186.246.8.13
     port: 443
@@ -12,36 +28,77 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 2"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
-    server: 145.223.68.58
+    server: 161.97.160.224
     port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
+    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
+    network: "tcp"
     flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 3"
-    type: vless
-    server: 82.22.2.137
-    port: 443
-    uuid: "7ce93cef-119d-4cba-9d9d-da0056ba979c"
-    network: "xhttp"
-    servername: "fr2.green-tg.com"
+    servername: "passport.yandex.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "EhKlZ3cHsJQRkNH7Qeya0ZeAy5jovCT-H4VNivwPyls"
-      short-id: "0bf13fb706784403"
-    xhttp-opts:
-      path: "/api/v2/7d94497a"
-  - name: "🇫🇷 [BL] Сервер 4"
+      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
+      short-id: "e6"
+  - name: "🇫🇷 [BL] Сервер 5"
+    type: vless
+    server: 37.221.76.116
+    port: 2092
+    uuid: "ca21222b-caf1-4418-b404-345ea713daa4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.apple.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "zeyIqmHylDrPbbtdG9BleBt0-fqKCHpZ0OZ9OY2_WUI"
+      short-id: "716b7eba38125f3a"
+  - name: "🇫🇷 [BL/AI] Сервер 6"
+    type: vless
+    server: 189.74.117.20
+    port: 443
+    uuid: "25b062d3-1d5c-45f7-a8e2-c2981bbe9c27"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.videodolina.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇫🇷 [BL] Сервер 7"
+    type: vless
+    server: 83.98.132.153
+    port: 443
+    uuid: "7803bad0-403e-4ccc-bd7c-47db51eb674e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fr.static-s3.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Psxb6x7UbgQFEqMn4sCK68L1MDFY4fZ3HgJ5xlthHhI"
+      short-id: "c3f3f2a416d3fabd"
+  - name: "🇫🇷 [BL] Сервер 8"
+    type: vless
+    server: 83.98.139.152
+    port: 443
+    uuid: "7803bad0-403e-4ccc-bd7c-47db51eb674e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "fr.static-s3.org"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Psxb6x7UbgQFEqMn4sCK68L1MDFY4fZ3HgJ5xlthHhI"
+      short-id: "c3f3f2a416d3fabd"
+  - name: "🇫🇷 [BL] Сервер 9"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -55,7 +112,7 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -70,7 +127,7 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
-  - name: "🇫🇷 [BL] Сервер 6"
+  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -83,7 +140,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 7"
+  - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 62.210.91.2
     port: 23576
@@ -96,7 +153,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 8"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 152.228.139.33
     port: 51671
@@ -112,7 +169,22 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc_common3"
       grpc-mode: "gun"
-  - name: "🇫🇷 [BL] Сервер 9"
+  - name: "🇫🇷 [BL] Сервер 14"
+    type: vless
+    server: 82.22.2.137
+    port: 443
+    uuid: "7ce93cef-119d-4cba-9d9d-da0056ba979c"
+    network: "xhttp"
+    servername: "fr2.green-tg.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "EhKlZ3cHsJQRkNH7Qeya0ZeAy5jovCT-H4VNivwPyls"
+      short-id: "0bf13fb706784403"
+    xhttp-opts:
+      path: "/api/v2/7d94497a"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -127,21 +199,39 @@ proxies:
       short-id: "21569dd6"
     xhttp-opts:
       path: "/OCrp5Ajs"
-  - name: "🇫🇷 [BL] Сервер 10"
+  - name: "🇫🇷 [BL] Сервер 16"
+    type: ss
+    server: 57.131.27.21
+    port: 8388
+    password: "itzvpn@321"
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 17"
     type: ss
     server: 23.162.152.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: ss
     server: 38.109.228.110
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: ss
-    server: 167.17.64.27
+    server: 172.99.189.142
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 20"
+    type: ss
+    server: 167.17.64.175
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 21"
+    type: ss
+    server: 167.17.64.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"

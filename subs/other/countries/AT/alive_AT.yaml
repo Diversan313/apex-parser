@@ -1,11 +1,40 @@
 proxies:
-  - name: "🇦🇹 [BL] Сервер 1"
+  - name: "🇦🇹 [BL/AI] Сервер 1"
+    type: vless
+    server: 189.74.115.7
+    port: 443
+    uuid: "25b062d3-1d5c-45f7-a8e2-c2981bbe9c27"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "api.mediaroshcha.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
+      short-id: "a8"
+  - name: "🇦🇹 [BL] Сервер 2"
+    type: vless
+    server: 95.163.153.141
+    port: 8443
+    uuid: "04cbe9ea-9791-4195-827f-5d4cabbdba10"
+    network: "xhttp"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "bRtDyXYrSK7YP6zKZGTUIVfNlpilQViJ4ih_43oSWnU"
+      short-id: "c9ea2355ddeab39b"
+    xhttp-opts:
+      path: "/"
+  - name: "🇦🇹 [BL] Сервер 3"
     type: ss
     server: 152.53.1.57
     port: 8388
     password: "AdawffFMHymlasRb0VOP3HFf7sTG5sJx"
     cipher: "chacha20-ietf-poly1305"
-  - name: "🇦🇹 [BL] Сервер 2"
+  - name: "🇦🇹 [BL] Сервер 4"
     type: ss
     server: 82.110.60.9
     port: 19999
