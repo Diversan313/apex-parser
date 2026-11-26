@@ -1,15 +1,31 @@
 proxies:
-  - name: "🇺🇸 [TR] Сервер 1"
+  - name: "🇩🇪 [TR] Сервер 1"
     type: vless
-    server: 23.172.40.108
-    port: 443
-    uuid: "b488a893-d63f-46b5-94ce-b0f99b2ab02d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    server: 185.86.147.80
+    port: 5443
+    uuid: "639b131f-d0f3-460c-aa17-423047f8a5df"
+    network: "xhttp"
+    servername: "keshyou.mcufa.pro"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "RU8nrGj6a65ZG4S5LYDS7pmAon5TobdFEczBUCOFOTc"
-      short-id: "b89123f0"
+      public-key: "uR0Y9XXnLCHMDvBV99JPvY1l-ftxzjZ8iRLc04SKyw4"
+      short-id: "0123456789abcdef"
+    xhttp-opts:
+      path: "/api/v1/edge"
+      host: "keshyou.mcufa.pro"
+      mode: "stream-one"
+  - name: "🇩🇪 [TR] Сервер 2"
+    type: vless
+    server: 185.86.147.80
+    port: 9441
+    uuid: "639b131f-d0f3-460c-aa17-423047f8a5df"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "keshyou.mcufa.pro"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "-P8DgKISSG4jnLuj6ihZDqZs1_zt-juBrhVhTylHiAo"

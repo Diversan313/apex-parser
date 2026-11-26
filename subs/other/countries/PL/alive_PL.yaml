@@ -5,14 +5,14 @@ proxies:
     port: 443
     uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
     network: "ws"
-    servername: "devcdn.icu"
-    client-fingerprint: "chrome"
+    servername: "x55cf8ug.devcdn.icu"
+    client-fingerprint: "edge"
     udp: true
     tls: true
     ws-opts:
       path: "/edge/chunk/b2265efffa29/"
       headers:
-        Host: "devcdn.icu"
+        Host: "x55cf8ug.devcdn.icu"
   - name: "🇵🇱 [WL] Сервер 2"
     type: vless
     server: 188.72.112.1
@@ -29,35 +29,19 @@ proxies:
       mode: "packet-up"
   - name: "🇵🇱 [WL] Сервер 3"
     type: vless
-    server: 188.225.56.100
+    server: 82.97.248.39
     port: 443
-    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "ws"
-    servername: "e2.cdnwh.icu"
-    client-fingerprint: "random"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/stream/segment/3078a41dd7eb/"
-      headers:
-        Host: "e2.cdnwh.icu"
-  - name: "🇵🇱 [WL] Сервер 4"
-    type: vless
-    server: 93.184.169.179
-    port: 443
-    uuid: "9a9f167d-b461-466f-be50-f0ffd598a6f8"
-    network: "xhttp"
-    servername: "api.ggssstreaming.ru"
+    uuid: "ce1587a8-83ef-4d54-b5d8-ccf406fba147"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "pl-serv.maxleshax.icu"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "r445h-YroH5eENllZFKxE6XndWGAc9SBPAzfyIHnajQ"
-      short-id: "07b7580eec1fec3a"
-    xhttp-opts:
-      path: "/fc89f5f455d4/766e712c"
-      host: "api.ggssstreaming.ru"
-  - name: "🇵🇱 [BL] Сервер 5"
+      public-key: "pk26pM_LnkB8lv3ysFZZunj_5kzPDvyAJ92wDP0-hBg"
+      short-id: "d7584d2bc6bc868a"
+  - name: "🇵🇱 [BL] Сервер 4"
     type: vless
     server: 82.118.22.161
     port: 443
@@ -70,22 +54,21 @@ proxies:
     reality-opts:
       public-key: "xY1KpNxaIGmi6jfeudYQ_aaLGQqWK_uHStnwUFd2_2E"
       short-id: "fa3ea655619a3e78"
-  - name: "🇵🇱 [BL] Сервер 6"
+  - name: "🇵🇱 [BL] Сервер 5"
     type: vless
-    server: 31.77.56.68
-    port: 2052
-    uuid: "8f154051-5b60-4e04-8880-a416c133a61b"
-    network: "grpc"
-    servername: "cdn.ozon.ru"
+    server: cdnpl.worldfly.io
+    port: 443
+    uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
+    network: "xhttp"
+    servername: "cdnpl.worldfly.io"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "4UA4nr9RIIEOC6ZDK5AHkj5v0Q-e3_jNeVI5cIgPSg4"
-      short-id: "24"
-    grpc-opts:
-      grpc-service-name: "plogrpc"
-      grpc-mode: "gun"
-  - name: "🇵🇱 [BL] Сервер 7"
+    xhttp-opts:
+      path: "/api/v1/assets/"
+      host: "cdnpl.worldfly.io"
+      mode: "packet-up"
+  - name: "🇵🇱 [BL] Сервер 6"
     type: vless
     server: 187.52.45.236
     port: 443
@@ -99,7 +82,45 @@ proxies:
       public-key: "FjY0N4j06c6zkK2Rrk3fIs3L5W48CwsYaSoiGnts-jI"
     grpc-opts:
       grpc-service-name: "grpc"
-  - name: "🇵🇱 [BL/AI] Сервер 8"
+  - name: "🇵🇱 [BL] Сервер 7"
+    type: hysteria2
+    server: omegaparcel.videostockmarket.org
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "omegaparcel.videostockmarket.org"
+  - name: "🇵🇱 [BL] Сервер 8"
+    type: hysteria2
+    server: 144.31.1.111
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "omegaparcel.videostockmarket.org"
+  - name: "🇵🇱 [BL] Сервер 9"
+    type: hysteria2
+    server: 144.31.1.109
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "refundresize.lucheeebezlimitnoekino.stream"
+  - name: "🇵🇱 [BL] Сервер 10"
+    type: hysteria2
+    server: auditrecovery.cleanfoodshop.org
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "auditrecovery.cleanfoodshop.org"
+  - name: "🇵🇱 [BL] Сервер 11"
+    type: vless
+    server: 2.27.255.229
+    port: 443
+    uuid: "fb55d530-5931-4057-acc7-6a16053358e6"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "pl01.whiskeypapa.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "9MdU9Qktc6Qt0TPUynwCVnp59Xmgy7aG8e0KKU1akiM"
+      short-id: "4b3f5582037be122"
+  - name: "🇵🇱 [BL/AI] Сервер 12"
     type: vless
     server: 177.3.252.114
     port: 443
