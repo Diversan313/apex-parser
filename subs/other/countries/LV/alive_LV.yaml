@@ -1,11 +1,17 @@
 proxies:
   - name: "🇱🇻 [WL] Сервер 1"
+    type: hysteria2
+    server: 186.246.13.65
+    port: 31010
+    password: "68dea054-c7af-439e-a700-0f1c92e72795"
+    sni: "alb.vpnvpn.best"
+  - name: "🇱🇻 [WL] Сервер 2"
     type: ss
     server: 109.248.148.138
     port: 11468
     password: "263bc9e3c41ea70e1d4d2e89c8fa837a"
     cipher: "aes-128-gcm"
-  - name: "🇱🇻 [BL] Сервер 2"
+  - name: "🇱🇻 [BL] Сервер 3"
     type: vless
     server: 195.123.213.28
     port: 443
@@ -19,7 +25,7 @@ proxies:
     reality-opts:
       public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
       short-id: "5c256336e3b673fa"
-  - name: "🇱🇻 [BL/AI] Сервер 3"
+  - name: "🇱🇻 [BL/AI] Сервер 4"
     type: vless
     server: 178.130.133.24
     port: 443
@@ -32,29 +38,16 @@ proxies:
     tls: true
     reality-opts:
       public-key: "BIeplEH7MyksxHu-ut3eoBj8UUNeEsybJZrRmppwQnc"
-  - name: "🇱🇻 [BL] Сервер 4"
-    type: vless
-    server: 62.60.148.146
-    port: 443
-    uuid: "81c91c05-179f-4b87-95ca-3306677fb310"
-    network: "ws"
-    servername: "g-it-2.r3vgawew123fg.pics"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "g-it-2.r3vgawew123fg.pics"
   - name: "🇱🇻 [BL] Сервер 5"
     type: vless
-    server: 213.183.41.10
-    port: 8451
-    uuid: "eb62cabf-5901-403a-aa0c-b1d9ed1b346d"
-    network: "ws"
-    servername: "video.plumstatic.com"
+    server: balancer-msk.peregrine-sub.net
+    port: 443
+    uuid: "53a44f0c-a480-0004-802c-92e796ed77c9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "balancer-msk.peregrine-sub.net"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    ws-opts:
-      path: "/ws"
+    reality-opts:
+      public-key: "BIeplEH7MyksxHu-ut3eoBj8UUNeEsybJZrRmppwQnc"

@@ -77,6 +77,20 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 7"
     type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "b198fbd9-2930-4b06-97b8-182a2794d088"
+    network: "xhttp"
+    servername: "kumar.oblachniy.ink"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/library/track/"
+      host: "kumar.oblachniy.ink"
+      mode: "packet-up"
+  - name: "🇷🇺 [WL] Сервер 8"
+    type: vless
     server: 213.171.25.82
     port: 443
     uuid: "00000000-0000-0001-0000-000000000000"
@@ -85,19 +99,19 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 8"
+  - name: "🇷🇺 [WL] Сервер 9"
     type: vless
-    server: 200.169.179.233
+    server: 147.45.175.81
     port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "chrome"
+    servername: "xsru1.ddnsfree.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     grpc-opts:
-      grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 9"
+      grpc-service-name: "grpc-ru"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -111,20 +125,33 @@ proxies:
       path: "wsru"
       headers:
         Host: "xsru2.freeddns.org"
-  - name: "🇷🇺 [WL] Сервер 10"
+  - name: "🇷🇺 [WL] Сервер 11"
     type: vless
     server: 147.45.175.81
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "grpc"
+    network: "ws"
     servername: "xsru1.ddnsfree.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/wsru"
+      headers:
+        Host: "xsru1.ddnsfree.com"
+  - name: "🇷🇺 [WL] Сервер 12"
+    type: vless
+    server: 200.169.179.233
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     grpc-opts:
-      grpc-service-name: "grpc-ru"
-      grpc-mode: "gun"
-  - name: "🇷🇺 [WL] Сервер 11"
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 13"
     type: vless
     server: 45.132.176.123
     port: 443
@@ -134,7 +161,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 12"
+  - name: "🇷🇺 [WL] Сервер 14"
     type: vless
     server: 77.223.118.5
     port: 443
@@ -144,7 +171,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 13"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 129.101.109.173
     port: 443
@@ -154,7 +181,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 14"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
     server: 87.228.3.104
     port: 443
@@ -164,7 +191,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 15"
+  - name: "🇷🇺 [WL] Сервер 17"
     type: vless
     server: 45.132.177.16
     port: 443
@@ -174,7 +201,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 16"
+  - name: "🇷🇺 [WL] Сервер 18"
     type: vless
     server: 45.132.179.29
     port: 443
@@ -184,29 +211,19 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 17"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 18"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 19"
-    type: vless
-    server: 136.148.83.69
-    port: 443
-    uuid: "666821a2-5c3d-0001-a56f-5a3a562d7324"
-    network: "tcp"
-    servername: "szqbx-ru-77dc.my-fade.cloud"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 20"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 21"
     type: vless
     server: 136.148.83.71
     port: 443
@@ -216,12 +233,6 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 21"
-    type: ss
-    server: 194.87.69.12
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
   - name: "🇷🇺 [WL] Сервер 22"
     type: vless
     server: 136.148.83.70
@@ -233,20 +244,6 @@ proxies:
     udp: true
     tls: true
   - name: "🇷🇺 [WL] Сервер 23"
-    type: vless
-    server: 45.150.238.201
-    port: 20443
-    uuid: "67a31bdf-5846-409d-8b49-3d795e1a2a4f"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "dc.insidenet.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xE2CNenfDgtu28WQ23Bq2KfdkEj3XN42P_ZVou1YRC4"
-      short-id: "f847646adc2b82fe"
-  - name: "🇷🇺 [WL] Сервер 24"
     type: vless
     server: 45.158.197.237
     port: 8443
