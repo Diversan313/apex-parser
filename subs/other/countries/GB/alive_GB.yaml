@@ -1,20 +1,32 @@
 proxies:
   - name: "🇬🇧 [WL] Сервер 1"
-    type: trojan
-    server: 5.101.51.138
-    port: 2095
-    password: "cWM5aWtWR9"
-    sni: "ru-1.krugvpn.me"
-    client-fingerprint: "edge"
+    type: vless
+    server: 185.79.139.163
+    port: 7443
+    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
+    network: "xhttp"
+    servername: "mama120.baklajann.ru"
+    client-fingerprint: "chrome"
     udp: true
-  - name: "🇬🇧 [WL] Сервер 2"
-    type: trojan
-    server: ru-1.krugvpn.me
-    port: 2095
-    password: "cWM5aWtWR9"
-    sni: "ru-1.krugvpn.me"
-    client-fingerprint: "android"
+    tls: true
+    xhttp-opts:
+      path: "/"
+      host: "mama120.baklajann.ru"
+      mode: "auto"
+  - name: "🇬🇧 [BL] Сервер 2"
+    type: vless
+    server: 185.122.167.103
+    port: 59130
+    uuid: "b771804e-a62c-429f-a56c-9f0a452d8f6e"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "nvplm.stg.nvidia.com"
+    client-fingerprint: "chrome"
     udp: true
+    tls: true
+    reality-opts:
+      public-key: "6Lh48ni3w8oe9QW3xVzNMIE5LU-p5VPHPMCUtVMOmgo"
+      short-id: "14"
   - name: "🇬🇧 [BL] Сервер 3"
     type: hysteria2
     server: 128.254.186.213
@@ -22,6 +34,47 @@ proxies:
     password: "900c8c92-1979-4c7c-8f2f-63e87d53d8fe"
     sni: "mother-earth.fyi"
   - name: "🇬🇧 [BL] Сервер 4"
+    type: vless
+    server: 468bc3g.fi16.h1clayd.click
+    port: 443
+    uuid: "2ccb06b6-9eac-44eb-ade7-c1e5afb8e7df"
+    network: "grpc"
+    servername: "468bc3g.fi16.h1clayd.click"
+    client-fingerprint: "ios"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ITvHZlJwSY3tsZEN3uTmOGj5hUWk-uazUBh7ZGBy33o"
+      short-id: "d50d9c31ff34ebc7"
+    grpc-opts:
+      grpc-service-name: "973a13acd723"
+  - name: "🇬🇧 [BL] Сервер 5"
+    type: vless
+    server: f0f0bet.fi16.h1clayd.click
+    port: 443
+    uuid: "2ccb06b6-9eac-44eb-ade7-c1e5afb8e7df"
+    network: "tcp"
+    servername: "f0f0bet.fi16.h1clayd.click"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GR2jS6u-CicgvYj-mnyfVpbYzkXw-WiXHr6hhqmir38"
+      short-id: "795c3f4f29745c96"
+  - name: "🇬🇧 [BL/AI] Сервер 6"
+    type: vless
+    server: 153.56.231.174
+    port: 443
+    uuid: "2ccb06b6-9eac-44eb-ade7-c1e5afb8e7df"
+    network: "tcp"
+    servername: "a80b5386.fi16.h1clayd.click"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "PslSaSQWP4BZZmkL7irab4FMti8sW6BvoC7ytFjJFyc"
+      short-id: "cc678f10161992a9"
+  - name: "🇬🇧 [BL] Сервер 7"
     type: vless
     server: 136.176.68.34
     port: 443
@@ -35,7 +88,7 @@ proxies:
     reality-opts:
       public-key: "Jcm0TjP_kw-KmJoiG5EGyY5sQ9RGeqlX9Ajd3ZCnSAo"
       short-id: "a6040129ad7f4b74"
-  - name: "🇬🇧 [BL] Сервер 5"
+  - name: "🇬🇧 [BL] Сервер 8"
     type: vless
     server: 51.89.194.151
     port: 2053
@@ -48,3 +101,9 @@ proxies:
     reality-opts:
       public-key: "OZR8SI6JUFl7nNcJHJb9gMFs_l9so3FRoYVHGNE9MFA"
       short-id: "c36042c276917a43"
+  - name: "🇬🇧 [BL] Сервер 9"
+    type: ss
+    server: 198.244.201.129
+    port: 19999
+    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    cipher: "aes-256-gcm"
