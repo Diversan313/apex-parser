@@ -1,5 +1,5 @@
 proxies:
-  - name: "🇭🇰 [WL] Сервер 1"
+  - name: "🇭🇰 [WL/CF] Сервер 1"
     type: vless
     server: 103.88.241.220
     port: 443
@@ -15,19 +15,27 @@ proxies:
       short-id: "bad10ef561d2e2a1"
   - name: "🇭🇰 [BL] Сервер 2"
     type: vless
-    server: 138.249.210.11
-    port: 443
-    uuid: "148917bd-0b37-42b8-98f4-aa94ca73e75a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "travel.yandex.ru"
-    client-fingerprint: "firefox"
+    server: 38.55.193.106
+    port: 8443
+    uuid: "2377a148-5e9b-431f-93f4-a1bbaa3dabe9"
+    network: "ws"
+    servername: "hk1.1am.cc.cd"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "tp7awfnKLbhIDkdYlT7Avf-SfUwt7ncX5oyWS5wQmR0"
-      short-id: "4e3f59"
+    ws-opts:
+      path: "/69258b95124b5273"
+      headers:
+        Host: "hk1.1am.cc.cd"
   - name: "🇭🇰 [BL] Сервер 3"
+    type: hysteria2
+    server: 152.32.254.68
+    port: 5010
+    password: "eBTe6Ax2pUts8oMEWoYVDfnSlHfkLffQ"
+    sni: "nas.aizhzo.com"
+    obfs: "salamander"
+    obfs-password: "7M4RXPFcQyQEGbkxBPfXo4bilMhCW2U9"
+  - name: "🇭🇰 [BL] Сервер 4"
     type: vless
     server: 116.213.43.43
     port: 11107
@@ -41,43 +49,20 @@ proxies:
     reality-opts:
       public-key: "6GRzkPbs12fKBdBBFzs5dmtmbSHCXMngUCBKLrXYm3U"
       short-id: "e2ccd8eedcbee2ce"
-  - name: "🇭🇰 [BL] Сервер 4"
-    type: vless
-    server: 38.55.193.106
-    port: 8443
-    uuid: "2377a148-5e9b-431f-93f4-a1bbaa3dabe9"
-    network: "ws"
-    servername: "hk1.1am.cc.cd"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/69258b95124b5273"
-      headers:
-        Host: "hk1.1am.cc.cd"
   - name: "🇭🇰 [BL] Сервер 5"
-    type: hysteria2
-    server: 152.32.254.68
-    port: 5010
-    password: "eBTe6Ax2pUts8oMEWoYVDfnSlHfkLffQ"
-    sni: "nas.aizhzo.com"
-    obfs: "salamander"
-    obfs-password: "7M4RXPFcQyQEGbkxBPfXo4bilMhCW2U9"
-  - name: "🇭🇰 [BL] Сервер 6"
     type: vless
-    server: 2.26.204.46
-    port: 31001
-    uuid: "12a4f736-2238-49ee-831f-5516f15cc951"
-    network: "tcp"
+    server: 38.207.178.28
+    port: 20086
+    uuid: "11a2709f-a1aa-4b97-9212-4d5cb0c83e53"
+    network: "raw"
     flow: "xtls-rprx-vision"
-    servername: "mensura.cdn-apple.com"
+    servername: "www.paypal.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "lzpIiMqHXas_qayw-HvrySb78FNkVroBOqniwqPXPzY"
-      short-id: "39793bc4708abbbb"
-  - name: "🇭🇰 [BL] Сервер 7"
+      public-key: "fSVnXtIce23KOtqQjDuwRkNCM3mvWlva7bPNMfODv04"
+  - name: "🇭🇰 [BL] Сервер 6"
     type: vless
     server: 204.115.18.142
     port: 443
@@ -91,3 +76,9 @@ proxies:
     reality-opts:
       public-key: "l2LZUHHMVVbZwaIhBlMr-Vdpfo7I6_oFyOQdgZywOjI"
       short-id: "2fa9b0474b689aff"
+  - name: "🇭🇰 [BL] Сервер 7"
+    type: ss
+    server: 27.124.5.86
+    port: 8388
+    password: "j4DddfVh3zON1s3Wfbmdn2WWhLCWAaOJyKqdeKvxh4A="
+    cipher: "2022-blake3-aes-256-gcm"
