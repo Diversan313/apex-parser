@@ -1,18 +1,18 @@
 proxies:
   - name: "🇨🇭 [BL] Сервер 1"
     type: vless
-    server: ycnl2-n26.subs-sosavpn.ru
+    server: 45.90.59.15
     port: 443
-    uuid: "4a3e1246-4ac0-4212-abac-a34008218f66"
-    network: "xhttp"
-    servername: "ycnl2-n26.subs-sosavpn.ru"
-    client-fingerprint: "edge"
+    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "random"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v4/media/session/poll.ts"
-      host: "ycnl2-n26.subs-sosavpn.ru"
-      mode: "packet-up"
+    reality-opts:
+      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
+      short-id: "19253fae84102271"
   - name: "🇨🇭 [BL] Сервер 2"
     type: vless
     server: 193.233.89.130
@@ -28,18 +28,38 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc"
   - name: "🇨🇭 [BL] Сервер 3"
+    type: vless
+    server: 200.234.112.37
+    port: 443
+    uuid: "79dabc26-e535-419f-a034-a6fe4438d41f"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "play.google.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "nylVdFaZ2E3hh8j8Hfyui1TIrKMkdSThvrX_V_sEXAY"
+      short-id: "fcf9ec34a0421c5d"
+  - name: "🇨🇭 [BL] Сервер 4"
+    type: hysteria2
+    server: 193.238.155.48
+    port: 443
+    password: "lvu_3390f238bef4e3058ac47c87473755cf_07cd5acf7265adf5c1210040ca46facf:np2.1.HJjJucZ0-OZZUq5Njkl48v1gYx7ol9rXjxYXZUxrQdM"
+    sni: "n50.neproxy.net"
+  - name: "🇨🇭 [BL] Сервер 5"
     type: ss
     server: 23.166.88.127
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 4"
+  - name: "🇨🇭 [BL] Сервер 6"
     type: ss
     server: 186.190.215.251
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 5"
+  - name: "🇨🇭 [BL] Сервер 7"
     type: ss
     server: 79.127.184.104
     port: 19999
