@@ -1,18 +1,18 @@
 proxies:
-  - name: "🇪🇸 [BL] Сервер 1"
+  - name: "🇪🇸 [WL] Сервер 1"
     type: vless
-    server: 46.28.71.247
+    server: 188.72.112.1
     port: 443
-    uuid: "12c53e32-e589-47d6-b857-e4132294f767"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "firefox"
+    uuid: "0259e5aa-c188-4334-b204-32cd5ea859f6"
+    network: "xhttp"
+    servername: "keno-nl-cdn-cello.keno.su"
+    client-fingerprint: "edge"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "v4MuZIvFrTPT5GHMSaPryUAbIZlLstmsUTzmC1E-JTE"
-      short-id: "0dfc23fe80778c00"
+    xhttp-opts:
+      path: "/api/uploadFile/"
+      host: "keno-nl-cdn-cello.keno.su"
+      mode: "packet-up"
   - name: "🇪🇸 [BL] Сервер 2"
     type: vless
     server: 179.255.189.18
@@ -29,21 +29,22 @@ proxies:
       short-id: "76834511"
   - name: "🇪🇸 [BL] Сервер 3"
     type: vless
-    server: 196.199.122.2
-    port: 443
-    uuid: "4201786b-d99b-4147-a5f0-20d47acddb81"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "7aa271t.es1.h1clayd.click"
-    client-fingerprint: "chrome"
+    server: 178.236.254.81
+    port: 8443
+    uuid: "ab53f3b6-7962-4bc1-90f6-8420767b22a8"
+    network: "xhttp"
+    servername: "cdn-es.cahmes.space"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "ZSmetD4e9QG5CiXhniHg5HJB68L4kwbgAkJmMHtVwEE"
-      short-id: "42426c882c5fcd41"
+      public-key: "dSH20qQm9nyDIN1gI1KyUjtVOilHh0wG8t-Xw1iz638"
+      short-id: "01f0a0809d05552b"
+    xhttp-opts:
+      path: "/xhttp"
   - name: "🇪🇸 [BL] Сервер 4"
     type: vless
-    server: 196.196.149.80
+    server: 196.199.122.2
     port: 443
     uuid: "4201786b-d99b-4147-a5f0-20d47acddb81"
     network: "tcp"
@@ -57,7 +58,21 @@ proxies:
       short-id: "42426c882c5fcd41"
   - name: "🇪🇸 [BL] Сервер 5"
     type: vless
-    server: 196.196.148.90
+    server: 196.196.149.80
+    port: 443
+    uuid: "4201786b-d99b-4147-a5f0-20d47acddb81"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "7aa271t.es1.h1clayd.click"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ZSmetD4e9QG5CiXhniHg5HJB68L4kwbgAkJmMHtVwEE"
+      short-id: "42426c882c5fcd41"
+  - name: "🇪🇸 [BL] Сервер 6"
+    type: vless
+    server: 7aa271t.es9.h1clayd.click
     port: 443
     uuid: "4201786b-d99b-4147-a5f0-20d47acddb81"
     network: "tcp"
@@ -69,7 +84,7 @@ proxies:
     reality-opts:
       public-key: "ZSmetD4e9QG5CiXhniHg5HJB68L4kwbgAkJmMHtVwEE"
       short-id: "42426c882c5fcd41"
-  - name: "🇪🇸 [BL] Сервер 6"
+  - name: "🇪🇸 [BL] Сервер 7"
     type: vless
     server: 185.200.244.37
     port: 443
@@ -84,35 +99,7 @@ proxies:
       short-id: "0bf13fb706784403"
     xhttp-opts:
       path: "/api/v2/7d94497a"
-  - name: "🇪🇸 [BL] Сервер 7"
-    type: vless
-    server: 31.56.179.171
-    port: 8444
-    uuid: "4e73a85c-21fb-4caf-97aa-af9f835d439c"
-    network: "tcp"
-    servername: "www.nvidia.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "xtiowfhPbLYybHWeUtcyqv8iMvsj2Id0uZtLDTga80o"
-      short-id: "209297f5"
   - name: "🇪🇸 [BL] Сервер 8"
-    type: vless
-    server: 178.236.254.81
-    port: 8443
-    uuid: "ab53f3b6-7962-4bc1-90f6-8420767b22a8"
-    network: "xhttp"
-    servername: "cdn-es.cahmes.space"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "dSH20qQm9nyDIN1gI1KyUjtVOilHh0wG8t-Xw1iz638"
-      short-id: "01f0a0809d05552b"
-    xhttp-opts:
-      path: "/xhttp"
-  - name: "🇪🇸 [BL] Сервер 9"
     type: vless
     server: 196.240.6.115
     port: 443
@@ -124,7 +111,7 @@ proxies:
     tls: true
     xhttp-opts:
       path: "/es/?—MARAMBASHI—MARAMBASHI—MARAMBASHI?ed=2048"
-  - name: "🇪🇸 [BL] Сервер 10"
+  - name: "🇪🇸 [BL] Сервер 9"
     type: ss
     server: 79.127.139.242
     port: 19999
