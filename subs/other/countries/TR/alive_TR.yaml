@@ -1,6 +1,20 @@
 proxies:
   - name: "🇹🇷 [BL] Сервер 1"
     type: vless
+    server: 31.57.225.5
+    port: 443
+    uuid: "2a446e74-fd92-4917-aa71-f4d54721cf24"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "action.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "JF-Lpu6qTA2gz2Dsho2n_q9mgU6LzWC4gI4W1V1HNSE"
+      short-id: "59cab42f52890fd7"
+  - name: "🇹🇷 [BL] Сервер 2"
+    type: vless
     server: 103.83.87.152
     port: 443
     uuid: "c0742f77-5495-43bf-b007-88d368774d7c"
@@ -13,3 +27,17 @@ proxies:
     reality-opts:
       public-key: "bZpzmeWiEJyJQy0W2hHc34Nr6BuFXj1UDd80Cbwh1Fk"
       short-id: "ff776ff77be48b88"
+  - name: "🇹🇷 [BL] Сервер 3"
+    type: vless
+    server: 37.202.231.38
+    port: 5252
+    uuid: "2a446e74-fd92-4917-aa71-f4d54721cf24"
+    network: "ws"
+    servername: "dpt.codmaxx.ir"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    ws-opts:
+      path: "/video"
+      headers:
+        Host: "dpt.codmaxx.ir"
