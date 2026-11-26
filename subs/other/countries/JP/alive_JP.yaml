@@ -1,18 +1,18 @@
 proxies:
   - name: "🇯🇵 [WL] Сервер 1"
     type: vless
-    server: 88.216.72.171
+    server: 185.222.43.175
     port: 443
-    uuid: "ee0a6b97-4dc1-0008-8b16-95a42c917158"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "se-sto1.connect.accessboy.com"
-    client-fingerprint: "firefox"
+    uuid: "4e4f1f70-5e56-4a76-bb9d-db087f4690c4"
+    network: "ws"
+    servername: "jp3.yohototo.top"
+    client-fingerprint: "unsafe"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1TtWNQhTJr_3H7-ypMw4EiLzVxy22AzUtMiE5JmQMl4"
-      short-id: "1c5869a95671bcb0"
+    ws-opts:
+      path: "/tyxyws"
+      headers:
+        Host: "jp3.yohototo.top"
   - name: "🇯🇵 [BL] Сервер 2"
     type: vless
     server: 155.248.175.201
@@ -104,9 +104,3 @@ proxies:
     reality-opts:
       public-key: "ejx56dFtS4LK_Th6HSLFFdm7v7zqRpv8KfjrWAw4Sjg"
       short-id: "bd6f67b6b2152b45"
-  - name: "🇯🇵 [BL/AI] Сервер 9"
-    type: ss
-    server: 8.216.19.169
-    port: 5555
-    password: "123456"
-    cipher: "aes-256-gcm"
