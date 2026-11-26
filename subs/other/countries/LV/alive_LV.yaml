@@ -7,6 +7,19 @@ proxies:
     cipher: "aes-128-gcm"
   - name: "🇱🇻 [BL] Сервер 2"
     type: vless
+    server: 45.38.143.210
+    port: 30584
+    uuid: "cebc5f19-18d9-48e6-9029-fb4b04caf393"
+    network: "tcp"
+    servername: "m.vk.com"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "2hV4TY2ygvQ7ISa5o4u_FUKXzlIhLgbsScE8M1h0m3Y"
+      short-id: "67ece882d65d0f1a"
+  - name: "🇱🇻 [BL] Сервер 3"
+    type: vless
     server: 195.123.213.28
     port: 443
     uuid: "02fcc1a4-ee90-4970-8bbb-4ffaa8109d24"
@@ -19,3 +32,29 @@ proxies:
     reality-opts:
       public-key: "NMgy1XgCSXExOg6Tg8xG9lCWttMF6sjdpB41lZy6FWo"
       short-id: "5c256336e3b673fa"
+  - name: "🇱🇻 [BL/AI] Сервер 4"
+    type: vless
+    server: 178.130.133.24
+    port: 443
+    uuid: "53a44f0c-a480-0004-802c-92e796ed77c9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "balancer-msk.peregrine-sub.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BIeplEH7MyksxHu-ut3eoBj8UUNeEsybJZrRmppwQnc"
+  - name: "🇱🇻 [BL] Сервер 5"
+    type: vless
+    server: balancer-msk.peregrine-sub.net
+    port: 443
+    uuid: "53a44f0c-a480-0004-802c-92e796ed77c9"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "balancer-msk.peregrine-sub.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "BIeplEH7MyksxHu-ut3eoBj8UUNeEsybJZrRmppwQnc"
