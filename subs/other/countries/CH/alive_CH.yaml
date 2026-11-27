@@ -1,31 +1,37 @@
 proxies:
-  - name: "🇨🇭 [BL] Сервер 1"
+  - name: "🇨🇭 [WL] Сервер 1"
     type: vless
-    server: 84.32.108.50
+    server: 188.72.112.1
     port: 443
-    uuid: "2098ca45-e61c-0022-ad7d-8badb6b154f4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nl-ams1.connect.accessboy.com"
+    uuid: "d32e1a92-dd3b-4ac0-a78d-5d6a6032c425"
+    network: "xhttp"
+    servername: "ch3-cdn.insidenet.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "1TtWNQhTJr_3H7-ypMw4EiLzVxy22AzUtMiE5JmQMl4"
-      short-id: "1c5869a95671bcb0"
+    xhttp-opts:
+      path: "/api/v2/telemetry/"
+      host: "ch3-cdn.insidenet.ru"
+      mode: "packet-up"
   - name: "🇨🇭 [BL] Сервер 2"
+    type: hysteria2
+    server: 193.238.155.48
+    port: 443
+    password: "lvu_3390f238bef4e3058ac47c87473755cf_07cd5acf7265adf5c1210040ca46facf:np2.1.HJjJucZ0-OZZUq5Njkl48v1gYx7ol9rXjxYXZUxrQdM"
+    sni: "n50.neproxy.net"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: ss
     server: 23.166.88.127
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 3"
+  - name: "🇨🇭 [BL] Сервер 4"
     type: ss
     server: 186.190.215.251
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 4"
+  - name: "🇨🇭 [BL] Сервер 5"
     type: ss
     server: 79.127.184.104
     port: 19999
