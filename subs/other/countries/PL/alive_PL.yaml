@@ -1,34 +1,19 @@
 proxies:
   - name: "🇵🇱 [WL] Сервер 1"
     type: vless
-    server: 188.225.56.100
+    server: 188.72.112.1
     port: 443
     uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "ws"
-    servername: "e2.cdnwh.icu"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/stream/segment/3078a41dd7eb/"
-      headers:
-        Host: "e2.cdnwh.icu"
-  - name: "🇵🇱 [WL] Сервер 2"
-    type: vless
-    server: 93.184.169.233
-    port: 443
-    uuid: "9a9f167d-b461-466f-be50-f0ffd598a6f8"
     network: "xhttp"
-    servername: "srartsfoparts.store"
-    client-fingerprint: "chrome"
+    servername: "cdnpl.worldfly.io"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "pF63V3JDoxSa9lMMKoXyxpjBJNqIsajj84LMXElvF1w"
-      short-id: "1205987ccd622887"
     xhttp-opts:
-      path: "/e90d4e998aad/9d1d9b8b"
-  - name: "🇵🇱 [WL] Сервер 3"
+      path: "/api/v1/assets/"
+      host: "cdnpl.worldfly.io"
+      mode: "packet-up"
+  - name: "🇵🇱 [WL] Сервер 2"
     type: vless
     server: 72.56.249.32
     port: 443
@@ -41,7 +26,34 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
+  - name: "🇵🇱 [BL] Сервер 3"
+    type: vless
+    server: 82.118.22.161
+    port: 443
+    uuid: "05488656-d4bf-4634-8b2e-e4ff5a56c7e2"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "xY1KpNxaIGmi6jfeudYQ_aaLGQqWK_uHStnwUFd2_2E"
+      short-id: "fa3ea655619a3e78"
   - name: "🇵🇱 [BL] Сервер 4"
+    type: vless
+    server: 212.127.91.79
+    port: 443
+    uuid: "7af8ad56-33ce-4f3d-ad15-ef32a71d67f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "storage.yandex.net"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "lCCvbwGOEkx6IuK3eFd4RtmBi6UInWoMyt0QtfsOjwk"
+      short-id: "99fe1ec015fde70c"
+  - name: "🇵🇱 [BL] Сервер 5"
     type: vless
     server: 77.83.246.186
     port: 8443
@@ -58,7 +70,55 @@ proxies:
       path: "/api/v6/media/cd1303c9/"
       host: "www.wp.pl"
       mode: "auto"
-  - name: "🇵🇱 [BL] Сервер 5"
+  - name: "🇵🇱 [BL] Сервер 6"
+    type: vless
+    server: lesson1.schoolpizorbz.xyz
+    port: 443
+    uuid: "e894c08a-fecc-46f5-bf03-c95d0274c79d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "lesson1.schoolpizorbz.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "AdOl7XVxVk4Yb_tBxjrG-FP5elV_V2MeI_6WVC4H41s"
+      short-id: "d14566fcec627162"
+  - name: "🇵🇱 [BL] Сервер 7"
+    type: vless
+    server: 201.58.178.236
+    port: 443
+    uuid: "e894c08a-fecc-46f5-bf03-c95d0274c79d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "lesson1.schoolpizorbz.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "AdOl7XVxVk4Yb_tBxjrG-FP5elV_V2MeI_6WVC4H41s"
+      short-id: "d14566fcec627162"
+  - name: "🇵🇱 [BL] Сервер 8"
+    type: hysteria2
+    server: n42.neproxy.net
+    port: 9443
+    password: "lvu_3390f238bef4e3058ac47c87473755cf_07cd5acf7265adf5c1210040ca46facf:np2.1.HJjJucZ0-OZZUq5Njkl48v1gYx7ol9rXjxYXZUxrQdM"
+    sni: "n34.neproxy.net"
+  - name: "🇵🇱 [BL] Сервер 9"
+    type: vless
+    server: 48.102.174.147
+    port: 443
+    uuid: "e894c08a-fecc-46f5-bf03-c95d0274c79d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "lesson15.schoolpizorbz.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Wpmzv6fsZD7Lgbxtad3Of-XEl6T2qnjq_GDLCh6eOAg"
+      short-id: "4e1a1a1c3d18869e"
+  - name: "🇵🇱 [BL] Сервер 10"
     type: vless
     server: 31.59.116.161
     port: 443
@@ -74,31 +134,3 @@ proxies:
     xhttp-opts:
       path: "/"
       host: "www.samsung.com"
-  - name: "🇵🇱 [BL] Сервер 6"
-    type: vless
-    server: 189.74.116.7
-    port: 443
-    uuid: "b3ab1262-e2ef-46ef-927b-f35c4cce15a4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "api.mediatropa.cc"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
-      short-id: "a8"
-  - name: "🇵🇱 [BL] Сервер 7"
-    type: vless
-    server: 2.27.255.240
-    port: 443
-    uuid: "a132f71a-b916-47e6-a80d-4c20fb645491"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "wislapark.silalink.sbs"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "2zRkAEam96G33mwRmdxNPrzj16X5mwPonLvhf2uIumw"
-      short-id: "65403a56bde97959"

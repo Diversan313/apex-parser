@@ -26,18 +26,18 @@ proxies:
       short-id: "07a66150eac3db28"
   - name: "🇸🇬 [BL] Сервер 3"
     type: vless
-    server: 140.245.113.33
-    port: 443
-    uuid: "f4ca59b2-767d-3425-8dfc-95a96a0e6802"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "learn.microsoft.com"
+    server: 141.193.213.20
+    port: 8443
+    uuid: "4d8d9640-7cc7-4c55-ba54-6ce0d1709541"
+    network: "ws"
+    servername: "matrix.learnpodedu.com"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "tF9nKF6amexok5wKbieQ2QRKQI5_ZTFE6MUj1hUBBkY"
-      short-id: "c940a3b6d60b8611"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "matrix.learnpodedu.com"
   - name: "🇸🇬 [BL] Сервер 4"
     type: vless
     server: 188.166.182.158
@@ -66,20 +66,6 @@ proxies:
       short-id: "e1c483f9d4437d42"
   - name: "🇸🇬 [BL] Сервер 6"
     type: vless
-    server: 134.185.81.5
-    port: 47881
-    uuid: "59b203b2-b1bc-4e9c-a9e5-ccb8f691bf72"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.tesla.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "6XmXX1QXGodmtqU37Zx9CDHnCnPtonRdq8ieLmt__g4"
-      short-id: "38d72071"
-  - name: "🇸🇬 [BL] Сервер 7"
-    type: vless
     server: 139.162.27.96
     port: 2096
     uuid: "6e59d5c5-7aa3-4c36-a4c4-e3b899525ed2"
@@ -92,6 +78,20 @@ proxies:
       path: "/free-server.techsonic.dev"
       headers:
         Host: "free-server.techsonic.dev"
+  - name: "🇸🇬 [BL] Сервер 7"
+    type: vless
+    server: 167.150.100.106
+    port: 443
+    uuid: "2098ca45-e61c-4a92-ad7d-8badb6b154f4"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sg-sin1.connect.accessboy.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "1TtWNQhTJr_3H7-ypMw4EiLzVxy22AzUtMiE5JmQMl4"
+      short-id: "1c5869a95671bcb0"
   - name: "🇸🇬 [BL] Сервер 8"
     type: vmess
     server: 149.88.23.202
@@ -100,6 +100,7 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
+    servername: "149.88.23.202"
   - name: "🇸🇬 [BL] Сервер 9"
     type: vmess
     server: 149.88.23.207
