@@ -1,27 +1,19 @@
 proxies:
   - name: "🇸🇪 [WL] Сервер 1"
     type: vless
-    server: 188.225.77.71
+    server: 188.72.112.1
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "raw"
-    flow: "xtls-rprx-vision-udp443"
-    servername: "spb2.b2ai.top"
+    network: "xhttp"
+    servername: "cdnok.b2ai.top"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 188.225.77.71
-    port: 443
-    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "spb2.b2ai.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL/CF] Сервер 3"
+    xhttp-opts:
+      path: "/api/v1/telemetry/call/"
+      host: "cdnok.b2ai.top"
+      mode: "packet-up"
+  - name: "🇸🇪 [WL/CF] Сервер 2"
     type: vless
     server: 92.63.193.41
     port: 443
@@ -35,6 +27,17 @@ proxies:
     reality-opts:
       public-key: "Hk7E17R41exzrPKAOeETobKQ0LOAmuLSzFXdEwLSmiQ"
       short-id: "b92d7008f05da71e"
+  - name: "🇸🇪 [WL] Сервер 3"
+    type: vless
+    server: 188.225.77.71
+    port: 443
+    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
+    network: "tcp"
+    flow: "xtls-rprx-vision-udp443"
+    servername: "spb2.b2ai.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
   - name: "🇸🇪 [BL] Сервер 4"
     type: vless
     server: 136.234.173.231
@@ -96,7 +99,7 @@ proxies:
     type: vless
     server: 92.63.189.39
     port: 8443
-    uuid: "7aa77858-f235-0003-9434-7ab060848b17"
+    uuid: "7aa77858-f235-44d6-9434-7ab060848b17"
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "avelon.onl"
@@ -104,20 +107,6 @@ proxies:
     udp: true
     tls: true
   - name: "🇸🇪 [BL] Сервер 9"
-    type: vless
-    server: 150.241.87.51
-    port: 443
-    uuid: "0444647e-6388-4c4b-9847-1fcd5bc101ea"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "nh-pl-01-eis0cc2f.farmerly.cc"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "cp947CBxZl6dHGM5epfaXvKyj7Gh3CVBnprViDFL6Rk"
-      short-id: "2174c487a4c9664b"
-  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 213.21.252.56
     port: 443
@@ -130,35 +119,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "-P8DgKISSG4jnLuj6ihZDqZs1_zt-juBrhVhTylHiAo"
-  - name: "🇸🇪 [BL] Сервер 11"
-    type: vless
-    server: r.dhafhdtjdti.site
-    port: 443
-    uuid: "9f749472-c636-4c5a-af51-7f8feefaac81"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
-      short-id: "7c4e91ab"
-  - name: "🇸🇪 [BL/AI] Сервер 12"
-    type: vless
-    server: 13.51.167.89
-    port: 443
-    uuid: "9f749472-c636-4c5a-af51-7f8feefaac81"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
-      short-id: "7c4e91ab"
-  - name: "🇸🇪 [BL/AI] Сервер 13"
+  - name: "🇸🇪 [BL/AI] Сервер 10"
     type: vless
     server: 31.77.158.172
     port: 443
@@ -171,30 +132,3 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL/AI] Сервер 14"
-    type: vless
-    server: swe1.baterium.space
-    port: 443
-    uuid: "7d63243c-983e-44db-a1b8-13dc3fd6f7a2"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "cdnjs.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL/AI] Сервер 15"
-    type: vless
-    server: 51.21.171.162
-    port: 443
-    uuid: "9f749472-c636-4c5a-af51-7f8feefaac81"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
-      short-id: "7c4e91ab"
