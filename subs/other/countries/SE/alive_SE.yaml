@@ -35,20 +35,20 @@ proxies:
       path: "/api/v1/telemetry/call/"
       host: "cdnok.b2ai.top"
       mode: "packet-up"
-  - name: "🇸🇪 [WL] Сервер 4"
+  - name: "🇸🇪 [WL/CF] Сервер 4"
     type: vless
-    server: 188.72.112.1
+    server: 92.63.193.41
     port: 443
-    uuid: "bc5c220e-6c87-4465-a495-acfb1790feda"
-    network: "xhttp"
-    servername: "edge-se1.gramstar.online"
-    client-fingerprint: "firefox"
+    uuid: "f4b08bf1-d9bd-4755-aa88-ba922282c608"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ruswedmicro2.gangplatform.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/uploadfiles/"
-      host: "edge-se1.gramstar.online"
-      mode: "packet-up"
+    reality-opts:
+      public-key: "Hk7E17R41exzrPKAOeETobKQ0LOAmuLSzFXdEwLSmiQ"
+      short-id: "b92d7008f05da71e"
   - name: "🇸🇪 [BL] Сервер 5"
     type: vless
     server: 136.234.173.231
@@ -61,9 +61,10 @@ proxies:
     tls: true
     reality-opts:
       public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
-      short-id: "aa"
+      short-id: "aabb"
     grpc-opts:
       grpc-service-name: "grpc-tunnel"
+      grpc-mode: "multi"
   - name: "🇸🇪 [BL] Сервер 6"
     type: vless
     server: 31.77.144.255
@@ -71,6 +72,7 @@ proxies:
     uuid: "95580a09-cce7-4b62-af74-a514083ba9e4"
     network: "xhttp"
     servername: "www.amd.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     reality-opts:
@@ -94,20 +96,6 @@ proxies:
       grpc-service-name: "138-124-86-230-sslip-io"
   - name: "🇸🇪 [BL] Сервер 8"
     type: vless
-    server: 143.246.195.83
-    port: 8448
-    uuid: "240cb330-efc6-4d06-b5de-eb5fa8c7cc47"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.tele2.se"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ipT42Jd5c_HMbbi-x0Qt12BGl2lGfJuZ5Im87DMfNGI"
-      short-id: "497b9fa9b6050f45"
-  - name: "🇸🇪 [BL] Сервер 9"
-    type: vless
     server: 150.241.87.51
     port: 443
     uuid: "0444647e-6388-4c4b-9847-1fcd5bc101ea"
@@ -120,7 +108,7 @@ proxies:
     reality-opts:
       public-key: "cp947CBxZl6dHGM5epfaXvKyj7Gh3CVBnprViDFL6Rk"
       short-id: "2174c487a4c9664b"
-  - name: "🇸🇪 [BL] Сервер 10"
+  - name: "🇸🇪 [BL] Сервер 9"
     type: vless
     server: swe1.baterium.space
     port: 443
@@ -133,7 +121,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL/AI] Сервер 11"
+  - name: "🇸🇪 [BL/AI] Сервер 10"
     type: vless
     server: 31.77.158.172
     port: 443

@@ -1,19 +1,6 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
-    server: 94.26.248.130
-    port: 443
-    uuid: "ea759639-a58c-4c46-8e0b-4cc834bf6658"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "steam-videos.cc"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
-  - name: "🇫🇷 [WL] Сервер 2"
-    type: vless
     server: 186.246.8.13
     port: 443
     uuid: "00799b08-1090-4ed3-bec0-0fa26816a703"
@@ -25,7 +12,34 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 3"
+  - name: "🇫🇷 [BL] Сервер 2"
+    type: vless
+    server: 145.223.68.58
+    port: 443
+    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
+      short-id: "a44ff7d2e80213c2"
+  - name: "🇫🇷 [BL/AI] Сервер 3"
+    type: vless
+    server: 45.154.96.24
+    port: 443
+    uuid: "b92fa8ab-5a4b-4202-8e2d-af8e8b332193"
+    network: "tcp"
+    servername: "firmwaresign.partners.nvidia.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "o2KcQK-yk3JFACI2IuGoYLa23sClJ2_Az_mKzIj2PhY"
+      short-id: "f30e45c1fa958a4d"
+  - name: "🇫🇷 [BL] Сервер 4"
     type: vless
     server: 161.97.160.224
     port: 443
@@ -39,7 +53,7 @@ proxies:
     reality-opts:
       public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
       short-id: "e6"
-  - name: "🇫🇷 [BL] Сервер 4"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -54,20 +68,6 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL/CF] Сервер 5"
-    type: vless
-    server: 192.144.58.203
-    port: 443
-    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ruparmicro2.gangplatform.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "W7M4MhVHx47N0lVQwP4uIGpyCIkzYsTsDOygqMK4li8"
-      short-id: "60e5181f77500676"
   - name: "🇫🇷 [BL] Сервер 6"
     type: vless
     server: 62.210.24.143
@@ -122,20 +122,7 @@ proxies:
     reality-opts:
       public-key: "ekzDelSQeyL_mkDLybS2AbFV4Iw5zA632HfEmAUnSHA"
       short-id: "a20cbc598110b179"
-  - name: "🇫🇷 [BL/AI] Сервер 10"
-    type: vless
-    server: 45.154.96.24
-    port: 443
-    uuid: "b92fa8ab-5a4b-4202-8e2d-af8e8b332193"
-    network: "tcp"
-    servername: "firmwaresign.partners.nvidia.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "o2KcQK-yk3JFACI2IuGoYLa23sClJ2_Az_mKzIj2PhY"
-      short-id: "f30e45c1fa958a4d"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 82.22.2.137
     port: 443
@@ -150,7 +137,7 @@ proxies:
     xhttp-opts:
       path: "/api/v2/7d94497a"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -165,33 +152,3 @@ proxies:
       short-id: "21569dd6"
     xhttp-opts:
       path: "/OCrp5Ajs"
-  - name: "🇫🇷 [BL] Сервер 13"
-    type: ss
-    server: 23.162.152.22
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 14"
-    type: ss
-    server: 38.109.228.110
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 15"
-    type: ss
-    server: 167.17.64.27
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 16"
-    type: ss
-    server: 172.99.189.142
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 17"
-    type: ss
-    server: 167.17.64.175
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"

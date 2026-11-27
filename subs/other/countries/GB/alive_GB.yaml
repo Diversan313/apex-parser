@@ -1,17 +1,18 @@
 proxies:
-  - name: "🇬🇧 [BL/AI] Сервер 1"
+  - name: "🇬🇧 [WL] Сервер 1"
     type: vless
-    server: 109.176.202.177
+    server: 188.72.112.1
     port: 443
-    uuid: "b92fa8ab-5a4b-4202-8e2d-af8e8b332193"
-    network: "tcp"
-    servername: "delivery.mp.microsoft.com"
+    uuid: "d32e1a92-dd3b-4ac0-a78d-5d6a6032c425"
+    network: "xhttp"
+    servername: "uk-cdn.insidenet.ru"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "4YuPm6_B_Aa9Um70LtKFnVfA_F8uiwwmXChE_pyXjX8"
-      short-id: "ec77cd113fc57140"
+    xhttp-opts:
+      path: "/api/v3/feed/"
+      host: "uk-cdn.insidenet.ru"
+      mode: "packet-up"
   - name: "🇬🇧 [BL] Сервер 2"
     type: vless
     server: 48.102.240.1
@@ -56,17 +57,17 @@ proxies:
       mode: "auto"
   - name: "🇬🇧 [BL] Сервер 6"
     type: vless
-    server: 45.88.183.86
-    port: 777
-    uuid: "3b97ec69-1326-401c-8505-4cca6f8e9827"
-    network: "grpc"
-    servername: "it.nvidia.com"
-    client-fingerprint: "chrome"
+    server: 201.58.133.77
+    port: 443
+    uuid: "e8b7abeb-98d4-44b6-ba91-3adae6086108"
+    network: "tcp"
+    servername: "eu121.cdn77.icu"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "Jgj652OV4c6FcJwpWtFFbrF4FcGnXMNfry44fq3vbkg"
-      short-id: "66d560a799610b07"
+      public-key: "zYNnGVEkMFCUR_9NcYeaXfm9A_L-PP6iG2sIIST6S0M"
+      short-id: "1ed136481e0ede74"
   - name: "🇬🇧 [BL/AI] Сервер 7"
     type: vless
     server: eu121.cdn77.icu
@@ -107,3 +108,18 @@ proxies:
     reality-opts:
       public-key: "OZR8SI6JUFl7nNcJHJb9gMFs_l9so3FRoYVHGNE9MFA"
       short-id: "c36042c276917a43"
+  - name: "🇬🇧 [BL] Сервер 10"
+    type: vless
+    server: 144.31.249.159
+    port: 2053
+    uuid: "7c768ae5-33eb-4460-b901-cffa40948c5f"
+    network: "xhttp"
+    servername: "flsh.luna-nodes.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "4zpFl-kdSaBlWcL9tqunp9gQQRwNrpeua_OFx3oD7WI"
+      short-id: "98383c4e8a3f1b74"
+    xhttp-opts:
+      path: "/"
