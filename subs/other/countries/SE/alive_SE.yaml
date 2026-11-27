@@ -5,23 +5,12 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision-udp443"
-    servername: "spb2.b2ai.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 188.225.77.71
-    port: 443
-    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "raw"
     flow: "xtls-rprx-vision"
     servername: "spb2.b2ai.top"
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇸🇪 [WL] Сервер 3"
+  - name: "🇸🇪 [WL] Сервер 2"
     type: vless
     server: 188.72.112.1
     port: 443
@@ -35,7 +24,7 @@ proxies:
       path: "/api/v1/telemetry/call/"
       host: "cdnok.b2ai.top"
       mode: "packet-up"
-  - name: "🇸🇪 [WL/CF] Сервер 4"
+  - name: "🇸🇪 [WL/CF] Сервер 3"
     type: vless
     server: 92.63.193.41
     port: 443
@@ -49,7 +38,7 @@ proxies:
     reality-opts:
       public-key: "Hk7E17R41exzrPKAOeETobKQ0LOAmuLSzFXdEwLSmiQ"
       short-id: "b92d7008f05da71e"
-  - name: "🇸🇪 [BL] Сервер 5"
+  - name: "🇸🇪 [BL] Сервер 4"
     type: vless
     server: 136.234.173.231
     port: 8881
@@ -64,7 +53,7 @@ proxies:
       short-id: "aa"
     grpc-opts:
       grpc-service-name: "grpc-tunnel"
-  - name: "🇸🇪 [BL] Сервер 6"
+  - name: "🇸🇪 [BL] Сервер 5"
     type: vless
     server: 31.77.144.255
     port: 8444
@@ -80,7 +69,7 @@ proxies:
       path: "/xh"
       host: "www.amd.com"
       mode: "stream-one"
-  - name: "🇸🇪 [BL] Сервер 7"
+  - name: "🇸🇪 [BL] Сервер 6"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -92,6 +81,19 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
+  - name: "🇸🇪 [BL] Сервер 7"
+    type: vless
+    server: 213.21.252.56
+    port: 443
+    uuid: "639b131f-d0f3-460c-aa17-423047f8a5df"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stock2.mcufa.pro"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "-P8DgKISSG4jnLuj6ihZDqZs1_zt-juBrhVhTylHiAo"
   - name: "🇸🇪 [BL/AI] Сервер 8"
     type: vless
     server: 81.177.215.81
