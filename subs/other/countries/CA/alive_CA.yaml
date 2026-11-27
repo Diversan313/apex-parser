@@ -27,21 +27,32 @@ proxies:
     reality-opts:
       public-key: "3U3hb-HmOG5qptCzXIt8NQE3TE40eeTJsNpBV_B9hQA"
       short-id: "1dde6750d22c5634"
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇨🇦 [WL] Сервер 3"
     type: vless
-    server: 209.200.246.148
+    server: 79.141.166.81
     port: 443
-    uuid: "ca52e2b6-fb9f-4dac-b6dc-49da9923f251"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
+    uuid: "ba373a70-295f-482d-a471-8bc17b54e23b"
+    network: "grpc"
+    servername: "hazelforge.xyz"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
-      short-id: "f98843107912e782"
+      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
+      short-id: "27350908de933e09"
+    grpc-opts:
+      grpc-service-name: "neurex"
   - name: "🇨🇦 [BL] Сервер 4"
+    type: vless
+    server: 66.163.113.9
+    port: 443
+    uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
+    network: "tcp"
+    servername: "kuruish.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: 184.107.179.150
     port: 8443
@@ -55,26 +66,7 @@ proxies:
     reality-opts:
       public-key: "FZvOenkKu_0DspnZA7Nc7xgWhR0_Z0MvqhntPqPchV4"
       short-id: "40a4615253b8f75d"
-  - name: "🇨🇦 [BL] Сервер 5"
-    type: vless
-    server: 66.163.113.9
-    port: 443
-    uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
-    network: "tcp"
-    servername: "kuruish.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
   - name: "🇨🇦 [BL] Сервер 6"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-    servername: "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET"
-  - name: "🇨🇦 [BL] Сервер 7"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -84,6 +76,14 @@ proxies:
     network: "raw"
     ws-opts:
       path: "/eyJqdW5rIjoiNUZVWmdPNWNpTW5LOCIsInByb3RvY29sIjoidmwiLCJtb2RlIjoicHJlZml4IiwicGFuZWxJUHMiOlsiWzI2MDI6ZmM1OTpiMDo2NDo6XSJdfQ"
+  - name: "🇨🇦 [BL] Сервер 7"
+    type: vmess
+    server: 169.197.142.22
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
   - name: "🇨🇦 [BL] Сервер 8"
     type: ss
     server: 51.222.141.125

@@ -1,18 +1,33 @@
 proxies:
-  - name: "🇮🇹 [BL] Сервер 1"
+  - name: "🇮🇹 [WL] Сервер 1"
     type: vless
-    server: 82.118.16.187
+    server: 194.180.207.155
     port: 443
-    uuid: "dc2259c4-388e-4285-ba18-df619b6672b6"
-    network: "raw"
+    uuid: "ba373a70-295f-482d-a471-8bc17b54e23b"
+    network: "grpc"
+    servername: "duskbrook.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "pR39Vv5qhk8r6akOicoy6mMs4-ppSWUez8MyAXG7wwQ"
+      short-id: "27350908de933e09"
+    grpc-opts:
+      grpc-service-name: "neurex"
+  - name: "🇮🇹 [BL] Сервер 2"
+    type: vless
+    server: 82.118.16.189
+    port: 443
+    uuid: "29f178f7-f96f-46ba-8fc0-bbcd690ba788"
+    network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "www.cloudflare.com"
     udp: true
     tls: true
     reality-opts:
-      public-key: "R5ycsjJ-v024902dMSqTsSdqxUwCFEXMebdBEWFt9VU"
-      short-id: "cd6065902eea7a02"
-  - name: "🇮🇹 [BL] Сервер 2"
+      public-key: "zmo2VkZkfjh2kWjaRghXUs39ImQo87LmPhjvzbX3yB4"
+      short-id: "1e9a49dd374c1191"
+  - name: "🇮🇹 [BL/CF] Сервер 3"
     type: vless
     server: 94.103.83.173
     port: 443
@@ -26,58 +41,31 @@ proxies:
     reality-opts:
       public-key: "X99zq7QEhnb9l3JsdyrL8Jt6yDZTcL3QzNbTZrUmJEM"
       short-id: "dbd5efbe0fd57f71"
-  - name: "🇮🇹 [BL] Сервер 3"
-    type: vless
-    server: 82.118.16.189
-    port: 443
-    uuid: "29f178f7-f96f-46ba-8fc0-bbcd690ba788"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "zmo2VkZkfjh2kWjaRghXUs39ImQo87LmPhjvzbX3yB4"
-      short-id: "1e9a49dd374c1191"
   - name: "🇮🇹 [BL] Сервер 4"
-    type: vless
-    server: 179.255.190.88
-    port: 443
-    uuid: "148917bd-0b37-42b8-98f4-aa94ca73e75a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "travel.yandex.ru"
-    client-fingerprint: "safari"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "tp7awfnKLbhIDkdYlT7Avf-SfUwt7ncX5oyWS5wQmR0"
-      short-id: "065861068f65e954"
-  - name: "🇮🇹 [BL] Сервер 5"
     type: ss
     server: 202.50.253.27
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇮🇹 [BL] Сервер 6"
+  - name: "🇮🇹 [BL] Сервер 5"
     type: ss
     server: 202.50.253.90
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇮🇹 [BL] Сервер 7"
+  - name: "🇮🇹 [BL] Сервер 6"
     type: ss
     server: 202.50.253.54
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇮🇹 [BL] Сервер 8"
+  - name: "🇮🇹 [BL] Сервер 7"
     type: ss
     server: 202.50.253.36
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇮🇹 [BL] Сервер 9"
+  - name: "🇮🇹 [BL] Сервер 8"
     type: ss
     server: 202.50.253.63
     port: 19999
