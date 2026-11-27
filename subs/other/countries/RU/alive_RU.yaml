@@ -41,6 +41,18 @@ proxies:
       mode: "packet-up"
   - name: "🇷🇺 [WL] Сервер 4"
     type: vless
+    server: vps3.nemnogogo.com
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
+  - name: "🇷🇺 [WL] Сервер 5"
+    type: vless
     server: 201.51.12.98
     port: 443
     uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
@@ -51,19 +63,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
-    server: 200.169.179.233
-    port: 443
-    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
-    network: "grpc"
-    servername: "vps3.nemnogogo.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 6"
+  - name: "🇷🇺 [WL/AI] Сервер 6"
     type: vless
     server: 176.57.215.54
     port: 37508
@@ -77,11 +77,17 @@ proxies:
       public-key: "_Iqh4SUi85b59zoNhLWVZrSGMNa45OTgK3fWrjZI0l8"
       short-id: "d3"
   - name: "🇷🇺 [WL] Сервер 7"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
+    type: vless
+    server: 200.169.179.233
+    port: 443
+    uuid: "38308ff1-5aa9-494f-a25a-0f2870d56b3e"
+    network: "grpc"
+    servername: "vps3.nemnogogo.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    grpc-opts:
+      grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 8"
     type: hysteria2
     server: 103.88.243.142
@@ -89,6 +95,12 @@ proxies:
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 9"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
+  - name: "🇷🇺 [WL] Сервер 10"
     type: vless
     server: 176.114.83.142
     port: 443
@@ -98,7 +110,7 @@ proxies:
     client-fingerprint: "firefox"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 10"
+  - name: "🇷🇺 [WL] Сервер 11"
     type: vless
     server: 136.148.83.69
     port: 443
@@ -108,7 +120,7 @@ proxies:
     client-fingerprint: "edge"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 11"
+  - name: "🇷🇺 [WL] Сервер 12"
     type: vless
     server: 136.148.83.70
     port: 443
@@ -118,15 +130,6 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 12"
-    type: vless
-    server: 136.148.83.71
-    port: 443
-    uuid: "00000000-0000-0001-0000-000000000000"
-    network: "tcp"
-    servername: "wccfu-ru-79dc.my-fade.cloud"
-    udp: true
-    tls: true
   - name: "🇷🇺 [WL] Сервер 13"
     type: ss
     server: 194.87.69.12
@@ -134,6 +137,34 @@ proxies:
     password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
     cipher: "aes-256-gcm"
   - name: "🇷🇺 [WL/AI] Сервер 14"
+    type: vless
+    server: 185.231.204.70
+    port: 443
+    uuid: "318d9cc0-248f-4f44-b79a-1ba4fda95c08"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.aegon.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "esH80_84Bccc0dulU0nNn5nDlkkRUt9xy7U5op-Gdhc"
+      short-id: "cf71aa27e0f1b941"
+  - name: "🇷🇺 [WL] Сервер 15"
+    type: vless
+    server: nl26.umarketvpn.pro
+    port: 443
+    uuid: "318d9cc0-248f-4f44-b79a-1ba4fda95c08"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.aegon.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "esH80_84Bccc0dulU0nNn5nDlkkRUt9xy7U5op-Gdhc"
+      short-id: "cf71aa27e0f1b941"
+  - name: "🇷🇺 [WL/AI] Сервер 16"
     type: vless
     server: ads2.yandex-dev.online
     port: 443

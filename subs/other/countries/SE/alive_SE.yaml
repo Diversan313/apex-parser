@@ -5,9 +5,9 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision-udp443"
+    flow: "xtls-rprx-vision"
     servername: "spb2.b2ai.top"
-    client-fingerprint: "ios"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 2"
@@ -15,8 +15,8 @@ proxies:
     server: 188.225.77.71
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "raw"
-    flow: "xtls-rprx-vision"
+    network: "tcp"
+    flow: "xtls-rprx-vision-udp443"
     servername: "spb2.b2ai.top"
     client-fingerprint: "firefox"
     udp: true
@@ -35,7 +35,7 @@ proxies:
       path: "/api/v1/telemetry/call/"
       host: "cdnok.b2ai.top"
       mode: "packet-up"
-  - name: "🇸🇪 [WL/CF] Сервер 4"
+  - name: "🇸🇪 [WL] Сервер 4"
     type: vless
     server: 92.63.193.41
     port: 443
@@ -121,7 +121,7 @@ proxies:
     tls: true
     reality-opts:
       public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL/AI] Сервер 10"
+  - name: "🇸🇪 [BL] Сервер 10"
     type: vless
     server: 31.77.158.172
     port: 443
@@ -129,8 +129,22 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "cdnjs.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
+  - name: "🇸🇪 [BL/AI] Сервер 11"
+    type: vless
+    server: 2.26.124.209
+    port: 443
+    uuid: "848951d4-c5a5-484c-897d-d777929bcdc2"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "gateway.icloud.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "aykMwW19tGa685HLa9yI8FDTH567ovT4KipCSUHEySk"
+      short-id: "54325343"

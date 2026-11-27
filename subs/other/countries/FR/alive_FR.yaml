@@ -1,6 +1,32 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
+    server: 94.26.248.130
+    port: 443
+    uuid: "ea759639-a58c-4c46-8e0b-4cc834bf6658"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "steam-videos.cc"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+  - name: "🇫🇷 [WL/AI] Сервер 2"
+    type: vless
+    server: 5.42.121.154
+    port: 443
+    uuid: "ea759639-a58c-4c46-8e0b-4cc834bf6658"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "steam-videos.cc"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+  - name: "🇫🇷 [WL] Сервер 3"
+    type: vless
     server: 186.246.8.13
     port: 443
     uuid: "00799b08-1090-4ed3-bec0-0fa26816a703"
@@ -12,47 +38,21 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 2"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL/AI] Сервер 3"
-    type: vless
-    server: 45.154.96.24
-    port: 443
-    uuid: "b92fa8ab-5a4b-4202-8e2d-af8e8b332193"
-    network: "tcp"
-    servername: "firmwaresign.partners.nvidia.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "o2KcQK-yk3JFACI2IuGoYLa23sClJ2_Az_mKzIj2PhY"
-      short-id: "f30e45c1fa958a4d"
   - name: "🇫🇷 [BL] Сервер 4"
     type: vless
-    server: 161.97.160.224
-    port: 443
-    uuid: "b81b4d1b-7f20-48f1-82dc-d24bef898cab"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "passport.yandex.ru"
-    client-fingerprint: "firefox"
+    server: 85.208.69.43
+    port: 33055
+    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
+    network: "xhttp"
+    servername: "yandex.ru"
     udp: true
     tls: true
     reality-opts:
-      public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
-      short-id: "e6"
+      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
+      short-id: "77"
+    xhttp-opts:
+      path: "/"
+      mode: "auto"
   - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 152.228.139.33
