@@ -1,20 +1,6 @@
 proxies:
   - name: "🇫🇷 [WL] Сервер 1"
     type: vless
-    server: 185.79.139.163
-    port: 7443
-    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
-    network: "xhttp"
-    servername: "mama51.baklajann.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/"
-      host: "mama51.baklajann.ru"
-      mode: "auto"
-  - name: "🇫🇷 [WL] Сервер 2"
-    type: vless
     server: 186.246.8.13
     port: 443
     uuid: "00799b08-1090-4ed3-bec0-0fa26816a703"
@@ -26,21 +12,7 @@ proxies:
     xhttp-opts:
       path: "/api/v2/stream"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 3"
-    type: vless
-    server: 145.223.68.58
-    port: 443
-    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
-      short-id: "a44ff7d2e80213c2"
-  - name: "🇫🇷 [BL] Сервер 4"
+  - name: "🇫🇷 [BL] Сервер 2"
     type: vless
     server: 161.97.160.224
     port: 443
@@ -54,22 +26,36 @@ proxies:
     reality-opts:
       public-key: "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0"
       short-id: "e6"
-  - name: "🇫🇷 [BL] Сервер 5"
+  - name: "🇫🇷 [BL] Сервер 3"
     type: vless
-    server: 85.208.69.43
-    port: 33055
-    uuid: "ce8faf30-b1d6-4a53-95a0-8520dc609db3"
-    network: "xhttp"
-    servername: "yandex.ru"
+    server: 185.12.127.227
+    port: 2089
+    uuid: "5b345e12-abe7-43e4-98f3-0bc7d3359403"
+    network: "grpc"
+    servername: "archive.saltmarsh-photo.de"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "1rvxGeCvBMccFM2LKGJ4SqezdkMxS4ZZagHR1MGdCgo"
-      short-id: "77"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 6"
+      public-key: "U8g1i7zUfpeXwK_-EoiIcJOoJ92pOlpEKwzimmCUyzE"
+      short-id: "ba6fd46c"
+    grpc-opts:
+      grpc-service-name: "cas-fr"
+  - name: "🇫🇷 [BL] Сервер 4"
+    type: vless
+    server: 145.223.68.58
+    port: 443
+    uuid: "edb50d20-2d3e-4c1e-8a75-a17168a89aa5"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "qc2DcqT9zPPZr6ePZ7ukxACWrYhRNIBjDIjCK7veyQg"
+      short-id: "a44ff7d2e80213c2"
+  - name: "🇫🇷 [BL] Сервер 5"
     type: vless
     server: 152.228.139.33
     port: 35108
@@ -84,7 +70,7 @@ proxies:
       short-id: "52add08b86a5ccea"
     grpc-opts:
       grpc-service-name: "grpc-common3"
-  - name: "🇫🇷 [BL] Сервер 7"
+  - name: "🇫🇷 [BL] Сервер 6"
     type: vless
     server: 189.74.117.20
     port: 443
@@ -98,35 +84,7 @@ proxies:
     reality-opts:
       public-key: "r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs"
       short-id: "a8"
-  - name: "🇫🇷 [BL] Сервер 8"
-    type: vless
-    server: 108.158.198.2
-    port: 443
-    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
-    network: "ws"
-    servername: "d1aedflfr97jes.cloudfront.net"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "d1aedflfr97jes.cloudfront.net"
-  - name: "🇫🇷 [BL] Сервер 9"
-    type: vless
-    server: 89.44.80.204
-    port: 443
-    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
-    network: "xhttp"
-    servername: "newmama.baklajann.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/"
-      host: "newmama.baklajann.ru"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 10"
+  - name: "🇫🇷 [BL] Сервер 7"
     type: vless
     server: 213.199.57.127
     port: 2087
@@ -140,7 +98,35 @@ proxies:
     reality-opts:
       public-key: "Y8U3PhV0K8jT4PBHq-rhCA4eUtOXa1CNB9waCvZbZSc"
       short-id: "42"
-  - name: "🇫🇷 [BL] Сервер 11"
+  - name: "🇫🇷 [BL/CF] Сервер 8"
+    type: vless
+    server: 192.144.58.203
+    port: 443
+    uuid: "9df9ee1a-0671-4c6c-93c7-65598fb946f7"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ruparmicro2.gangplatform.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "W7M4MhVHx47N0lVQwP4uIGpyCIkzYsTsDOygqMK4li8"
+      short-id: "60e5181f77500676"
+  - name: "🇫🇷 [BL] Сервер 9"
+    type: vless
+    server: 194.87.242.23
+    port: 443
+    uuid: "76c75192-37fb-408d-94e9-3e4b570fdb36"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "stream.selectus.ru"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "ub1PHBkdqrCahRc4rgavIBm9EvIDWrZi0ff_OvEv8FU"
+      short-id: "b0f839d2a5c7e146"
+  - name: "🇫🇷 [BL] Сервер 10"
     type: vless
     server: 62.210.24.143
     port: 32202
@@ -155,7 +141,7 @@ proxies:
       short-id: "f57d8f26"
     xhttp-opts:
       path: "/G3EEoH63"
-  - name: "🇫🇷 [BL] Сервер 12"
+  - name: "🇫🇷 [BL] Сервер 11"
     type: vless
     server: 62.210.91.10
     port: 23576
@@ -168,7 +154,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 13"
+  - name: "🇫🇷 [BL] Сервер 12"
     type: vless
     server: 62.210.91.2
     port: 23576
@@ -181,7 +167,7 @@ proxies:
     reality-opts:
       public-key: "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
       short-id: "01"
-  - name: "🇫🇷 [BL] Сервер 14"
+  - name: "🇫🇷 [BL] Сервер 13"
     type: vless
     server: 31.97.199.38
     port: 8443
@@ -195,7 +181,7 @@ proxies:
     reality-opts:
       public-key: "GcraWawjMdjBJLD_HvSZ3BQuHvFnSWjbesCkMeCaITY"
       short-id: "5b4a12ef7e1694dd"
-  - name: "🇫🇷 [BL] Сервер 15"
+  - name: "🇫🇷 [BL] Сервер 14"
     type: vless
     server: 51.77.217.70
     port: 2053
@@ -208,35 +194,7 @@ proxies:
     reality-opts:
       public-key: "ekzDelSQeyL_mkDLybS2AbFV4Iw5zA632HfEmAUnSHA"
       short-id: "a20cbc598110b179"
-  - name: "🇫🇷 [BL] Сервер 16"
-    type: vless
-    server: 193.42.109.29
-    port: 443
-    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
-    network: "xhttp"
-    servername: "mama1455.baklajann.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/"
-      host: "mama1455.baklajann.ru"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 17"
-    type: vless
-    server: 87.120.126.127
-    port: 443
-    uuid: "65286844-4797-4f94-bb37-5e41f90a2daa"
-    network: "xhttp"
-    servername: "mama147.baklajann.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/"
-      host: "mama147.baklajann.ru"
-      mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 18"
+  - name: "🇫🇷 [BL] Сервер 15"
     type: vless
     server: 82.22.2.137
     port: 443
@@ -251,21 +209,7 @@ proxies:
     xhttp-opts:
       path: "/api/v2/7d94497a"
       mode: "auto"
-  - name: "🇫🇷 [BL] Сервер 19"
-    type: vless
-    server: 194.87.242.23
-    port: 443
-    uuid: "76c75192-37fb-408d-94e9-3e4b570fdb36"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "stream.selectus.ru"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "ub1PHBkdqrCahRc4rgavIBm9EvIDWrZi0ff_OvEv8FU"
-      short-id: "b0f839d2a5c7e146"
-  - name: "🇫🇷 [BL] Сервер 20"
+  - name: "🇫🇷 [BL] Сервер 16"
     type: vless
     server: 62.210.70.194
     port: 37783
@@ -280,37 +224,43 @@ proxies:
       short-id: "21569dd6"
     xhttp-opts:
       path: "/OCrp5Ajs"
-  - name: "🇫🇷 [BL] Сервер 21"
+  - name: "🇫🇷 [BL] Сервер 17"
+    type: ss
+    server: 57.131.27.21
+    port: 8388
+    password: "itzvpn@321"
+    cipher: "aes-256-gcm"
+  - name: "🇫🇷 [BL] Сервер 18"
     type: ss
     server: 23.162.152.22
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 22"
+  - name: "🇫🇷 [BL] Сервер 19"
     type: ss
     server: 38.109.228.110
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 23"
+  - name: "🇫🇷 [BL] Сервер 20"
     type: ss
     server: 167.17.64.27
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 24"
+  - name: "🇫🇷 [BL] Сервер 21"
     type: ss
     server: 172.99.189.142
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 25"
+  - name: "🇫🇷 [BL] Сервер 22"
     type: ss
     server: 167.17.64.175
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇫🇷 [BL] Сервер 26"
+  - name: "🇫🇷 [BL] Сервер 23"
     type: ss
     server: 167.17.64.22
     port: 19999
