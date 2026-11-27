@@ -1,11 +1,25 @@
 proxies:
   - name: "🇷🇴 [BL] Сервер 1"
     type: vless
+    server: 46.28.67.55
+    port: 443
+    uuid: "d1a6a033-fdbd-46a6-a177-3370ba042b9f"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "i2dJ1_XGDpp50qpEclh6SWSWkxt4B0t2hi2qOVQbeSU"
+      short-id: "d06d78e974491b6e"
+  - name: "🇷🇴 [BL] Сервер 2"
+    type: vless
     server: 38.79.154.181
     port: 8443
     uuid: "640bc89e-24e6-415c-a995-a00d2835fb5f"
     network: "xhttp"
     servername: "www.google.com"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
@@ -13,9 +27,8 @@ proxies:
       short-id: "49d12c44b3fcce8a"
     xhttp-opts:
       path: "/39865cd33a51"
-      host: "38.79.154.181"
       mode: "auto"
-  - name: "🇷🇴 [BL] Сервер 2"
+  - name: "🇷🇴 [BL] Сервер 3"
     type: vless
     server: 193.168.140.228
     port: 443
@@ -31,7 +44,7 @@ proxies:
       path: "/"
       host: "www.vodafone.ro"
       mode: "auto"
-  - name: "🇷🇴 [BL] Сервер 3"
+  - name: "🇷🇴 [BL] Сервер 4"
     type: vless
     server: 46.28.67.210
     port: 443
@@ -46,3 +59,4 @@ proxies:
       short-id: "27350908de933e09"
     grpc-opts:
       grpc-service-name: "neurex"
+      grpc-mode: "gun"

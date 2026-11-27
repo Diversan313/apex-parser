@@ -5,9 +5,9 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision-udp443"
+    flow: "xtls-rprx-vision"
     servername: "spb2.b2ai.top"
-    client-fingerprint: "ios"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 2"
@@ -16,9 +16,9 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision"
+    flow: "xtls-rprx-vision-udp443"
     servername: "spb2.b2ai.top"
-    client-fingerprint: "firefox"
+    client-fingerprint: "ios"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 3"
@@ -64,6 +64,7 @@ proxies:
       short-id: "27350908de933e09"
     grpc-opts:
       grpc-service-name: "neurex"
+      grpc-mode: "gun"
   - name: "🇸🇪 [BL] Сервер 6"
     type: vless
     server: 31.77.144.255
@@ -134,7 +135,7 @@ proxies:
     reality-opts:
       public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
       short-id: "7c4e91ab"
-  - name: "🇸🇪 [BL/AI] Сервер 11"
+  - name: "🇸🇪 [BL] Сервер 11"
     type: vless
     server: 13.51.167.89
     port: 443
@@ -164,7 +165,20 @@ proxies:
     xhttp-opts:
       path: "/26248d10d830"
       mode: "auto"
-  - name: "🇸🇪 [BL/AI] Сервер 13"
+  - name: "🇸🇪 [BL] Сервер 13"
+    type: vless
+    server: 150.241.87.52
+    port: 443
+    uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "pl.galacticworld.online"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
+  - name: "🇸🇪 [BL/AI] Сервер 14"
     type: vless
     server: 2.26.124.209
     port: 443
@@ -178,16 +192,3 @@ proxies:
     reality-opts:
       public-key: "aykMwW19tGa685HLa9yI8FDTH567ovT4KipCSUHEySk"
       short-id: "54325343"
-  - name: "🇸🇪 [BL] Сервер 14"
-    type: vless
-    server: 150.241.87.52
-    port: 443
-    uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pl.galacticworld.online"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
