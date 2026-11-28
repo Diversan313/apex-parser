@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇸🇬 [WL/AI] Сервер 1"
-    type: vless
-    server: 89.169.0.142
-    port: 2082
-    uuid: "5ce50e24-73ab-4bae-bec7-7eab645acc15"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "assets99.spielinsel.party"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "HxIEwKgVSpjE6w4ad32tZ_wSD3wi1Du-AUplDBwkoTg"
-      short-id: "08e1c3640e92c931"
-  - name: "🇸🇬 [WL] Сервер 2"
+  - name: "🇸🇬 [WL] Сервер 1"
     type: vless
     server: 89.169.0.142
     port: 2082
@@ -27,19 +13,21 @@ proxies:
     reality-opts:
       public-key: "HxIEwKgVSpjE6w4ad32tZ_wSD3wi1Du-AUplDBwkoTg"
       short-id: "08e1c3640e92c931"
-  - name: "🇸🇬 [BL] Сервер 3"
+  - name: "🇸🇬 [WL] Сервер 2"
     type: vless
-    server: 103.106.229.177
-    port: 21004
-    uuid: "67952583-8572-42e1-943d-0602794f885b"
-    network: "tcp"
-    servername: "www.cloudflare.com"
+    server: 88.216.66.7
+    port: 8443
+    uuid: "7967bf59-57e3-4cde-9898-527b0fe60022"
+    network: "ws"
+    servername: "speed.dulacloud.store"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
-    reality-opts:
-      public-key: "IRaSB0ImgMO7fsrIbh9i3Pz-bgo5F1jKeC51Fpfs9AA"
-      short-id: "4e0418d648f86141"
-  - name: "🇸🇬 [BL] Сервер 4"
+    ws-opts:
+      path: "/"
+      headers:
+        Host: "speed.dulacloud.store"
+  - name: "🇸🇬 [BL] Сервер 3"
     type: vless
     server: 194.233.67.103
     port: 2053
@@ -52,6 +40,18 @@ proxies:
     reality-opts:
       public-key: "un_9X4oh5ODWIcXl_jiuUaox4XOJE7oZpSPWGb46tRI"
       short-id: "07a66150eac3db28"
+  - name: "🇸🇬 [BL] Сервер 4"
+    type: vless
+    server: 103.106.229.177
+    port: 21004
+    uuid: "67952583-8572-42e1-943d-0602794f885b"
+    network: "tcp"
+    servername: "www.cloudflare.com"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "IRaSB0ImgMO7fsrIbh9i3Pz-bgo5F1jKeC51Fpfs9AA"
+      short-id: "4e0418d648f86141"
   - name: "🇸🇬 [BL] Сервер 5"
     type: vless
     server: 185.225.195.7
@@ -68,7 +68,7 @@ proxies:
         Host: "speed.dulacloud.store"
   - name: "🇸🇬 [BL] Сервер 6"
     type: vless
-    server: 104.254.140.7
+    server: 188.42.88.7
     port: 8443
     uuid: "7967bf59-57e3-4cde-9898-527b0fe60022"
     network: "ws"
@@ -82,7 +82,7 @@ proxies:
         Host: "speed.dulacloud.store"
   - name: "🇸🇬 [BL] Сервер 7"
     type: vless
-    server: 185.158.133.7
+    server: 45.131.7.7
     port: 8443
     uuid: "7967bf59-57e3-4cde-9898-527b0fe60022"
     network: "ws"
@@ -98,31 +98,17 @@ proxies:
     type: vless
     server: 141.193.213.20
     port: 8443
-    uuid: "4d8d9640-7cc7-4c55-ba54-6ce0d1709541"
+    uuid: "131e581e-42c2-474d-a22f-91d19f5b4652"
     network: "ws"
-    servername: "matrix.learnpodedu.com"
+    servername: "sg16.gigaray.store"
     client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/gigaray"
       headers:
-        Host: "matrix.learnpodedu.com"
+        Host: "sg16.gigaray.store"
   - name: "🇸🇬 [BL] Сервер 9"
-    type: vless
-    server: 134.185.81.5
-    port: 47881
-    uuid: "59b203b2-b1bc-4e9c-a9e5-ccb8f691bf72"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.tesla.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "6XmXX1QXGodmtqU37Zx9CDHnCnPtonRdq8ieLmt__g4"
-      short-id: "38d72071"
-  - name: "🇸🇬 [BL] Сервер 10"
     type: vless
     server: 47.84.226.221
     port: 443
@@ -135,7 +121,7 @@ proxies:
     reality-opts:
       public-key: "gVQsvRtzd77zlvKW4Gk0dAOJNPRa7cfN1-jVe_AJ8Bo"
       short-id: "e1c483f9d4437d42"
-  - name: "🇸🇬 [BL] Сервер 11"
+  - name: "🇸🇬 [BL] Сервер 10"
     type: vless
     server: jp2chat.xyy123.win
     port: 443
@@ -149,6 +135,20 @@ proxies:
     reality-opts:
       public-key: "I4sC7wO_OjKQcby3249aC1qGAmoMgHEFtRUvoLUy2yc"
       short-id: "c92cbef726ee8169"
+  - name: "🇸🇬 [BL] Сервер 11"
+    type: vless
+    server: 134.185.81.5
+    port: 47881
+    uuid: "59b203b2-b1bc-4e9c-a9e5-ccb8f691bf72"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.tesla.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "6XmXX1QXGodmtqU37Zx9CDHnCnPtonRdq8ieLmt__g4"
+      short-id: "38d72071"
   - name: "🇸🇬 [BL] Сервер 12"
     type: vless
     server: 139.162.27.96
@@ -177,3 +177,13 @@ proxies:
     reality-opts:
       public-key: "tF9nKF6amexok5wKbieQ2QRKQI5_ZTFE6MUj1hUBBkY"
       short-id: "c940a3b6d60b8611"
+  - name: "🇸🇬 [BL] Сервер 14"
+    type: vmess
+    server: 149.88.23.207
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "tcp"
+    ws-opts:
+      path: "/4bc027a44532"
