@@ -1,19 +1,5 @@
 proxies:
-  - name: "🇲🇩 [WL/CF] Сервер 1"
-    type: vless
-    server: 194.180.191.200
-    port: 443
-    uuid: "5d7b401c-78fa-4254-872e-6d42bf7e75ec"
-    network: "ws"
-    servername: "v2n5.11676767.xyz"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/doujin/channels/cb"
-      headers:
-        Host: "v2n5.11676767.xyz"
-  - name: "🇲🇩 [BL] Сервер 2"
+  - name: "🇲🇩 [BL] Сервер 1"
     type: vless
     server: 5.181.156.92
     port: 8443
@@ -27,7 +13,7 @@ proxies:
     reality-opts:
       public-key: "G_fY9pA9N6QmXPUMVPjnxzAqvpyvVRqbPZwOaC7iin0"
       short-id: "aace430d"
-  - name: "🇲🇩 [BL] Сервер 3"
+  - name: "🇲🇩 [BL] Сервер 2"
     type: vless
     server: 217.156.123.25
     port: 443
@@ -42,7 +28,19 @@ proxies:
       short-id: "27350908de933e09"
     grpc-opts:
       grpc-service-name: "neurex"
+  - name: "🇲🇩 [BL] Сервер 3"
+    type: hysteria2
+    server: 176.123.11.40
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "seriesseller.ratethatrestaurant.org"
   - name: "🇲🇩 [BL] Сервер 4"
+    type: hysteria2
+    server: seriesseller.ratethatrestaurant.org
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "seriesseller.ratethatrestaurant.org"
+  - name: "🇲🇩 [BL] Сервер 5"
     type: vless
     server: 193.84.71.76
     port: 443
@@ -56,15 +54,3 @@ proxies:
     reality-opts:
       public-key: "_KTsOFhGnC0W28ZqO8_FApozMp7tJ9cVBTLKLAA_OR0"
       short-id: "ae64c9b46bff174a"
-  - name: "🇲🇩 [BL] Сервер 5"
-    type: hysteria2
-    server: 176.123.11.40
-    port: 443
-    password: "b1490307-d693-4392-8f32-a3f7cc139202"
-    sni: "seriesseller.ratethatrestaurant.org"
-  - name: "🇲🇩 [BL] Сервер 6"
-    type: hysteria2
-    server: seriesseller.ratethatrestaurant.org
-    port: 443
-    password: "b1490307-d693-4392-8f32-a3f7cc139202"
-    sni: "seriesseller.ratethatrestaurant.org"

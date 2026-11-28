@@ -15,7 +15,21 @@ proxies:
     grpc-opts:
       grpc-service-name: "grpc-tunnel"
       grpc-mode: "multi"
-  - name: "🇪🇪 [BL] Сервер 2"
+  - name: "🇪🇪 [WL] Сервер 2"
+    type: vless
+    server: 200.165.234.74
+    port: 443
+    uuid: "9fdec6be-b6b5-4f18-bac0-461cb7953ff0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ru7.cdn-global.pro"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "h18Rbgv9RV558p-9Pl4g_--jJjXlTZL0-jHqNK5M_n4"
+      short-id: "2b8c3e90e14740d2"
+  - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 185.174.135.219
     port: 443
@@ -30,7 +44,7 @@ proxies:
       short-id: "27350908de933e09"
     grpc-opts:
       grpc-service-name: "neurex"
-  - name: "🇪🇪 [BL] Сервер 3"
+  - name: "🇪🇪 [BL] Сервер 4"
     type: vless
     server: 132.243.65.185
     port: 443
@@ -38,21 +52,6 @@ proxies:
     network: "xhttp"
     servername: "player.vimeo.com"
     client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "UZKrOusu0M0i3gnqDanh2yXXkTibNEjj41Hsvah2XlI"
-    xhttp-opts:
-      path: "/"
-      mode: "auto"
-  - name: "🇪🇪 [BL] Сервер 4"
-    type: vless
-    server: 132.243.65.0
-    port: 443
-    uuid: "3bfaf855-a05a-482a-93d3-d66388c5506c"
-    network: "xhttp"
-    servername: "player.vimeo.com"
-    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
