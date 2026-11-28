@@ -15,7 +15,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "neurex"
       grpc-mode: "gun"
-  - name: "🇨🇦 [WL] Сервер 2"
+  - name: "🇨🇦 [WL/CF] Сервер 2"
     type: vless
     server: 157.22.191.75
     port: 443
@@ -45,6 +45,16 @@ proxies:
       short-id: "f98843107912e782"
   - name: "🇨🇦 [BL] Сервер 4"
     type: vless
+    server: kuruish.org
+    port: 443
+    uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
+    network: "tcp"
+    servername: "kuruish.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇨🇦 [BL] Сервер 5"
+    type: vless
     server: 66.163.113.9
     port: 443
     uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
@@ -53,45 +63,21 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇨🇦 [BL/CF] Сервер 5"
-    type: vless
-    server: 185.193.29.123
-    port: 443
-    uuid: "1d16c6e0-1bbe-435b-b661-90043fee999c"
-    network: "ws"
-    servername: "notls.lukongtou.eu.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "/"
-      headers:
-        Host: "notls.lukongtou.eu.org"
   - name: "🇨🇦 [BL/CF] Сервер 6"
     type: vless
-    server: 216.128.176.190
-    port: 443
-    uuid: "51a0af77-a60c-4d9b-81a4-f50e1b38d90b"
+    server: 66.81.247.6
+    port: 2096
+    uuid: "293733e5-a8ac-4132-ba79-7dcbd0d642b7"
     network: "ws"
-    servername: "vf3uymn6bu20313tqlfvws58mnqrhxxi.pages.dev"
-    client-fingerprint: "chrome"
+    servername: "rAyaN19-Nb4nzBlz-v2.raYAn-19.workERs.deV"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     ws-opts:
-      path: "/"
+      path: "/?ed=2560"
       headers:
-        Host: "vf3uymn6bu20313tqlfvws58mnqrhxxi.pages.dev"
+        Host: "rAyaN19-Nb4nzBlz-v2.raYAn-19.workERs.deV"
   - name: "🇨🇦 [BL] Сервер 7"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-    ws-opts:
-      path: "/"
-  - name: "🇨🇦 [BL] Сервер 8"
     type: vmess
     server: 23.162.200.198
     port: 18000
@@ -100,7 +86,7 @@ proxies:
     alterId: 0
     network: "tcp"
     servername: "23.162.200.198"
-  - name: "🇨🇦 [BL] Сервер 9"
+  - name: "🇨🇦 [BL] Сервер 8"
     type: vmess
     server: 169.197.142.22
     port: 18000
@@ -108,7 +94,14 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-    servername: "169.197.142.22"
+  - name: "🇨🇦 [BL] Сервер 9"
+    type: vmess
+    server: 134.195.196.211
+    port: 18000
+    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
+    cipher: "auto"
+    alterId: 0
+    network: "raw"
   - name: "🇨🇦 [BL] Сервер 10"
     type: ss
     server: 51.222.141.125
@@ -123,17 +116,29 @@ proxies:
     cipher: "aes-256-gcm"
   - name: "🇨🇦 [BL] Сервер 12"
     type: ss
+    server: 51.222.200.165
+    port: 5000
+    password: "Y6R9pAtvxxzmGC"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 13"
+    type: ss
     server: 51.222.136.236
     port: 8882
     password: "kDWvXYZoTBcGkC4"
     cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 13"
+  - name: "🇨🇦 [BL] Сервер 14"
     type: ss
     server: 51.222.155.113
     port: 5601
     password: "Y6R9pAtvxxzmGC"
     cipher: "aes-256-gcm"
-  - name: "🇨🇦 [BL] Сервер 14"
+  - name: "🇨🇦 [BL] Сервер 15"
+    type: ss
+    server: 51.79.49.116
+    port: 8882
+    password: "kDWvXYZoTBcGkC4"
+    cipher: "aes-256-gcm"
+  - name: "🇨🇦 [BL] Сервер 16"
     type: ss
     server: 51.222.12.127
     port: 445

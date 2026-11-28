@@ -17,18 +17,20 @@ proxies:
       grpc-mode: "multi"
   - name: "🇪🇪 [WL] Сервер 2"
     type: vless
-    server: 200.165.234.74
-    port: 443
-    uuid: "9fdec6be-b6b5-4f18-bac0-461cb7953ff0"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ru7.cdn-global.pro"
-    client-fingerprint: "firefox"
+    server: 72.56.245.146
+    port: 8881
+    uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
+    network: "grpc"
+    servername: "dl.google.com"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     reality-opts:
-      public-key: "h18Rbgv9RV558p-9Pl4g_--jJjXlTZL0-jHqNK5M_n4"
-      short-id: "2b8c3e90e14740d2"
+      public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
+      short-id: "aabbccdd"
+    grpc-opts:
+      grpc-service-name: "grpc-tunnel"
+      grpc-mode: "multi"
   - name: "🇪🇪 [BL] Сервер 3"
     type: vless
     server: 185.174.135.219
@@ -46,12 +48,26 @@ proxies:
       grpc-service-name: "neurex"
   - name: "🇪🇪 [BL] Сервер 4"
     type: vless
-    server: 132.243.65.185
+    server: 132.243.65.148
     port: 443
-    uuid: "bb010934-37b7-4ef8-8816-cfe2140c6e97"
+    uuid: "9fdec6be-b6b5-4f18-bac0-461cb7953ff0"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ee.frgcdn.xyz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "RO5YMxxtJmZo2w370qG-seJ41toowHPbz6i2uXJ2gG0"
+      short-id: "7a3f9e2b1c8d4f6a"
+  - name: "🇪🇪 [BL] Сервер 5"
+    type: vless
+    server: 132.243.65.0
+    port: 443
+    uuid: "3bfaf855-a05a-482a-93d3-d66388c5506c"
     network: "xhttp"
     servername: "player.vimeo.com"
-    client-fingerprint: "firefox"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -59,7 +75,7 @@ proxies:
     xhttp-opts:
       path: "/"
       mode: "auto"
-  - name: "🇪🇪 [BL] Сервер 5"
+  - name: "🇪🇪 [BL] Сервер 6"
     type: vless
     server: 89.125.13.161
     port: 8443
@@ -75,17 +91,3 @@ proxies:
     xhttp-opts:
       path: "/810011f9c542"
       mode: "auto"
-  - name: "🇪🇪 [BL] Сервер 6"
-    type: vless
-    server: 132.243.65.148
-    port: 443
-    uuid: "47cd0aca-3ed8-4ddd-86c6-4d3f6a7670b4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "ee.frgcdn.xyz"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "RO5YMxxtJmZo2w370qG-seJ41toowHPbz6i2uXJ2gG0"
-      short-id: "7a3f9e2b1c8d4f6a"
