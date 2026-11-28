@@ -1,19 +1,41 @@
 proxies:
-  - name: "🇨🇭 [BL] Сервер 1"
+  - name: "🇨🇭 [WL] Сервер 1"
+    type: vless
+    server: 188.72.112.1
+    port: 443
+    uuid: "0837c236-226b-4b69-94cf-999192001c02"
+    network: "xhttp"
+    servername: "ycnl2-n26.subs-sosavpn.ru"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/api/v4/media/session/poll.ts"
+      host: "ycnl2-n26.subs-sosavpn.ru"
+      mode: "packet-up"
+  - name: "🇨🇭 [BL] Сервер 2"
+    type: vless
+    server: 45.90.59.15
+    port: 443
+    uuid: "3950b45e-740d-4dca-ac95-505ec8534592"
+    network: "raw"
+    flow: "xtls-rprx-vision"
+    servername: "www.cloudflare.com"
+    client-fingerprint: "random"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "P7S4UPFlQbmiBr4txyy8NZIMTrmO3UdxyH16WBU-YzY"
+      short-id: "19253fae84102271"
+  - name: "🇨🇭 [BL] Сервер 3"
     type: ss
     server: 23.166.88.127
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 2"
+  - name: "🇨🇭 [BL] Сервер 4"
     type: ss
     server: 186.190.215.251
-    port: 19999
-    password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
-    cipher: "aes-256-gcm"
-  - name: "🇨🇭 [BL] Сервер 3"
-    type: ss
-    server: 79.127.184.104
     port: 19999
     password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
     cipher: "aes-256-gcm"

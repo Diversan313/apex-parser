@@ -1,11 +1,34 @@
 proxies:
   - name: "🇷🇺 [WL] Сервер 1"
-    type: ss
-    server: 90.156.203.62
-    port: 5112
-    password: "VVlAff77CnAU43Aoc5j15Y"
-    cipher: "chacha20-ietf-poly1305"
+    type: vless
+    server: 78.159.240.11
+    port: 445
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "grpc"
+    servername: "passport.yandex.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
+    grpc-opts:
+      grpc-service-name: "grpc"
+      grpc-mode: "gun"
   - name: "🇷🇺 [WL] Сервер 2"
+    type: vless
+    server: 78.159.246.83
+    port: 445
+    uuid: "37af0181-5598-4aad-a040-d926bcb65757"
+    network: "grpc"
+    servername: "passport.yandex.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
+    grpc-opts:
+      grpc-service-name: "grpc"
+  - name: "🇷🇺 [WL] Сервер 3"
     type: vless
     server: 201.51.12.98
     port: 443
@@ -17,7 +40,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 3"
+  - name: "🇷🇺 [WL] Сервер 4"
     type: vless
     server: 201.24.116.192
     port: 443
@@ -29,7 +52,7 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
-  - name: "🇷🇺 [WL] Сервер 4"
+  - name: "🇷🇺 [WL] Сервер 5"
     type: vless
     server: 147.45.175.81
     port: 443
@@ -43,19 +66,6 @@ proxies:
       path: "/wsru"
       headers:
         Host: "xsru2.freeddns.org"
-  - name: "🇷🇺 [WL] Сервер 5"
-    type: vless
-    server: 147.45.175.81
-    port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "grpc"
-    servername: "xsru1.ddnsfree.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    grpc-opts:
-      grpc-service-name: "grpc-ru"
-      grpc-mode: "gun"
   - name: "🇷🇺 [WL] Сервер 6"
     type: vless
     server: 147.45.175.81
@@ -74,20 +84,6 @@ proxies:
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
-    servername: "xsru2.freeddns.org"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    ws-opts:
-      path: "wsru"
-      headers:
-        Host: "xsru2.freeddns.org"
-  - name: "🇷🇺 [WL] Сервер 8"
-    type: vless
-    server: 147.45.175.81
-    port: 443
-    uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
-    network: "ws"
     servername: "xsru1.ddnsfree.com"
     client-fingerprint: "safari"
     udp: true
@@ -96,6 +92,19 @@ proxies:
       path: "/wsru"
       headers:
         Host: "xsru1.ddnsfree.com"
+  - name: "🇷🇺 [WL/AI] Сервер 8"
+    type: vless
+    server: 185.76.241.241
+    port: 443
+    uuid: "db80088c-32a1-4cb8-a907-0f3cb7844152"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "ru1.japancase.site"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "SiwxBWpYrdcS70DDnr0yBrTgpJY-MiqKiOs3_yjK1Cc"
+      short-id: "5b555442d5975d6b"
   - name: "🇷🇺 [WL] Сервер 9"
     type: vless
     server: 200.169.179.233
@@ -160,27 +169,7 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 16"
-    type: ss
-    server: 194.87.69.12
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
-  - name: "🇷🇺 [WL] Сервер 17"
-    type: vless
-    server: 185.231.204.70
-    port: 443
-    uuid: "318d9cc0-248f-4f44-b79a-1ba4fda95c08"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.aegon.com"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "esH80_84Bccc0dulU0nNn5nDlkkRUt9xy7U5op-Gdhc"
-      short-id: "cf71aa27e0f1b941"
-  - name: "🇷🇺 [WL/AI] Сервер 18"
+  - name: "🇷🇺 [WL/AI] Сервер 16"
     type: vless
     server: nl26.umarketvpn.pro
     port: 443
