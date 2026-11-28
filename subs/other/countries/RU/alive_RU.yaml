@@ -25,7 +25,7 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
-    server: 147.45.175.81
+    server: xsru2.freeddns.org
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
@@ -35,8 +35,6 @@ proxies:
     tls: true
     ws-opts:
       path: "/wsru"
-      headers:
-        Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 4"
     type: vless
     server: 147.45.175.81
@@ -81,14 +79,14 @@ proxies:
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
-    servername: "xsru1.ddnsfree.com"
-    client-fingerprint: "safari"
+    servername: "xsru2.freeddns.org"
+    client-fingerprint: "ios"
     udp: true
     tls: true
     ws-opts:
       path: "/wsru"
       headers:
-        Host: "xsru1.ddnsfree.com"
+        Host: "xsru2.freeddns.org"
   - name: "🇷🇺 [WL] Сервер 8"
     type: vless
     server: 212.233.90.78
@@ -97,13 +95,13 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "birch-ledger.justext.space"
-    client-fingerprint: "edge"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
       public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
       short-id: "2c6df23e"
-  - name: "🇷🇺 [WL] Сервер 9"
+  - name: "🇷🇺 [WL/AI] Сервер 9"
     type: vless
     server: 176.57.215.54
     port: 37508
@@ -170,9 +168,17 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 16"
-    type: ss
-    server: 194.87.69.12
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
+  - name: "🇷🇺 [WL/AI] Сервер 16"
+    type: vless
+    server: 185.231.204.70
+    port: 443
+    uuid: "318d9cc0-248f-4f44-b79a-1ba4fda95c08"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.aegon.com"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "esH80_84Bccc0dulU0nNn5nDlkkRUt9xy7U5op-Gdhc"
+      short-id: "cf71aa27e0f1b941"
