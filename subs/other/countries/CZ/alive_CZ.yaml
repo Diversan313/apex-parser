@@ -1,5 +1,50 @@
 proxies:
-  - name: "🇨🇿 [BL] Сервер 1"
+  - name: "🇨🇿 [WL] Сервер 1"
+    type: vless
+    server: 45.146.166.64
+    port: 2083
+    uuid: "fb721937-6284-0005-9cbd-c3ba2cb66b4a"
+    network: "xhttp"
+    servername: "cdn.mornismp.ru"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/transport/xhttp"
+      mode: "auto"
+  - name: "🇨🇿 [BL] Сервер 2"
+    type: vless
+    server: 67.159.18.8
+    port: 8443
+    uuid: "b58564f3-bcc4-4af9-8a47-7ad8039cba93"
+    network: "xhttp"
+    servername: "www.novinky.cz"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "T1ox3NAq2XpBQWzzHfro5L1ltDC6bv7ouFOYceuPmWQ"
+      short-id: "27f8050c"
+    xhttp-opts:
+      path: "/api/v6/media/02b73b0f/"
+      host: "www.novinky.cz"
+  - name: "🇨🇿 [BL] Сервер 3"
+    type: vless
+    server: 103.200.28.8
+    port: 25812
+    uuid: "893fdb90-b1a1-4235-8f0d-56aac1cfde9e"
+    network: "grpc"
+    servername: "cz2.jetstoreapp.ru"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "3g6uVc70EKi_XPzCTcZj_p77XJPpVUZvFNUPew4s0iU"
+      short-id: "8643513c64b7f35e"
+    grpc-opts:
+      grpc-service-name: "7acacc2cc9d3"
+      grpc-mode: "gun"
+  - name: "🇨🇿 [BL] Сервер 4"
     type: vless
     server: 212.102.38.25
     port: 443
@@ -7,9 +52,36 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "udemy.com"
-    client-fingerprint: "chrome"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
       public-key: "23cb4W9THzBKsrECsLh-A_FcKZfkAtUONoDze8-GnQE"
       short-id: "e90360ec7cc61b20"
+  - name: "🇨🇿 [BL] Сервер 5"
+    type: vless
+    server: 153.52.69.249
+    port: 443
+    uuid: "7ad63b26-bf70-4872-8fab-ebaf73a1e19d"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "cache-78.topp-con.xyz"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "WVfpQqoeOrTtCq052_IOxvMv7RCWfLlAOxEfsH1aa2U"
+      short-id: "d5492c7a39515c65"
+  - name: "🇨🇿 [BL] Сервер 6"
+    type: vless
+    server: 83.141.92.168
+    port: 443
+    uuid: "a7595994-695d-484e-bfcb-e9fbb73cfa39"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sladovna.russianpiwo.fun"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
+      short-id: "7a7d19880a9ee786"
