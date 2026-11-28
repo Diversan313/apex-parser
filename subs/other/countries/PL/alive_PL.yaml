@@ -1,18 +1,18 @@
 proxies:
   - name: "🇵🇱 [WL] Сервер 1"
     type: vless
-    server: 188.72.112.1
+    server: 188.225.56.100
     port: 443
     uuid: "b432a23a-acff-425c-bf69-70480cd6ed09"
-    network: "xhttp"
-    servername: "cdnpl.worldfly.io"
-    client-fingerprint: "firefox"
+    network: "ws"
+    servername: "e2.cdnwh.icu"
+    client-fingerprint: "random"
     udp: true
     tls: true
-    xhttp-opts:
-      path: "/api/v1/assets/"
-      host: "cdnpl.worldfly.io"
-      mode: "packet-up"
+    ws-opts:
+      path: "/stream/segment/3078a41dd7eb/"
+      headers:
+        Host: "e2.cdnwh.icu"
   - name: "🇵🇱 [WL] Сервер 2"
     type: vless
     server: 72.56.249.32
@@ -41,19 +41,6 @@ proxies:
       short-id: "fa3ea655619a3e78"
   - name: "🇵🇱 [BL] Сервер 4"
     type: vless
-    server: 150.251.113.34
-    port: 443
-    uuid: "d7d724b5-17ce-4f3c-877d-dfbf0f07afa1"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "www.cloudflare.com"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "8yMLSTbkpJFfbgTjNzotzz7U8OT6AERrclgKdKrXXW8"
-      short-id: "150a627d15154cf2"
-  - name: "🇵🇱 [BL] Сервер 5"
-    type: vless
     server: 212.127.91.79
     port: 443
     uuid: "7af8ad56-33ce-4f3d-ad15-ef32a71d67f7"
@@ -66,19 +53,36 @@ proxies:
     reality-opts:
       public-key: "lCCvbwGOEkx6IuK3eFd4RtmBi6UInWoMyt0QtfsOjwk"
       short-id: "99fe1ec015fde70c"
-  - name: "🇵🇱 [BL] Сервер 6"
+  - name: "🇵🇱 [BL] Сервер 5"
     type: vless
-    server: 150.241.87.52
-    port: 443
-    uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pl.galacticworld.online"
-    client-fingerprint: "chrome"
+    server: 178.236.254.84
+    port: 8443
+    uuid: "1ade7da3-edbe-4e1d-acd3-9738379a0dac"
+    network: "xhttp"
+    servername: "cdn-plng.cahmes.space"
+    client-fingerprint: "firefox"
     udp: true
     tls: true
     reality-opts:
-      public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
+      public-key: "CfNBTIsftRSg56DcYqqFTug11Ff4IirfnbUAzyL6ZmE"
+      short-id: "39a5886e503ec5ab"
+    xhttp-opts:
+      path: "/xhttp"
+  - name: "🇵🇱 [BL] Сервер 6"
+    type: vless
+    server: 82.148.242.217
+    port: 8443
+    uuid: "1ade7da3-edbe-4e1d-acd3-9738379a0dac"
+    network: "xhttp"
+    servername: "cdn-plng.cahmes.space"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "CfNBTIsftRSg56DcYqqFTug11Ff4IirfnbUAzyL6ZmE"
+      short-id: "39a5886e503ec5ab"
+    xhttp-opts:
+      path: "/xhttp"
   - name: "🇵🇱 [BL] Сервер 7"
     type: vless
     server: 77.83.246.186
@@ -98,20 +102,6 @@ proxies:
       mode: "auto"
   - name: "🇵🇱 [BL] Сервер 8"
     type: vless
-    server: 187.52.45.236
-    port: 443
-    uuid: "70d8651a-3fce-4e11-8f13-912ee01c1066"
-    network: "grpc"
-    servername: "povar.tallreed.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FjY0N4j06c6zkK2Rrk3fIs3L5W48CwsYaSoiGnts-jI"
-    grpc-opts:
-      grpc-service-name: "grpc"
-  - name: "🇵🇱 [BL] Сервер 9"
-    type: vless
     server: 45.194.66.177
     port: 443
     uuid: "352a250d-080b-47b5-b7db-f9f8fa31c551"
@@ -120,7 +110,7 @@ proxies:
     servername: "31tawwo0.virtual-network.lol"
     udp: true
     tls: true
-  - name: "🇵🇱 [BL] Сервер 10"
+  - name: "🇵🇱 [BL] Сервер 9"
     type: vless
     server: 201.58.178.197
     port: 443
@@ -134,21 +124,7 @@ proxies:
     reality-opts:
       public-key: "EUuZAVtneL8O7MgjETmHvOyInaxqJu2RD6hiFQdDPwk"
       short-id: "0df067145606c0b0"
-  - name: "🇵🇱 [BL] Сервер 11"
-    type: vless
-    server: lesson4.schoolpizorbz.xyz
-    port: 443
-    uuid: "e894c08a-fecc-46f5-bf03-c95d0274c79d"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "lesson4.schoolpizorbz.xyz"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "EUuZAVtneL8O7MgjETmHvOyInaxqJu2RD6hiFQdDPwk"
-      short-id: "0df067145606c0b0"
-  - name: "🇵🇱 [BL] Сервер 12"
+  - name: "🇵🇱 [BL] Сервер 10"
     type: vless
     server: 177.202.76.30
     port: 443
@@ -162,7 +138,7 @@ proxies:
     reality-opts:
       public-key: "G465rpA3czwxSTrjkcl0KK6HohO5G8do2MxjcRbULSA"
       short-id: "d52f9a703c9bf2d9"
-  - name: "🇵🇱 [BL] Сервер 13"
+  - name: "🇵🇱 [BL] Сервер 11"
     type: vless
     server: 201.58.178.236
     port: 443
@@ -176,7 +152,7 @@ proxies:
     reality-opts:
       public-key: "AdOl7XVxVk4Yb_tBxjrG-FP5elV_V2MeI_6WVC4H41s"
       short-id: "d14566fcec627162"
-  - name: "🇵🇱 [BL] Сервер 14"
+  - name: "🇵🇱 [BL] Сервер 12"
     type: vless
     server: lesson1.schoolpizorbz.xyz
     port: 443
@@ -190,7 +166,7 @@ proxies:
     reality-opts:
       public-key: "AdOl7XVxVk4Yb_tBxjrG-FP5elV_V2MeI_6WVC4H41s"
       short-id: "d14566fcec627162"
-  - name: "🇵🇱 [BL] Сервер 15"
+  - name: "🇵🇱 [BL] Сервер 13"
     type: vless
     server: 201.58.178.207
     port: 443
@@ -204,7 +180,7 @@ proxies:
     reality-opts:
       public-key: "S8sWDQftwzUiNredawkRmbDxar70w2uX3y1EJISvQBo"
       short-id: "fd417540c0fab072"
-  - name: "🇵🇱 [BL] Сервер 16"
+  - name: "🇵🇱 [BL] Сервер 14"
     type: vless
     server: 48.102.174.147
     port: 443
@@ -218,7 +194,7 @@ proxies:
     reality-opts:
       public-key: "Wpmzv6fsZD7Lgbxtad3Of-XEl6T2qnjq_GDLCh6eOAg"
       short-id: "4e1a1a1c3d18869e"
-  - name: "🇵🇱 [BL] Сервер 17"
+  - name: "🇵🇱 [BL] Сервер 15"
     type: vless
     server: 201.58.190.223
     port: 443

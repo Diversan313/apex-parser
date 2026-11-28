@@ -1,5 +1,19 @@
 proxies:
-  - name: "🇨🇦 [BL] Сервер 1"
+  - name: "🇨🇦 [WL/CF] Сервер 1"
+    type: vless
+    server: 157.22.191.75
+    port: 443
+    uuid: "f4b08bf1-d9bd-4755-aa88-ba922282c608"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "rucanmicro1.gangplatform.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "3U3hb-HmOG5qptCzXIt8NQE3TE40eeTJsNpBV_B9hQA"
+      short-id: "1dde6750d22c5634"
+  - name: "🇨🇦 [BL] Сервер 2"
     type: vless
     server: 209.200.246.148
     port: 443
@@ -13,7 +27,17 @@ proxies:
     reality-opts:
       public-key: "uTmb-ytXsx8p0fkBz7A76SHpWk7_oVutIA4LGTE8BQk"
       short-id: "f98843107912e782"
-  - name: "🇨🇦 [BL] Сервер 2"
+  - name: "🇨🇦 [BL] Сервер 3"
+    type: vless
+    server: kuruish.org
+    port: 443
+    uuid: "03fcc618-b93d-6796-6aed-8a38c975d581"
+    network: "tcp"
+    servername: "kuruish.org"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+  - name: "🇨🇦 [BL] Сервер 4"
     type: vless
     server: 66.163.113.9
     port: 443
@@ -23,7 +47,7 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇨🇦 [BL] Сервер 3"
+  - name: "🇨🇦 [BL] Сервер 5"
     type: vless
     server: 66.163.113.197
     port: 443
@@ -32,16 +56,7 @@ proxies:
     servername: "kuruish.org"
     udp: true
     tls: true
-  - name: "🇨🇦 [BL] Сервер 4"
-    type: vmess
-    server: 23.162.200.198
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "tcp"
-    servername: "23.162.200.198"
-  - name: "🇨🇦 [BL] Сервер 5"
+  - name: "🇨🇦 [BL] Сервер 6"
     type: vmess
     server: 169.197.142.22
     port: 18000
@@ -49,14 +64,6 @@ proxies:
     cipher: "auto"
     alterId: 0
     network: "tcp"
-  - name: "🇨🇦 [BL] Сервер 6"
-    type: vmess
-    server: 134.195.196.211
-    port: 18000
-    uuid: "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe"
-    cipher: "auto"
-    alterId: 0
-    network: "raw"
   - name: "🇨🇦 [BL] Сервер 7"
     type: ss
     server: 51.222.141.125
