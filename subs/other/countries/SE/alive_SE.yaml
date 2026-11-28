@@ -5,9 +5,9 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision"
+    flow: "xtls-rprx-vision-udp443"
     servername: "spb2.b2ai.top"
-    client-fingerprint: "safari"
+    client-fingerprint: "ios"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 2"
@@ -16,59 +16,12 @@ proxies:
     port: 443
     uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
     network: "raw"
-    flow: "xtls-rprx-vision-udp443"
+    flow: "xtls-rprx-vision"
     servername: "spb2.b2ai.top"
     client-fingerprint: "firefox"
     udp: true
     tls: true
   - name: "🇸🇪 [WL] Сервер 3"
-    type: vless
-    server: 72.56.245.146
-    port: 8881
-    uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
-    network: "grpc"
-    servername: "dl.google.com"
-    client-fingerprint: "ios"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
-      short-id: "aabb"
-    grpc-opts:
-      grpc-service-name: "grpc-tunnel"
-      grpc-mode: "multi"
-  - name: "🇸🇪 [WL] Сервер 4"
-    type: vless
-    server: 72.56.245.146
-    port: 8881
-    uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
-    network: "grpc"
-    servername: "dl.google.com"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
-      short-id: "aabbccdd"
-    grpc-opts:
-      grpc-service-name: "grpc-tunnel"
-      grpc-mode: "multi"
-  - name: "🇸🇪 [WL/AI] Сервер 5"
-    type: vless
-    server: 72.56.245.146
-    port: 8881
-    uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
-    network: "grpc"
-    servername: "dl.google.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
-      short-id: "aabb"
-    grpc-opts:
-      grpc-service-name: "grpc-tunnel"
-  - name: "🇸🇪 [WL] Сервер 6"
     type: vless
     server: 188.72.112.1
     port: 443
@@ -82,7 +35,7 @@ proxies:
       path: "/api/v1/telemetry/call/"
       host: "cdnok.b2ai.top"
       mode: "packet-up"
-  - name: "🇸🇪 [BL] Сервер 7"
+  - name: "🇸🇪 [BL] Сервер 4"
     type: vless
     server: 31.77.144.255
     port: 8444
@@ -99,7 +52,7 @@ proxies:
       path: "/xh"
       host: "www.amd.com"
       mode: "stream-one"
-  - name: "🇸🇪 [BL] Сервер 8"
+  - name: "🇸🇪 [BL] Сервер 5"
     type: vless
     server: 138.124.86.230
     port: 48115
@@ -111,9 +64,9 @@ proxies:
     tls: true
     grpc-opts:
       grpc-service-name: "138-124-86-230-sslip-io"
-  - name: "🇸🇪 [BL] Сервер 9"
+  - name: "🇸🇪 [BL] Сервер 6"
     type: vless
-    server: sweringa.rottshieldsons.pics
+    server: 5.157.10.2
     port: 443
     uuid: "f88bc31a-c30a-4a7f-bca6-5bc95d5bb593"
     network: "tcp"
@@ -125,19 +78,3 @@ proxies:
     reality-opts:
       public-key: "x6p656szvu_3CKLsJ4NtkooRvdTVGx7IoPca_p58_jA"
       short-id: "fb442438e2223836"
-  - name: "🇸🇪 [BL] Сервер 10"
-    type: vless
-    server: 31.207.7.181
-    port: 8443
-    uuid: "55ba7b31-b0eb-4362-9c9b-fc53b0a53fab"
-    network: "xhttp"
-    servername: "se2.setlocation.top"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "lya2dqMRkfYPsewu8xXFBIa9t8bbAcOKbHOcvZekpVw"
-      short-id: "8d26268c8aae812c"
-    xhttp-opts:
-      path: "/26248d10d830"
-      mode: "auto"
