@@ -1,18 +1,5 @@
 proxies:
-  - name: "🇨🇿 [WL] Сервер 1"
-    type: vless
-    server: 45.146.166.64
-    port: 2083
-    uuid: "fb721937-6284-0005-9cbd-c3ba2cb66b4a"
-    network: "xhttp"
-    servername: "cdn.mornismp.ru"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    xhttp-opts:
-      path: "/transport/xhttp"
-      mode: "auto"
-  - name: "🇨🇿 [BL] Сервер 2"
+  - name: "🇨🇿 [BL] Сервер 1"
     type: vless
     server: 67.159.18.8
     port: 8443
@@ -28,7 +15,7 @@ proxies:
     xhttp-opts:
       path: "/api/v6/media/02b73b0f/"
       host: "www.novinky.cz"
-  - name: "🇨🇿 [BL] Сервер 3"
+  - name: "🇨🇿 [BL] Сервер 2"
     type: vless
     server: 103.200.28.8
     port: 25812
@@ -44,7 +31,7 @@ proxies:
     grpc-opts:
       grpc-service-name: "7acacc2cc9d3"
       grpc-mode: "gun"
-  - name: "🇨🇿 [BL] Сервер 4"
+  - name: "🇨🇿 [BL] Сервер 3"
     type: vless
     server: 212.102.38.25
     port: 443
@@ -58,6 +45,20 @@ proxies:
     reality-opts:
       public-key: "23cb4W9THzBKsrECsLh-A_FcKZfkAtUONoDze8-GnQE"
       short-id: "e90360ec7cc61b20"
+  - name: "🇨🇿 [BL] Сервер 4"
+    type: vless
+    server: 83.141.92.168
+    port: 443
+    uuid: "a7595994-695d-484e-bfcb-e9fbb73cfa39"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "sladovna.russianpiwo.fun"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
+      short-id: "7a7d19880a9ee786"
   - name: "🇨🇿 [BL] Сервер 5"
     type: vless
     server: 153.52.69.249
@@ -72,16 +73,3 @@ proxies:
     reality-opts:
       public-key: "WVfpQqoeOrTtCq052_IOxvMv7RCWfLlAOxEfsH1aa2U"
       short-id: "d5492c7a39515c65"
-  - name: "🇨🇿 [BL] Сервер 6"
-    type: vless
-    server: 83.141.92.168
-    port: 443
-    uuid: "a7595994-695d-484e-bfcb-e9fbb73cfa39"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "sladovna.russianpiwo.fun"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "kpQWnVk3fEJXfPGFsMerUoPV_ZqUJUJFRnF1FvKyhRY"
-      short-id: "7a7d19880a9ee786"
