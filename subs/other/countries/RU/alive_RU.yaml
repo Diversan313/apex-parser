@@ -25,6 +25,19 @@ proxies:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 3"
     type: vless
+    server: 46.173.26.242
+    port: 2083
+    uuid: "fb721937-6284-001a-9cbd-c3ba2cb66b4a"
+    network: "xhttp"
+    servername: "cdn.mornismp.ru"
+    client-fingerprint: "edge"
+    udp: true
+    tls: true
+    xhttp-opts:
+      path: "/transport/xhttp"
+      mode: "auto"
+  - name: "🇷🇺 [WL] Сервер 4"
+    type: vless
     server: 168.113.128.93
     port: 43000
     uuid: "93d6b020-38fe-4c36-9228-491a0ce495e1"
@@ -37,27 +50,14 @@ proxies:
     reality-opts:
       public-key: "1LconkdpoOKWu9Xc_RlAvEB5q2YjNP-AetYMNOVD4yU"
       short-id: "260218e2"
-  - name: "🇷🇺 [WL] Сервер 4"
-    type: vless
-    server: 168.113.128.93
-    port: 43000
-    uuid: "93d6b020-38fe-4c36-9228-491a0ce495e1"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "1LconkdpoOKWu9Xc_RlAvEB5q2YjNP-AetYMNOVD4yU"
-      short-id: "260218e2"
   - name: "🇷🇺 [WL] Сервер 5"
     type: vless
-    server: 147.45.175.81
+    server: xsru2.freeddns.org
     port: 443
     uuid: "c90395e6-2140-47ad-a54d-9b166729d3ef"
     network: "ws"
     servername: "xsru2.freeddns.org"
-    client-fingerprint: "ios"
+    client-fingerprint: "random"
     udp: true
     tls: true
     ws-opts:
@@ -143,19 +143,11 @@ proxies:
     grpc-opts:
       grpc-service-name: "mobile.api.Event"
   - name: "🇷🇺 [WL] Сервер 12"
-    type: vless
-    server: 212.233.90.78
-    port: 443
-    uuid: "9548ef84-b54d-41dc-b17c-9da21d52ba82"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "birch-ledger.justext.space"
-    client-fingerprint: "edge"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "FwPphm8xGAKY6u74WDRVrcVye3A7GdLDfJoNSDWFsFQ"
-      short-id: "2c6df23e"
+    type: hysteria2
+    server: 103.88.243.142
+    port: 11592
+    password: "41edb44c8e"
+    sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 13"
     type: hysteria2
     server: 103.88.243.142
@@ -163,12 +155,6 @@ proxies:
     password: "41edb44c8e"
     sni: "srv-17e124.21freedom.net"
   - name: "🇷🇺 [WL] Сервер 14"
-    type: hysteria2
-    server: 103.88.243.142
-    port: 11592
-    password: "41edb44c8e"
-    sni: "srv-17e124.21freedom.net"
-  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 136.148.83.69
     port: 443
@@ -178,7 +164,7 @@ proxies:
     client-fingerprint: "ios"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 16"
+  - name: "🇷🇺 [WL] Сервер 15"
     type: vless
     server: 136.148.83.70
     port: 443
@@ -188,7 +174,7 @@ proxies:
     client-fingerprint: "chrome"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 17"
+  - name: "🇷🇺 [WL] Сервер 16"
     type: vless
     server: 136.148.83.71
     port: 443
@@ -198,9 +184,3 @@ proxies:
     client-fingerprint: "qq"
     udp: true
     tls: true
-  - name: "🇷🇺 [WL] Сервер 18"
-    type: ss
-    server: 194.87.69.12
-    port: 18443
-    password: "5mKjXAGrliIAlYwWDeFzkCEMIgQdFQLe"
-    cipher: "aes-256-gcm"
