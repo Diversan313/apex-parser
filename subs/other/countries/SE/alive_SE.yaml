@@ -1,28 +1,6 @@
 proxies:
   - name: "🇸🇪 [WL] Сервер 1"
     type: vless
-    server: 188.225.77.71
-    port: 443
-    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "raw"
-    flow: "xtls-rprx-vision-udp443"
-    servername: "spb2.b2ai.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL] Сервер 2"
-    type: vless
-    server: 188.225.77.71
-    port: 443
-    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "spb2.b2ai.top"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-  - name: "🇸🇪 [WL] Сервер 3"
-    type: vless
     server: 72.56.245.146
     port: 8881
     uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
@@ -36,14 +14,30 @@ proxies:
       short-id: "aabb"
     grpc-opts:
       grpc-service-name: "grpc-tunnel"
-  - name: "🇸🇪 [WL] Сервер 4"
+  - name: "🇸🇪 [WL] Сервер 2"
     type: vless
     server: 72.56.245.146
     port: 8881
     uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
     network: "grpc"
     servername: "dl.google.com"
-    client-fingerprint: "edge"
+    client-fingerprint: "safari"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "Dfgu8Ey0M8Hz4gXGZAwQ3H9jLt2HByVsjAOTWiuKDB0"
+      short-id: "aabb"
+    grpc-opts:
+      grpc-service-name: "grpc-tunnel"
+      grpc-mode: "multi"
+  - name: "🇸🇪 [WL] Сервер 3"
+    type: vless
+    server: 72.56.245.146
+    port: 8881
+    uuid: "e460e7b2-a146-4468-87ed-52510b2caae6"
+    network: "grpc"
+    servername: "dl.google.com"
+    client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
@@ -51,7 +45,18 @@ proxies:
       short-id: "aabbccdd"
     grpc-opts:
       grpc-service-name: "grpc-tunnel"
-      grpc-mode: "gun"
+      grpc-mode: "multi"
+  - name: "🇸🇪 [WL] Сервер 4"
+    type: vless
+    server: 188.225.77.71
+    port: 443
+    uuid: "faf6b8af-e741-4ef5-b1e2-25a3f413cc8e"
+    network: "raw"
+    flow: "xtls-rprx-vision-udp443"
+    servername: "spb2.b2ai.top"
+    client-fingerprint: "firefox"
+    udp: true
+    tls: true
   - name: "🇸🇪 [WL] Сервер 5"
     type: vless
     server: 188.72.112.1
@@ -132,19 +137,11 @@ proxies:
     password: "b1490307-d693-4392-8f32-a3f7cc139202"
     sni: "clustertoken.comparecarprices.org"
   - name: "🇸🇪 [BL] Сервер 11"
-    type: vless
-    server: 187.54.11.145
+    type: hysteria2
+    server: clustertoken.comparecarprices.org
     port: 443
-    uuid: "47cd0aca-3ed8-4ddd-86c6-4d3f6a7670b4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "se01.static-s3.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Ah92GPz7DePQhzVy1wMpB2i7I-ONOHmFI8tmgs9Bvzw"
-      short-id: "4ed692757445e6ab"
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "clustertoken.comparecarprices.org"
   - name: "🇸🇪 [BL] Сервер 12"
     type: hysteria2
     server: 147.45.73.182
@@ -153,49 +150,23 @@ proxies:
     sni: "accountentry.comparecarprices.org"
   - name: "🇸🇪 [BL] Сервер 13"
     type: hysteria2
-    server: accountentry.comparecarprices.org
-    port: 443
-    password: "b1490307-d693-4392-8f32-a3f7cc139202"
-    sni: "accountentry.comparecarprices.org"
-  - name: "🇸🇪 [BL] Сервер 14"
-    type: vless
-    server: 187.54.11.143
-    port: 443
-    uuid: "47cd0aca-3ed8-4ddd-86c6-4d3f6a7670b4"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "se01.static-s3.org"
-    client-fingerprint: "firefox"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "Ah92GPz7DePQhzVy1wMpB2i7I-ONOHmFI8tmgs9Bvzw"
-      short-id: "4ed692757445e6ab"
-  - name: "🇸🇪 [BL] Сервер 15"
-    type: hysteria2
-    server: revisionbuyer.videostockmarket.org
-    port: 443
-    password: "b1490307-d693-4392-8f32-a3f7cc139202"
-    sni: "revisionbuyer.videostockmarket.org"
-  - name: "🇸🇪 [BL] Сервер 16"
-    type: hysteria2
-    server: 31.76.3.7
-    port: 443
-    password: "b1490307-d693-4392-8f32-a3f7cc139202"
-    sni: "revisionbuyer.videostockmarket.org"
-  - name: "🇸🇪 [BL] Сервер 17"
-    type: hysteria2
     server: statslabel.videostockmarket.org
     port: 443
     password: "b1490307-d693-4392-8f32-a3f7cc139202"
     sni: "statslabel.videostockmarket.org"
-  - name: "🇸🇪 [BL] Сервер 18"
+  - name: "🇸🇪 [BL] Сервер 14"
     type: hysteria2
     server: 2.26.93.169
     port: 443
     password: "b1490307-d693-4392-8f32-a3f7cc139202"
     sni: "statslabel.videostockmarket.org"
-  - name: "🇸🇪 [BL] Сервер 19"
+  - name: "🇸🇪 [BL] Сервер 15"
+    type: hysteria2
+    server: 31.76.3.7
+    port: 443
+    password: "b1490307-d693-4392-8f32-a3f7cc139202"
+    sni: "revisionbuyer.videostockmarket.org"
+  - name: "🇸🇪 [BL] Сервер 16"
     type: vless
     server: 31.207.7.181
     port: 8443
@@ -211,7 +182,7 @@ proxies:
     xhttp-opts:
       path: "/26248d10d830"
       mode: "auto"
-  - name: "🇸🇪 [BL] Сервер 20"
+  - name: "🇸🇪 [BL] Сервер 17"
     type: vless
     server: 31.77.158.172
     port: 443
@@ -219,52 +190,12 @@ proxies:
     network: "tcp"
     flow: "xtls-rprx-vision"
     servername: "cdnjs.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL/AI] Сервер 21"
-    type: vless
-    server: swe1.baterium.space
-    port: 443
-    uuid: "7d63243c-983e-44db-a1b8-13dc3fd6f7a2"
-    network: "raw"
-    flow: "xtls-rprx-vision"
-    servername: "cdnjs.com"
-    client-fingerprint: "qq"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
-  - name: "🇸🇪 [BL] Сервер 22"
-    type: vless
-    server: 13.51.167.89
-    port: 443
-    uuid: "9f749472-c636-4c5a-af51-7f8feefaac81"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "www.samsung.com"
     client-fingerprint: "chrome"
     udp: true
     tls: true
     reality-opts:
-      public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
-      short-id: "7c4e91ab"
-  - name: "🇸🇪 [BL] Сервер 23"
-    type: vless
-    server: 150.241.87.52
-    port: 443
-    uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
-    network: "tcp"
-    flow: "xtls-rprx-vision"
-    servername: "pl.galacticworld.online"
-    client-fingerprint: "chrome"
-    udp: true
-    tls: true
-    reality-opts:
-      public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
-  - name: "🇸🇪 [BL] Сервер 24"
+      public-key: "mg2MoLpb8B51aZiko_nW2SBRoaudv-O6HLHx8VYP7Do"
+  - name: "🇸🇪 [BL] Сервер 18"
     type: vless
     server: 2.26.124.209
     port: 443
@@ -278,3 +209,30 @@ proxies:
     reality-opts:
       public-key: "aykMwW19tGa685HLa9yI8FDTH567ovT4KipCSUHEySk"
       short-id: "54325343"
+  - name: "🇸🇪 [BL] Сервер 19"
+    type: vless
+    server: 13.51.167.89
+    port: 443
+    uuid: "9f749472-c636-4c5a-af51-7f8feefaac81"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "www.samsung.com"
+    client-fingerprint: "chrome"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "yMYWijK43WMI0voEhf7EEPvZCjo0vtCPoQibqqPlGn4"
+      short-id: "7c4e91ab"
+  - name: "🇸🇪 [BL] Сервер 20"
+    type: vless
+    server: 150.241.87.52
+    port: 443
+    uuid: "ecc0e60a-f2cc-4266-8353-b228df89730a"
+    network: "tcp"
+    flow: "xtls-rprx-vision"
+    servername: "pl.galacticworld.online"
+    client-fingerprint: "qq"
+    udp: true
+    tls: true
+    reality-opts:
+      public-key: "GBO_paFyK9FihgPMH8r_vHa4IKMkSGfvAQ2fhPK_1H4"
